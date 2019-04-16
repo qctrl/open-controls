@@ -1,0 +1,14 @@
+version: 2
+
+jobs:
+  build:
+    working_directory: ~/open-controls
+    docker:
+      - image: continuumio/anaconda3:2018.12
+    steps:
+      - checkout
+      - run: python3 setup.py install
+      - run: pytest
+      - run: pytest --nbval-lax examples/*.ipynb --sanitize-with examples/notebook-sanitize.cfg
+      - run: pylint qctrlopencontrols --rcfile=.pylintrc
+      - run: pylint tests --rcfile=.pylintrc
