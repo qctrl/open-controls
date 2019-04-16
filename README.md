@@ -59,7 +59,7 @@ $ pytest
 
 ## Usage
 
-Usage depends on the application. We've provided a set of [example Jupyter notebooks](examples) addressing a variety of quantum control problems. Below is a short description of each notebook grouped by application. For further details on usage, use the inline documentation in the source code.
+Usage depends on the application. We've provided a set of [example Jupyter notebooks](examples) addressing a variety of quantum control problems. Below is a short description of each notebook grouped by application. For further details on usage, use the inline documentation in the source code. 
 
 ### Dynamical Decoupling Sequences (DDS)
 
