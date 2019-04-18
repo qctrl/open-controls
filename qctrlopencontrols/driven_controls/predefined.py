@@ -86,7 +86,8 @@ def new_predefined_driven_control(
         driven_control = \
             new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control(
                 **kwargs)
-    elif driven_control_type == COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE_WITH_SOLOVAY_KITAEV:
+    elif driven_control_type == \
+        COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE_WITH_SOLOVAY_KITAEV:
         driven_control = \
             new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control(
                 **kwargs)
@@ -99,8 +100,8 @@ def new_predefined_driven_control(
         raise ArgumentsValueError(
             'Unknown predefined pulse type. See help(new_predefined_driven_control) to display all'
             + ' allowed inputs.',
-                                  {'pulse_type', driven_control_type})
-    return driven_control_type
+            {'driven_control_type', driven_control_type})
+    return driven_control
 
 def _predefined_common_attributes(maximum_rabi_rate,
                                   rabi_rotation,
@@ -182,6 +183,32 @@ def _get_transformed_rabi_rotation_wimperis(rabi_rotation):
             'The polar angle must be between -4 pi and 4 pi (inclusive).',
             {'rabi_rotation': rabi_rotation})
     return np.arccos(-rabi_rotation / (4 * np.pi))
+
+def _derive_segments(angles, amplitude=2. * np.pi):
+    """
+    Derive the driven control segments from a set of rabi_rotations defined in terms of the
+        spherical polar angles
+
+    Parameters
+    ----------
+    angles : numpy.array
+        angles is made of a list polar angle 2-lists formatted
+        as [polar_angle, azimuthal_angle].
+        All angles should be greater or equal to 0, and the polar_angles
+        must be greater than zero.
+    amplitude : float, optional
+        Defaults to 1. The total amplitude of each segment in
+        rad Hz.
+
+    Returns
+    -------
+    list
+        Segments for the driven control.
+
+    """
+    segments = [[amplitude * np.cos(phi), amplitude * np.sin(phi), 0., theta / amplitude]
+                for (theta, phi) in angles]
+    return segments
 
 
 def new_primitive_control(
@@ -470,7 +497,7 @@ def new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_contr
     (rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
         maximum_rabi_rate, rabi_rotation, shape, azimuthal_angle)
 
-    phi_p = _phi_p_function(rabi_rotation)
+    phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
     k = np.arcsin(np.sin(rabi_rotation / 2.) / 2.)
     angles = np.array([
         [2. * np.pi + rabi_rotation / 2. - k, azimuthal_angle],
@@ -729,4 +756,3 @@ def new_walsh_amplitude_modulated_filter_1_control(  # pylint: disable=invalid-n
         shape=shape,
         scheme=WALSH_AMPLITUDE_MODULATED_FILTER_1,
         **kwargs)
-
