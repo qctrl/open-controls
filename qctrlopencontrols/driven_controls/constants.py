@@ -18,6 +18,10 @@ driven_controls.constants
 ================
 """
 
+GAUSSIAN_STANDARD_DEVIATION_SCALE = 6.
+"""
+"""
+
 #maximum and minimum values
 UPPER_BOUND_RABI_RATE = 1e10
 """Maximum allowed rabi rate
