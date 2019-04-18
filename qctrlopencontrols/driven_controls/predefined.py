@@ -13,12 +13,15 @@
 # limitations under the License.
 
 """
-=============
-driven_controls module
-=============
+===================
+driven_controls.predefined
+===================
 """
 
-from .driven_controls import DrivenControls
+import numpy as np
+
+from qctrlopencontrols.exceptions import ArgumentsValueError
+from qctrlopencontrols import DrivenControls
 
 from .constants import (
     UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE,
