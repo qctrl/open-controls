@@ -31,9 +31,59 @@ from .constants import (
     UPPER_BOUND_DURATION, LOWER_BOUND_DURATION)
 
 
+def get_plot_data_from_segments(segments):
+    """
+    Generates arrays that can be used to produce a plot representing the shape of the driven control
+    constructed from the segments.
+
+    Parameters
+    ----------
+    segments : list
+        List of segments formatted as described in qctrlopencontrols.driven_controls.DrivenControl
+
+    Returns
+    -------
+    tuple
+        Tuple made up of arrays for plotting formatted as
+        (amplitude_x,amplitude_y,amplitude_z,time) where:
+        - amplitude_k is the amplitude values.
+        - times the time corresponding to each amplitude_k coordinate.
+        Note that plot will have repeated times and for amplitudes, this is because it is
+        expected that these coordinates are to be used with plotting software that 'joins
+        the dots' with linear lines between each coordinate. The time array gives the x
+        values for all the amplitude arrays, which give the y values.
+
+    """
+    segment_times = np.insert(np.cumsum(segments[:, 3]), 0, 0.)
+    coords = len(segment_times)
+    coord_amplitude_x = np.concatenate([[0.], segments[:, 0], [0.]])
+    coord_amplitude_y = np.concatenate([[0.], segments[:, 1], [0.]])
+    coord_amplitude_z = np.concatenate([[0.], segments[:, 2], [0.]])
+    plot_time = []
+    plot_amplitude_x = []
+    plot_amplitude_y = []
+    plot_amplitude_z = []
+    for i in range(coords):
+        plot_time.append(segment_times[i])
+        plot_time.append(segment_times[i])
+        plot_amplitude_x.append(coord_amplitude_x[i])
+        plot_amplitude_x.append(coord_amplitude_x[i + 1])
+        plot_amplitude_y.append(coord_amplitude_y[i])
+        plot_amplitude_y.append(coord_amplitude_y[i + 1])
+        plot_amplitude_z.append(coord_amplitude_z[i])
+        plot_amplitude_z.append(coord_amplitude_z[i + 1])
+
+    return (np.array(plot_amplitude_x),
+            np.array(plot_amplitude_y),
+            np.array(plot_amplitude_z),
+            np.array(plot_time))
+
+
+
 class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
-    """Creates a driven control. A driven is a set of segments made up of amplitude vectors
-        and corresponding durations.
+    """
+    Creates a driven control. A driven is a set of segments made up of amplitude vectors
+    and corresponding durations.
 
     Parameters
     ----------
@@ -291,6 +341,122 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
             self._export_to_qctrl_expanded_format(filename=filename,
                                                   file_type=file_type,
                                                   coordinates=coordinates)
+
+    def get_plot_formatted_arrays(self, coordinates=CARTESIAN, dimensionless=True):
+        """ Gets arrays for plotting a driven control.
+
+        Parameters
+        ----------
+        dimensionless: boolean
+            If True, calculates the dimensionless values for segments
+        coordinates : string
+            Indicated the type of segments that need to be transformed can be 'cartesian' or
+            'cylindrical'.
+
+        Returns
+        -------
+        tuple
+            Tuple made up of arrays for plotting formatted as
+            (amplitude_x,amplitude_y,amplitude_z,time) where:
+            - amplitude_k is the amplitude values in rad Hz for the k axis, or k Pauli matrix.
+            - times the time corresponding to each amplitude_k coordinate.
+
+        Notes
+        -----
+        The plot data can have repeated times and for amplitudes, because it is expected
+        that these coordinates are to be used with plotting software that 'joins the dots' with
+        linear lines between each coordinate. The time array gives the x values for all the
+        amplitude arrays, which give the y values.
+
+        Raises
+        ------
+        ArgumentsValueError
+            Raised when an argument is invalid.
+        """
+
+        plot_segments = self.get_transformed_segments(coordinates=CARTESIAN,
+                                                      dimensionless=dimensionless)
+
+        plot_data = get_plot_data_from_segments(plot_segments)
+
+        if coordinates == CARTESIAN:
+            (x_amplitudes, y_amplitudes, detunings, times) = plot_data
+            plot_dictionary = {
+                'x_amplitudes': x_amplitudes,
+                'y_amplitudes': y_amplitudes,
+                'z_amplitudes': detunings,
+                'times': times
+            }
+        elif coordinates == CYLINDRICAL:
+            (x_plot, y_plot, detunings, times) = plot_data
+            x_plot[np.equal(x_plot, -0.0)] = 0.
+            y_plot[np.equal(y_plot, -0.0)] = 0.
+            azimuthal_angles_plot = np.arctan2(y_plot, x_plot)
+            amplitudes_plot = np.sqrt(np.abs(x_plot**2 + y_plot**2))
+            plot_dictionary = {
+                'amplitudes': amplitudes_plot,
+                'azimuthal_angles': azimuthal_angles_plot,
+                'detunings': detunings,
+                'times': times
+            }
+        else:
+            raise ArgumentsValueError(
+                'Unsupported coordinates provided: ',
+                arguments={'coordinates': coordinates})
+
+        return plot_dictionary
+
+    def get_transformed_segments(self, coordinates=CARTESIAN, dimensionless=True):
+        """
+        Function that transforms standard dimension-full segments of the
+        driven control into dimensionless segments
+
+        Parameters
+        ----------
+        coordinates : string
+            Indicated the type of segments that need to be transformed can be 'cartesian' or
+            'cylindrical' or 'polar'.
+        dimensionless : boolean
+            If True, calculates the dimensionless segments
+
+        Returns
+        -------
+        numpy.ndarray
+            if dimensionless is True, returns the dimensionless segments of the driven control;
+            otherwise returns the segments
+
+        Raises
+        ------
+        ArgumentsValueError
+            Raised when an argument is invalid.
+        """
+        dimensionless = bool(dimensionless)
+        transformed_segments = self.segments.copy()
+
+        if dimensionless:
+            transformed_segments[:, 0:2] = transformed_segments[:, 0:2] / self.maximum_rabi_rate
+
+        if coordinates == CARTESIAN:
+            pass
+        elif coordinates == CYLINDRICAL:
+
+            temp_amplitudes = np.sqrt(np.abs(
+                transformed_segments[:, 0]**2 + transformed_segments[:, 1]**2))
+            temp_azimuthal_angles = np.arctan2(
+                transformed_segments[:, 1], transformed_segments[:, 0])
+            transformed_segments = np.stack(
+                (temp_amplitudes,
+                 temp_azimuthal_angles,
+                 transformed_segments[:, 2],
+                 transformed_segments[:, 3]),
+                axis=1)
+        else:
+            raise ArgumentsValueError('Unsupported coordinates provided: ',
+                                      arguments={'coordinates': coordinates})
+
+        return transformed_segments
+
+
 
 
 if __name__ == '__main__':
