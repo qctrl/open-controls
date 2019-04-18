@@ -34,6 +34,8 @@ from .constants import (
     SHORT_COMPOSITE_ROTATION_FOR_UNDOING_LENGTH_OVER_AND_UNDER_SHOOT,
     CORPSE_IN_SCROFULOUS_PULSE)
 
+from .conversion import gaussian_max_rabi_rate_scale_down
+
 
 def new_predefined_driven_control(
         driven_control_type=PRIMITIVE,
@@ -143,8 +145,12 @@ def _predefined_common_attributes(maximum_rabi_rate,
 
     if shape == SQUARE:
         rabi_rate = maximum_rabi_rate
-    else:  # self.shape == GAUSSIAN
-        rabi_rate = None#gaussian_max_rabi_rate_scale_down(maximum_rabi_rate) # TODO
+    elif shape == GAUSSIAN:
+        rabi_rate = gaussian_max_rabi_rate_scale_down(maximum_rabi_rate)
+    else:
+        raise ArgumentsValueError(
+            'The shape for a driven control must be either "{}" or "{}".'.format(SQUARE, GAUSSIAN),
+            {'shape': shape})
 
     rabi_rotation = float(rabi_rotation)
     if rabi_rotation == 0:

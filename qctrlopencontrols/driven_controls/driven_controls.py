@@ -30,6 +30,8 @@ from .constants import (
     UPPER_BOUND_SEGMENTS, UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE,
     UPPER_BOUND_DURATION, LOWER_BOUND_DURATION)
 
+from .conversion import gaussian_segment_rabi_rate_scale_up
+
 
 def get_plot_data_from_segments(segments):
     """
@@ -200,13 +202,12 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
                 extras={'minimum_duration'})
 
         if self.shape == GAUSSIAN:
-            pass # TODO
-            #self.maximum_rabi_rate = gaussian_segment_rabi_rate_scale_up(
-            #    np.amax(self.maximum_rabi_rate))
-            #self.maximum_detuning = gaussian_segment_rabi_rate_scale_up(
-            #    np.amax(self.maximum_detuning))
-            #self.maximum_amplitude = gaussian_segment_rabi_rate_scale_up(
-            #    np.amax(self.maximum_amplitude))
+            self.maximum_rabi_rate = gaussian_segment_rabi_rate_scale_up(
+                np.amax(self.maximum_rabi_rate))
+            self.maximum_detuning = gaussian_segment_rabi_rate_scale_up(
+                np.amax(self.maximum_detuning))
+            self.maximum_amplitude = gaussian_segment_rabi_rate_scale_up(
+                np.amax(self.maximum_amplitude))
 
     def _qctrl_expanded_export_content(self, file_type, coordinates):
 
