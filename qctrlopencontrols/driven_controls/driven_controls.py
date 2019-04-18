@@ -24,7 +24,7 @@ from qctrlopencontrols.exceptions import ArgumentsValueError
 from qctrlopencontrols.base import QctrlObject
 
 from qctrlopencontrols.globals import (
-    QCTRL_EXPANDED, CSV, JSON, CARTESIAN, CYLINDRICAL)
+    QCTRL_EXPANDED, CSV, JSON, CARTESIAN, CYLINDRICAL, SQUARE, GAUSSIAN)
 
 from .constants import (
     UPPER_BOUND_SEGMENTS, UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE,
@@ -106,11 +106,22 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
 
     def __init__(self,
                  segments=None,
+                 shape=None,
+                 scheme=None,
                  name=None):
+
+        self.shape = str(shape)
+        if not (self.shape == SQUARE or self.shape == GAUSSIAN):
+            raise ArgumentsValueError('Shape must be "square" or "gaussian".',
+                                      {'shape': self.shape})
 
         self.name = name
         if self.name is not None:
             self.name = str(self.name)
+
+        self.scheme = scheme
+        if self.scheme is not None:
+            self.scheme = str(self.scheme)
 
         if segments is None:
             segments = [[np.pi, 0, 0, 1], ]
@@ -138,7 +149,7 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
                                       extras={'segment_durations': self.segment_durations})
 
         super(DrivenControls, self).__init__(
-            base_attributes=['segments', 'name'])
+            base_attributes=['segments', 'shape', 'name'])
 
         self.angles = self.amplitudes * self.segment_durations
         self.directions = np.array([self.segments[i, 0:3] / self.amplitudes[i]
@@ -182,6 +193,15 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
                 + str(LOWER_BOUND_DURATION),
                 {'segments': self.segments},
                 extras={'minimum_duration'})
+
+        if self.shape == GAUSSIAN:
+            pass # TODO
+            #self.maximum_rabi_rate = gaussian_segment_rabi_rate_scale_up(
+            #    np.amax(self.maximum_rabi_rate))
+            #self.maximum_detuning = gaussian_segment_rabi_rate_scale_up(
+            #    np.amax(self.maximum_detuning))
+            #self.maximum_amplitude = gaussian_segment_rabi_rate_scale_up(
+            #    np.amax(self.maximum_amplitude))
 
     def _qctrl_expanded_export_content(self, file_type, coordinates):
 
