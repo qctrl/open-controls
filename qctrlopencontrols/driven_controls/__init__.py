@@ -30,3 +30,12 @@ from .constants import (
     COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE_WITH_WIMPERIS,
     SHORT_COMPOSITE_ROTATION_FOR_UNDOING_LENGTH_OVER_AND_UNDER_SHOOT,
     CORPSE_IN_SCROFULOUS_PULSE)
+
+from .predefined import (
+    new_primitive_control, new_wimperis_1_control, new_solovay_kitaev_1_control,
+    new_compensating_for_off_resonance_with_a_pulse_sequence_control,
+    new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control,
+    new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control,
+    new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control,
+    new_walsh_amplitude_modulated_filter_1_control,
+    new_corpse_in_scrofulous_control)
