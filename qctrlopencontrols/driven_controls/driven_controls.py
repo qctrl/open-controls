@@ -95,6 +95,11 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
         corresponding pauli matrix, i.e. amplitude_x would correspond to sigma_x.
         The duration is the time of that segment.
         If None, defaults to a square pi pulse [[np.pi, 0, 0, 1], ].
+    shape : str, optional
+        Defines the shape used in each segment can be 'square' or 'gaussian'. Defaults to
+        'square'.
+    scheme : string, optional
+        Defaults to None. The scheme the driven control came from if derived that way.
     name : string, optional
         Defaults to None. An optional string to name the driven control.
 
