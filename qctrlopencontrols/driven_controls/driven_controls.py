@@ -14,7 +14,7 @@
 
 """
 ======================
-pulses.driven_controls
+driven_controls.driven_controls
 ======================
 """
 import json
@@ -32,7 +32,8 @@ from .constants import (
 
 
 class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
-    """Creates a pulse. A pulse is a set of segments made up of amplitude vectors and durations.
+    """Creates a driven control. A driven is a set of segments made up of amplitude vectors
+        and corresponding durations.
 
     Parameters
     ----------
@@ -45,7 +46,7 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
         The duration is the time of that segment.
         If None, defaults to a square pi pulse [[np.pi, 0, 0, 1], ].
     name : string, optional
-        Defaults to None. An optional string to name the pulse.
+        Defaults to None. An optional string to name the driven control.
 
     Raises
     ------
@@ -81,7 +82,7 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
 
         self.segment_durations = self.segments[:, 3]
         if np.any(self.segment_durations <= 0):
-            raise ArgumentsValueError('Duration of pulse segments must all be greater'
+            raise ArgumentsValueError('Duration of driven control segments must all be greater'
                                       + ' than zero.',
                                       {'segments': self.segments},
                                       extras={'segment_durations': self.segment_durations})

@@ -14,7 +14,7 @@
 
 """
 ================
-pulses.constants
+driven_controls.constants
 ================
 """
 
