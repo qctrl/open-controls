@@ -24,13 +24,13 @@ from qctrlopencontrols.exceptions import ArgumentsValueError
 
 from qctrlopencontrols.driven_controls import (
     new_predefined_driven_control,
-    new_primitive_control, new_wimperis_1_control, new_solovay_kitaev_1_control,
-    new_compensating_for_off_resonance_with_a_pulse_sequence_control,
-    new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control,
-    new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control,
-    new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control,
-    new_walsh_amplitude_modulated_filter_1_control,
-    new_corpse_in_scrofulous_control
+    new_primitive_control, new_wimperis_1_control#, new_solovay_kitaev_1_control,
+    #new_compensating_for_off_resonance_with_a_pulse_sequence_control,
+    #new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control,
+    #new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control,
+    #new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control,
+    #new_walsh_amplitude_modulated_filter_1_control,
+    #new_corpse_in_scrofulous_control
 )
 
 from qctrlopencontrols.globals import SQUARE
@@ -42,7 +42,7 @@ def test_new_predefined_driven_control():
     """
     # Test that an error is raised if supplied with an unknown scheme
     with pytest.raises(ArgumentsValueError):
-        _ = new_predefined_driven_control(driven_control_type='nil')
+        _ = new_predefined_driven_control(scheme='nil')
 
 
 def test_primitive_control_segments():
@@ -57,14 +57,24 @@ def test_primitive_control_segments():
         0.,
         _rabi_rotation], ]
 
-    primitive_control = new_primitive_control(
+    primitive_control_1 = new_primitive_control(
         rabi_rotation=_rabi_rotation,
         maximum_rabi_rate=_rabi_rate,
         azimuthal_angle=_azimuthal_angle,
         shape=SQUARE
     )
 
-    assert np.allclose(_segments, primitive_control.segments)
+    # Test the new_predefined_driven_control function also
+    primitive_control_2 = new_predefined_driven_control(
+        rabi_rotation=_rabi_rotation,
+        maximum_rabi_rate=_rabi_rate,
+        azimuthal_angle=_azimuthal_angle,
+        shape=SQUARE,
+        scheme='primitive'
+    )
+
+    assert np.allclose(_segments, primitive_control_1.segments)
+    assert np.allclose(_segments, primitive_control_2.segments)
 
 def test_new_wimperis_1_control():
     """Test the segments of the Wimperis 1 (BB1) driven control
