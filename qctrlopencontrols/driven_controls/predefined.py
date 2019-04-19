@@ -102,7 +102,7 @@ def new_predefined_driven_control(
         raise ArgumentsValueError(
             'Unknown predefined pulse type. See help(new_predefined_driven_control) to display all'
             + ' allowed inputs.',
-            {'driven_control_type', driven_control_type})
+            {'driven_control_type': driven_control_type})
     return driven_control
 
 def _predefined_common_attributes(maximum_rabi_rate,
