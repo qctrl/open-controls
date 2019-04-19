@@ -13,9 +13,12 @@
 # limitations under the License.
 
 """
-===================
+==========================
 driven_controls.predefined
-===================
+==========================
+
+More information and publication references to all driven controls defined here
+can be found at https://docs.q-ctrl.com/control-library
 """
 
 import numpy as np
