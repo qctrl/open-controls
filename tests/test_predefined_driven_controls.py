@@ -17,10 +17,6 @@
 Tests for Predefined Driven Controls
 ====================================
 """
-
-import os
-os.chdir('/home/virginia/Documents/qctrl/python-open-controls')  
-
 import numpy as np
 import pytest
 
@@ -93,4 +89,3 @@ def test_new_wimperis_1_control():
     )
 
     assert np.allclose(wimperis_control.segments, _segments)
-
