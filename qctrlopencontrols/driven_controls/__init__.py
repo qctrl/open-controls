@@ -32,6 +32,7 @@ from .constants import (
     CORPSE_IN_SCROFULOUS_PULSE)
 
 from .predefined import (
+    new_predefined_driven_control,
     new_primitive_control, new_wimperis_1_control, new_solovay_kitaev_1_control,
     new_compensating_for_off_resonance_with_a_pulse_sequence_control,
     new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control,
