@@ -113,7 +113,7 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
 
     def __init__(self,
                  segments=None,
-                 shape=None,
+                 shape=SQUARE,
                  scheme=None,
                  name=None):
 
@@ -156,7 +156,7 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
                                       extras={'segment_durations': self.segment_durations})
 
         super(DrivenControls, self).__init__(
-            base_attributes=['segments', 'shape', 'name'])
+            base_attributes=['segments', 'shape', 'scheme', 'name'])
 
         self.angles = self.amplitudes * self.segment_durations
         self.directions = np.array([self.segments[i, 0:3] / self.amplitudes[i]
