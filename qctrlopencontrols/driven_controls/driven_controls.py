@@ -100,8 +100,6 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
     shape : str, optional
         Defines the shape used in each segment can be 'square' or 'gaussian'. Defaults to
         'square'.
-    scheme : string, optional
-        Defaults to None. The scheme the driven control came from if derived that way.
     name : string, optional
         Defaults to None. An optional string to name the driven control.
 
@@ -114,7 +112,6 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
     def __init__(self,
                  segments=None,
                  shape=SQUARE,
-                 scheme=None,
                  name=None):
 
         self.shape = str(shape)
@@ -125,10 +122,6 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
         self.name = name
         if self.name is not None:
             self.name = str(self.name)
-
-        self.scheme = scheme
-        if self.scheme is not None:
-            self.scheme = str(self.scheme)
 
         if segments is None:
             segments = [[np.pi, 0, 0, 1], ]

@@ -40,14 +40,14 @@ from .conversion import gaussian_max_rabi_rate_scale_down
 
 
 def new_predefined_driven_control(
-        driven_control_type=PRIMITIVE,
+        scheme=PRIMITIVE,
         **kwargs):
     """
     Create a new driven control
 
     Parameters
     ----------
-    driven_control_type : string, optional
+    scheme : string, optional
         Defaults to None. The name of the driven control type,
         supported options are:
         - 'primitive'
@@ -75,36 +75,36 @@ def new_predefined_driven_control(
 
     # Forced to import here to avoid cyclic imports, need to review
     # Raise error if the input driven_control_type is not known
-    if driven_control_type == PRIMITIVE:
+    if scheme == PRIMITIVE:
         driven_control = new_primitive_control(**kwargs)
-    elif driven_control_type == WIMPERIS_1:
+    elif scheme == WIMPERIS_1:
         driven_control = new_wimperis_1_control(**kwargs)
-    elif driven_control_type == SOLOVAY_KITAEV_1:
+    elif scheme == SOLOVAY_KITAEV_1:
         driven_control = new_solovay_kitaev_1_control(**kwargs)
-    elif driven_control_type == WALSH_AMPLITUDE_MODULATED_FILTER_1:
+    elif scheme == WALSH_AMPLITUDE_MODULATED_FILTER_1:
         driven_control = new_walsh_amplitude_modulated_filter_1_control(**kwargs)
-    elif driven_control_type == COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE:
+    elif scheme == COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE:
         driven_control = new_compensating_for_off_resonance_with_a_pulse_sequence_control(
             **kwargs)
-    elif driven_control_type == COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE_WITH_WIMPERIS:
+    elif scheme == COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE_WITH_WIMPERIS:
         driven_control = \
             new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control(
                 **kwargs)
-    elif driven_control_type == \
+    elif scheme == \
         COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE_WITH_SOLOVAY_KITAEV:
         driven_control = \
             new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control(
                 **kwargs)
-    elif driven_control_type == SHORT_COMPOSITE_ROTATION_FOR_UNDOING_LENGTH_OVER_AND_UNDER_SHOOT:
+    elif scheme == SHORT_COMPOSITE_ROTATION_FOR_UNDOING_LENGTH_OVER_AND_UNDER_SHOOT:
         driven_control = \
             new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(**kwargs)
-    elif driven_control_type == CORPSE_IN_SCROFULOUS_PULSE:
+    elif scheme == CORPSE_IN_SCROFULOUS_PULSE:
         driven_control = new_corpse_in_scrofulous_control(**kwargs)
     else:
         raise ArgumentsValueError(
             'Unknown predefined pulse type. See help(new_predefined_driven_control) to display all'
             + ' allowed inputs.',
-            {'driven_control_type': driven_control_type})
+            {'scheme': scheme})
     return driven_control
 
 def _predefined_common_attributes(maximum_rabi_rate,
@@ -256,7 +256,7 @@ def new_primitive_control(
         0.,
         rabi_rotation / rabi_rate], ]
 
-    return DrivenControls(segments=segments, shape=shape, scheme=PRIMITIVE, **kwargs)
+    return DrivenControls(segments=segments, shape=shape, **kwargs)
 
 
 def new_wimperis_1_control(
@@ -299,7 +299,7 @@ def new_wimperis_1_control(
 
     segments = _derive_segments(angles, amplitude=rabi_rate)
 
-    return DrivenControls(segments=segments, shape=shape, scheme=WIMPERIS_1, **kwargs)
+    return DrivenControls(segments=segments, shape=shape, **kwargs)
 
 
 def new_solovay_kitaev_1_control(
@@ -342,7 +342,7 @@ def new_solovay_kitaev_1_control(
 
     segments = _derive_segments(angles, amplitude=rabi_rate)
 
-    return DrivenControls(segments=segments, shape=shape, scheme=SOLOVAY_KITAEV_1, **kwargs)
+    return DrivenControls(segments=segments, shape=shape, **kwargs)
 
 
 def new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(  # pylint: disable=invalid-name
@@ -420,11 +420,7 @@ def new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control
 
     segments = _derive_segments(angles, amplitude=rabi_rate)
 
-    return DrivenControls(
-        segments=segments,
-        shape=shape,
-        scheme=SHORT_COMPOSITE_ROTATION_FOR_UNDOING_LENGTH_OVER_AND_UNDER_SHOOT,
-        **kwargs)
+    return DrivenControls(segments=segments, shape=shape, **kwargs)
 
 
 def new_compensating_for_off_resonance_with_a_pulse_sequence_control(  # pylint: disable=invalid-name
@@ -466,11 +462,7 @@ def new_compensating_for_off_resonance_with_a_pulse_sequence_control(  # pylint:
 
     segments = _derive_segments(angles, amplitude=rabi_rate)
 
-    return DrivenControls(
-        segments=segments,
-        shape=shape,
-        scheme=COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE,
-        **kwargs)
+    return DrivenControls(segments=segments, shape=shape, **kwargs)
 
 
 def new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control(  # pylint: disable=invalid-name
@@ -517,11 +509,7 @@ def new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_contr
 
     segments = _derive_segments(angles, amplitude=rabi_rate)
 
-    return DrivenControls(
-        segments=segments,
-        shape=shape,
-        scheme=COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE_WITH_WIMPERIS,
-        **kwargs)
+    return DrivenControls(segments=segments, shape=shape, **kwargs)
 
 
 def new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control(  # pylint: disable=invalid-name
@@ -567,11 +555,7 @@ def new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev
 
     segments = _derive_segments(angles, amplitude=rabi_rate)
 
-    return DrivenControls(
-        segments=segments,
-        shape=shape,
-        scheme=COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE_WITH_SOLOVAY_KITAEV,
-        **kwargs)
+    return DrivenControls(segments=segments, shape=shape, **kwargs)
 
 
 def new_corpse_in_scrofulous_control(  # pylint: disable=invalid-name
@@ -657,11 +641,7 @@ def new_corpse_in_scrofulous_control(  # pylint: disable=invalid-name
 
     segments = _derive_segments(total_angles, amplitude=rabi_rate)
 
-    return DrivenControls(
-        segments=segments,
-        shape=shape,
-        scheme=CORPSE_IN_SCROFULOUS_PULSE,
-        **kwargs)
+    return DrivenControls(segments=segments, shape=shape, **kwargs)
 
 
 def new_walsh_amplitude_modulated_filter_1_control(  # pylint: disable=invalid-name
@@ -759,8 +739,4 @@ def new_walsh_amplitude_modulated_filter_1_control(  # pylint: disable=invalid-n
          rabi_rate_plus * np.sin(azimuthal_angle),
          0., time_segment]])
 
-    return DrivenControls(
-        segments=segments,
-        shape=shape,
-        scheme=WALSH_AMPLITUDE_MODULATED_FILTER_1,
-        **kwargs)
+    return DrivenControls(segments=segments, shape=shape, **kwargs)
