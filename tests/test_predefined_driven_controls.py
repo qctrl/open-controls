@@ -27,6 +27,7 @@ import pytest
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
 from qctrlopencontrols.driven_controls import (
+    new_predefined_driven_control,
     new_primitive_control, new_wimperis_1_control, new_solovay_kitaev_1_control,
     new_compensating_for_off_resonance_with_a_pulse_sequence_control,
     new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control,
@@ -39,17 +40,26 @@ from qctrlopencontrols.driven_controls import (
 from qctrlopencontrols.globals import SQUARE
 
 
+def test_new_predefined_driven_control():
+    """Test the new_predefined_driven_control function in
+       qctrlopencontrols.driven_controls.predefined
+    """
+    # Test that an error is raised if supplied with an unknown scheme
+    with pytest.raises(ArgumentsValueError):
+        _ = new_predefined_driven_control(driven_control_type='nil')
+
+
 def test_primitive_control_segments():
-    """Test the segments predefined primitive driven control
+    """Test the segments of the predefined primitive driven control
     """
     _rabi_rate = 1
     _rabi_rotation = np.pi
     _azimuthal_angle = np.pi/2
     _segments = [[
-        _rabi_rate * np.cos(_azimuthal_angle),
-        _rabi_rate * np.sin(_azimuthal_angle),
+        np.cos(_azimuthal_angle),
+        np.sin(_azimuthal_angle),
         0.,
-        _rabi_rotation / _rabi_rate], ]
+        _rabi_rotation], ]
 
     primitive_control = new_primitive_control(
         rabi_rotation=_rabi_rotation,
@@ -59,3 +69,28 @@ def test_primitive_control_segments():
     )
 
     assert np.allclose(_segments, primitive_control.segments)
+
+def test_new_wimperis_1_control():
+    """Test the segments of the Wimperis 1 (BB1) driven control
+    """
+    _rabi_rotation = np.pi
+    _azimuthal_angle = np.pi/2
+
+    phi_p = np.arccos(-_rabi_rotation / (4 * np.pi))
+
+    _segments = [
+        [np.cos(_azimuthal_angle), np.sin(_azimuthal_angle), 0., _rabi_rotation],
+        [np.cos(phi_p + _azimuthal_angle), np.sin(phi_p + _azimuthal_angle), 0., np.pi],
+        [np.cos(3. * phi_p + _azimuthal_angle),
+         np.sin(3. * phi_p + _azimuthal_angle), 0., 2 * np.pi],
+        [np.cos(phi_p + _azimuthal_angle), np.sin(phi_p + _azimuthal_angle), 0., np.pi]
+    ]
+
+    wimperis_control = new_wimperis_1_control(
+        rabi_rotation=_rabi_rotation,
+        azimuthal_angle=_azimuthal_angle,
+        maximum_rabi_rate=1
+    )
+
+    assert np.allclose(wimperis_control.segments, _segments)
+
