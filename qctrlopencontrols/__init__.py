@@ -21,5 +21,5 @@ qcrtlopencontrols
 from .dynamic_decoupling_sequences import (DynamicDecouplingSequence,
                                            new_predefined_dds,
                                            convert_dds_to_driven_controls)
-from .driven_controls import DrivenControls
+from .driven_controls import DrivenControls, new_predefined_driven_control
 from .qiskit import convert_dds_to_quantum_circuit
