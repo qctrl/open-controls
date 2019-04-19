@@ -482,6 +482,39 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
 
         return transformed_segments
 
+    def __str__(self):
+        """Prepares a friendly string format for a Driven Control
+        """
+        driven_control_string = list()
+
+        # Specify the number of decimals for pretty string representation
+        decimals_format_str = '{:+.3f}'
+
+        if self.name is not None:
+            driven_control_string.append('{}:'.format(self.name))
+
+        # Format amplitudes
+        for i, axis in enumerate('XYZ'):
+            pretty_amplitudes_str = ', '.join(
+                [decimals_format_str.format(amplitude/np.pi).rstrip('0').rstrip('.')
+                 for amplitude in self.segments[:, i]]
+            )
+            driven_control_string.append(
+                '{} Amplitudes: [{}] x pi'.format(axis, pretty_amplitudes_str)
+            )
+        # Format durations
+        total_duration = np.sum(self.segments[:, 3])
+        pretty_durations_str = ','.join(
+            [decimals_format_str.format(duration/total_duration).rstrip('0').rstrip('.')
+             for duration in self.segments[:, 3]]
+        )
+        driven_control_string.append(
+            'Durations:    [{}] x {}s'.format(pretty_durations_str, str(total_duration))
+        )
+
+        driven_control_string = '\n'.join(driven_control_string)
+
+        return driven_control_string
 
 
 
