@@ -18,6 +18,8 @@ Tests for Predefined Driven Controls
 ====================================
 """
 
+import os
+os.chdir('/home/virginia/Documents/qctrl/python-open-controls')  
 
 import numpy as np
 import pytest

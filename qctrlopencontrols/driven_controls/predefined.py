@@ -21,7 +21,7 @@ driven_controls.predefined
 import numpy as np
 
 from qctrlopencontrols.exceptions import ArgumentsValueError
-from qctrlopencontrols import DrivenControls
+from .driven_controls import DrivenControls
 
 from qctrlopencontrols.globals import SQUARE, GAUSSIAN
 
