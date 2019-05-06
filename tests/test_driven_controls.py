@@ -128,9 +128,9 @@ def test_plot_data():
     plot_data = driven_control.get_plot_formatted_arrays(dimensionless=False)
 
     assert np.allclose(plot_data['times'], times)
-    assert np.allclose(plot_data['x_amplitudes'], x_amplitude)
-    assert np.allclose(plot_data['y_amplitudes'], y_amplitude)
-    assert np.allclose(plot_data['z_amplitudes'], z_amplitude)
+    assert np.allclose(plot_data['amplitude_x'], x_amplitude)
+    assert np.allclose(plot_data['amplitude_y'], y_amplitude)
+    assert np.allclose(plot_data['detuning'], z_amplitude)
 
 def test_dimensionless_segments():
     """

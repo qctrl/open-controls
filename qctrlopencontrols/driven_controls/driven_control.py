@@ -354,11 +354,10 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
 
         Returns
         -------
-        tuple
-            Tuple made up of arrays for plotting formatted as
-            (amplitude_x,amplitude_y,amplitude_z,time) where:
-            - amplitude_k is the amplitude values in rad Hz for the k axis, or k Pauli matrix.
-            - times the time corresponding to each amplitude_k coordinate.
+        dict
+            A dict with keywords depending on the chosen coordinates. For 'cylindrical', we have
+            'rabi_rate', 'azimuthal_angle', 'detuning' and 'times', and for 'cartesian' we have
+            'amplitude_x', 'amplitude_y', 'detuning' and 'times'.
 
         Notes
         -----
@@ -381,9 +380,9 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
         if coordinates == CARTESIAN:
             (x_amplitudes, y_amplitudes, detunings, times) = plot_data
             plot_dictionary = {
-                'x_amplitudes': x_amplitudes,
-                'y_amplitudes': y_amplitudes,
-                'z_amplitudes': detunings,
+                'amplitude_x': x_amplitudes,
+                'amplitude_y': y_amplitudes,
+                'detuning': detunings,
                 'times': times
             }
         elif coordinates == CYLINDRICAL:
@@ -393,9 +392,9 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             azimuthal_angles_plot = np.arctan2(y_plot, x_plot)
             amplitudes_plot = np.sqrt(np.abs(x_plot**2 + y_plot**2))
             plot_dictionary = {
-                'amplitudes': amplitudes_plot,
-                'azimuthal_angles': azimuthal_angles_plot,
-                'detunings': detunings,
+                'rabi_rate': amplitudes_plot,
+                'azimuthal_angle': azimuthal_angles_plot,
+                'detuning': detunings,
                 'times': times
             }
         else:
