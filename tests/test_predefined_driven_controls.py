@@ -34,8 +34,6 @@ from qctrlopencontrols.driven_controls import (
     new_walsh_amplitude_modulated_filter_1_control
 )
 
-from qctrlopencontrols.globals import SQUARE
-
 
 def test_new_predefined_driven_control():
     """Test the new_predefined_driven_control function in
@@ -52,10 +50,6 @@ def test_predefined_common_attributes():
     with pytest.raises(ArgumentsValueError):
         _ = new_predefined_driven_control(
             maximum_rabi_rate=-1, shape='PRIMITIVE', rabi_rotation=1, azimuthal_angle=0)
-    # Test invalid shape
-    with pytest.raises(ArgumentsValueError):
-        _ = new_predefined_driven_control(
-            maximum_rabi_rate=1, shape='-', rabi_rotation=1, azimuthal_angle=0)
     # Test zero Rabi rotation
     with pytest.raises(ArgumentsValueError):
         _ = new_predefined_driven_control(
@@ -77,8 +71,7 @@ def test_primitive_control_segments():
     primitive_control_1 = new_primitive_control(
         rabi_rotation=_rabi_rotation,
         maximum_rabi_rate=_rabi_rate,
-        azimuthal_angle=_azimuthal_angle,
-        shape=SQUARE
+        azimuthal_angle=_azimuthal_angle
     )
 
     # Test the new_predefined_driven_control function also
@@ -86,7 +79,6 @@ def test_primitive_control_segments():
         rabi_rotation=_rabi_rotation,
         maximum_rabi_rate=_rabi_rate,
         azimuthal_angle=_azimuthal_angle,
-        shape=SQUARE,
         scheme=PRIMITIVE
     )
 

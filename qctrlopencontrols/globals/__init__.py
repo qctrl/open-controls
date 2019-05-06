@@ -39,12 +39,3 @@ CARTESIAN = 'cartesian'
 CYLINDRICAL = 'cylindrical'
 """Defines Cylindrical coordinate system
 """
-
-#shapes for driven controls
-SQUARE = 'square'
-"""Defines square segments for a DrivenControls object
-"""
-
-GAUSSIAN = 'gaussian'
-"""Defines gaussian segments for a DrivenControls object
-"""

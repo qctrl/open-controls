@@ -19,13 +19,9 @@ driven_controls.conversion
 """
 
 import numpy as np
-from scipy.special import erf
 
 from qctrlopencontrols.globals import CARTESIAN, CYLINDRICAL
 from qctrlopencontrols.exceptions import ArgumentsValueError
-
-from .constants import GAUSSIAN_STANDARD_DEVIATION_SCALE
-
 
 def convert_to_standard_segments(transformed_segments, maximum_rabi_rate=None,
                                  coordinates=CARTESIAN, dimensionless=True):
@@ -101,54 +97,3 @@ def convert_to_standard_segments(transformed_segments, maximum_rabi_rate=None,
         segments_copy[:, 0:2] = segments_copy[:, 0:2] * maximum_rabi_rate
 
     return segments_copy
-
-
-def _gaussian_rabi_rate_scale():
-    """
-    Returns the scale factor for the rabi rate
-
-    Returns
-    -------
-    float
-        Gaussian scale factor.
-    """
-    rho = GAUSSIAN_STANDARD_DEVIATION_SCALE
-    return (
-        rho * (np.exp(rho**2 / 8.) - 1.) /
-        (np.exp(rho**2 / 8.) * np.sqrt(2 * np.pi) * erf(rho / (2 * np.sqrt(2))) - rho))
-
-
-def gaussian_max_rabi_rate_scale_down(maximum_rabi_rate):  # pylint: disable=invalid-name
-    """
-    Takes a maximum rabi rate and scales it down to the rabi rate that would be used in each
-    segments
-
-    Parameters
-    ----------
-    maximum_rabi_rate : float
-        The maximum rabi rate
-
-    Returns
-    -------
-    float
-        Rabi rate for segment
-    """
-    return maximum_rabi_rate / _gaussian_rabi_rate_scale()
-
-
-def gaussian_segment_rabi_rate_scale_up(segment_rabi_rate):  # pylint: disable=invalid-name
-    """
-    Takes a rabi rate of a segment and scales it up to the actual maximum rabi rate if
-    it was gaussian.
-
-    Parameters
-    ----------
-    segment_rabi_rate : float
-        The segment rabi rate
-
-    Returns
-    -------
-    float
-        Maximum rabi rate for segment
-    """
-    return segment_rabi_rate * _gaussian_rabi_rate_scale()
