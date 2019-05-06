@@ -341,12 +341,12 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                                                   file_type=file_type,
                                                   coordinates=coordinates)
 
-    def get_plot_formatted_arrays(self, coordinates=CARTESIAN, dimensionless=True):
+    def get_plot_formatted_arrays(self, coordinates=CARTESIAN, dimensionless_rabi_rate=True):
         """ Gets arrays for plotting a driven control.
 
         Parameters
         ----------
-        dimensionless: boolean
+        dimensionless_rabi_rate: boolean
             If True, calculates the dimensionless values for segments
         coordinates : string
             Indicated the type of segments that need to be transformed can be 'cartesian' or
@@ -372,8 +372,8 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             Raised when an argument is invalid.
         """
 
-        plot_segments = self.get_transformed_segments(coordinates=CARTESIAN,
-                                                      dimensionless=dimensionless)
+        plot_segments = self.get_transformed_segments(
+            coordinates=CARTESIAN, dimensionless_rabi_rate=dimensionless_rabi_rate)
 
         plot_data = get_plot_data_from_segments(plot_segments)
 
@@ -404,7 +404,7 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
 
         return plot_dictionary
 
-    def get_transformed_segments(self, coordinates=CARTESIAN, dimensionless=True):
+    def get_transformed_segments(self, coordinates=CARTESIAN, dimensionless_rabi_rate=True):
         """
         Function that transforms standard dimension-full segments of the
         driven control into dimensionless segments
@@ -414,7 +414,7 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
         coordinates : string
             Indicated the type of segments that need to be transformed can be 'cartesian' or
             'cylindrical' or 'polar'.
-        dimensionless : boolean
+        dimensionless_rabi_rate : boolean
             If True, calculates the dimensionless segments
 
         Returns
@@ -428,10 +428,10 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
         ArgumentsValueError
             Raised when an argument is invalid.
         """
-        dimensionless = bool(dimensionless)
+        dimensionless_rabi_rate = bool(dimensionless_rabi_rate)
         transformed_segments = self.segments.copy()
 
-        if dimensionless:
+        if dimensionless_rabi_rate:
             transformed_segments[:, 0:2] = transformed_segments[:, 0:2] / self.maximum_rabi_rate
 
         if coordinates == CARTESIAN:

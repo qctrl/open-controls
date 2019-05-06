@@ -125,7 +125,7 @@ def test_plot_data():
     z_amplitude = [0., 0., 0., 1.7, 1.7, 2.1, 2.1, 0.]
     times = [0., 0., 2., 2., 5., 5., 5.5, 5.5]
     driven_control = DrivenControl(segments=segments)
-    plot_data = driven_control.get_plot_formatted_arrays(dimensionless=False)
+    plot_data = driven_control.get_plot_formatted_arrays(dimensionless_rabi_rate=False)
 
     assert np.allclose(plot_data['times'], times)
     assert np.allclose(plot_data['amplitude_x'], x_amplitude)
@@ -160,21 +160,21 @@ def test_dimensionless_segments():
     dimensionless_cylinder[:, 0] = dimensionless_cylinder[:, 0] / _max_rabi
 
     transformed_euclidean = driven_control.get_transformed_segments(coordinates=CARTESIAN,
-                                                                    dimensionless=False)
+                                                                    dimensionless_rabi_rate=False)
 
     assert np.allclose(segments, transformed_euclidean)
 
     transformed_euclidean = driven_control.get_transformed_segments(coordinates=CARTESIAN,
-                                                                    dimensionless=True)
+                                                                    dimensionless_rabi_rate=True)
 
     assert np.allclose(dimensionless_euclid, transformed_euclidean)
 
     transformed_cylindrical = driven_control.get_transformed_segments(coordinates=CYLINDRICAL,
-                                                                      dimensionless=False)
+                                                                      dimensionless_rabi_rate=False)
 
     assert np.allclose(amplitude_angle_segments, transformed_cylindrical)
 
     transformed_cylindrical = driven_control.get_transformed_segments(coordinates=CYLINDRICAL,
-                                                                      dimensionless=True)
+                                                                      dimensionless_rabi_rate=True)
 
     assert np.allclose(amplitude_angle_segments, transformed_cylindrical)

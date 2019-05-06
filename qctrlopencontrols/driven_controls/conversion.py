@@ -24,7 +24,7 @@ from qctrlopencontrols.globals import CARTESIAN, CYLINDRICAL
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
 def convert_to_standard_segments(transformed_segments, maximum_rabi_rate=None,
-                                 coordinates=CARTESIAN, dimensionless=True):
+                                 coordinates=CARTESIAN, dimensionless_rabi_rate=True):
     """Converts the dimensionless segments of any type into dimension-full Cartesian segments
 
     Parameters
@@ -40,7 +40,7 @@ def convert_to_standard_segments(transformed_segments, maximum_rabi_rate=None,
         [amplitude_x, amplitude_y, amplitude_z,segment_duration] format
         if 'cylindrical' - the segments should be in
         [on_resonance_amplitude, azimuthal_angle, detuning, segment_duration] format
-    dimensionless : boolean
+    dimensionless_rabi_rate : boolean
         if True, identifies if the transformed_segments are dimensionless
 
     Returns
@@ -62,14 +62,14 @@ def convert_to_standard_segments(transformed_segments, maximum_rabi_rate=None,
     transformed_segments = np.array(transformed_segments, dtype=np.float)
     segments_copy = np.array(transformed_segments, dtype=np.float)
     number_of_segments = len(segments_copy)
-    dimensionless = bool(dimensionless)
+    dimensionless_rabi_rate = bool(dimensionless_rabi_rate)
 
     # Raise error if dimensionless is True and maximum_rabi_rate is not a float
-    if dimensionless:
+    if dimensionless_rabi_rate:
         if maximum_rabi_rate is None:
             raise ArgumentsValueError('Maximum rate rate needs to be a valid float',
                                       {'maximum_rabi_rate': maximum_rabi_rate,
-                                       'dimensionless': dimensionless},
+                                       'dimensionless_rabi_rate': dimensionless_rabi_rate},
                                       extras={'segments': transformed_segments,
                                               'number_of_segments': number_of_segments,
                                               'coordinates': coordinates})
@@ -93,7 +93,7 @@ def convert_to_standard_segments(transformed_segments, maximum_rabi_rate=None,
         segments_copy[:, 1] = radius * sin_theta
 
     # if dimensionless, make the segments dimension-full
-    if dimensionless:
+    if dimensionless_rabi_rate:
         segments_copy[:, 0:2] = segments_copy[:, 0:2] * maximum_rabi_rate
 
     return segments_copy
