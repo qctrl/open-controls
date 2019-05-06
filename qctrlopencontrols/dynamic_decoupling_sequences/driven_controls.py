@@ -22,7 +22,7 @@ import numpy as np
 
 from qctrlopencontrols.exceptions import ArgumentsValueError
 from qctrlopencontrols.driven_controls import (
-    UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE, DrivenControls)
+    UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE, DrivenControl)
 
 
 def _check_valid_operation(rabi_rotations, detuning_rotations):
@@ -260,7 +260,7 @@ def convert_dds_to_driven_controls(
         # the original sequence should be a free evolution
         control_segments = np.reshape(
             np.array([0., 0., 0., sequence_duration]), (1, 4))
-        return DrivenControls(segments=control_segments, **kwargs)
+        return DrivenControl(segments=control_segments, **kwargs)
 
     control_segments = np.zeros((operations.shape[1]*2, 4))
     pulse_segment_idx = 0
@@ -287,7 +287,7 @@ def convert_dds_to_driven_controls(
     # almost there; let us check if there is any segments with durations = 0
     segment_durations = control_segments[:, 3]
     control_segments = control_segments[segment_durations != 0]
-    return DrivenControls(segments=control_segments, **kwargs)
+    return DrivenControl(segments=control_segments, **kwargs)
 
 
 if __name__ == '__main__':

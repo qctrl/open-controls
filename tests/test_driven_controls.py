@@ -22,7 +22,7 @@ import numpy as np
 import pytest
 
 from qctrlopencontrols.exceptions import ArgumentsValueError
-from qctrlopencontrols import DrivenControls
+from qctrlopencontrols import DrivenControl
 from qctrlopencontrols.globals import CARTESIAN, CYLINDRICAL
 
 
@@ -47,7 +47,7 @@ def test_driven_controls():
 
     _name = 'driven_control'
 
-    driven_control = DrivenControls(
+    driven_control = DrivenControl(
         segments=_segments, name=_name)
 
     assert np.allclose(driven_control.segments, _segments)
@@ -59,10 +59,10 @@ def test_driven_controls():
 
     with pytest.raises(ArgumentsValueError):
 
-        _ = DrivenControls(segments=[[1e12, 0., 3, 1.]])
-        _ = DrivenControls(segments=[[3., 0., 1e12, 1.]])
-        _ = DrivenControls(segments=[[3., 0., 1e12, -1.]])
-        _ = DrivenControls(segments=[[0., 0., 0., 0.]])
+        _ = DrivenControl(segments=[[1e12, 0., 3, 1.]])
+        _ = DrivenControl(segments=[[3., 0., 1e12, 1.]])
+        _ = DrivenControl(segments=[[3., 0., 1e12, -1.]])
+        _ = DrivenControl(segments=[[0., 0., 0., 0.]])
 
 
 def test_control_export():
@@ -76,7 +76,7 @@ def test_control_export():
                  [0., 0., np.pi, 1.]]
     _name = 'driven_controls'
 
-    driven_control = DrivenControls(
+    driven_control = DrivenControl(
         segments=_segments, name=_name)
 
     _filename = 'driven_control_qctrl_cylindrical.csv'
@@ -124,7 +124,7 @@ def test_plot_data():
     y_amplitude = [0., 0., 0., 1.5, 1.5, 0., 0., 0.]
     z_amplitude = [0., 0., 0., 1.7, 1.7, 2.1, 2.1, 0.]
     times = [0., 0., 2., 2., 5., 5., 5.5, 5.5]
-    driven_control = DrivenControls(segments=segments)
+    driven_control = DrivenControl(segments=segments)
     plot_data = driven_control.get_plot_formatted_arrays(dimensionless=False)
 
     assert np.allclose(plot_data['times'], times)
@@ -148,7 +148,7 @@ def test_dimensionless_segments():
     amplitude_angle_segments = np.stack((_on_resonance_amplitudes, _azimuthal_angles,
                                          _detunings, _durations), axis=1)
 
-    driven_control = DrivenControls(segments=segments)
+    driven_control = DrivenControl(segments=segments)
     _max_rabi = driven_control.maximum_rabi_rate
 
     dimensionless_euclid = segments.copy()

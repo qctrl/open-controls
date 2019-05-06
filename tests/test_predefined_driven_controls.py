@@ -25,7 +25,7 @@ from qctrlopencontrols.exceptions import ArgumentsValueError
 from qctrlopencontrols.driven_controls import (
     new_predefined_driven_control,
     new_primitive_control, new_wimperis_1_control, new_solovay_kitaev_1_control,
-    PRIMITIVE, WIMPERIS_1, SOLOVAY_KITAEV_1, COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE,
+    PRIMITIVE, BB1, SK1, CORPSE,
     new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control,
     new_corpse_in_scrofulous_control,
     new_compensating_for_off_resonance_with_a_pulse_sequence_control,
@@ -111,7 +111,7 @@ def test_wimperis_1_control():
         rabi_rotation=_rabi_rotation,
         azimuthal_angle=_azimuthal_angle,
         maximum_rabi_rate=1,
-        scheme=WIMPERIS_1
+        scheme=BB1
     )
 
     assert np.allclose(wimperis_control_1.segments, _segments)
@@ -139,7 +139,7 @@ def test_solovay_kitaev_1_control():
     )
 
     sk1_control_2 = new_predefined_driven_control(
-        scheme=SOLOVAY_KITAEV_1,
+        scheme=SK1,
         rabi_rotation=_rabi_rotation,
         azimuthal_angle=_azimuthal_angle,
         maximum_rabi_rate=1
@@ -258,7 +258,7 @@ def test_corpse_control():
     )
 
     corpse_control_2 = new_predefined_driven_control(
-        scheme=COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE,
+        scheme=CORPSE,
         rabi_rotation=_rabi_rotation,
         azimuthal_angle=_azimuthal_angle,
         maximum_rabi_rate=1

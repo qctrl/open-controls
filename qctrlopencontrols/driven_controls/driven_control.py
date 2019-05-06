@@ -79,7 +79,7 @@ def get_plot_data_from_segments(segments):
 
 
 
-class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
+class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
     """
     Creates a driven control. A driven is a set of segments made up of amplitude vectors
     and corresponding durations.
@@ -136,7 +136,7 @@ class DrivenControls(QctrlObject):   #pylint: disable=too-few-public-methods
                                       {'segments': self.segments},
                                       extras={'segment_durations': self.segment_durations})
 
-        super(DrivenControls, self).__init__(
+        super(DrivenControl, self).__init__(
             base_attributes=['segments', 'shape', 'scheme', 'name'])
 
         self.angles = self.amplitudes * self.segment_durations

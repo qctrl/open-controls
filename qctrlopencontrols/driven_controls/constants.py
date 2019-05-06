@@ -44,38 +44,35 @@ PRIMITIVE = 'primitive'
 """Primitive control
 """
 
-WIMPERIS_1 = 'wimperis_1'
+BB1 = 'BB1'
 """First-order Wimperis control, also known as BB1
 """
 
-SOLOVAY_KITAEV_1 = 'solovay_kitaev_1'
+SK1 = 'SK1'
 """First-order Solovay-Kitaev control
 """
 
-WALSH_AMPLITUDE_MODULATED_FILTER_1 = 'walsh_amplitude_modulated_filter_1'
+WAMF1 = 'WAMF1'
 """First-order Walsh sequence control
 """
 
-COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE = \
-    'compensating_for_off_resonance_with_a_pulse_sequence'
-"""Dynamically corrected control - commonly abbreviated as COPRSE
+CORPSE = 'CORPSE'
+"""Dynamically corrected control - Compensating for Off-Resonance with a Pulse Sequence (COPRSE)
 """
 
-COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE_WITH_WIMPERIS = \
-    'compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis'
-"""Concatenated dynamically corrected control - Wimperis inside COPRSE
+CORPSE_IN_BB1 = 'CORPSE in BB1'
+"""Concatenated dynamically corrected control - BB1 inside COPRSE
 """
 
-COMPENSATING_FOR_OFF_RESONANCE_WITH_A_PULSE_SEQUENCE_WITH_SOLOVAY_KITAEV = \
-    'compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev'
-"""Concatenated dynamically corrected control - Solovay-Kitaev inside COPRSE
+CORPSE_IN_SK1 = 'CORPSE in SK1'
+"""Concatenated dynamically corrected control - First order Solovay-Kitaev inside COPRSE
 """
 
-SHORT_COMPOSITE_ROTATION_FOR_UNDOING_LENGTH_OVER_AND_UNDER_SHOOT = \
-    'short_composite_rotation_for_undoing_length_over_and_under_shoot'
-"""Dynamically corrected control - commonly abbreviated as SCROFULOUS
+SCROFULOUS = 'SCROFULOUS'
+"""Dynamically corrected control -
+   Short Composite Rotation For Undoing Length Over and Under Shoot (SCROFULOUS)
 """
 
-CORPSE_IN_SCROFULOUS_PULSE = 'corpse_in_scrofulous_pulse'
+CORPSE_IN_SCROFULOUS = 'CORPSE in SCROFULOUS'
 """Concatenated dynamically corrected control - CORPSE inside SCROFULOUS
 """
