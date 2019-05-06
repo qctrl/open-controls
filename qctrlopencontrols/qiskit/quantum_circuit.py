@@ -83,7 +83,7 @@ def _get_circuit_gate_list(dynamic_decoupling_sequence,
         if offset_distance < 0:
             raise ArgumentsValueError("Offsets cannot be placed properly",
                                       {'sequence_operations': operations})
-        elif offset_distance == 0:
+        if offset_distance == 0:
             circuit_operations.append('offset')
             if np.isclose(np.sum(operations[:, operation_idx]), 0.0):
                 time_covered = offsets[operation_idx]
@@ -244,8 +244,7 @@ def convert_dds_to_quantum_circuit(
                                       {'target_qubits': target_qubits,
                                        'size(quantum_registers)': len(quantum_registers)},
                                       extras={'max(target_qubits)': max(target_qubits)})
-        else:
-            quantum_registers = quantum_registers
+        quantum_registers = quantum_registers
     else:
         quantum_registers = QuantumRegister(max(target_qubits)+1)
 
