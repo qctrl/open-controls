@@ -145,8 +145,8 @@ def test_plot_data():
         durations=_durations
     )
 
-    x_amplitude = [0., 0.5, 0.5, 0., 0., 0., 0., 0.]
-    y_amplitude = [0., 0., 0., 1., 1., -0.5, -0.5, 0.]
+    x_amplitude = [0., np.pi, np.pi, 0., 0., 0., 0., 0.]
+    y_amplitude = [0., 0., 0., 2*np.pi, 2*np.pi, -np.pi, -np.pi, 0.]
     z_amplitude = [0., 0., 0., 1., 1., 0., 0., 0.]
     times = [0., 0., 1., 1., 2.25, 2.25, 3.75, 3.75]
 
@@ -155,9 +155,9 @@ def test_plot_data():
     )
 
     assert np.allclose(plot_data['times'], times)
-    assert np.allclose(plot_data['amplitude_x'], x_amplitude)
-    assert np.allclose(plot_data['amplitude_y'], y_amplitude)
-    assert np.allclose(plot_data['detuning'], z_amplitude)
+    assert np.allclose(plot_data['amplitudes_x'], x_amplitude)
+    assert np.allclose(plot_data['amplitudes_y'], y_amplitude)
+    assert np.allclose(plot_data['detunings'], z_amplitude)
 
 @pytest.mark.skip('save for later')
 def test_dimensionless_segments():

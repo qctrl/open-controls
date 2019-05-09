@@ -60,13 +60,14 @@ def test_primitive_control_segments():
     """Test the segments of the predefined primitive driven control
     """
     _rabi_rate = 1
-    _rabi_rotation = np.pi
+    _rabi_rotation = 1.5
     _azimuthal_angle = np.pi/2
-    _segments = [[
-        _rabi_rotation * np.cos(_azimuthal_angle),
-        _rabi_rotation * np.sin(_azimuthal_angle),
+    _segments = [
+        np.cos(_azimuthal_angle) * _rabi_rotation,
+        np.sin(_azimuthal_angle) * _rabi_rotation,
         0.,
-        _rabi_rotation], ]
+        _rabi_rotation
+    ]
 
     primitive_control_1 = new_primitive_control(
         rabi_rotation=_rabi_rotation,
@@ -83,12 +84,14 @@ def test_primitive_control_segments():
     )
 
     for control in [primitive_control_1, primitive_control_2]:
-        segments = np.vstack((
-            control.amplitude_x, control.amplitude_y,
-            control.detunings, control.durations
-        ))
+        segments = [
+            control.amplitude_x[0],
+            control.amplitude_y[0],
+            control.detunings[0],
+            control.durations[0]
+        ]
         assert np.allclose(_segments, segments)
-        assert np.allclose(_rabi_rate, control.maximum_rabi_rate)
+        assert np.allclose(_rabi_rotation, control.maximum_rabi_rate)
 
 
 def test_wimperis_1_control():
@@ -99,13 +102,13 @@ def test_wimperis_1_control():
 
     phi_p = np.arccos(-_rabi_rotation / (4 * np.pi))
 
-    _segments = [
+    _segments = np.array([
         [np.cos(_azimuthal_angle), np.sin(_azimuthal_angle), 0., _rabi_rotation],
         [np.cos(phi_p + _azimuthal_angle), np.sin(phi_p + _azimuthal_angle), 0., np.pi],
         [np.cos(3. * phi_p + _azimuthal_angle),
          np.sin(3. * phi_p + _azimuthal_angle), 0., 2 * np.pi],
         [np.cos(phi_p + _azimuthal_angle), np.sin(phi_p + _azimuthal_angle), 0., np.pi]
-    ]
+    ])
 
     wimperis_control_1 = new_wimperis_1_control(
         rabi_rotation=_rabi_rotation,
@@ -119,8 +122,12 @@ def test_wimperis_1_control():
         scheme=BB1
     )
 
-    assert np.allclose(wimperis_control_1.segments, _segments)
-    assert np.allclose(wimperis_control_2.segments, _segments)
+    for control in [wimperis_control_1, wimperis_control_2]:
+        segments = np.vstack((
+            control.amplitude_x, control.amplitude_y, control.detunings, control.durations
+        )).T
+    assert np.allclose(segments, _segments)
+    assert np.allclose(segments, _segments)
 
 
 def test_solovay_kitaev_1_control():

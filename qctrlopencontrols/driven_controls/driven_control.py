@@ -252,7 +252,7 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             X-Amplitude of each segment
         """
 
-        return (self.rabi_rates * np.cos(self.azimuthal_angles))/self.maximum_rabi_rate
+        return (self.rabi_rates * np.cos(self.azimuthal_angles))
 
     @property
     def amplitude_y(self):
@@ -264,7 +264,7 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             Y-Amplitude of each segment
         """
 
-        return (self.rabi_rates * np.sin(self.azimuthal_angles))/self.maximum_rabi_rate
+        return (self.rabi_rates * np.sin(self.azimuthal_angles))
 
     @property
     def angles(self):
@@ -546,9 +546,9 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                            self.detunings, self.durations)).T
             )
             plot_dictionary = {
-                'amplitude_x': x_amplitudes,
-                'amplitude_y': y_amplitudes,
-                'detuning': detunings,
+                'amplitudes_x': x_amplitudes,
+                'amplitudes_y': y_amplitudes,
+                'detunings': detunings,
                 'times': times
             }
 
@@ -562,9 +562,9 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             azimuthal_angles_plot = np.arctan2(y_plot, x_plot)
             amplitudes_plot = np.sqrt(np.abs(x_plot**2 + y_plot**2))
             plot_dictionary = {
-                'rabi_rate': amplitudes_plot,
-                'azimuthal_angle': azimuthal_angles_plot,
-                'detuning': detunings,
+                'rabi_rates': amplitudes_plot,
+                'azimuthal_angles': azimuthal_angles_plot,
+                'detunings': detunings,
                 'times': times
             }
         else:
