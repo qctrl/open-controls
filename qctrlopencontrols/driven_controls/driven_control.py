@@ -346,6 +346,18 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
 
         return np.amin(self.durations)
 
+    @property
+    def duration(self):
+        """Returns the total duration of the control
+
+        Returns
+        -------
+        float
+            Total duration of the control
+        """
+
+        return np.sum(self.durations)
+
     def _qctrl_expanded_export_content(self, file_type, coordinates):
 
         """Private method to prepare the content to be saved in Q-CTRL expanded format
@@ -579,35 +591,37 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
         """
         driven_control_string = list()
 
-        # Specify the number of decimals for pretty string representation
-        decimals_format_str = '{:+.3f}'
-
         if self.name is not None:
             driven_control_string.append('{}:'.format(self.name))
 
-        # Format amplitudes
-        for axis in 'XYZ':
-            pretty_amplitudes_str = ', '.join(
-                [decimals_format_str.format(amplitude/np.pi).rstrip('0').rstrip('.')
-                 for amplitude in [self.amplitude_x, self.amplitude_y, self.detunings]]
-            )
-            driven_control_string.append(
-                '{} Amplitudes = [{}] x pi'.format(axis, pretty_amplitudes_str)
-            )
-        # Format durations
-        total_duration = np.sum(self.durations)
-        pretty_durations_str = ','.join(
-            [decimals_format_str.format(duration/total_duration).rstrip('0').rstrip('.')
-             for duration in self.durations]
-        )
-        driven_control_string.append(
-            'Durations = [{}] x {}s'.format(pretty_durations_str, str(total_duration))
-        )
+        pretty_rabi_rates = [str(rabi_rate/self.maximum_rabi_rate)
+                             if self.maximum_rabi_rate != 0 else '0'
+                             for rabi_rate in list(self.rabi_rates)]
+        pretty_rabi_rates = ','.join(pretty_rabi_rates)
+        pretty_azimuthal_angles = [str(azimuthal_angle/np.pi)
+                                   for azimuthal_angle in self.azimuthal_angles]
+        pretty_azimuthal_angles = ','.join(pretty_azimuthal_angles)
+        pretty_detuning = [str(detuning/self.maximum_detuning)
+                           if self.maximum_detuning != 0 else '0'
+                           for detuning in list(self.detunings)]
+        pretty_detuning = ','.join(pretty_detuning)
 
+        pretty_durations = [str(duration/self.duration) for duration in self.durations]
+        pretty_durations = ','.join(pretty_durations)
+
+        driven_control_string.append(
+            'Rabi Rates = [{}] x {}'.format(pretty_rabi_rates,
+                                             self.maximum_rabi_rate))
+        driven_control_string.append(
+            'Azimuthal Angles = [{}] x pi'.format(pretty_azimuthal_angles))
+        driven_control_string.append(
+            'Detunings = [{}] x {}'.format(pretty_detuning,
+                                            self.maximum_detuning))
+        driven_control_string.append('Durations = [{}] x {}'.format(pretty_durations,
+                                                                     self.duration))
         driven_control_string = '\n'.join(driven_control_string)
 
         return driven_control_string
-
 
 
 if __name__ == '__main__':
