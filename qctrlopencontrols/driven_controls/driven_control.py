@@ -252,7 +252,7 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             X-Amplitude of each segment
         """
 
-        return (self.rabi_rates * np.cos(self.azimuthal_angles))
+        return self.rabi_rates * np.cos(self.azimuthal_angles)
 
     @property
     def amplitude_y(self):
@@ -264,7 +264,7 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             Y-Amplitude of each segment
         """
 
-        return (self.rabi_rates * np.sin(self.azimuthal_angles))
+        return self.rabi_rates * np.sin(self.azimuthal_angles)
 
     @property
     def angles(self):

@@ -63,8 +63,8 @@ def test_primitive_control_segments():
     _rabi_rotation = 1.5
     _azimuthal_angle = np.pi/2
     _segments = [
-        np.cos(_azimuthal_angle) * _rabi_rotation,
-        np.sin(_azimuthal_angle) * _rabi_rotation,
+        np.cos(_azimuthal_angle),
+        np.sin(_azimuthal_angle),
         0.,
         _rabi_rotation
     ]
@@ -91,7 +91,7 @@ def test_primitive_control_segments():
             control.durations[0]
         ]
         assert np.allclose(_segments, segments)
-        assert np.allclose(_rabi_rotation, control.maximum_rabi_rate)
+        assert np.allclose(_rabi_rate, control.maximum_rabi_rate)
 
 
 def test_wimperis_1_control():
@@ -99,36 +99,38 @@ def test_wimperis_1_control():
     """
     _rabi_rotation = np.pi
     _azimuthal_angle = np.pi/2
+    _maximum_rabi_rate = 1
 
     phi_p = np.arccos(-_rabi_rotation / (4 * np.pi))
 
     _segments = np.array([
-        [np.cos(_azimuthal_angle), np.sin(_azimuthal_angle), 0., _rabi_rotation],
-        [np.cos(phi_p + _azimuthal_angle), np.sin(phi_p + _azimuthal_angle), 0., np.pi],
-        [np.cos(3. * phi_p + _azimuthal_angle),
-         np.sin(3. * phi_p + _azimuthal_angle), 0., 2 * np.pi],
-        [np.cos(phi_p + _azimuthal_angle), np.sin(phi_p + _azimuthal_angle), 0., np.pi]
+        [np.cos(_azimuthal_angle), np.sin(_azimuthal_angle)],
+        [np.cos(phi_p + _azimuthal_angle), np.sin(phi_p + _azimuthal_angle)],
+        [np.cos(3. * phi_p + _azimuthal_angle), np.sin(3. * phi_p + _azimuthal_angle)],
+        [np.cos(phi_p + _azimuthal_angle), np.sin(phi_p + _azimuthal_angle)]
     ])
 
     wimperis_control_1 = new_wimperis_1_control(
         rabi_rotation=_rabi_rotation,
         azimuthal_angle=_azimuthal_angle,
-        maximum_rabi_rate=1
+        maximum_rabi_rate=_maximum_rabi_rate
     )
     wimperis_control_2 = new_predefined_driven_control(
         rabi_rotation=_rabi_rotation,
         azimuthal_angle=_azimuthal_angle,
-        maximum_rabi_rate=1,
+        maximum_rabi_rate=_maximum_rabi_rate,
         scheme=BB1
     )
 
+    durations = [np.pi, np.pi, np.pi * 2, np.pi]
+
     for control in [wimperis_control_1, wimperis_control_2]:
         segments = np.vstack((
-            control.amplitude_x, control.amplitude_y, control.detunings, control.durations
+            control.amplitude_x, control.amplitude_y
         )).T
-    assert np.allclose(segments, _segments)
-    assert np.allclose(segments, _segments)
-
+        assert np.allclose(segments, _segments)
+        assert np.allclose(control.durations, durations)
+        assert np.allclose(control.detunings, 0)
 
 def test_solovay_kitaev_1_control():
     """Test the segments of the Solovay-Kitaev 1 (SK1) driven control
@@ -139,9 +141,12 @@ def test_solovay_kitaev_1_control():
     phi_p = np.arccos(-_rabi_rotation / (4 * np.pi))
 
     _segments = [
-        [np.cos(_azimuthal_angle), np.sin(_azimuthal_angle), 0., _rabi_rotation],
-        [np.cos(-phi_p + _azimuthal_angle), np.sin(-phi_p + _azimuthal_angle), 0., 2 * np.pi],
-        [np.cos(phi_p + _azimuthal_angle), np.sin(phi_p + _azimuthal_angle), 0., 2 * np.pi]
+        [np.cos(_azimuthal_angle),
+         np.sin(_azimuthal_angle)],
+        [np.cos(-phi_p + _azimuthal_angle),
+         np.sin(-phi_p + _azimuthal_angle)],
+        [np.cos(phi_p + _azimuthal_angle),
+         np.sin(phi_p + _azimuthal_angle)]
     ]
 
     sk1_control_1 = new_solovay_kitaev_1_control(
@@ -157,8 +162,15 @@ def test_solovay_kitaev_1_control():
         maximum_rabi_rate=1
     )
 
-    assert np.allclose(sk1_control_1.segments, _segments)
-    assert np.allclose(sk1_control_2.segments, _segments)
+    durations = [np.pi, 2 * np.pi, 2 * np.pi]
+
+    for control in [sk1_control_1, sk1_control_2]:
+        segments = np.vstack((
+            control.amplitude_x, control.amplitude_y
+        )).T
+        assert np.allclose(segments, _segments)
+        assert np.allclose(control.durations, durations)
+        assert np.allclose(control.detunings, 0)
 
 def test_scofulous_control():
     """Test the segments of the SCROFULOUS driven control.
@@ -173,9 +185,14 @@ def test_scofulous_control():
         )
 
     # Construct SCROFULOUS controls for target rotations pi/4, pi/2 and pi
-    pi_segments = new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(
+    scrofulous_pi = new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(
         rabi_rotation=np.pi, azimuthal_angle=0.5, maximum_rabi_rate=2*np.pi
-    ).segments
+    )
+
+    pi_segments = np.vstack((
+        scrofulous_pi.amplitude_x, scrofulous_pi.amplitude_y, scrofulous_pi.detunings,
+        scrofulous_pi.durations
+    )).T
 
     _pi_segments = np.array([
         [0.14826172, 6.28143583, 0., 0.5],
@@ -184,9 +201,14 @@ def test_scofulous_control():
 
     assert np.allclose(pi_segments, _pi_segments)
 
-    pi_on_2_segments = new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(
+    scrofulous_pi2 = new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(
         rabi_rotation=np.pi/2, azimuthal_angle=-0.5, maximum_rabi_rate=2*np.pi
-    ).segments
+    )
+
+    pi_on_2_segments = np.vstack((
+        scrofulous_pi2.amplitude_x, scrofulous_pi2.amplitude_y, scrofulous_pi2.detunings,
+        scrofulous_pi2.durations
+    )).T
 
     _pi_on_2_segments = np.array([
         [5.25211762, 3.44872124, 0., 0.32],
@@ -195,9 +217,14 @@ def test_scofulous_control():
 
     assert np.allclose(pi_on_2_segments, _pi_on_2_segments)
 
-    pi_on_4_segments = new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(
+    scrofulous_pi4 = new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(
         rabi_rotation=np.pi/4, azimuthal_angle=0, maximum_rabi_rate=2*np.pi
-    ).segments
+    )
+
+    pi_on_4_segments = np.vstack((
+        scrofulous_pi4.amplitude_x, scrofulous_pi4.amplitude_y, scrofulous_pi4.detunings,
+        scrofulous_pi4.durations
+    )).T
 
     _pi_on_4_segments = np.array([
         [1.78286387, 6.0249327, 0., 0.26861111],
@@ -212,9 +239,14 @@ def test_corpse_in_scrofulous_control():
        defined numerically as well.
     """
     # Test pi and pi/2 rotations
-    pi_segments = new_corpse_in_scrofulous_control(
+    cs_pi = new_corpse_in_scrofulous_control(
         rabi_rotation=np.pi, azimuthal_angle=0.5, maximum_rabi_rate=2*np.pi
-    ).segments
+    )
+
+    pi_segments = np.vstack((
+        cs_pi.amplitude_x, cs_pi.amplitude_y, cs_pi.detunings,
+        cs_pi.durations
+    )).T
 
     _pi_segments = np.array([
         [0.14826172, 6.28143583, 0., 1.16666667],
@@ -229,9 +261,14 @@ def test_corpse_in_scrofulous_control():
 
     assert np.allclose(pi_segments, _pi_segments)
 
-    pi_on_2_segments = new_corpse_in_scrofulous_control(
+    cs_pi_on_2 = new_corpse_in_scrofulous_control(
         rabi_rotation=np.pi/2, azimuthal_angle=0.25, maximum_rabi_rate=np.pi
-    ).segments
+    )
+
+    pi_on_2_segments = np.vstack((
+        cs_pi_on_2.amplitude_x, cs_pi_on_2.amplitude_y, cs_pi_on_2.detunings,
+        cs_pi_on_2.durations
+    )).T
 
     _pi_on_2_segments = np.array([
         [0.74606697, 3.05171894, 0., 2.18127065],
@@ -276,15 +313,24 @@ def test_corpse_control():
         maximum_rabi_rate=1
     )
 
-    assert np.allclose(corpse_control_1.segments, _segments)
-    assert np.allclose(corpse_control_2.segments, _segments)
+    for control in [corpse_control_1, corpse_control_2]:
+        segments = np.vstack((
+            control.amplitude_x, control.amplitude_y, control.detunings, control.durations
+        )).T
+        assert np.allclose(segments, _segments)
+
 
 def test_cinbb_control():
     """Test the segments of the CinBB (BB1 made up of CORPSEs) driven control
     """
-    segments = new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control(
+    cinbb = new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control(
         rabi_rotation=np.pi/3, azimuthal_angle=0.25, maximum_rabi_rate=np.pi
-    ).segments
+    )
+
+    segments = np.vstack((
+        cinbb.amplitude_x, cinbb.amplitude_y, cinbb.detunings,
+        cinbb.durations
+    )).T
 
     _segments = np.array([
         [3.04392815, 0.77724246, 0., 2.08623604],
@@ -296,9 +342,14 @@ def test_cinbb_control():
 
     assert np.allclose(segments, _segments)
 
-    segments = new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control(
+    cinbb = new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control(
         rabi_rotation=np.pi/5, azimuthal_angle=-0.25, maximum_rabi_rate=np.pi
-    ).segments
+    )
+
+    segments = np.vstack((
+        cinbb.amplitude_x, cinbb.amplitude_y, cinbb.detunings,
+        cinbb.durations
+    )).T
 
     _segments = np.array([
         [3.04392815, -0.77724246, 0., 2.0506206],
@@ -314,9 +365,14 @@ def test_cinbb_control():
 def test_cinsk1_control():
     """Test the segments of the CinSK1 (SK1 made up of CORPSEs) driven control
     """
-    segments = new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control(
+    cinsk = new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control(
         rabi_rotation=np.pi/2, azimuthal_angle=0.5, maximum_rabi_rate=2*np.pi
-    ).segments
+    )
+
+    segments = np.vstack((
+        cinsk.amplitude_x, cinsk.amplitude_y, cinsk.detunings,
+        cinsk.durations
+    )).T
 
     _segments = np.array([
         [5.51401386, 3.0123195, 0., 1.06748664],
@@ -327,9 +383,14 @@ def test_cinsk1_control():
 
     assert np.allclose(segments, _segments)
 
-    segments = new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control(
+    cinsk = new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control(
         rabi_rotation=2*np.pi, azimuthal_angle=-0.5, maximum_rabi_rate=2*np.pi
-    ).segments
+    )
+
+    segments = np.vstack((
+        cinsk.amplitude_x, cinsk.amplitude_y, cinsk.detunings,
+        cinsk.durations
+    )).T
 
     _segments = np.array([
         [5.51401386, -3.0123195, 0., 1.5],
@@ -350,40 +411,54 @@ def test_walsh_control():
             rabi_rotation=0.3
         )
     # test pi rotation
-    pi_segments = new_walsh_amplitude_modulated_filter_1_control(
+    walsh_pi = new_walsh_amplitude_modulated_filter_1_control(
         rabi_rotation=np.pi, azimuthal_angle=-0.35, maximum_rabi_rate=2*np.pi
-    ).segments
+    )
+
+    pi_segments = np.vstack((
+        walsh_pi.amplitude_x, walsh_pi.amplitude_y, walsh_pi.detunings,
+        walsh_pi.durations
+    )).T
 
     _pi_segments = np.array([
         [5.90225283, -2.15449047, 0., 0.5],
-        [2.95112641, -1.07724523, 0., 0.5],
-        [2.95112641, -1.07724523, 0., 0.5],
+        [5.90225283, -2.15449047, 0., 0.25],
+        [5.90225283, -2.15449047, 0., 0.25],
         [5.90225283, -2.15449047, 0., 0.5]])
 
     assert np.allclose(pi_segments, _pi_segments)
 
     # test pi/2 rotation
-    pi_on_2_segments = new_walsh_amplitude_modulated_filter_1_control(
+    walsh_pi_on_2 = new_walsh_amplitude_modulated_filter_1_control(
         rabi_rotation=np.pi/2, azimuthal_angle=0.57, maximum_rabi_rate=2*np.pi
-    ).segments
+    )
+
+    pi_on_2_segments = np.vstack((
+        walsh_pi_on_2.amplitude_x, walsh_pi_on_2.amplitude_y, walsh_pi_on_2.detunings,
+        walsh_pi_on_2.durations
+    )).T
 
     _pi_on_2_segments = np.array([
         [5.28981984, 3.39060816, 0., 0.39458478],
-        [3.08895592, 1.9799236, 0., 0.39458478],
-        [3.08895592, 1.9799236, 0., 0.39458478],
+        [5.28981984, 3.39060816, 0., 0.23041522],
+        [5.28981984, 3.39060816, 0., 0.23041522],
         [5.28981984, 3.39060816, 0., 0.39458478]])
 
     assert np.allclose(pi_on_2_segments, _pi_on_2_segments)
 
     # test pi/4 rotation
-    pi_on_4_segments = new_walsh_amplitude_modulated_filter_1_control(
+    walsh_pi_on_4 = new_walsh_amplitude_modulated_filter_1_control(
         rabi_rotation=np.pi/4, azimuthal_angle=-0.273, maximum_rabi_rate=2*np.pi
-    ).segments
+    )
+    pi_on_4_segments = np.vstack((
+        walsh_pi_on_4.amplitude_x, walsh_pi_on_4.amplitude_y, walsh_pi_on_4.detunings,
+        walsh_pi_on_4.durations
+    )).T
 
     _pi_on_4_segments = np.array([
         [6.05049612, -1.69408213, 0., 0.3265702],
-        [4.37116538, -1.22388528, 0., 0.3265702],
-        [4.37116538, -1.22388528, 0., 0.3265702],
+        [6.05049612, -1.69408213, 0., 0.2359298],
+        [6.05049612, -1.69408213, 0., 0.2359298],
         [6.05049612, -1.69408213, 0., 0.3265702]])
 
     assert np.allclose(pi_on_4_segments, _pi_on_4_segments)

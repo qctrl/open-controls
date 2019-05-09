@@ -23,11 +23,9 @@ import pytest
 
 from qctrlopencontrols.exceptions import ArgumentsValueError
 from qctrlopencontrols import DrivenControl
-from qctrlopencontrols.globals import CARTESIAN, CYLINDRICAL
 
 from qctrlopencontrols.driven_controls.constants import (
-    UPPER_BOUND_SEGMENTS, UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE,
-    UPPER_BOUND_DURATION, LOWER_BOUND_DURATION)
+    UPPER_BOUND_SEGMENTS, UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE)
 
 
 def _remove_file(filename):
@@ -158,51 +156,3 @@ def test_plot_data():
     assert np.allclose(plot_data['amplitudes_x'], x_amplitude)
     assert np.allclose(plot_data['amplitudes_y'], y_amplitude)
     assert np.allclose(plot_data['detunings'], z_amplitude)
-
-@pytest.mark.skip('save for later')
-def test_dimensionless_segments():
-    """
-    Test the dimensionless amplitude and angle segments generated
-    """
-    segments = [[1., 0., 0., np.pi / 2],
-                [0., 1., 0., np.pi / 2],
-                [1. / np.sqrt(2.), 0., 1. / np.sqrt(2.), np.pi / 2]]
-
-    _on_resonance_amplitudes = np.array([1., 1., 1. / np.sqrt(2.)])
-    _azimuthal_angles = np.array([0., np.pi / 2, 0.])
-    _detunings = np.array([0, 0, 1. / np.sqrt(2.)])
-    _durations = np.pi / 2. * np.array([1., 1., 1.])
-
-    amplitude_angle_segments = np.stack((_on_resonance_amplitudes, _azimuthal_angles,
-                                         _detunings, _durations), axis=1)
-
-    driven_control = DrivenControl(segments=segments)
-    _max_rabi = driven_control.maximum_rabi_rate
-
-    dimensionless_euclid = segments.copy()
-    dimensionless_euclid = np.array(dimensionless_euclid)
-    dimensionless_euclid[:, 0:2] = dimensionless_euclid[:, 0:2] / _max_rabi
-
-    dimensionless_cylinder = amplitude_angle_segments.copy()
-    dimensionless_cylinder = np.array(dimensionless_cylinder)
-    dimensionless_cylinder[:, 0] = dimensionless_cylinder[:, 0] / _max_rabi
-
-    transformed_euclidean = driven_control.get_transformed_segments(coordinates=CARTESIAN,
-                                                                    dimensionless_rabi_rate=False)
-
-    assert np.allclose(segments, transformed_euclidean)
-
-    transformed_euclidean = driven_control.get_transformed_segments(coordinates=CARTESIAN,
-                                                                    dimensionless_rabi_rate=True)
-
-    assert np.allclose(dimensionless_euclid, transformed_euclidean)
-
-    transformed_cylindrical = driven_control.get_transformed_segments(coordinates=CYLINDRICAL,
-                                                                      dimensionless_rabi_rate=False)
-
-    assert np.allclose(amplitude_angle_segments, transformed_cylindrical)
-
-    transformed_cylindrical = driven_control.get_transformed_segments(coordinates=CYLINDRICAL,
-                                                                      dimensionless_rabi_rate=True)
-
-    assert np.allclose(amplitude_angle_segments, transformed_cylindrical)
