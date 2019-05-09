@@ -24,10 +24,8 @@ import pytest
 from qctrlopencontrols.exceptions import ArgumentsValueError
 from qctrlopencontrols import DrivenControl
 
-
 from qctrlopencontrols.driven_controls.constants import (
-    UPPER_BOUND_SEGMENTS, UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE,
-    UPPER_BOUND_DURATION, LOWER_BOUND_DURATION)
+    UPPER_BOUND_SEGMENTS, UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE)
 
 
 def _remove_file(filename):
@@ -235,7 +233,7 @@ def test_pretty_print():
     _pretty_rabi_rates = [str(_rabi_rate/_maximum_rabi_rate)
                           for _rabi_rate in _rabi_rates]
     _pretty_azimuthal_angles = [str(azimuthal_angle/np.pi)
-                               for azimuthal_angle in _azimuthal_angles]
+                                for azimuthal_angle in _azimuthal_angles]
     _pretty_detunings = [str(detuning/_maximum_detuning)
                          for detuning in _detunings]
     _pretty_durations = [str(duration/3.) for duration in _durations]

@@ -250,7 +250,7 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             X-Amplitude of each segment
         """
 
-        return (self.rabi_rates * np.cos(self.azimuthal_angles))
+        return self.rabi_rates * np.cos(self.azimuthal_angles)
 
     @property
     def amplitude_y(self):
@@ -262,7 +262,7 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             Y-Amplitude of each segment
         """
 
-        return (self.rabi_rates * np.sin(self.azimuthal_angles))
+        return self.rabi_rates * np.sin(self.azimuthal_angles)
 
     @property
     def angles(self):
@@ -609,14 +609,14 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
 
         driven_control_string.append(
             'Rabi Rates = [{}] x {}'.format(pretty_rabi_rates,
-                                             self.maximum_rabi_rate))
+                                            self.maximum_rabi_rate))
         driven_control_string.append(
             'Azimuthal Angles = [{}] x pi'.format(pretty_azimuthal_angles))
         driven_control_string.append(
             'Detunings = [{}] x {}'.format(pretty_detuning,
-                                            self.maximum_detuning))
+                                           self.maximum_detuning))
         driven_control_string.append('Durations = [{}] x {}'.format(pretty_durations,
-                                                                     self.duration))
+                                                                    self.duration))
         driven_control_string = '\n'.join(driven_control_string)
 
         return driven_control_string
