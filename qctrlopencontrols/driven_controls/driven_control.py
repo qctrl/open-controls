@@ -239,13 +239,13 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
         return np.amax(self.rabi_rates)
 
     @property
-    def maximum_detuning_rate(self):
-        """Returns the maximum detuning rate of the control
+    def maximum_detuning(self):
+        """Returns the maximum detuning of the control
 
         Returns
         -------
         float
-            The maximum detuning rate of the control
+            The maximum detuning of the control
         """
         return np.amax(self.detunings)
 
