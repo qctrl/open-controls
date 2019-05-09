@@ -23,7 +23,7 @@ import pytest
 
 from qctrlopencontrols.exceptions import ArgumentsValueError
 from qctrlopencontrols import DrivenControl
-from qctrlopencontrols.globals import CARTESIAN, CYLINDRICAL
+
 
 from qctrlopencontrols.driven_controls.constants import (
     UPPER_BOUND_SEGMENTS, UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE,
@@ -159,50 +159,125 @@ def test_plot_data():
     assert np.allclose(plot_data['amplitudes_y'], y_amplitude)
     assert np.allclose(plot_data['detunings'], z_amplitude)
 
-@pytest.mark.skip('save for later')
-def test_dimensionless_segments():
+def test_pretty_print():
+
+    """Tests pretty output of driven control
     """
-    Test the dimensionless amplitude and angle segments generated
-    """
-    segments = [[1., 0., 0., np.pi / 2],
-                [0., 1., 0., np.pi / 2],
-                [1. / np.sqrt(2.), 0., 1. / np.sqrt(2.), np.pi / 2]]
 
-    _on_resonance_amplitudes = np.array([1., 1., 1. / np.sqrt(2.)])
-    _azimuthal_angles = np.array([0., np.pi / 2, 0.])
-    _detunings = np.array([0, 0, 1. / np.sqrt(2.)])
-    _durations = np.pi / 2. * np.array([1., 1., 1.])
+    _maximum_rabi_rate = 2*np.pi
+    _maximum_detuning = 1.0
+    _rabi_rates = [np.pi, 2 * np.pi, np.pi]
+    _azimuthal_angles = [0, np.pi / 2, -np.pi / 2]
+    _detunings = [0, 1, 0]
+    _durations = [1., 1., 1.]
 
-    amplitude_angle_segments = np.stack((_on_resonance_amplitudes, _azimuthal_angles,
-                                         _detunings, _durations), axis=1)
+    driven_control = DrivenControl(
+        rabi_rates=_rabi_rates,
+        azimuthal_angles=_azimuthal_angles,
+        detunings=_detunings,
+        durations=_durations
+    )
 
-    driven_control = DrivenControl(segments=segments)
-    _max_rabi = driven_control.maximum_rabi_rate
+    _pretty_rabi_rates = [str(_rabi_rate/_maximum_rabi_rate)
+                          for _rabi_rate in _rabi_rates]
+    _pretty_azimuthal_angles = [str(azimuthal_angle/np.pi)
+                               for azimuthal_angle in _azimuthal_angles]
+    _pretty_detunings = [str(detuning/_maximum_detuning)
+                         for detuning in _detunings]
+    _pretty_durations = [str(duration/3.) for duration in _durations]
+    _pretty_rabi_rates = ','.join(_pretty_rabi_rates)
+    _pretty_azimuthal_angles = ','.join(_pretty_azimuthal_angles)
+    _pretty_detunings = ','.join(_pretty_detunings)
+    _pretty_durations = ','.join(_pretty_durations)
 
-    dimensionless_euclid = segments.copy()
-    dimensionless_euclid = np.array(dimensionless_euclid)
-    dimensionless_euclid[:, 0:2] = dimensionless_euclid[:, 0:2] / _max_rabi
+    _pretty_string = []
+    _pretty_string.append('Rabi Rates = [{}] x {}'.format(
+        _pretty_rabi_rates, _maximum_rabi_rate))
+    _pretty_string.append('Azimuthal Angles = [{}] x pi'.format(
+        _pretty_azimuthal_angles))
+    _pretty_string.append('Detunings = [{}] x {}'.format(
+        _pretty_detunings, _maximum_detuning))
+    _pretty_string.append('Durations = [{}] x 3.0'.format(
+        _pretty_durations))
 
-    dimensionless_cylinder = amplitude_angle_segments.copy()
-    dimensionless_cylinder = np.array(dimensionless_cylinder)
-    dimensionless_cylinder[:, 0] = dimensionless_cylinder[:, 0] / _max_rabi
+    _pretty_string = '\n'.join(_pretty_string)
 
-    transformed_euclidean = driven_control.get_transformed_segments(coordinates=CARTESIAN,
-                                                                    dimensionless_rabi_rate=False)
+    assert str(driven_control) == _pretty_string
 
-    assert np.allclose(segments, transformed_euclidean)
+    _maximum_rabi_rate = 0.
+    _maximum_detuning = 1.0
+    _rabi_rates = [0., 0., 0.]
+    _azimuthal_angles = [0, np.pi / 2, -np.pi / 2]
+    _detunings = [0, 1, 0]
+    _durations = [1., 1., 1.]
 
-    transformed_euclidean = driven_control.get_transformed_segments(coordinates=CARTESIAN,
-                                                                    dimensionless_rabi_rate=True)
+    driven_control = DrivenControl(
+        rabi_rates=_rabi_rates,
+        azimuthal_angles=_azimuthal_angles,
+        detunings=_detunings,
+        durations=_durations
+    )
 
-    assert np.allclose(dimensionless_euclid, transformed_euclidean)
+    _pretty_rabi_rates = ['0', '0', '0']
+    _pretty_azimuthal_angles = [str(azimuthal_angle / np.pi)
+                                for azimuthal_angle in _azimuthal_angles]
+    _pretty_detunings = [str(detuning / _maximum_detuning)
+                         for detuning in _detunings]
+    _pretty_durations = [str(duration / 3.) for duration in _durations]
+    _pretty_rabi_rates = ','.join(_pretty_rabi_rates)
+    _pretty_azimuthal_angles = ','.join(_pretty_azimuthal_angles)
+    _pretty_detunings = ','.join(_pretty_detunings)
+    _pretty_durations = ','.join(_pretty_durations)
 
-    transformed_cylindrical = driven_control.get_transformed_segments(coordinates=CYLINDRICAL,
-                                                                      dimensionless_rabi_rate=False)
+    _pretty_string = []
+    _pretty_string.append('Rabi Rates = [{}] x {}'.format(
+        _pretty_rabi_rates, _maximum_rabi_rate))
+    _pretty_string.append('Azimuthal Angles = [{}] x pi'.format(
+        _pretty_azimuthal_angles))
+    _pretty_string.append('Detunings = [{}] x {}'.format(
+        _pretty_detunings, _maximum_detuning))
+    _pretty_string.append('Durations = [{}] x 3.0'.format(
+        _pretty_durations))
 
-    assert np.allclose(amplitude_angle_segments, transformed_cylindrical)
+    _pretty_string = '\n'.join(_pretty_string)
 
-    transformed_cylindrical = driven_control.get_transformed_segments(coordinates=CYLINDRICAL,
-                                                                      dimensionless_rabi_rate=True)
+    assert str(driven_control) == _pretty_string
 
-    assert np.allclose(amplitude_angle_segments, transformed_cylindrical)
+    _maximum_rabi_rate = 2 * np.pi
+    _maximum_detuning = 0.
+    _rabi_rates = [np.pi, 2 * np.pi, np.pi]
+    _azimuthal_angles = [0, np.pi / 2, -np.pi / 2]
+    _detunings = [0, 0., 0]
+    _durations = [1., 1., 1.]
+
+    driven_control = DrivenControl(
+        rabi_rates=_rabi_rates,
+        azimuthal_angles=_azimuthal_angles,
+        detunings=_detunings,
+        durations=_durations
+    )
+
+    _pretty_rabi_rates = [str(_rabi_rate / _maximum_rabi_rate)
+                          for _rabi_rate in _rabi_rates]
+    _pretty_azimuthal_angles = [str(azimuthal_angle / np.pi)
+                                for azimuthal_angle in _azimuthal_angles]
+    _pretty_detunings = ['0', '0', '0']
+    _pretty_durations = [str(duration / 3.) for duration in _durations]
+    _pretty_rabi_rates = ','.join(_pretty_rabi_rates)
+    _pretty_azimuthal_angles = ','.join(_pretty_azimuthal_angles)
+    _pretty_detunings = ','.join(_pretty_detunings)
+    _pretty_durations = ','.join(_pretty_durations)
+
+    _pretty_string = []
+    _pretty_string.append('Rabi Rates = [{}] x {}'.format(
+        _pretty_rabi_rates, _maximum_rabi_rate))
+    _pretty_string.append('Azimuthal Angles = [{}] x pi'.format(
+        _pretty_azimuthal_angles))
+    _pretty_string.append('Detunings = [{}] x {}'.format(
+        _pretty_detunings, _maximum_detuning))
+    _pretty_string.append('Durations = [{}] x 3.0'.format(
+        _pretty_durations))
+
+    _pretty_string = '\n'.join(_pretty_string)
+
+    assert str(driven_control) == _pretty_string
