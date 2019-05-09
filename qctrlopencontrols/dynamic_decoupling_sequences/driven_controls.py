@@ -22,7 +22,7 @@ import numpy as np
 
 from qctrlopencontrols.exceptions import ArgumentsValueError
 from qctrlopencontrols.driven_controls import (
-    UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE, DrivenControls)
+    UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE, DrivenControl)
 
 
 def _check_valid_operation(rabi_rotations, detuning_rotations):
@@ -258,36 +258,50 @@ def convert_dds_to_driven_controls(
 
     if np.allclose(pulse_start_ends, 0.0):
         # the original sequence should be a free evolution
-        control_segments = np.reshape(
-            np.array([0., 0., 0., sequence_duration]), (1, 4))
-        return DrivenControls(segments=control_segments, **kwargs)
+        return DrivenControl(rabi_rates=[0.],
+                             azimuthal_angles=[0.],
+                             detunings=[0.],
+                             durations=[sequence_duration],
+                             **kwargs)
 
-    control_segments = np.zeros((operations.shape[1]*2, 4))
+    control_rabi_rates = np.zeros((operations.shape[1]*2,))
+    control_azimuthal_angles = np.zeros((operations.shape[1] * 2,))
+    control_detunings = np.zeros((operations.shape[1] * 2,))
+    control_durations = np.zeros((operations.shape[1] * 2,))
+
     pulse_segment_idx = 0
     for op_idx in range(0, operations.shape[1]):
 
         if operations[3, op_idx] == 0.0:
-            control_segments[pulse_segment_idx, 0:3] = [
-                maximum_rabi_rate * np.cos(operations[2, op_idx]),
-                maximum_rabi_rate * np.sin(operations[2, op_idx]),
-                0.]
-            control_segments[pulse_segment_idx, 3] = (pulse_start_ends[op_idx, 1] -
-                                                      pulse_start_ends[op_idx, 0])
+            control_rabi_rates[pulse_segment_idx] = maximum_rabi_rate
+            control_azimuthal_angles[pulse_segment_idx] = operations[2, op_idx]
+            control_durations[pulse_segment_idx] = (pulse_start_ends[op_idx, 1] -
+                                                    pulse_start_ends[op_idx, 0])
         else:
-            control_segments[pulse_segment_idx, 0:3] = [0., 0., operations[3, op_idx]]
-            control_segments[pulse_segment_idx, 3] = (pulse_start_ends[op_idx, 1] -
-                                                      pulse_start_ends[op_idx, 0])
+            control_detunings[pulse_segment_idx] = operations[3, op_idx]
+            control_durations[pulse_segment_idx] = (pulse_start_ends[op_idx, 1] -
+                                                    pulse_start_ends[op_idx, 0])
 
         if op_idx != (operations.shape[1]-1):
-            control_segments[pulse_segment_idx+1, 0:3] = np.array([0, 0, 0])
-            control_segments[pulse_segment_idx+1, 3] = (pulse_start_ends[op_idx+1, 0] -
-                                                        pulse_start_ends[op_idx, 1])
+            control_rabi_rates[pulse_segment_idx+1] = 0.
+            control_azimuthal_angles[pulse_segment_idx+1] = 0.
+            control_detunings[pulse_segment_idx+1] = 0.
+            control_durations[pulse_segment_idx+1] = (pulse_start_ends[op_idx+1, 0] -
+                                                      pulse_start_ends[op_idx, 1])
+
         pulse_segment_idx += 2
 
     # almost there; let us check if there is any segments with durations = 0
-    segment_durations = control_segments[:, 3]
-    control_segments = control_segments[segment_durations != 0]
-    return DrivenControls(segments=control_segments, **kwargs)
+    control_rabi_rates = control_rabi_rates[control_durations > 0.]
+    control_azimuthal_angles = control_azimuthal_angles[control_durations > 0.]
+    control_detunings = control_detunings[control_durations > 0.]
+    control_durations = control_durations[control_durations > 0.]
+
+    return DrivenControl(rabi_rates=control_rabi_rates,
+                         azimuthal_angles=control_azimuthal_angles,
+                         detunings=control_detunings,
+                         durations=control_durations,
+                         **kwargs)
 
 
 if __name__ == '__main__':

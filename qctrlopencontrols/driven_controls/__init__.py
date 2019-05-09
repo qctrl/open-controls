@@ -14,12 +14,29 @@
 
 """
 =============
-Pulses module
+driven_controls module
 =============
 """
 
-from .driven_controls import DrivenControls
+from .driven_control import DrivenControl
 
 from .constants import (
     UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE,
-    UPPER_BOUND_DURATION, LOWER_BOUND_DURATION, UPPER_BOUND_SEGMENTS)
+    UPPER_BOUND_DURATION, LOWER_BOUND_DURATION, UPPER_BOUND_SEGMENTS,
+    PRIMITIVE, BB1, SK1,
+    WAMF1,
+    CORPSE,
+    CORPSE_IN_SK1,
+    CORPSE_IN_BB1,
+    SCROFULOUS,
+    CORPSE_IN_SCROFULOUS)
+
+from .predefined import (
+    new_predefined_driven_control,
+    new_primitive_control, new_wimperis_1_control, new_solovay_kitaev_1_control,
+    new_compensating_for_off_resonance_with_a_pulse_sequence_control,
+    new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control,
+    new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control,
+    new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control,
+    new_walsh_amplitude_modulated_filter_1_control,
+    new_corpse_in_scrofulous_control)

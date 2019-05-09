@@ -14,7 +14,7 @@
 
 """
 ================
-pulses.constants
+driven_controls.constants
 ================
 """
 
@@ -37,4 +37,42 @@ LOWER_BOUND_DURATION = 1e-12
 
 UPPER_BOUND_SEGMENTS = 10000
 """Maximum number of segments allowed in a control
+"""
+
+#Driven control types
+PRIMITIVE = 'primitive'
+"""Primitive control
+"""
+
+BB1 = 'BB1'
+"""First-order Wimperis control, also known as BB1
+"""
+
+SK1 = 'SK1'
+"""First-order Solovay-Kitaev control
+"""
+
+WAMF1 = 'WAMF1'
+"""First-order Walsh sequence control
+"""
+
+CORPSE = 'CORPSE'
+"""Dynamically corrected control - Compensating for Off-Resonance with a Pulse Sequence (COPRSE)
+"""
+
+CORPSE_IN_BB1 = 'CORPSE in BB1'
+"""Concatenated dynamically corrected control - BB1 inside COPRSE
+"""
+
+CORPSE_IN_SK1 = 'CORPSE in SK1'
+"""Concatenated dynamically corrected control - First order Solovay-Kitaev inside COPRSE
+"""
+
+SCROFULOUS = 'SCROFULOUS'
+"""Dynamically corrected control -
+   Short Composite Rotation For Undoing Length Over and Under Shoot (SCROFULOUS)
+"""
+
+CORPSE_IN_SCROFULOUS = 'CORPSE in SCROFULOUS'
+"""Concatenated dynamically corrected control - CORPSE inside SCROFULOUS
 """

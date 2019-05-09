@@ -37,5 +37,5 @@ CARTESIAN = 'cartesian'
 """
 
 CYLINDRICAL = 'cylindrical'
-"""Defined Cylindrical coordinate system
+"""Defines Cylindrical coordinate system
 """
