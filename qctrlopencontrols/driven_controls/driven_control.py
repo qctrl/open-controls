@@ -30,6 +30,7 @@ from .constants import (
     UPPER_BOUND_SEGMENTS, UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE,
     UPPER_BOUND_DURATION, LOWER_BOUND_DURATION)
 
+
 def get_plot_data_from_segments(segments):
     """
     Generates arrays that can be used to produce a plot representing the shape of the driven control
@@ -76,7 +77,6 @@ def get_plot_data_from_segments(segments):
             np.array(plot_amplitude_y),
             np.array(plot_amplitude_z),
             np.array(plot_time))
-
 
 
 class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
@@ -132,15 +132,19 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             # some may be None while others are not
             input_array_lengths = []
             if not check_none_values[0]:
-                input_array_lengths.append(len(rabi_rates))
+                rabi_rates = np.array(rabi_rates, dtype=np.float).reshape((-1,))
+                input_array_lengths.append(rabi_rates.shape[0])
 
             if not check_none_values[1]:
+                azimuthal_angles = np.array(azimuthal_angles, dtype=np.float).reshape((-1,))
                 input_array_lengths.append(len(azimuthal_angles))
 
             if not check_none_values[2]:
+                detunings = np.array(detunings, dtype=np.float).reshape((-1,))
                 input_array_lengths.append(len(detunings))
 
             if not check_none_values[3]:
+                durations = np.array(durations, dtype=np.float).reshape((-1,))
                 input_array_lengths.append(len(durations))
 
             # check all valid array lengths are equal
@@ -161,12 +165,6 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                 detunings = np.zeros((valid_input_length,))
             if check_none_values[3]:
                 durations = np.ones((valid_input_length,))
-
-        # time to convert to numpy array
-        rabi_rates = np.array(rabi_rates, dtype=np.float)
-        azimuthal_angles = np.array(azimuthal_angles, dtype=np.float)
-        detunings = np.array(detunings, dtype=np.float)
-        durations = np.array(durations, dtype=np.float)
 
         self.rabi_rates = rabi_rates
         self.azimuthal_angles = azimuthal_angles
@@ -303,8 +301,8 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
         normalized_detunings = self.detunings/amplitudes
 
         normalized_amplitudes = np.hstack((normalized_amplitude_x[:, np.newaxis],
-                                         normalized_amplitude_y[:, np.newaxis],
-                                         normalized_detunings[:, np.newaxis]))
+                                           normalized_amplitude_y[:, np.newaxis],
+                                           normalized_detunings[:, np.newaxis]))
 
         directions = np.array([normalized_amplitudes if amplitudes[i] != 0. else
                                np.zeros([3, ]) for i in range(self.number_of_segments)])
@@ -348,8 +346,6 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
 
         return np.amin(self.durations)
 
-
-
     def _qctrl_expanded_export_content(self, file_type, coordinates):
 
         """Private method to prepare the content to be saved in Q-CTRL expanded format
@@ -368,18 +364,19 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             Based on file_type; list if 'csv', dict if 'json'
         """
         control_info = None
+        amplitude_x = self.amplitude_x
+        amplitude_y = self.amplitude_y
         if coordinates == CARTESIAN:
-
             if file_type == CSV:
 
                 control_info = list()
                 control_info.append('amplitude_x,amplitude_y,detuning,duration,maximum_rabi_rate')
                 for segment_idx in range(self.number_of_segments):
                     control_info.append('{},{},{},{},{}'.format(
-                        self.amplitude_x / self.maximum_rabi_rate,
-                        self.amplitude_y / self.maximum_rabi_rate,
-                        self.detunings,
-                        self.durations,
+                        amplitude_x[segment_idx],
+                        amplitude_y[segment_idx],
+                        self.detunings[segment_idx],
+                        self.durations[segment_idx],
                         self.maximum_rabi_rate
                     ))
             else:
@@ -387,8 +384,8 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                 if self.name is not None:
                     control_info['name'] = self.name
                 control_info['maximum_rabi_rate'] = self.maximum_rabi_rate
-                control_info['amplitude_x'] = list(self.amplitude_x / self.maximum_rabi_rate)
-                control_info['amplitude_y'] = list(self.amplitude_y / self.maximum_rabi_rate)
+                control_info['amplitude_x'] = list(amplitude_x)
+                control_info['amplitude_y'] = list(amplitude_y)
                 control_info['detuning'] = list(self.detunings)
                 control_info['duration'] = list(self.durations)
 
@@ -400,8 +397,8 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                 for segment_idx in range(self.number_of_segments):
                     control_info.append('{},{},{},{},{}'.format(
                         self.rabi_rates[segment_idx]/self.maximum_rabi_rate,
-                        np.arctan2(self.amplitude_y[segment_idx],
-                                   self.amplitude_x[segment_idx]),
+                        np.arctan2(amplitude_y[segment_idx],
+                                   amplitude_x[segment_idx]),
                         self.detunings[segment_idx],
                         self.durations[segment_idx],
                         self.maximum_rabi_rate
@@ -414,7 +411,7 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                 control_info['maximum_rabi_rate'] = self.maximum_rabi_rate
                 control_info['rabi_rates'] = list(self.rabi_rates / self.maximum_rabi_rate)
                 control_info['azimuthal_angles'] = list(np.arctan2(
-                    self.amplitude_y, self.amplitude_x))
+                    amplitude_y, amplitude_x))
                 control_info['detuning'] = list(self.detunings)
                 control_info['duration'] = list(self.durations)
 
