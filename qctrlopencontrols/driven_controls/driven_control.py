@@ -367,7 +367,6 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
         list or dict
             Based on file_type; list if 'csv', dict if 'json'
         """
-
         control_info = None
         if coordinates == CARTESIAN:
 
@@ -375,12 +374,12 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
 
                 control_info = list()
                 control_info.append('amplitude_x,amplitude_y,detuning,duration,maximum_rabi_rate')
-                for segment_idx in range(self.segments.shape[0]):
+                for segment_idx in range(self.number_of_segments):
                     control_info.append('{},{},{},{},{}'.format(
-                        self.segments[segment_idx, 0] / self.maximum_rabi_rate,
-                        self.segments[segment_idx, 1] / self.maximum_rabi_rate,
-                        self.segments[segment_idx, 2],
-                        self.segments[segment_idx, 3],
+                        self.amplitude_x / self.maximum_rabi_rate,
+                        self.amplitude_y / self.maximum_rabi_rate,
+                        self.detunings,
+                        self.durations,
                         self.maximum_rabi_rate
                     ))
             else:
@@ -388,23 +387,23 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                 if self.name is not None:
                     control_info['name'] = self.name
                 control_info['maximum_rabi_rate'] = self.maximum_rabi_rate
-                control_info['amplitude_x'] = list(self.segments[:, 0]/self.maximum_rabi_rate)
-                control_info['amplitude_y'] = list(self.segments[:, 1] / self.maximum_rabi_rate)
-                control_info['detuning'] = list(self.segments[:, 2])
-                control_info['duration'] = list(self.segments[:, 3])
+                control_info['amplitude_x'] = list(self.amplitude_x / self.maximum_rabi_rate)
+                control_info['amplitude_y'] = list(self.amplitude_y / self.maximum_rabi_rate)
+                control_info['detuning'] = list(self.detunings)
+                control_info['duration'] = list(self.durations)
 
         else:
 
             if file_type == CSV:
                 control_info = list()
                 control_info.append('rabi_rate,azimuthal_angle,detuning,duration,maximum_rabi_rate')
-                for segment_idx in range(self.segments.shape[0]):
+                for segment_idx in range(self.number_of_segments):
                     control_info.append('{},{},{},{},{}'.format(
                         self.rabi_rates[segment_idx]/self.maximum_rabi_rate,
-                        np.arctan2(self.segments[segment_idx, 1],
-                                   self.segments[segment_idx, 0]),
-                        self.segments[segment_idx, 2],
-                        self.segments[segment_idx, 3],
+                        np.arctan2(self.amplitude_y[segment_idx],
+                                   self.amplitude_x[segment_idx]),
+                        self.detunings[segment_idx],
+                        self.durations[segment_idx],
                         self.maximum_rabi_rate
                     ))
 
@@ -415,9 +414,9 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                 control_info['maximum_rabi_rate'] = self.maximum_rabi_rate
                 control_info['rabi_rates'] = list(self.rabi_rates / self.maximum_rabi_rate)
                 control_info['azimuthal_angles'] = list(np.arctan2(
-                    self.segments[:, 1], self.segments[:, 0]))
-                control_info['detuning'] = list(self.segments[:, 2])
-                control_info['duration'] = list(self.segments[:, 3])
+                    self.amplitude_y, self.amplitude_x))
+                control_info['detuning'] = list(self.detunings)
+                control_info['duration'] = list(self.durations)
 
         return control_info
 
@@ -539,22 +538,28 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
         ArgumentsValueError
             Raised when an argument is invalid.
         """
-
-        plot_segments = self.get_transformed_segments(
-            coordinates=CARTESIAN, dimensionless_rabi_rate=dimensionless_rabi_rate)
-
-        plot_data = get_plot_data_from_segments(plot_segments)
+        if dimensionless_rabi_rate:
+            normalizer = self.maximum_rabi_rate
+        else:
+            normalizer = 1
 
         if coordinates == CARTESIAN:
-            (x_amplitudes, y_amplitudes, detunings, times) = plot_data
+            (x_amplitudes, y_amplitudes, detunings, times) = get_plot_data_from_segments(
+                np.vstack((self.amplitude_x / normalizer, self.amplitude_y / normalizer,
+                           self.detunings, self.durations)).T
+            )
             plot_dictionary = {
                 'amplitude_x': x_amplitudes,
                 'amplitude_y': y_amplitudes,
                 'detuning': detunings,
                 'times': times
             }
+
         elif coordinates == CYLINDRICAL:
-            (x_plot, y_plot, detunings, times) = plot_data
+            (x_plot, y_plot, detunings, times) = get_plot_data_from_segments(
+                np.vstack((self.rabi_rates / normalizer, self.azimuthal_angles,
+                           self.detunings, self.durations)).T
+            )
             x_plot[np.equal(x_plot, -0.0)] = 0.
             y_plot[np.equal(y_plot, -0.0)] = 0.
             azimuthal_angles_plot = np.arctan2(y_plot, x_plot)
@@ -584,22 +589,22 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             driven_control_string.append('{}:'.format(self.name))
 
         # Format amplitudes
-        for i, axis in enumerate('XYZ'):
+        for axis in 'XYZ':
             pretty_amplitudes_str = ', '.join(
                 [decimals_format_str.format(amplitude/np.pi).rstrip('0').rstrip('.')
-                 for amplitude in self.segments[:, i]]
+                 for amplitude in [self.amplitude_x, self.amplitude_y, self.detunings]]
             )
             driven_control_string.append(
-                '{} Amplitudes: [{}] x pi'.format(axis, pretty_amplitudes_str)
+                '{} Amplitudes = [{}] x pi'.format(axis, pretty_amplitudes_str)
             )
         # Format durations
-        total_duration = np.sum(self.segments[:, 3])
+        total_duration = np.sum(self.durations)
         pretty_durations_str = ','.join(
             [decimals_format_str.format(duration/total_duration).rstrip('0').rstrip('.')
-             for duration in self.segments[:, 3]]
+             for duration in self.durations]
         )
         driven_control_string.append(
-            'Durations:    [{}] x {}s'.format(pretty_durations_str, str(total_duration))
+            'Durations = [{}] x {}s'.format(pretty_durations_str, str(total_duration))
         )
 
         driven_control_string = '\n'.join(driven_control_string)
