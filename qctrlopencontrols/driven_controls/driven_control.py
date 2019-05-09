@@ -120,9 +120,7 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
 
         check_none_values = [(rabi_rates is None), (azimuthal_angles is None),
                              (detunings is None), (durations is None)]
-
-        all_are_none = all(value is None for value in check_none_values)
-
+        all_are_none = all(value is True for value in check_none_values)
         if all_are_none:
             rabi_rates = np.array([np.pi])
             azimuthal_angles = np.array([0.])
