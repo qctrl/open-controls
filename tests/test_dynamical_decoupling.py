@@ -387,23 +387,17 @@ def test_conversion_to_driven_controls():
                                                     maximum_rabi_rate=_maximum_rabi_rate,
                                                     maximum_detuning_rate=_maximum_detuning_rate,
                                                     name=_name)
-    assert np.sum(driven_control.segments[:, 3]) == _duration
-    assert np.allclose(driven_control.segments[:, 0], np.array(
-        [0., _maximum_rabi_rate*np.cos(_azimuthal_angles[1]), 0., 0., 0.,
-         _maximum_rabi_rate*np.cos(_azimuthal_angles[3]), 0.]))
-    assert np.allclose(driven_control.segments[:, 1], np.array(
-        [0., _maximum_rabi_rate*np.sin(_azimuthal_angles[1]), 0., 0., 0., 0., 0]))
-    assert np.allclose(driven_control.segments[:, 2], np.array(
+    assert np.sum(driven_control.durations) == _duration
+    assert np.allclose(driven_control.rabi_rates, np.array(
+        [0., _maximum_rabi_rate, 0., 0., 0.,
+         _maximum_rabi_rate, 0.]))
+    assert np.allclose(driven_control.azimuthal_angles, np.array(
+        [0., _azimuthal_angles[1], 0., 0., 0.,
+         _azimuthal_angles[3], 0.]))
+    assert np.allclose(driven_control.detunings, np.array(
         [0., 0., 0., np.pi, 0., 0., 0]))
-    assert np.allclose(driven_control.segments[:, 3], np.array(
+    assert np.allclose(driven_control.durations, np.array(
         [4.75e-1, 5e-2, 4.5e-1, 5e-2, 4.5e-1, 5e-2, 4.75e-1]))
-
-    _duration = 2.
-    _offsets = 2 * np.array([0., 0.25, 0.5, 0.75, 1.])
-    _rabi_rotations = np.array([0., np.pi, 0., np.pi, 0.])
-    _azimuthal_angles = np.array([0., np.pi / 2, 0., 0., 0.])
-    _detuning_rotations = np.array([0., 0., np.pi, 0., 0.])
-    _name = 'test_sequence'
 
 
 def test_free_evolution_conversion():
@@ -433,8 +427,14 @@ def test_free_evolution_conversion():
         maximum_detuning_rate=_maximum_detuning_rate,
         name=_name)
 
-    _segments = np.reshape(np.array([0., 0., 0., _duration]), (1, 4))
-    assert np.allclose(driven_control.segments, _segments)
+    _rabi_rates = np.array([0.])
+    _azimuthal_angles = np.array([0.])
+    _detunings = np.array([0.])
+    _durations = np.array([_duration])
+    assert np.allclose(driven_control.rabi_rates, _rabi_rates)
+    assert np.allclose(driven_control.azimuthal_angles, _azimuthal_angles)
+    assert np.allclose(driven_control.detunings, _detunings)
+    assert np.allclose(driven_control.durations, _durations)
 
 
 def test_export_to_file():
@@ -499,6 +499,7 @@ def test_export_to_file():
     _remove_file('dds_qctrl_cartesian.csv')
     _remove_file('dds_qctrl_cylindrical.json')
     _remove_file('dds_qctrl_cartesian.json')
+
 
 
 if __name__ == '__main__':
