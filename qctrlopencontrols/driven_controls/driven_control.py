@@ -86,16 +86,20 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
 
     Parameters
     ----------
-    segments : list, optional
-        Defaults to None. A list of amplitude vector components
-        and durations. Each element of the list should be formatted as
-        [amplitude_x,amplitude_y,amplitude_z,duration] where amplitude_i is the angular
-        rabi frequency to be multiplied by the
-        corresponding pauli matrix, i.e. amplitude_x would correspond to sigma_x.
-        The duration is the time of that segment.
-        If None, defaults to a square pi pulse [[np.pi, 0, 0, 1], ].
+    rabi_rates : numpy.ndarray, optional
+        1-D array of size nx1 where n is number of segments;
+        Each entry is the rabi rate for the segment. Defaults to None
+    azimuthal_angles : numpy.ndarray, optional
+        1-D array of size nx1 where n is the number of segments;
+        Each entry is the azimuthal angle for the segment; Defaults to None
+    detunings : numpy.ndarray, optional
+        1-D array of size nx1 where n is the number of segments;
+        Each entry is the detuning angle for the segment; Defaults to None
+    durations : numpy.ndarray, optional
+        1-D array of size nx1 where n is the number of segments;
+        Each entry is the duration of the segment (in seconds); Defaults to None
     name : string, optional
-        Defaults to None. An optional string to name the driven control.
+        An optional string to name the driven control. Defaults to None.
 
     Raises
     ------
@@ -104,17 +108,88 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
     """
 
     def __init__(self,
-                 segments=None,
+                 rabi_rates=None,
+                 azimuthal_angles=None,
+                 detunings=None,
+                 durations=None,
                  name=None):
 
         self.name = name
         if self.name is not None:
             self.name = str(self.name)
 
-        if segments is None:
-            segments = [[np.pi, 0, 0, 1], ]
+        check_none_values = [(rabi_rates is None), (azimuthal_angles is None),
+                             (detunings is None), (durations is None)]
 
-        self.segments = np.array(segments, dtype=np.float)
+        all_are_none = all(value is None for value in check_none_values)
+
+        if all_are_none:
+            rabi_rates = np.array([np.pi])
+            azimuthal_angles = np.array([0.])
+            detunings = np.array([0.])
+            durations = np.array([1.])
+        else:
+            # some may be None while others are not
+            input_array_lengths = []
+            if not check_none_values[0]:
+                input_array_lengths.append(len(rabi_rates))
+
+            if not check_none_values[1]:
+                input_array_lengths.append(len(azimuthal_angles))
+
+            if not check_none_values[2]:
+                input_array_lengths.append(len(detunings))
+
+            if not check_none_values[3]:
+                input_array_lengths.append(len(durations))
+
+            # check all valid array lengths are equal
+            if max(input_array_lengths) != min(input_array_lengths):
+                raise ArgumentsValueError('Rabi rates, Azimuthal angles, Detunings and Durations '
+                                          'must be of same length',
+                                          {'len(rabi_rates)': len(rabi_rates),
+                                           'len(azimuthal_angles)': len(azimuthal_angles),
+                                           'len(detunings)': len(detunings),
+                                           'len(durations)': len(durations)})
+
+            valid_input_length = max(input_array_lengths)
+            if check_none_values[0]:
+                rabi_rates = np.zeros((valid_input_length,))
+            if check_none_values[1]:
+                azimuthal_angles = np.zeros((valid_input_length,))
+            if check_none_values[2]:
+                detunings = np.zeros((valid_input_length,))
+            if check_none_values[3]:
+                durations = np.ones((valid_input_length,))
+
+        # check if all the rabi_rates are greater than zero
+        if np.any(rabi_rates < 0.):
+            raise ArgumentsValueError('All rabi rates must be greater than zero.',
+                                      {'rabi_rates': rabi_rates},
+                                      extras={
+                                          'azimuthal_angles': azimuthal_angles,
+                                          'detunings': detunings,
+                                          'durations': durations})
+
+        # check if all the durations are greater than zero
+        if np.any(durations <= 0):
+            raise ArgumentsValueError('Duration of driven control segments must all be greater'
+                                      + ' than zero.',
+                                      {'durations': durations})
+
+        if len(rabi_rates.shape) == 1:
+            rabi_rates = rabi_rates[:, np.newaxis]
+        if len(azimuthal_angles.shape) == 1:
+            azimuthal_angles = azimuthal_angles[:, np.newaxis]
+        if len(detunings.shape) == 1:
+            detunings = detunings[:, np.newaxis]
+        if len(durations.shape) == 1:
+            durations = durations[:, np.newaxis]
+
+        self.segments = np.hstack((rabi_rates * np.cos(azimuthal_angles),
+                                   rabi_rates * np.sin(azimuthal_angles),
+                                   detunings,
+                                   durations))
         self.number_of_segments = len(self.segments)
         if self.segments.shape != (self.number_of_segments, 4):
             raise ArgumentsValueError('Segments must be of shape (number_of_segments,4).',
@@ -130,14 +205,10 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
         self.amplitudes = np.sqrt(np.sum(self.segments[:, 0:3] ** 2, axis=1))
 
         self.segment_durations = self.segments[:, 3]
-        if np.any(self.segment_durations <= 0):
-            raise ArgumentsValueError('Duration of driven control segments must all be greater'
-                                      + ' than zero.',
-                                      {'segments': self.segments},
-                                      extras={'segment_durations': self.segment_durations})
 
         super(DrivenControl, self).__init__(
-            base_attributes=['segments', 'shape', 'scheme', 'name'])
+            base_attributes=['rabi_rates', 'azimuthal_angles', 'detunings',
+                             'durations', 'name'])
 
         self.angles = self.amplitudes * self.segment_durations
         self.directions = np.array([self.segments[i, 0:3] / self.amplitudes[i]
