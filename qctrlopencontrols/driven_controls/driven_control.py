@@ -147,10 +147,10 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             if max(input_array_lengths) != min(input_array_lengths):
                 raise ArgumentsValueError('Rabi rates, Azimuthal angles, Detunings and Durations '
                                           'must be of same length',
-                                          {'len(rabi_rates)': len(rabi_rates),
-                                           'len(azimuthal_angles)': len(azimuthal_angles),
-                                           'len(detunings)': len(detunings),
-                                           'len(durations)': len(durations)})
+                                          {'rabi_rates': rabi_rates,
+                                           'azimuthal_angles': azimuthal_angles,
+                                           'detunings': detunings,
+                                           'durations': durations})
 
             valid_input_length = max(input_array_lengths)
             if check_none_values[0]:
@@ -163,10 +163,15 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                 durations = np.ones((valid_input_length,))
 
         # time to convert to numpy array
-        rabi_rates = np.array(rabi_rates)
-        azimuthal_angles = np.array(azimuthal_angles)
-        detunings = np.array(detunings)
-        durations = np.array(durations)
+        rabi_rates = np.array(rabi_rates, dtype=np.float)
+        azimuthal_angles = np.array(azimuthal_angles, dtype=np.float)
+        detunings = np.array(detunings, dtype=np.float)
+        durations = np.array(durations, dtype=np.float)
+
+        self.rabi_rates = rabi_rates
+        self.azimuthal_angles = azimuthal_angles
+        self.detunings = detunings
+        self.durations = durations
 
         # check if all the rabi_rates are greater than zero
         if np.any(rabi_rates < 0.):
@@ -183,24 +188,7 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                                       + ' than zero.',
                                       {'durations': durations})
 
-        if len(rabi_rates.shape) == 1:
-            rabi_rates = rabi_rates[:, np.newaxis]
-        if len(azimuthal_angles.shape) == 1:
-            azimuthal_angles = azimuthal_angles[:, np.newaxis]
-        if len(detunings.shape) == 1:
-            detunings = detunings[:, np.newaxis]
-        if len(durations.shape) == 1:
-            durations = durations[:, np.newaxis]
-
-        self.segments = np.hstack((rabi_rates * np.cos(azimuthal_angles),
-                                   rabi_rates * np.sin(azimuthal_angles),
-                                   detunings,
-                                   durations))
-        self.number_of_segments = len(self.segments)
-        if self.segments.shape != (self.number_of_segments, 4):
-            raise ArgumentsValueError('Segments must be of shape (number_of_segments,4).',
-                                      {'segments': self.segments},
-                                      extras={'number_of_segments': self.number_of_segments})
+        self.number_of_segments = rabi_rates.shape[0]
         if self.number_of_segments > UPPER_BOUND_SEGMENTS:
             raise ArgumentsValueError(
                 'The number of segments must be smaller than the upper bound:'
@@ -208,30 +196,9 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                 {'segments': self.segments},
                 extras={'number_of_segments': self.number_of_segments})
 
-        self.amplitudes = np.sqrt(np.sum(self.segments[:, 0:3] ** 2, axis=1))
-
-        self.segment_durations = self.segments[:, 3]
-
         super(DrivenControl, self).__init__(
             base_attributes=['rabi_rates', 'azimuthal_angles', 'detunings',
                              'durations', 'name'])
-
-        self.angles = self.amplitudes * self.segment_durations
-        self.directions = np.array([self.segments[i, 0:3] / self.amplitudes[i]
-                                    if self.amplitudes[i] != 0. else np.zeros([3, ])
-                                    for i in range(self.number_of_segments)])
-
-        self.segment_times = np.insert(
-            np.cumsum(self.segment_durations), 0, 0.)
-        self.duration = self.segment_times[-1]
-
-        self.rabi_rates = np.sqrt(np.sum(self.segments[:, 0:2]**2, axis=1))
-
-        self.maximum_rabi_rate = np.amax(self.rabi_rates)
-        self.maximum_detuning = np.amax(np.abs(self.segments[:, 2]))
-        self.maximum_amplitude = np.amax(self.amplitudes)
-        self.minimum_duration = np.amin(self.segment_durations)
-        self.maximum_duration = np.amax(self.segment_durations)
 
         if self.maximum_rabi_rate > UPPER_BOUND_RABI_RATE:
             raise ArgumentsValueError(
@@ -258,6 +225,135 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                 + str(LOWER_BOUND_DURATION),
                 {'segments': self.segments},
                 extras={'minimum_duration'})
+
+    @property
+    def maximum_rabi_rate(self):
+        """Returns the maximum rabi rate of the control
+
+        Returns
+        -------
+        float
+            The maximum rabi rate of the control
+        """
+
+        return np.amax(self.rabi_rates)
+
+    @property
+    def maximum_detuning_rate(self):
+        """Returns the maximum detuning rate of the control
+
+        Returns
+        -------
+        float
+            The maximum detuning rate of the control
+        """
+        return np.amax(self.detunings)
+
+    @property
+    def amplitude_x(self):
+        """Return the X-Amplitude
+
+        Returns
+        -------
+        numpy.ndarray
+            X-Amplitude of each segment
+        """
+
+        return (self.rabi_rates * np.cos(self.azimuthal_angles))/self.maximum_rabi_rate
+
+    @property
+    def amplitude_y(self):
+        """Return the Y-Amplitude
+
+        Returns
+        -------
+        numpy.ndarray
+            Y-Amplitude of each segment
+        """
+
+        return (self.rabi_rates * np.sin(self.azimuthal_angles))/self.maximum_rabi_rate
+
+    @property
+    def angles(self):
+        """Returns the angles
+
+        Returns
+        -------
+        numpy.darray
+            Angles as 1-D array of floats
+        """
+
+        amplitudes = np.sqrt(self.amplitude_x ** 2 +
+                             self.amplitude_y ** 2 +
+                             self.detunings ** 2)
+        angles = amplitudes * self.durations
+
+        return angles
+
+    @property
+    def directions(self):
+
+        """Returns the directions
+
+        Returns
+        -------
+        numpy.ndarray
+            Directions as 1-D array of floats
+        """
+        amplitudes = np.sqrt(self.amplitude_x ** 2 +
+                             self.amplitude_y ** 2 +
+                             self.detunings ** 2)
+        normalized_amplitude_x = self.amplitude_x/amplitudes
+        normalized_amplitude_y = self.amplitude_y/amplitudes
+        normalized_detunings = self.detunings/amplitudes
+
+        normalized_amplitudes = np.hstack((normalized_amplitude_x[:, np.newaxis],
+                                         normalized_amplitude_y[:, np.newaxis],
+                                         normalized_detunings[:, np.newaxis]))
+
+        directions = np.array([normalized_amplitudes if amplitudes[i] != 0. else
+                               np.zeros([3, ]) for i in range(self.number_of_segments)])
+
+        return directions
+
+    @property
+    def times(self):
+        """Returns the time of each segment within the duration
+        of the control
+
+        Returns
+        ------
+        numpy.ndarray
+            Segment times as 1-D array of floats
+        """
+
+        return np.insert(np.cumsum(self.durations), 0, 0.)
+
+    @property
+    def maximum_duration(self):
+        """Returns the maximum duration of all the control segments
+
+        Returns
+        -------
+        float
+            The maximum duration of all the control segments
+        """
+
+        return np.amax(self.durations)
+
+    @property
+    def minimum_duration(self):
+        """Returns the minimum duration of all the control segments
+
+        Returns
+        -------
+        float
+            The minimum duration of all the controls segments
+        """
+
+        return np.amin(self.durations)
+
+
 
     def _qctrl_expanded_export_content(self, file_type, coordinates):
 
@@ -480,56 +576,6 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                 arguments={'coordinates': coordinates})
 
         return plot_dictionary
-
-    def get_transformed_segments(self, coordinates=CARTESIAN, dimensionless_rabi_rate=True):
-        """
-        Function that transforms standard dimension-full segments of the
-        driven control into dimensionless segments
-
-        Parameters
-        ----------
-        coordinates : string
-            Indicated the type of segments that need to be transformed can be 'cartesian' or
-            'cylindrical' or 'polar'.
-        dimensionless_rabi_rate : boolean
-            If True, calculates the dimensionless segments
-
-        Returns
-        -------
-        numpy.ndarray
-            if dimensionless is True, returns the dimensionless segments of the driven control;
-            otherwise returns the segments
-
-        Raises
-        ------
-        ArgumentsValueError
-            Raised when an argument is invalid.
-        """
-        dimensionless_rabi_rate = bool(dimensionless_rabi_rate)
-        transformed_segments = self.segments.copy()
-
-        if dimensionless_rabi_rate:
-            transformed_segments[:, 0:2] = transformed_segments[:, 0:2] / self.maximum_rabi_rate
-
-        if coordinates == CARTESIAN:
-            pass
-        elif coordinates == CYLINDRICAL:
-
-            temp_amplitudes = np.sqrt(np.abs(
-                transformed_segments[:, 0]**2 + transformed_segments[:, 1]**2))
-            temp_azimuthal_angles = np.arctan2(
-                transformed_segments[:, 1], transformed_segments[:, 0])
-            transformed_segments = np.stack(
-                (temp_amplitudes,
-                 temp_azimuthal_angles,
-                 transformed_segments[:, 2],
-                 transformed_segments[:, 3]),
-                axis=1)
-        else:
-            raise ArgumentsValueError('Unsupported coordinates provided: ',
-                                      arguments={'coordinates': coordinates})
-
-        return transformed_segments
 
     def __str__(self):
         """Prepares a friendly string format for a Driven Control
