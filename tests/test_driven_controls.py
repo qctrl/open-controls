@@ -41,18 +41,14 @@ def test_driven_controls():
 
     """Tests the construction of driven controls
     """
-    _rabi_rates = np.array([np.pi, 0., 0.])
-    _azimuthal_angles = np.array([0., np.pi/2, np.pi])
-    _detunings = np.array([0., 0., np.pi])
-    _durations = np.array([1., 2., 3.])
+    _segments = [[np.pi, 0., 0., 1.],
+                 [np.pi, np.pi/2, 0., 2.],
+                 [0., 0., np.pi, 3.]]
+
     _name = 'driven_control'
 
-    _segments = np.hstack((_rabi_rates, _azimuthal_angles, _detunings, _durations))
-
     driven_control = DrivenControl(
-        rabi_rates = _rabi_rates, azimuthal_angles = _azimuthal_angles,
-        detunings = _detunings, durations = _durations,
-        name=_name)
+        segments=_segments, name=_name)
 
     assert np.allclose(driven_control.segments, _segments)
     assert driven_control.number_of_segments == 3
@@ -75,24 +71,13 @@ def test_control_export():
     """
 
     _maximum_rabi_rate = 5*np.pi
-    _rabi_rates = np.array([_maximum_rabi_rate*np.cos(np.pi/4),
-                            _maximum_rabi_rate * np.cos(np.pi / 3),
-                            0.])
-    _azimuthal_angles = np.array([_maximum_rabi_rate*np.sin(np.pi/4),
-                                  _maximum_rabi_rate * np.sin(np.pi / 3),
-                                  0.])
-    _detunings = np.array([0., 0., np.pi])
-    _durations = np.array([2., 2., 1.])
-    #_segments = np.array(
-    #    [[_maximum_rabi_rate*np.cos(np.pi/4), _maximum_rabi_rate*np.sin(np.pi/4), 0., 2.],
-    #    [_maximum_rabi_rate*np.cos(np.pi/3), _maximum_rabi_rate*np.sin(np.pi/3), 0., 2.],
-    #    [0., 0., np.pi, 1.]])
-
+    _segments = [[_maximum_rabi_rate*np.cos(np.pi/4), _maximum_rabi_rate*np.sin(np.pi/4), 0., 2.],
+                 [_maximum_rabi_rate*np.cos(np.pi/3), _maximum_rabi_rate*np.sin(np.pi/3), 0., 2.],
+                 [0., 0., np.pi, 1.]]
     _name = 'driven_controls'
 
     driven_control = DrivenControl(
-        rabi_rates=_rabi_rates, azimuthal_angles=_azimuthal_angles,
-        detunings=_detunings, durations=_durations, name=_name)
+        segments=_segments, name=_name)
 
     _filename = 'driven_control_qctrl_cylindrical.csv'
     driven_control.export_to_file(
@@ -131,18 +116,15 @@ def test_plot_data():
     """
     Test the plot data produced for a driven control.
     """
-    _rabi_rates = np.array([1., 0. 1.])
-    _azimuthal_angles = np.array([0., 1.5, 0.])
-    _detunings = np.array([0., 1.7, 2.1])
-    _durations = np.array([2., 3., 0.5])
 
+    segments = [[1., 0., 0., 2.],
+                [0., 1.5, 1.7, 3.],
+                [1., 0., 2.1, 0.5]]
     x_amplitude = [0., 1., 1., 0., 0., 1., 1., 0.]
     y_amplitude = [0., 0., 0., 1.5, 1.5, 0., 0., 0.]
     z_amplitude = [0., 0., 0., 1.7, 1.7, 2.1, 2.1, 0.]
     times = [0., 0., 2., 2., 5., 5., 5.5, 5.5]
-    driven_control = DrivenControl(
-        rabi_rates=_rabi_rates, azimuthal_angles=_azimuthal_angles,
-        detunings=_detunings, durations=_durations)
+    driven_control = DrivenControl(segments=segments)
     plot_data = driven_control.get_plot_formatted_arrays(dimensionless_rabi_rate=False)
 
     assert np.allclose(plot_data['times'], times)
@@ -154,10 +136,6 @@ def test_dimensionless_segments():
     """
     Test the dimensionless amplitude and angle segments generated
     """
-    _rabi_rates = np.array([1., 0., 1. / np.sqrt(2.)])
-    _azimuthal_angles = np.array([0., 1., 0. ])
-    _detunings = np.array([0., 0., 1. / np.sqrt(2.)])
-    _durations = np.array([])
     segments = [[1., 0., 0., np.pi / 2],
                 [0., 1., 0., np.pi / 2],
                 [1. / np.sqrt(2.), 0., 1. / np.sqrt(2.), np.pi / 2]]
