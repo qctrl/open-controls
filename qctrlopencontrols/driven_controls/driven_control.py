@@ -186,15 +186,14 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
         if np.any(durations <= 0):
             raise ArgumentsValueError('Duration of driven control segments must all be greater'
                                       + ' than zero.',
-                                      {'durations': durations})
+                                      {'durations': self.durations})
 
         self.number_of_segments = rabi_rates.shape[0]
         if self.number_of_segments > UPPER_BOUND_SEGMENTS:
             raise ArgumentsValueError(
                 'The number of segments must be smaller than the upper bound:'
                 + str(UPPER_BOUND_SEGMENTS),
-                {'segments': self.segments},
-                extras={'number_of_segments': self.number_of_segments})
+                {'number_of_segments': self.number_of_segments})
 
         super(DrivenControl, self).__init__(
             base_attributes=['rabi_rates', 'azimuthal_angles', 'detunings',
@@ -204,27 +203,23 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             raise ArgumentsValueError(
                 'Maximum rabi rate of segments must be smaller than the upper bound: '
                 + str(UPPER_BOUND_RABI_RATE),
-                {'segments': self.segments},
-                extras={'maximum_rabi_rate': self.maximum_rabi_rate})
+                {'maximum_rabi_rate': self.maximum_rabi_rate})
 
         if self.maximum_detuning > UPPER_BOUND_DETUNING_RATE:
             raise ArgumentsValueError(
                 'Maximum detuning of segments must be smaller than the upper bound: '
                 + str(UPPER_BOUND_DETUNING_RATE),
-                {'segments': self.segments},
-                extras={'maximum_detuning': self.maximum_detuning})
+                {'maximum_detuning': self.maximum_detuning})
         if self.maximum_duration > UPPER_BOUND_DURATION:
             raise ArgumentsValueError(
                 'Maximum duration of segments must be smaller than the upper bound: '
                 + str(UPPER_BOUND_DURATION),
-                {'segments': self.segments},
-                extras={'maximum_duration': self.maximum_duration})
+                {'maximum_duration': self.maximum_duration})
         if self.minimum_duration < LOWER_BOUND_DURATION:
             raise ArgumentsValueError(
                 'Minimum duration of segments must be larger than the lower bound: '
                 + str(LOWER_BOUND_DURATION),
-                {'segments': self.segments},
-                extras={'minimum_duration'})
+                {'minimum_duration': self.minimum_duration})
 
     @property
     def maximum_rabi_rate(self):
