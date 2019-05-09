@@ -162,6 +162,12 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             if check_none_values[3]:
                 durations = np.ones((valid_input_length,))
 
+        # time to convert to numpy array
+        rabi_rates = np.array(rabi_rates)
+        azimuthal_angles = np.array(azimuthal_angles)
+        detunings = np.array(detunings)
+        durations = np.array(durations)
+
         # check if all the rabi_rates are greater than zero
         if np.any(rabi_rates < 0.):
             raise ArgumentsValueError('All rabi rates must be greater than zero.',
