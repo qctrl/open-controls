@@ -63,8 +63,8 @@ def test_primitive_control_segments():
     _rabi_rotation = np.pi
     _azimuthal_angle = np.pi/2
     _segments = [[
-        np.cos(_azimuthal_angle),
-        np.sin(_azimuthal_angle),
+        _rabi_rotation * np.cos(_azimuthal_angle),
+        _rabi_rotation * np.sin(_azimuthal_angle),
         0.,
         _rabi_rotation], ]
 
@@ -82,8 +82,13 @@ def test_primitive_control_segments():
         scheme=PRIMITIVE
     )
 
-    assert np.allclose(_segments, primitive_control_1.segments)
-    assert np.allclose(_segments, primitive_control_2.segments)
+    for control in [primitive_control_1, primitive_control_2]:
+        segments = np.vstack((
+            control.amplitude_x, control.amplitude_y,
+            control.detunings, control.durations
+        ))
+        assert np.allclose(_segments, segments)
+        assert np.allclose(_rabi_rate, control.maximum_rabi_rate)
 
 
 def test_wimperis_1_control():

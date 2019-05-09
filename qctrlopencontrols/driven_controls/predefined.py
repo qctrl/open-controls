@@ -226,19 +226,18 @@ def new_primitive_control(
 
     Returns
     -------
-    qctrlopencontrols.DrivenControls
+    qctrlopencontrols.DrivenControl
         The driven control.
     """
-    (rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
+    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
         maximum_rabi_rate, rabi_rotation, azimuthal_angle)
 
-    segments = [[
-        rabi_rate * np.cos(azimuthal_angle),
-        rabi_rate * np.sin(azimuthal_angle),
-        0.,
-        rabi_rotation / rabi_rate], ]
-
-    return DrivenControl(segments=segments, **kwargs)
+    return DrivenControl(
+        rabi_rates=[rabi_rotation],
+        azimuthal_angles=[azimuthal_angle],
+        detunings=[0],
+        durations=[rabi_rotation/maximum_rabi_rate],
+        **kwargs)
 
 
 def new_wimperis_1_control(
@@ -263,23 +262,26 @@ def new_wimperis_1_control(
 
     Returns
     -------
-    qctrlopencontrols.DrivenControls
+    qctrlopencontrols.DrivenControl
         The driven control.
     """
-    (rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
+    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
         maximum_rabi_rate, rabi_rotation, azimuthal_angle)
 
     phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
-    angles = np.array([
-        [rabi_rotation, azimuthal_angle],
-        [np.pi, phi_p + azimuthal_angle],
-        [2 * np.pi, 3. * phi_p + azimuthal_angle],
-        [np.pi, phi_p + azimuthal_angle]])
 
-    segments = _derive_segments(angles, amplitude=rabi_rate)
+    rabi_rates = [rabi_rotation, np.pi, 2 * np.pi, np.pi]
+    azimuthal_angles = [azimuthal_angle, azimuthal_angle + phi_p,
+                        azimuthal_angle + 3 * phi_p, azimuthal_angle + phi_p]
+    detunings = [0] * 4
+    durations = [rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rates]
 
-    return DrivenControl(segments=segments, **kwargs)
-
+    return DrivenControl(
+        rabi_rates=rabi_rates,
+        azimuthal_angles=azimuthal_angles,
+        detunings=detunings,
+        durations=durations,
+        **kwargs)
 
 def new_solovay_kitaev_1_control(
         rabi_rotation=None,
@@ -303,22 +305,25 @@ def new_solovay_kitaev_1_control(
 
     Returns
     -------
-    qctrlopencontrols.DrivenControls
+    qctrlopencontrols.DrivenControl
         The driven control.
     """
-    (rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
+    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
         maximum_rabi_rate, rabi_rotation, azimuthal_angle)
 
     phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
 
-    angles = np.array([
-        [rabi_rotation, azimuthal_angle],
-        [2 * np.pi, -phi_p + azimuthal_angle],
-        [2 * np.pi, phi_p + azimuthal_angle]])
+    rabi_rates = [rabi_rotation, 2 * np.pi, 2 * np.pi]
+    azimuthal_angles = [azimuthal_angle, azimuthal_angle - phi_p, azimuthal_angle + phi_p]
+    detunings = [0] * 3
+    durations = [rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rates]
 
-    segments = _derive_segments(angles, amplitude=rabi_rate)
-
-    return DrivenControl(segments=segments, **kwargs)
+    return DrivenControl(
+        rabi_rates=rabi_rates,
+        azimuthal_angles=azimuthal_angles,
+        detunings=detunings,
+        durations=durations,
+        **kwargs)
 
 
 def new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(  # pylint: disable=invalid-name
@@ -343,7 +348,7 @@ def new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control
 
     Returns
     -------
-    qctrlopencontrols.DrivenControls
+    qctrlopencontrols.DrivenControl
         The driven control.
 
     Raises
@@ -351,7 +356,7 @@ def new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control
     ArgumentsValueError
         Raised when an argument is invalid.
     """
-    (rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
+    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
         maximum_rabi_rate, rabi_rotation, azimuthal_angle)
 
     # Create a lookup table for rabi rotation and phase angles, taken from the official paper.
@@ -391,9 +396,17 @@ def new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control
         [theta_2, phi_2 + azimuthal_angle],
         [theta_3, phi_3 + azimuthal_angle]])
 
-    segments = _derive_segments(angles, amplitude=rabi_rate)
+    rabi_rates = [theta_1, theta_2, theta_3]
+    azimuthal_angles = [azimuthal_angle + phi_1, azimuthal_angle + phi_2, azimuthal_angle + phi_1]
+    detunings = [0] * 3
+    durations = [rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rates]
 
-    return DrivenControl(segments=segments, **kwargs)
+    return DrivenControl(
+        rabi_rates=rabi_rates,
+        azimuthal_angles=azimuthal_angles,
+        detunings=detunings,
+        durations=durations,
+        **kwargs)
 
 
 def new_compensating_for_off_resonance_with_a_pulse_sequence_control(  # pylint: disable=invalid-name
@@ -418,10 +431,10 @@ def new_compensating_for_off_resonance_with_a_pulse_sequence_control(  # pylint:
 
     Returns
     -------
-    qctrlopencontrols.DrivenControls
+    qctrlopencontrols.DrivenControl
         The driven control.
     """
-    (rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
+    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
         maximum_rabi_rate, rabi_rotation, azimuthal_angle)
 
     k = np.arcsin(np.sin(rabi_rotation / 2.) / 2.)
@@ -430,9 +443,17 @@ def new_compensating_for_off_resonance_with_a_pulse_sequence_control(  # pylint:
         [2. * np.pi - 2. * k, np.pi + azimuthal_angle],
         [rabi_rotation / 2. - k, azimuthal_angle]])
 
-    segments = _derive_segments(angles, amplitude=rabi_rate)
+    rabi_rates = [rabi_rotation / 2. + 2 * np.pi - k, 2 * np.pi - 2 * k, rabi_rotation / 2. - k]
+    azimuthal_angles = [azimuthal_angle, azimuthal_angle + np.pi, azimuthal_angle]
+    detunings = [0] * 3
+    durations = [rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rates]
 
-    return DrivenControl(segments=segments, **kwargs)
+    return DrivenControl(
+        rabi_rates=rabi_rates,
+        azimuthal_angles=azimuthal_angles,
+        detunings=detunings,
+        durations=durations,
+        **kwargs)
 
 
 def new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control(  # pylint: disable=invalid-name
@@ -458,10 +479,10 @@ def new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_contr
 
     Returns
     -------
-    qctrlopencontrols.DrivenControls
+    qctrlopencontrols.DrivenControl
         The driven control.
     """
-    (rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
+    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
         maximum_rabi_rate, rabi_rotation, azimuthal_angle)
 
     phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
@@ -474,9 +495,20 @@ def new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_contr
         [2. * np.pi, 3 * phi_p + azimuthal_angle],
         [np.pi, phi_p + azimuthal_angle]])
 
-    segments = _derive_segments(angles, amplitude=rabi_rate)
+    rabi_rates = [2 * np.pi + rabi_rotation / 2. - k, 2 * np.pi - 2 * k,
+                  rabi_rotation / 2. - k, np.pi, 2 * np.pi, np.pi]
+    azimuthal_angles = [azimuthal_angle, azimuthal_angle + np.pi, azimuthal_angle,
+                        azimuthal_angle + phi_p, azimuthal_angle + 3 * phi_p,
+                        azimuthal_angle + phi_p]
+    detunings = [0] * 6
+    durations = [rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rates]
 
-    return DrivenControl(segments=segments, **kwargs)
+    return DrivenControl(
+        rabi_rates=rabi_rates,
+        azimuthal_angles=azimuthal_angles,
+        detunings=detunings,
+        durations=durations,
+        **kwargs)
 
 
 def new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control(  # pylint: disable=invalid-name
@@ -502,10 +534,10 @@ def new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev
 
     Returns
     -------
-    qctrlopencontrols.DrivenControls
+    qctrlopencontrols.DrivenControl
         The driven control.
     """
-    (rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
+    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
         maximum_rabi_rate, rabi_rotation, azimuthal_angle)
 
     phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
@@ -517,9 +549,19 @@ def new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev
         [2. * np.pi, -phi_p + azimuthal_angle],
         [2. * np.pi, phi_p + azimuthal_angle]])
 
-    segments = _derive_segments(angles, amplitude=rabi_rate)
+    rabi_rates = [2 * np.pi + rabi_rotation / 2. - k, 2 * np.pi - 2 * k,
+                  rabi_rotation / 2. - k, 2 * np.pi, 2 * np.pi]
+    azimuthal_angles = [azimuthal_angle, azimuthal_angle + np.pi, azimuthal_angle,
+                        azimuthal_angle - phi_p, azimuthal_angle + phi_p]
+    detunings = [0] * 5
+    durations = [rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rates]
 
-    return DrivenControl(segments=segments, **kwargs)
+    return DrivenControl(
+        rabi_rates=rabi_rates,
+        azimuthal_angles=azimuthal_angles,
+        detunings=detunings,
+        durations=durations,
+        **kwargs)
 
 
 def new_corpse_in_scrofulous_control(  # pylint: disable=invalid-name
@@ -546,7 +588,7 @@ def new_corpse_in_scrofulous_control(  # pylint: disable=invalid-name
 
     Returns
     -------
-    qctrlopencontrols.DrivenControls
+    qctrlopencontrols.DrivenControl
         The driven control.
 
     Raises
@@ -554,7 +596,7 @@ def new_corpse_in_scrofulous_control(  # pylint: disable=invalid-name
     ArgumentsValueError
         Raised when an argument is invalid.
     """
-    (rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
+    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
         maximum_rabi_rate, rabi_rotation, azimuthal_angle)
 
     # Create a lookup table for rabi rotation and phase angles, taken from
@@ -597,12 +639,21 @@ def new_corpse_in_scrofulous_control(  # pylint: disable=invalid-name
             [2. * np.pi - 2. * k, np.pi + phi + azimuthal_angle],
             [theta / 2. - k, phi + azimuthal_angle]])
         total_angles.append(angles)
-
+    
     total_angles = np.vstack(total_angles)
 
-    segments = _derive_segments(total_angles, amplitude=rabi_rate)
+    rabi_rates = total_angles[:, 0]
+    azimuthal_angles = total_angles[:, 1]
 
-    return DrivenControl(segments=segments, **kwargs)
+    detunings = [0] * 9
+    durations = [rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rates]
+
+    return DrivenControl(
+        rabi_rates=rabi_rates,
+        azimuthal_angles=azimuthal_angles,
+        detunings=detunings,
+        durations=durations,
+        **kwargs)
 
 
 def new_walsh_amplitude_modulated_filter_1_control(  # pylint: disable=invalid-name
@@ -635,7 +686,7 @@ def new_walsh_amplitude_modulated_filter_1_control(  # pylint: disable=invalid-n
     ArgumentsValueError
         Raised when an argument is invalid.
     """
-    (rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
+    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
         maximum_rabi_rate, rabi_rotation, azimuthal_angle)
 
     if np.isclose(rabi_rotation, np.pi):
@@ -652,7 +703,7 @@ def new_walsh_amplitude_modulated_filter_1_control(  # pylint: disable=invalid-n
             'rabi_rotation angle must be either pi, pi/2 or pi/4',
             {'rabi_rotation': rabi_rotation})
 
-    rabi_rate_plus = rabi_rate
+    rabi_rate_plus = maximum_rabi_rate
     time_segment = theta_plus / rabi_rate_plus
     rabi_rate_minus = theta_minus / time_segment
 
@@ -670,4 +721,14 @@ def new_walsh_amplitude_modulated_filter_1_control(  # pylint: disable=invalid-n
          rabi_rate_plus * np.sin(azimuthal_angle),
          0., time_segment]])
 
-    return DrivenControl(segments=segments, **kwargs)
+    rabi_rates = [rabi_rate_plus, rabi_rate_minus, rabi_rate_minus, rabi_rate_plus]
+    azimuthal_angles = [azimuthal_angle] * 4
+    detunings = [0] * 4
+    durations = [rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rates]
+
+    return DrivenControl(
+        rabi_rates=rabi_rates,
+        azimuthal_angles=azimuthal_angles,
+        detunings=detunings,
+        durations=durations,
+        **kwargs)

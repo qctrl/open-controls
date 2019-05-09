@@ -25,6 +25,10 @@ from qctrlopencontrols.exceptions import ArgumentsValueError
 from qctrlopencontrols import DrivenControl
 from qctrlopencontrols.globals import CARTESIAN, CYLINDRICAL
 
+from qctrlopencontrols.driven_controls.constants import (
+    UPPER_BOUND_SEGMENTS, UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE,
+    UPPER_BOUND_DURATION, LOWER_BOUND_DURATION)
+
 
 def _remove_file(filename):
     """Removes the file after test done
@@ -41,43 +45,56 @@ def test_driven_controls():
 
     """Tests the construction of driven controls
     """
-    _segments = [[np.pi, 0., 0., 1.],
-                 [np.pi, np.pi/2, 0., 2.],
-                 [0., 0., np.pi, 3.]]
+    _rabi_rates = [np.pi, np.pi, 0]
+    _azimuthal_angles = [np.pi/2, 0, -np.pi]
+    _detunings = [0, 0, 0]
+    _durations = [1, 2, 3]
 
     _name = 'driven_control'
 
     driven_control = DrivenControl(
-        segments=_segments, name=_name)
+        rabi_rates=_rabi_rates,
+        azimuthal_angles=_azimuthal_angles,
+        detunings=_detunings,
+        durations=_durations,
+        name=_name)
 
-    assert np.allclose(driven_control.segments, _segments)
-    assert driven_control.number_of_segments == 3
-    assert np.allclose(driven_control.segment_durations, np.array(
-        [1., 2., 3.]))
+    assert np.allclose(driven_control.rabi_rates, _rabi_rates)
+    assert np.allclose(driven_control.durations, _durations)
+    assert np.allclose(driven_control.detunings, _detunings)
+    assert np.allclose(driven_control.azimuthal_angles, _azimuthal_angles)
 
     assert driven_control.name == _name
 
     with pytest.raises(ArgumentsValueError):
-
-        _ = DrivenControl(segments=[[1e12, 0., 3, 1.]])
-        _ = DrivenControl(segments=[[3., 0., 1e12, 1.]])
-        _ = DrivenControl(segments=[[3., 0., 1e12, -1.]])
-        _ = DrivenControl(segments=[[0., 0., 0., 0.]])
-
+        _ = DrivenControl(rabi_rates=[-1])
+    with pytest.raises(ArgumentsValueError):
+        _ = DrivenControl(durations=[0])
+    with pytest.raises(ArgumentsValueError):
+        _ = DrivenControl(rabi_rates=[1.1 * UPPER_BOUND_RABI_RATE])
+    with pytest.raises(ArgumentsValueError):
+        _ = DrivenControl(detunings=[1.1 * UPPER_BOUND_DETUNING_RATE])
+    with pytest.raises(ArgumentsValueError):
+        _ = DrivenControl(rabi_rates=[1] * UPPER_BOUND_SEGMENTS + [1])
 
 def test_control_export():
 
     """Tests exporting the control to a file
     """
+    _rabi_rates = [5 * np.pi, 4 * np.pi, 3 * np.pi]
+    _azimuthal_angles = [np.pi / 4, np.pi / 3, 0]
+    _detunings = [0, 0, np.pi]
+    _durations = [2, 2, 1]
 
-    _maximum_rabi_rate = 5*np.pi
-    _segments = [[_maximum_rabi_rate*np.cos(np.pi/4), _maximum_rabi_rate*np.sin(np.pi/4), 0., 2.],
-                 [_maximum_rabi_rate*np.cos(np.pi/3), _maximum_rabi_rate*np.sin(np.pi/3), 0., 2.],
-                 [0., 0., np.pi, 1.]]
-    _name = 'driven_controls'
+    _name = 'driven_control'
 
     driven_control = DrivenControl(
-        segments=_segments, name=_name)
+        rabi_rates=_rabi_rates,
+        azimuthal_angles=_azimuthal_angles,
+        detunings=_detunings,
+        durations=_durations,
+        name=_name
+    )
 
     _filename = 'driven_control_qctrl_cylindrical.csv'
     driven_control.export_to_file(
@@ -116,22 +133,33 @@ def test_plot_data():
     """
     Test the plot data produced for a driven control.
     """
+    _rabi_rates = [np.pi, 2 * np.pi, np.pi]
+    _azimuthal_angles = [0, np.pi/2, -np.pi/2]
+    _detunings = [0, 1, 0]
+    _durations = [1, 1.25, 1.5]
 
-    segments = [[1., 0., 0., 2.],
-                [0., 1.5, 1.7, 3.],
-                [1., 0., 2.1, 0.5]]
-    x_amplitude = [0., 1., 1., 0., 0., 1., 1., 0.]
-    y_amplitude = [0., 0., 0., 1.5, 1.5, 0., 0., 0.]
-    z_amplitude = [0., 0., 0., 1.7, 1.7, 2.1, 2.1, 0.]
-    times = [0., 0., 2., 2., 5., 5., 5.5, 5.5]
-    driven_control = DrivenControl(segments=segments)
-    plot_data = driven_control.get_plot_formatted_arrays(dimensionless_rabi_rate=False)
+    driven_control = DrivenControl(
+        rabi_rates=_rabi_rates,
+        azimuthal_angles=_azimuthal_angles,
+        detunings=_detunings,
+        durations=_durations
+    )
+
+    x_amplitude = [0., 0.5, 0.5, 0., 0., 0., 0., 0.]
+    y_amplitude = [0., 0., 0., 1., 1., -0.5, -0.5, 0.]
+    z_amplitude = [0., 0., 0., 1., 1., 0., 0., 0.]
+    times = [0., 0., 1., 1., 2.25, 2.25, 3.75, 3.75]
+
+    plot_data = driven_control.get_plot_formatted_arrays(
+        dimensionless_rabi_rate=False, coordinates='cartesian'
+    )
 
     assert np.allclose(plot_data['times'], times)
     assert np.allclose(plot_data['amplitude_x'], x_amplitude)
     assert np.allclose(plot_data['amplitude_y'], y_amplitude)
     assert np.allclose(plot_data['detuning'], z_amplitude)
 
+@pytest.mark.skip('save for later')
 def test_dimensionless_segments():
     """
     Test the dimensionless amplitude and angle segments generated
