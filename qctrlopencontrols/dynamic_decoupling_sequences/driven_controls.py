@@ -258,9 +258,11 @@ def convert_dds_to_driven_controls(
 
     if np.allclose(pulse_start_ends, 0.0):
         # the original sequence should be a free evolution
-        control_segments = np.reshape(
-            np.array([0., 0., 0., sequence_duration]), (1, 4))
-        return DrivenControl(segments=control_segments, **kwargs)
+        return DrivenControl(rabi_rates=[0.],
+                             azimuthal_angles=[0.],
+                             detunings=[0.],
+                             durations=[sequence_duration],
+                             **kwargs)
 
     control_rabi_rates = np.zeros((operations.shape[1]*2,))
     control_azimuthal_angles = np.zeros((operations.shape[1] * 2,))
