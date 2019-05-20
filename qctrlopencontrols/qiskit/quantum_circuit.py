@@ -152,11 +152,11 @@ def convert_dds_to_quantum_circuit(
     pre_post_gate_parameters : tuple or None, optional
         Tuple of (length 3) floating point numbers that correspond to :math:`\\theta,
         \\phi, \\lambda` parameters respectively in `U3` gate defined in Qiskit
-        as `U3Gate(theta, phi, lamda)`. Qiskit documentation suggests this to be
+        as `U3Gate(theta, phi, lambda)`. Qiskit documentation suggests this to be
         the most generalized definition of unitary gates. Defaults to
         (pi/2, -pi/2, pi/2) that corresponds to a :math:`pi/2`
         rotation around X-axis; if None, the resulting circuit will have no `pre` or `post`
-        gater. See `IBM-Q Documentation
+        gates. See `IBM-Q Documentation
         <https://quantumexperience.ng.bluemix.net/proxy/tutorial/full-user-guide/
         002-The_Weird_and_Wonderful_World_of_the_Qubit/004-advanced_qubit_gates.html?` _.
     add_measurement : bool, optional
