@@ -219,9 +219,6 @@ def convert_dds_to_quantum_circuit(
     if target_qubits is None:
         target_qubits = [0]
 
-    #if pre_post_gate_parameters is None:
-    #    pre_post_gate_parameters =
-
     if (pre_post_gate_parameters is not None and
             len(pre_post_gate_parameters) != 3):
         raise ArgumentsValueError('Pre-Post gate parameters must be a list of 3 '
