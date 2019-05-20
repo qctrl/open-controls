@@ -27,7 +27,8 @@ from qiskit.qasm import pi
 from qctrlopencontrols.dynamic_decoupling_sequences import DynamicDecouplingSequence
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
-from .constants import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
+from .constants import (FIX_DURATION_UNITARY, INSTANT_UNITARY,
+                        DEFAULT_PRE_POST_GATE_PARAMETERS)
 
 
 def _get_circuit_gate_list(dynamic_decoupling_sequence,
@@ -131,7 +132,7 @@ def convert_dds_to_quantum_circuit(
         dynamic_decoupling_sequence,
         target_qubits=None,
         gate_time=0.1,
-        pre_post_gate_parameters=None,
+        pre_post_gate_parameters=DEFAULT_PRE_POST_GATE_PARAMETERS,
         add_measurement=True,
         algorithm=FIX_DURATION_UNITARY,
         quantum_registers=None,
@@ -148,13 +149,14 @@ def convert_dds_to_quantum_circuit(
         defaults to None
     gate_time : float, optional
         Time (in seconds) delay introduced by a gate; defaults to 0.1
-    pre_post_gate_parameters : list, optional
-        List of (length 3) floating point numbers; These numbers correspond to :math:`\\theta,
-        \\phi, \\lambda` parameters in `U3` gate defined in Qiskit as `U3Gate(theta, phi, lamda)`.
-        Qiskit documentation suggests this to be the most generalized definition of unitary
-        gates. Defaults to None; if None, the parameters are assumed to be
-        :math:`[pi/2, -pi/2, pi/2]` that corresponds to `pi/2` rotation around X-axis.
-        See `IBM-Q Documentation
+    pre_post_gate_parameters : tuple or None, optional
+        Tuple of (length 3) floating point numbers that correspond to :math:`\\theta,
+        \\phi, \\lambda` parameters respectively in `U3` gate defined in Qiskit
+        as `U3Gate(theta, phi, lamda)`. Qiskit documentation suggests this to be
+        the most generalized definition of unitary gates. Defaults to
+        (pi/2, -pi/2, pi/2) that corresponds to a :math:`pi/2`
+        rotation around X-axis; if None, the resulting circuit will have no `pre` or `post`
+        gater. See `IBM-Q Documentation
         <https://quantumexperience.ng.bluemix.net/proxy/tutorial/full-user-guide/
         002-The_Weird_and_Wonderful_World_of_the_Qubit/004-advanced_qubit_gates.html?` _.
     add_measurement : bool, optional
@@ -217,10 +219,11 @@ def convert_dds_to_quantum_circuit(
     if target_qubits is None:
         target_qubits = [0]
 
-    if pre_post_gate_parameters is None:
-        pre_post_gate_parameters = [np.pi / 2, -pi / 2, pi / 2]
+    #if pre_post_gate_parameters is None:
+    #    pre_post_gate_parameters =
 
-    if len(pre_post_gate_parameters) != 3:
+    if (pre_post_gate_parameters is not None and
+            len(pre_post_gate_parameters) != 3):
         raise ArgumentsValueError('Pre-Post gate parameters must be a list of 3 '
                                   'floating point numbers.',
                                   {'pre_post_gate_params': pre_post_gate_parameters})
@@ -267,12 +270,13 @@ def convert_dds_to_quantum_circuit(
         gate_time=gate_time,
         unitary_time=unitary_time)
 
-    for qubit in target_qubits:
-        quantum_circuit.u3(pre_post_gate_parameters[0], #pylint: disable=no-member
-                           pre_post_gate_parameters[1],
-                           pre_post_gate_parameters[2],
-                           quantum_registers[qubit])
-        quantum_circuit.barrier(quantum_registers[qubit]) #pylint: disable=no-member
+    if pre_post_gate_parameters is not None:
+        for qubit in target_qubits:
+            quantum_circuit.u3(pre_post_gate_parameters[0], #pylint: disable=no-member
+                               pre_post_gate_parameters[1],
+                               pre_post_gate_parameters[2],
+                               quantum_registers[qubit])
+            quantum_circuit.barrier(quantum_registers[qubit]) #pylint: disable=no-member
 
     offset_count = 0
     for gate in circuit_gate_list:
@@ -318,12 +322,13 @@ def convert_dds_to_quantum_circuit(
 
         offset_count += 1
 
-    for qubit in target_qubits:
-        quantum_circuit.u3(pre_post_gate_parameters[0], #pylint: disable=no-member
-                           pre_post_gate_parameters[1],
-                           pre_post_gate_parameters[2],
-                           quantum_registers[qubit])
-        quantum_circuit.barrier(quantum_registers)  # pylint: disable=no-member
+    if pre_post_gate_parameters is not None:
+        for qubit in target_qubits:
+            quantum_circuit.u3(pre_post_gate_parameters[0], #pylint: disable=no-member
+                               pre_post_gate_parameters[1],
+                               pre_post_gate_parameters[2],
+                               quantum_registers[qubit])
+            quantum_circuit.barrier(quantum_registers)  # pylint: disable=no-member
 
     if add_measurement:
         for q_index, qubit in enumerate(target_qubits):
