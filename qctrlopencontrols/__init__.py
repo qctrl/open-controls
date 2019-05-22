@@ -23,3 +23,4 @@ from .dynamic_decoupling_sequences import (DynamicDecouplingSequence,
                                            convert_dds_to_driven_controls)
 from .driven_controls import DrivenControl, new_predefined_driven_control
 from .qiskit import convert_dds_to_quantum_circuit
+from .cirq import convert_dds_to_cirq_circuit
