@@ -25,7 +25,8 @@ import cirq
 from qctrlopencontrols.dynamic_decoupling_sequences import DynamicDecouplingSequence
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
-from .constants import (SCHEDULED_CIRCUIT, STANDARD_CIRCUIT, DEFAULT_ROTATION_MATRIX)
+from .constants import (SCHEDULED_CIRCUIT, STANDARD_CIRCUIT,
+                        DEFAULT_PRE_POST_ROTATION_MATRIX)
 
 
 def _get_circuit_gate_list(dynamic_decoupling_sequence,
@@ -370,7 +371,7 @@ def convert_dds_to_cirq_circuit(
         dynamic_decoupling_sequence,
         target_qubits=None,
         gate_time=0.1,
-        pre_post_gate_unitary_matrix=DEFAULT_ROTATION_MATRIX,
+        pre_post_gate_unitary_matrix=DEFAULT_PRE_POST_ROTATION_MATRIX,
         add_measurement=True,
         circuit_type=STANDARD_CIRCUIT,
         device=None):

@@ -14,7 +14,7 @@
 
 """
 ===================================
-Tests converstion to Qiskit Circuit
+Tests converstion to Cirq Circuit
 ===================================
 """
 
@@ -75,8 +75,8 @@ def _create_test_sequence(sequence_scheme):
     return sequence
 
 
-def _check_circuit_unitary(pre_post_gate_unitary_matrix,
-                           circuit_type, expected_result):
+def _check_circuit_output(pre_post_gate_unitary_matrix,
+                          circuit_type, expected_result):
     """Check the unitary of a dynamic decoupling operation
     """
 
@@ -100,27 +100,27 @@ def test_identity_operation():
     """Tests if the Dynamic Decoupling Sequence gives rise to expected
     state with different pre-post gates
     """
-    _check_circuit_unitary(None, 'scheduled circuit', 0)
+    _check_circuit_output(None, 'scheduled circuit', 0)
     pre_post_gate_unitary_matrix = (1. / np.power(2, 0.5)) * np.array(
         [[1, -1j], [-1j, 1]], dtype='complex')
-    _check_circuit_unitary(pre_post_gate_unitary_matrix,
-                           'scheduled circuit', 1)
+    _check_circuit_output(pre_post_gate_unitary_matrix,
+                          'scheduled circuit', 1)
 
     pre_post_gate_unitary_matrix = np.array(
         [[1, 0], [0, 1]], dtype='complex')
-    _check_circuit_unitary(pre_post_gate_unitary_matrix,
-                           'scheduled circuit', 0)
+    _check_circuit_output(pre_post_gate_unitary_matrix,
+                          'scheduled circuit', 0)
 
-    _check_circuit_unitary(None, 'standard circuit', 0)
+    _check_circuit_output(None, 'standard circuit', 0)
     pre_post_gate_unitary_matrix = (1. / np.power(2, 0.5)) * np.array(
         [[1, -1j], [-1j, 1]], dtype='complex')
-    _check_circuit_unitary(pre_post_gate_unitary_matrix,
-                           'standard circuit', 1)
+    _check_circuit_output(pre_post_gate_unitary_matrix,
+                          'standard circuit', 1)
 
     pre_post_gate_unitary_matrix = np.array(
         [[1, 0], [0, 1]], dtype='complex')
-    _check_circuit_unitary(pre_post_gate_unitary_matrix,
-                           'standard circuit', 0)
+    _check_circuit_output(pre_post_gate_unitary_matrix,
+                          'standard circuit', 0)
 
 if __name__ == '__main__':
     pass

@@ -31,7 +31,7 @@ STANDARD_CIRCUIT = 'standard circuit'
 identity gates between desired rotation operations.
 """
 
-DEFAULT_ROTATION_MATRIX = (1. / np.power(2, 0.5)) * np.array(
+DEFAULT_PRE_POST_ROTATION_MATRIX = (1. / np.power(2, 0.5)) * np.array(
     [[1, -1j], [-1j, 1]], dtype='complex')
 """Unitary matrix for a :math:`\\pi/2` rotation around X-axis.
 """
