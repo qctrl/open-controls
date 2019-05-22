@@ -27,7 +27,7 @@ from qctrlopencontrols import (
 
 def _create_test_sequence(sequence_scheme):
 
-    """Create a DD sequence of choice'''
+    """Create a DD sequence of choice
 
     Parameters
     ----------
@@ -77,7 +77,7 @@ def _create_test_sequence(sequence_scheme):
 
 def _check_circuit_output(pre_post_gate_unitary_matrix,
                           circuit_type, expected_result):
-    """Check the unitary of a dynamic decoupling operation
+    """Check the outcome of a circuit against expected outcome
     """
 
     simulator = cirq.Simulator()
@@ -95,10 +95,10 @@ def _check_circuit_output(pre_post_gate_unitary_matrix,
         assert results.measurements['qubit-0'] == expected_result
 
 
-def test_identity_operation():
+def test_cirq_circuit_operation():
 
     """Tests if the Dynamic Decoupling Sequence gives rise to expected
-    state with different pre-post gates
+    state with different pre-post gates parameters in cirq circuits
     """
     _check_circuit_output(None, 'scheduled circuit', 0)
     pre_post_gate_unitary_matrix = (1. / np.power(2, 0.5)) * np.array(
