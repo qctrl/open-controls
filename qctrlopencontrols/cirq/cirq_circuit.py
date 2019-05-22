@@ -156,6 +156,11 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
     -------
     cirq.Schedule
         The scheduled circuit operations
+
+    Raises
+    ------
+    ArgumentsValueError
+        If there is rotations around more than one axis at any of the offsets
     """
 
     gate_time = gate_time * 1e9
@@ -178,10 +183,11 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
     circuit_operations = []
     if pre_post_gate is not None:
         for qubit in target_qubits:
-            op = cirq.ScheduledOperation(time=cirq.Timestamp(nanos=0),
-                                         duration=cirq.Duration(nanos=gate_time),
-                                         operation=pre_post_gate(qubit))
-            circuit_operations.append(op)
+            operation = cirq.ScheduledOperation(
+                time=cirq.Timestamp(nanos=0),
+                duration=cirq.Duration(nanos=gate_time),
+                operation=pre_post_gate(qubit))
+            circuit_operations.append(operation)
         offsets = offsets + gate_time
 
     offset_count = 0
@@ -197,48 +203,55 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
             if not np.isclose(rotation, 0.0):
                 nonzero_pulse_counts += 1
         if nonzero_pulse_counts > 1:
-            raise ArgumentsValueError('Open Controls support a sequence with one '
-                                      'valid pulse at any offset. Found sequence '
-                                      'with multiple rotation operations at an offset.',
-                                      {'dynamic_decoupling_sequence': str(
-                                          dynamic_decoupling_sequence),
-                                          'instance_operation': instance_operation})
+            raise ArgumentsValueError(
+                'Open Controls support a sequence with one '
+                'valid pulse at any offset. Found sequence '
+                'with multiple rotation operations at an offset.',
+                {'dynamic_decoupling_sequence': str(dynamic_decoupling_sequence),
+                 'instance_operation': instance_operation})
+
         for qubit in target_qubits:
             if nonzero_pulse_counts == 0:
-                op = cirq.ScheduledOperation(time=cirq.Timestamp(nanos=offsets[op_idx]),
-                                             duration=cirq.Duration(nanos=gate_time),
-                                             operation=cirq.I(qubit))
+                operation = cirq.ScheduledOperation(
+                    time=cirq.Timestamp(nanos=offsets[op_idx]),
+                    duration=cirq.Duration(nanos=gate_time),
+                    operation=cirq.I(qubit))
             else:
                 if not np.isclose(rotations[0], 0.0):
-                    op = cirq.ScheduledOperation(time=cirq.Timestamp(nanos=offsets[op_idx]),
-                                                 duration=cirq.Duration(nanos=gate_time),
-                                                 operation=cirq.Rx(rotations[0])(qubit))
+                    operation = cirq.ScheduledOperation(
+                        time=cirq.Timestamp(nanos=offsets[op_idx]),
+                        duration=cirq.Duration(nanos=gate_time),
+                        operation=cirq.Rx(rotations[0])(qubit))
                 elif not np.isclose(rotations[1], 0.0):
-                    op = cirq.ScheduledOperation(time=cirq.Timestamp(nanos=offsets[op_idx]),
-                                                 duration=cirq.Duration(nanos=gate_time),
-                                                 operation=cirq.Rx(rotations[1])(qubit))
+                    operation = cirq.ScheduledOperation(
+                        time=cirq.Timestamp(nanos=offsets[op_idx]),
+                        duration=cirq.Duration(nanos=gate_time),
+                        operation=cirq.Rx(rotations[1])(qubit))
                 elif not np.isclose(rotations[2], 0.):
-                    op = cirq.ScheduledOperation(time=cirq.Timestamp(nanos=offsets[op_idx]),
-                                                 duration=cirq.Duration(nanos=gate_time),
-                                                 operation=cirq.Rx(rotations[2])(qubit))
+                    operation = cirq.ScheduledOperation(
+                        time=cirq.Timestamp(nanos=offsets[op_idx]),
+                        duration=cirq.Duration(nanos=gate_time),
+                        operation=cirq.Rx(rotations[2])(qubit))
             offset_count += 1
-            circuit_operations.append(op)
+            circuit_operations.append(operation)
 
     if pre_post_gate is not None:
         for qubit in target_qubits:
-            op = cirq.ScheduledOperation(time=cirq.Timestamp(nanos=offsets[-1] + gate_time),
-                                         duration=cirq.Duration(nanos=gate_time),
-                                         operation=pre_post_gate(qubit))
-            circuit_operations.append(op)
+            operation = cirq.ScheduledOperation(
+                time=cirq.Timestamp(nanos=offsets[-1] + gate_time),
+                duration=cirq.Duration(nanos=gate_time),
+                operation=pre_post_gate(qubit))
+            circuit_operations.append(operation)
         offsets = offsets + gate_time
 
     if add_measurement:
         for idx, qubit in enumerate(target_qubits):
-            op = cirq.ScheduledOperation(time=cirq.Timestamp(nanos=offsets[-1] + gate_time),
-                                         duration=cirq.Duration(nanos=gate_time),
-                                         operation=cirq.MeasurementGate(
-                                             1 ,key='qubit-{}'.format(idx))(qubit))
-            circuit_operations.append(op)
+            operation = cirq.ScheduledOperation(
+                time=cirq.Timestamp(nanos=offsets[-1] + gate_time),
+                duration=cirq.Duration(nanos=gate_time),
+                operation=cirq.MeasurementGate(
+                    1, key='qubit-{}'.format(idx))(qubit))
+            circuit_operations.append(operation)
 
     schedule = cirq.Schedule(device=device, scheduled_operations=circuit_operations)
     return schedule
@@ -274,6 +287,11 @@ def _get_standard_circuit(dynamic_decoupling_sequence,
         The circuit prepared from dynamic decoupling sequence. In standard circuit
         the desired decoupling pulses are placed at offsets and the duration between
         the pulses are constructed from identity gates with delays equal to 'gate_time'.
+
+    Raises
+    ------
+    ArgumentsValueError
+        If there is rotations around more than one axis at any of the offsets
     """
 
     unitary_time = gate_time
@@ -303,8 +321,7 @@ def _get_standard_circuit(dynamic_decoupling_sequence,
         instance_operation = np.array(
             [dynamic_decoupling_sequence.rabi_rotations[offset_count],
              dynamic_decoupling_sequence.azimuthal_angles[offset_count],
-             dynamic_decoupling_sequence.detuning_rotations[offset_count]
-                                       ])
+             dynamic_decoupling_sequence.detuning_rotations[offset_count]])
 
         rotations = _get_rotations(instance_operation)
         nonzero_pulse_counts = 0
@@ -312,12 +329,12 @@ def _get_standard_circuit(dynamic_decoupling_sequence,
             if not np.isclose(rotation, 0.0):
                 nonzero_pulse_counts += 1
         if nonzero_pulse_counts > 1:
-            raise ArgumentsValueError('Open Controls support a sequence with one '
-                                      'valid pulse at any offset. Found sequence '
-                                      'with multiple rotation operations at an offset.',
-                                      {'dynamic_decoupling_sequence': str(
-                                          dynamic_decoupling_sequence),
-                                          'instance_operation': instance_operation})
+            raise ArgumentsValueError(
+                'Open Controls support a sequence with one '
+                'valid pulse at any offset. Found sequence '
+                'with multiple rotation operations at an offset.',
+                {'dynamic_decoupling_sequence': str(dynamic_decoupling_sequence),
+                 'instance_operation': instance_operation})
         gate_list = []
         for qubit in target_qubits:
             if nonzero_pulse_counts == 0:
@@ -370,7 +387,7 @@ def convert_dds_to_cirq_circuit(
         Time (in seconds) delay introduced by a gate; defaults to 0.1
     pre_post_gate_unitary_matrix : numpy.ndarray or None, optional
         A 2x2 unitary matrix as pre-post gate operations. Defaults to
-        the unitary matrix corresponding to a rotation of :math:'pi/2' around
+        the unitary matrix corresponding to a rotation of :math:'\\pi/2' around
         X-axis. If None, pre-post gate is omitted from the circuit.
     add_measurement : bool, optional
         If True, the circuit contains a measurement operation for each of the
@@ -402,7 +419,7 @@ def convert_dds_to_cirq_circuit(
     Raises
     ------
     ArgumentsValueError
-        If any of the input parameters are invalid
+        If any of the input parameters result in an invalid operation.
 
     Notes
     -----
@@ -419,8 +436,8 @@ def convert_dds_to_cirq_circuit(
     In 'standard circuit' type, the `gaps` or idle
     time in between active pulses are filled up with `identity` gates. Each identity gate
     introduces a delay of `gate_time`. In this implementation, the number of identity gates
-    is determined by :math:`np.int(np.floor(offset_distance / gate_time))`. As a consequence, the duration of
-    the real-circuit is :math:`gate_time \\times number_of_identity_gates +
+    is determined by :math:`np.int(np.floor(offset_distance / gate_time))`. As a consequence,
+    the duration of the real-circuit is :math:`gate_time \\times number_of_identity_gates +
     pulse_gate_time \\times number_of_pulses`.
 
     In 'scheduled circuit', the active pulses are scheduled to be activated at a certain
@@ -465,19 +482,16 @@ def convert_dds_to_cirq_circuit(
                                      pre_post_gate=pre_post_gate,
                                      add_measurement=add_measurement)
 
-    elif circuit_type == SCHEDULED_CIRCUIT:
-        if device is None:
-            device = cirq.UnconstrainedDevice
+    if device is None:
+        device = cirq.UnconstrainedDevice
 
-        if not isinstance(device, cirq.Device):
-            raise ArgumentsValueError('Device must be a cirq.Device type.',
-                                      {'device': device})
+    if not isinstance(device, cirq.Device):
+        raise ArgumentsValueError('Device must be a cirq.Device type.',
+                                  {'device': device})
 
-        return _get_scheduled_circuit(dynamic_decoupling_sequence=dynamic_decoupling_sequence,
-                                      target_qubits=target_qubits,
-                                      gate_time=gate_time,
-                                      pre_post_gate=pre_post_gate,
-                                      add_measurement=add_measurement,
-                                      device=device)
-
-
+    return _get_scheduled_circuit(dynamic_decoupling_sequence=dynamic_decoupling_sequence,
+                                  target_qubits=target_qubits,
+                                  gate_time=gate_time,
+                                  pre_post_gate=pre_post_gate,
+                                  add_measurement=add_measurement,
+                                  device=device)
