@@ -33,7 +33,7 @@ def _get_circuit_gate_list(dynamic_decoupling_sequence,
                            unitary_time):
 
     """Converts the operations in a sequence into list of gates
-    of a quantum circuit
+    of a circuit
 
     Parameters
     ----------
@@ -155,7 +155,9 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
     Returns
     -------
     cirq.Schedule
-        The scheduled circuit operations
+        The scheduled circuit operations. The Schedule object contains a
+        series of desired gates at specific times measured from the start
+        of the duration.
 
     Raises
     ------
@@ -263,7 +265,7 @@ def _get_standard_circuit(dynamic_decoupling_sequence,
                           pre_post_gate,
                           add_measurement):
 
-    """Returns a standard circuit construncted from dynamic
+    """Returns a standard circuit constructed from dynamic
     decoupling sequence
 
     Parameters
@@ -375,6 +377,7 @@ def convert_dds_to_cirq_circuit(
 
     """Converts a Dynamic Decoupling Sequence into QuantumCircuit
     as defined in Qiskit
+
     Parameters
     ----------
     dynamic_decoupling_sequence : DynamicDecouplingSequence
@@ -412,7 +415,7 @@ def convert_dds_to_cirq_circuit(
 
     Returns
     -------
-    cirq.circuit or cirq.schedule
+    cirq.Circuit or cirq.Schedule
         The circuit or schedule (depending on circuit_type option).
         Either of them can be used with cirq.Simulator.
 
@@ -433,10 +436,11 @@ def convert_dds_to_cirq_circuit(
     `duration` where a pulse occurs instantaneously. A series of appropriate circuit components
     is placed in order to represent these pulses.
 
-    In 'standard circuit' type, the `gaps` or idle
-    time in between active pulses are filled up with `identity` gates. Each identity gate
-    introduces a delay of `gate_time`. In this implementation, the number of identity gates
-    is determined by :math:`np.int(np.floor(offset_distance / gate_time))`. As a consequence,
+    In 'standard circuit', the `gaps` or idle time in between active pulses are filled up
+    with `identity` gates. Each identity gate introduces a delay of `gate_time`. In this
+    implementation, the number of identity gates is determined by
+    :math:`np.int(np.floor(offset_distance / gate_time))`. As a consequence,
+    :math:`np.int(np.floor(offset_distance / gate_time))`. As a consequence,
     the duration of the real-circuit is :math:`gate_time \\times number_of_identity_gates +
     pulse_gate_time \\times number_of_pulses`.
 
