@@ -13,9 +13,9 @@
 # limitations under the License.
 
 """
-======================
+=================
 cirq.cirq_circuit
-======================
+=================
 """
 
 import numpy as np
@@ -166,6 +166,7 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
         If there is rotations around more than one axis at any of the offsets
     """
 
+    # time in nano seconds
     gate_time = gate_time * 1e9
 
     rabi_rotations = dynamic_decoupling_sequence.rabi_rotations
@@ -181,6 +182,7 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
 
     operations = np.vstack((rabi_rotations, azimuthal_angles, detuning_rotations))
     offsets = dynamic_decoupling_sequence.offsets
+    # offsets in nano seconds
     offsets = offsets * 1e9
 
     circuit_operations = []
@@ -376,8 +378,8 @@ def convert_dds_to_cirq_circuit(
         circuit_type=STANDARD_CIRCUIT,
         device=None):
 
-    """Converts a Dynamic Decoupling Sequence into QuantumCircuit
-    as defined in Qiskit
+    """Converts a Dynamic Decoupling Sequence into quantum circuit
+    as defined in cirq
 
     Parameters
     ----------
@@ -386,7 +388,7 @@ def convert_dds_to_cirq_circuit(
     target_qubits : list, optional
         List of target qubits for the sequence operation; the qubits must be
         cirq.Qid type; defaults to None in which case a 1-D lattice of one
-        qubit is used.
+        qubit is used (indexed as 0).
     gate_time : float, optional
         Time (in seconds) delay introduced by a gate; defaults to 0.1
     pre_post_gate_unitary_matrix : numpy.ndarray or None, optional
@@ -395,8 +397,9 @@ def convert_dds_to_cirq_circuit(
         X-axis. If None, pre-post gate is omitted from the circuit.
     add_measurement : bool, optional
         If True, the circuit contains a measurement operation for each of the
-        target qubits. Each measurement will have a string as the key. The string
-        is formatted as 'qubit-X' where X is a numeral between 0 and len(target_qubits).
+        target qubits. Measurement from each of the qubits is associated
+        with a string as key. The string is formatted as 'qubit-X' where
+        X is a number between 0 and len(target_qubits).
     circuit_type : str, optional
         One of 'scheduled circuit' or 'standard circuit'. In the case of
         'standard circuit', the circuit will be a sequence of desired operations

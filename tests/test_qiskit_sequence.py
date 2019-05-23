@@ -75,13 +75,18 @@ def _create_test_sequence(sequence_scheme):
     return sequence
 
 
-def _check_circuit_unitary(pre_post_gate_parameters, multiplier):
+def _check_circuit_unitary(pre_post_gate_parameters):
     """Check the unitary of a dynamic decoupling operation
     """
 
     backend = 'unitary_simulator'
     number_of_shots = 1
     backend_simulator = BasicAer.get_backend(backend)
+
+    if pre_post_gate_parameters is None:
+        multiplier = (1. / np.power(2, 0.5)) * np.array([[1, -1j], [-1j, 1]], dtype='complex')
+    else:
+        multiplier = np.array([[1, 0], [0, 1]])
 
     for sequence_scheme in ['Carr-Purcell', 'Carr-Purcell-Meiboom-Gill',
                             'Uhrig single-axis', 'periodic single-axis', 'Walsh single-axis',
@@ -110,12 +115,9 @@ def test_identity_operation():
     """Tests if the Dynamic Decoupling Sequence gives rise to Identity
     operation in Qiskit
     """
-    _multiplier = np.array([[1, 0], [0, 1]])
-    _check_circuit_unitary([0., 0., 0.], _multiplier)
-    _check_circuit_unitary(None, _multiplier)
 
-    _multiplier = (1. / np.power(2, 0.5)) * np.array([[1, -1j], [-1j, 1]], dtype='complex')
-    _check_circuit_unitary([np.pi / 2, -np.pi / 2, np.pi / 2], _multiplier)
+    _check_circuit_unitary([0., 0., 0.])
+    _check_circuit_unitary(None)
 
 if __name__ == '__main__':
     pass
