@@ -129,7 +129,6 @@ def _get_rotations(operation):
 def _get_scheduled_circuit(dynamic_decoupling_sequence,
                            target_qubits,
                            gate_time,
-                           pre_post_gate,
                            add_measurement,
                            device):
 
@@ -145,9 +144,6 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
         cirq.Qid type
     gate_time : float, optional
         Time (in seconds) delay introduced by a gate; defaults to 0.1
-    pre_post_gate : SingleQubitGate
-        A SingleQubitGate type (defined in cirq package) defined by a 2x2
-        unitary matrix.
     add_measurement : bool
         If True, a measurement operation is added to each of the qubits.
     device : cirq.Device
@@ -186,15 +182,6 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
     offsets = offsets * 1e9
 
     circuit_operations = []
-    if pre_post_gate is not None:
-        for qubit in target_qubits:
-            operation = cirq.ScheduledOperation(
-                time=cirq.Timestamp(nanos=0),
-                duration=cirq.Duration(nanos=gate_time),
-                operation=pre_post_gate(qubit))
-            circuit_operations.append(operation)
-        offsets = offsets + gate_time
-
     offset_count = 0
     for op_idx in range(operations.shape[1]):
         instance_operation = np.array([dynamic_decoupling_sequence.rabi_rotations[op_idx],
@@ -240,15 +227,6 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
             offset_count += 1
             circuit_operations.append(operation)
 
-    if pre_post_gate is not None:
-        for qubit in target_qubits:
-            operation = cirq.ScheduledOperation(
-                time=cirq.Timestamp(nanos=offsets[-1] + gate_time),
-                duration=cirq.Duration(nanos=gate_time),
-                operation=pre_post_gate(qubit))
-            circuit_operations.append(operation)
-        offsets = offsets + gate_time
-
     if add_measurement:
         for idx, qubit in enumerate(target_qubits):
             operation = cirq.ScheduledOperation(
@@ -265,7 +243,6 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
 def _get_standard_circuit(dynamic_decoupling_sequence,
                           target_qubits,
                           gate_time,
-                          pre_post_gate,
                           add_measurement):
 
     """Returns a standard circuit constructed from dynamic
@@ -280,9 +257,6 @@ def _get_standard_circuit(dynamic_decoupling_sequence,
         cirq.Qid type
     gate_time : float, optional
         Time (in seconds) delay introduced by a gate; defaults to 0.1
-    pre_post_gate : SingleQubitGate
-        A SingleQubitGate type (defined in cirq package) defined by a 2x2
-        unitary matrix.
     add_measurement : bool
         If True, a measurement operation is added to each of the qubits.
 
@@ -306,12 +280,6 @@ def _get_standard_circuit(dynamic_decoupling_sequence,
         unitary_time=unitary_time)
 
     circuit = cirq.Circuit()
-
-    if pre_post_gate is not None:
-        gate_list = []
-        for qubit in target_qubits:
-            gate_list.append(pre_post_gate(qubit))
-        circuit.append(gate_list)
 
     offset_count = 0
     for gate in circuit_gate_list:
@@ -354,12 +322,6 @@ def _get_standard_circuit(dynamic_decoupling_sequence,
         offset_count += 1
         circuit.append(gate_list)
 
-    if pre_post_gate is not None:
-        gate_list = []
-        for qubit in target_qubits:
-            gate_list.append(pre_post_gate(qubit))
-        circuit.append(gate_list)
-
     if add_measurement:
         gate_list = []
         for idx, qubit in enumerate(target_qubits):
@@ -373,7 +335,6 @@ def convert_dds_to_cirq_circuit(
         dynamic_decoupling_sequence,
         target_qubits=None,
         gate_time=0.1,
-        pre_post_gate_unitary_matrix=DEFAULT_PRE_POST_ROTATION_MATRIX,
         add_measurement=True,
         circuit_type=STANDARD_CIRCUIT,
         device=None):
@@ -391,10 +352,6 @@ def convert_dds_to_cirq_circuit(
         qubit is used (indexed as 0).
     gate_time : float, optional
         Time (in seconds) delay introduced by a gate; defaults to 0.1
-    pre_post_gate_unitary_matrix : numpy.ndarray or None, optional
-        A 2x2 unitary matrix as pre-post gate operations. Defaults to
-        the unitary matrix corresponding to a rotation of :math:'\\pi/2' around
-        X-axis. If None, pre-post gate is omitted from the circuit.
     add_measurement : bool, optional
         If True, the circuit contains a measurement operation for each of the
         target qubits. Measurement from each of the qubits is associated
@@ -474,11 +431,6 @@ def convert_dds_to_cirq_circuit(
     if target_qubits is None:
         target_qubits = [cirq.LineQubit(0)]
 
-    if pre_post_gate_unitary_matrix is None:
-        pre_post_gate = None
-    else:
-        pre_post_gate = cirq.SingleQubitMatrixGate(pre_post_gate_unitary_matrix)
-
     if circuit_type not in [SCHEDULED_CIRCUIT, STANDARD_CIRCUIT]:
         raise ArgumentsValueError('Circuit type must be one of {} or {}'.format(
             SCHEDULED_CIRCUIT, STANDARD_CIRCUIT), {'algorithm': circuit_type})
@@ -487,7 +439,6 @@ def convert_dds_to_cirq_circuit(
         return _get_standard_circuit(dynamic_decoupling_sequence=dynamic_decoupling_sequence,
                                      target_qubits=target_qubits,
                                      gate_time=gate_time,
-                                     pre_post_gate=pre_post_gate,
                                      add_measurement=add_measurement)
 
     if device is None:
@@ -500,6 +451,5 @@ def convert_dds_to_cirq_circuit(
     return _get_scheduled_circuit(dynamic_decoupling_sequence=dynamic_decoupling_sequence,
                                   target_qubits=target_qubits,
                                   gate_time=gate_time,
-                                  pre_post_gate=pre_post_gate,
                                   add_measurement=add_measurement,
                                   device=device)

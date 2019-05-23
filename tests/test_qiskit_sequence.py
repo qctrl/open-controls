@@ -66,19 +66,21 @@ def _create_test_sequence(sequence_scheme, pre_post_rotation):
 
     elif dd_sequence_params['scheme'] in ['quadratic']:
 
+        dd_sequence_params['duration'] = 16
         dd_sequence_params['number_outer_offsets'] = 4
         dd_sequence_params['number_inner_offsets'] = 4
 
     elif dd_sequence_params['scheme'] in ['X concatenated',
                                           'XY concatenated']:
 
+        dd_sequence_params['duration'] = 16
         dd_sequence_params['concatenation_order'] = 2
 
     sequence = new_predefined_dds(**dd_sequence_params)
     return sequence
 
 
-def _check_circuit_unitary(pre_post_rotation, multiplier):
+def _check_circuit_unitary(pre_post_rotation, multiplier, algorithm):
     """Check the unitary of a dynamic decoupling operation
     """
 
@@ -93,7 +95,7 @@ def _check_circuit_unitary(pre_post_rotation, multiplier):
         sequence = _create_test_sequence(sequence_scheme, pre_post_rotation)
         quantum_circuit = convert_dds_to_quantum_circuit(
             dynamic_decoupling_sequence=sequence,
-            add_measurement=False, algorithm='instant unitary')
+            add_measurement=False, algorithm=algorithm)
 
         job = execute(quantum_circuit,
                       backend_simulator,
@@ -113,10 +115,18 @@ def test_identity_operation():
     operation in Qiskit
     """
     _multiplier = np.array([[1, 0], [0, 1]])
-    _check_circuit_unitary(False, _multiplier)
+    _check_circuit_unitary(False, _multiplier, 'instant unitary')
 
     _multiplier = (1. / np.power(2, 0.5)) * np.array([[1, -1j], [-1j, 1]], dtype='complex')
-    _check_circuit_unitary(True, _multiplier)
+    _check_circuit_unitary(True, _multiplier, 'instant unitary')
+
+    _multiplier = np.array([[1, 0], [0, 1]])
+    _check_circuit_unitary(False, _multiplier, 'fixed duration unitary')
+
+    _multiplier = (1. / np.power(2, 0.5)) * np.array([[1, -1j], [-1j, 1]], dtype='complex')
+    _check_circuit_unitary(True, _multiplier, 'fixed duration unitary')
+
+
 
 if __name__ == '__main__':
     pass

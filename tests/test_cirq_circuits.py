@@ -25,9 +25,9 @@ from qctrlopencontrols import (
     new_predefined_dds, convert_dds_to_cirq_circuit)
 
 
-def _create_test_sequence(sequence_scheme):
+def _create_test_sequence(sequence_scheme, pre_post_rotation):
 
-    """Create a DD sequence of choice
+    """Create a DD sequence of choice'''
 
     Parameters
     ----------
@@ -36,6 +36,8 @@ def _create_test_sequence(sequence_scheme):
         'Uhrig single-axis', 'Periodic single-axis', 'Walsh single-axis',
         'Quadratic', 'X concatenated',
         'XY concatenated'
+    pre_post_rotation : bool
+        If True, adds a :math:`X_{\\pi/2}` gate on either ends
 
     Returns
     -------
@@ -47,6 +49,7 @@ def _create_test_sequence(sequence_scheme):
     dd_sequence_params = dict()
     dd_sequence_params['scheme'] = sequence_scheme
     dd_sequence_params['duration'] = 4
+    dd_sequence_params['pre_post_rotation'] = pre_post_rotation
 
     # 'spin_echo' does not need any additional parameter
 
@@ -75,8 +78,8 @@ def _create_test_sequence(sequence_scheme):
     return sequence
 
 
-def _check_circuit_output(pre_post_gate_unitary_matrix,
-                          circuit_type, expected_result):
+def _check_circuit_output(pre_post_rotation,
+                          circuit_type, expected_state):
     """Check the outcome of a circuit against expected outcome
     """
 
@@ -85,14 +88,13 @@ def _check_circuit_output(pre_post_gate_unitary_matrix,
                             'Uhrig single-axis', 'periodic single-axis',
                             'Walsh single-axis', 'quadratic', 'X concatenated',
                             'XY concatenated']:
-        sequence = _create_test_sequence(sequence_scheme)
+        sequence = _create_test_sequence(sequence_scheme, pre_post_rotation)
         cirq_circuit = convert_dds_to_cirq_circuit(
             dynamic_decoupling_sequence=sequence,
-            pre_post_gate_unitary_matrix=pre_post_gate_unitary_matrix,
             add_measurement=True, circuit_type=circuit_type)
 
         results = simulator.run(cirq_circuit)
-        assert results.measurements['qubit-0'] == expected_result
+        assert results.measurements['qubit-0'] == expected_state
 
 
 def test_cirq_circuit_operation():
@@ -100,27 +102,12 @@ def test_cirq_circuit_operation():
     """Tests if the Dynamic Decoupling Sequence gives rise to expected
     state with different pre-post gates parameters in cirq circuits
     """
-    _check_circuit_output(None, 'scheduled circuit', 0)
-    pre_post_gate_unitary_matrix = (1. / np.power(2, 0.5)) * np.array(
-        [[1, -1j], [-1j, 1]], dtype='complex')
-    _check_circuit_output(pre_post_gate_unitary_matrix,
-                          'scheduled circuit', 1)
+    _check_circuit_output(False, 'scheduled circuit', 0)
+    _check_circuit_output(True, 'scheduled circuit', 1)
 
-    pre_post_gate_unitary_matrix = np.array(
-        [[1, 0], [0, 1]], dtype='complex')
-    _check_circuit_output(pre_post_gate_unitary_matrix,
-                          'scheduled circuit', 0)
+    _check_circuit_output(False, 'standard circuit', 0)
+    _check_circuit_output(True, 'standard circuit', 1)
 
-    _check_circuit_output(None, 'standard circuit', 0)
-    pre_post_gate_unitary_matrix = (1. / np.power(2, 0.5)) * np.array(
-        [[1, -1j], [-1j, 1]], dtype='complex')
-    _check_circuit_output(pre_post_gate_unitary_matrix,
-                          'standard circuit', 1)
-
-    pre_post_gate_unitary_matrix = np.array(
-        [[1, 0], [0, 1]], dtype='complex')
-    _check_circuit_output(pre_post_gate_unitary_matrix,
-                          'standard circuit', 0)
 
 if __name__ == '__main__':
     pass
