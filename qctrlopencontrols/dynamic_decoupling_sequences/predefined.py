@@ -106,7 +106,9 @@ def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
     return sequence
 
 
-def new_ramsey_sequence(duration=None, **kwargs):
+def new_ramsey_sequence(duration=None,
+                        pre_post_rotation=False,
+                        **kwargs):
 
     """Ramsey sequence
 
@@ -114,6 +116,9 @@ def new_ramsey_sequence(duration=None, **kwargs):
     ----------
     duration : float, optional
         Total duration of the sequence. Defaults to None
+    pre_post_rotation : bool, optional
+        If True, a :math:`\\pi.2` rotation is added at the
+        start and end of the sequence.
     kwargs : dict
         Additional keywords required by
         qctrlopencontrols.sequences.DynamicDecouplingSequence
@@ -136,10 +141,17 @@ def new_ramsey_sequence(duration=None, **kwargs):
             'Sequence duration must be above zero:',
             {'duration': duration})
 
-    offsets = np.array([0.0, duration])
-    rabi_rotations = np.zeros(offsets.shape)
-    azimuthal_angles = np.zeros(offsets.shape)
-    detuning_rotations = np.zeros(offsets.shape)
+    if pre_post_rotation:
+        offsets = duration * np.array([0.0, 1.])
+        rabi_rotations = np.array([np.pi/2, np.pi/2])
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
+
+    else:
+        offsets = []
+        rabi_rotations = []
+        azimuthal_angles = []
+        detuning_rotations = []
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -149,7 +161,9 @@ def new_ramsey_sequence(duration=None, **kwargs):
         **kwargs)
 
 
-def new_spin_echo_sequence(duration=None, **kwargs):
+def new_spin_echo_sequence(duration=None,
+                           pre_post_rotation=False,
+                           **kwargs):
 
     """Spin Echo Sequence.
 
@@ -157,6 +171,9 @@ def new_spin_echo_sequence(duration=None, **kwargs):
     ---------
     duration : float, optional
         Total duration of the sequence. Defaults to None
+    pre_post_rotation : bool, optional
+        If True, a :math:`\\pi.2` rotation is added at the
+        start and end of the sequence.
     kwargs : dict
         Additional keywords required by
         qctrlopencontrols.sequences.DynamicDecouplingSequence
@@ -179,10 +196,16 @@ def new_spin_echo_sequence(duration=None, **kwargs):
             'Sequence duration must be above zero:',
             {'duration': duration})
 
-    offsets = duration * np.array([0.5])
-    rabi_rotations = np.array([np.pi])
-    azimuthal_angles = np.zeros(offsets.shape)
-    detuning_rotations = np.zeros(offsets.shape)
+    if pre_post_rotation:
+        offsets = duration * np.array([0., 0.5, 1.])
+        rabi_rotations = np.array([np.pi/2, np.pi, np.pi/2])
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
+    else:
+        offsets = duration * np.array([0.5])
+        rabi_rotations = np.array([np.pi])
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -192,7 +215,10 @@ def new_spin_echo_sequence(duration=None, **kwargs):
         **kwargs)
 
 
-def new_carr_purcell_sequence(duration=None, number_of_offsets=None, **kwargs):
+def new_carr_purcell_sequence(duration=None,
+                              number_of_offsets=None,
+                              pre_post_rotation=False,
+                              **kwargs):
 
     """Carr-Purcell Sequence.
 
@@ -202,6 +228,9 @@ def new_carr_purcell_sequence(duration=None, number_of_offsets=None, **kwargs):
         Total duration of the sequence. Defaults to None
     number_of_offsets : int, optional
         Number of offsets. Defaults to None
+    pre_post_rotation : bool, optional
+        If True, a :math:`\\pi.2` rotation is added at the
+        start and end of the sequence.
     kwargs : dict
         Additional keywords required by
         qctrlopencontrols.sequences.DynamicDecouplingSequence
@@ -232,12 +261,26 @@ def new_carr_purcell_sequence(duration=None, number_of_offsets=None, **kwargs):
             {'number_of_offsets': number_of_offsets})
 
     offsets = _carr_purcell_meiboom_gill_offsets(duration, number_of_offsets)
-    rabi_rotations = np.zeros(offsets.shape)
-    azimuthal_angles = np.zeros(offsets.shape)
-    detuning_rotations = np.zeros(offsets.shape)
 
-    # set all as X_pi
-    rabi_rotations[0:] = np.pi
+    if pre_post_rotation:
+        offsets = np.append([0], offsets)
+        offsets = np.append(offsets, [duration])
+
+        rabi_rotations = np.zeros(offsets.shape)
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
+
+        rabi_rotations[0] = np.pi/2
+        rabi_rotations[-1] = np.pi/2
+        rabi_rotations[1:-1] = np.pi
+    else:
+
+        rabi_rotations = np.zeros(offsets.shape)
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
+
+        # set all as X_pi
+        rabi_rotations[0:] = np.pi
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -247,6 +290,7 @@ def new_carr_purcell_sequence(duration=None, number_of_offsets=None, **kwargs):
 
 def new_carr_purcell_meiboom_gill_sequence(duration=None,  # pylint: disable=invalid-name
                                            number_of_offsets=None,
+                                           pre_post_rotation=False,
                                            **kwargs):
     """Carr-Purcell-Meiboom-Gill Sequences.
 
@@ -256,6 +300,9 @@ def new_carr_purcell_meiboom_gill_sequence(duration=None,  # pylint: disable=inv
         Total duration of the sequence. Defaults to None
     number_of_offsets : int, optional
         Number of offsets. Defaults to None
+    pre_post_rotation : bool, optional
+        If True, a :math:`\\pi.2` rotation is added at the
+        start and end of the sequence.
     kwargs : dict
         Additional keywords required by
         qctrlopencontrols.sequences.DynamicDecouplingSequence
@@ -287,13 +334,27 @@ def new_carr_purcell_meiboom_gill_sequence(duration=None,  # pylint: disable=inv
 
     offsets = _carr_purcell_meiboom_gill_offsets(duration, number_of_offsets)
 
-    rabi_rotations = np.zeros(offsets.shape)
-    azimuthal_angles = np.zeros(offsets.shape)
-    detuning_rotations = np.zeros(offsets.shape)
+    if pre_post_rotation:
+        offsets = np.append([0], offsets)
+        offsets = np.append(offsets, [duration])
 
-    # set all azimuthal_angles=pi/2, rabi_rotations = pi
-    rabi_rotations[0:] = np.pi
-    azimuthal_angles[0:] = np.pi/2
+        rabi_rotations = np.zeros(offsets.shape)
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
+
+        rabi_rotations[0] = np.pi/2
+        rabi_rotations[-1] = np.pi/2
+        rabi_rotations[1:-1] = np.pi
+        azimuthal_angles[1:-1] = np.pi/2
+    else:
+
+        rabi_rotations = np.zeros(offsets.shape)
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
+
+        # set all azimuthal_angles=pi/2, rabi_rotations = pi
+        rabi_rotations[0:] = np.pi
+        azimuthal_angles[0:] = np.pi/2
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -303,7 +364,9 @@ def new_carr_purcell_meiboom_gill_sequence(duration=None,  # pylint: disable=inv
         **kwargs)
 
 
-def new_uhrig_single_axis_sequence(duration=None, number_of_offsets=None, **kwargs):
+def new_uhrig_single_axis_sequence(duration=None, number_of_offsets=None,
+                                   pre_post_rotation=False,
+                                   **kwargs):
 
     """Uhrig Single Axis Sequence.
 
@@ -313,6 +376,9 @@ def new_uhrig_single_axis_sequence(duration=None, number_of_offsets=None, **kwar
         Total duration of the sequence. Defaults to None
     number_of_offsets : int, optional
         Number of offsets. Defaults to None
+    pre_post_rotation : bool, optional
+        If True, a :math:`\\pi.2` rotation is added at the
+        start and end of the sequence.
     kwargs : dict
         Additional keywords required by
         qctrlopencontrols.sequences.DynamicDecouplingSequence
@@ -344,13 +410,27 @@ def new_uhrig_single_axis_sequence(duration=None, number_of_offsets=None, **kwar
 
     offsets = _uhrig_single_axis_offsets(duration, number_of_offsets)
 
-    rabi_rotations = np.zeros(offsets.shape)
-    azimuthal_angles = np.zeros(offsets.shape)
-    detuning_rotations = np.zeros(offsets.shape)
+    if pre_post_rotation:
+        offsets = np.append([0], offsets)
+        offsets = np.append(offsets, [duration])
 
-    # set all the azimuthal_angles as pi/2, rabi_rotations = pi
-    rabi_rotations[0:] = np.pi
-    azimuthal_angles[0:] = np.pi/2
+        rabi_rotations = np.zeros(offsets.shape)
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
+
+        rabi_rotations[0] = np.pi/2
+        rabi_rotations[-1] = np.pi/2
+        rabi_rotations[1:-1] = np.pi
+        azimuthal_angles[1:-1] = np.pi/2
+    else:
+
+        rabi_rotations = np.zeros(offsets.shape)
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
+
+        # set all azimuthal_angles=pi/2, rabi_rotations = pi
+        rabi_rotations[0:] = np.pi
+        azimuthal_angles[0:] = np.pi/2
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -361,7 +441,9 @@ def new_uhrig_single_axis_sequence(duration=None, number_of_offsets=None, **kwar
 
 
 def new_periodic_single_axis_sequence(duration=None,    # pylint: disable=invalid-name
-                                      number_of_offsets=None, **kwargs):
+                                      number_of_offsets=None,
+                                      pre_post_rotation=False,
+                                      **kwargs):
 
     """Periodic Single Axis Sequence.
 
@@ -371,6 +453,9 @@ def new_periodic_single_axis_sequence(duration=None,    # pylint: disable=invali
         Total duration of the sequence. Defaults to None
     number_of_offsets : int, optional
         Number of offsets. Defaults to None
+    pre_post_rotation : bool, optional
+        If True, a :math:`\\pi.2` rotation is added at the
+        start and end of the sequence.
     kwargs : dict
         Additional keywords required by
         qctrlopencontrols.sequences.DynamicDecouplingSequence
@@ -406,12 +491,24 @@ def new_periodic_single_axis_sequence(duration=None,    # pylint: disable=invali
     deltas = np.array(deltas)
     offsets = duration * deltas
 
-    rabi_rotations = np.zeros(offsets.shape)
-    azimuthal_angles = np.zeros(offsets.shape)
-    detuning_rotations = np.zeros(offsets.shape)
+    if pre_post_rotation:
+        offsets = np.append([0], offsets)
+        offsets = np.append(offsets, [duration])
 
-    # set all the rabi_rotations to X_pi
-    rabi_rotations[0:] = np.pi
+        rabi_rotations = np.zeros(offsets.shape)
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
+
+        rabi_rotations[0] = np.pi/2
+        rabi_rotations[-1] = np.pi/2
+        rabi_rotations[1:-1] = np.pi
+    else:
+
+        rabi_rotations = np.zeros(offsets.shape)
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
+
+        rabi_rotations[0:] = np.pi
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -423,6 +520,7 @@ def new_periodic_single_axis_sequence(duration=None,    # pylint: disable=invali
 
 def new_walsh_single_axis_sequence(duration=None,
                                    paley_order=None,
+                                   pre_post_rotation=False,
                                    **kwargs):
 
     """Welsh Single Axis Sequence.
@@ -433,6 +531,9 @@ def new_walsh_single_axis_sequence(duration=None,
         Total duration of the sequence. Defaults to None
     paley_order : int, optional
         Defaults to 1. The paley order of the walsh sequence.
+    pre_post_rotation : bool, optional
+        If True, a :math:`\\pi.2` rotation is added at the
+        start and end of the sequence.
     kwargs : dict
         Additional keywords required by
         qctrlopencontrols.sequences.DynamicDecouplingSequence
@@ -482,12 +583,24 @@ def new_walsh_single_axis_sequence(duration=None,
     walsh_relative_offsets = np.array(walsh_relative_offsets, dtype=np.float)
     offsets = duration * walsh_relative_offsets
 
-    rabi_rotations = np.zeros(offsets.shape)
-    azimuthal_angles = np.zeros(offsets.shape)
-    detuning_rotations = np.zeros(offsets.shape)
+    if pre_post_rotation:
+        offsets = np.append([0], offsets)
+        offsets = np.append(offsets, [duration])
 
-    # set the rabi_rotations to X_pi
-    rabi_rotations[0:] = np.pi
+        rabi_rotations = np.zeros(offsets.shape)
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
+
+        rabi_rotations[0] = np.pi/2
+        rabi_rotations[-1] = np.pi/2
+        rabi_rotations[1:-1] = np.pi
+    else:
+
+        rabi_rotations = np.zeros(offsets.shape)
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
+
+        rabi_rotations[0:] = np.pi
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -498,7 +611,9 @@ def new_walsh_single_axis_sequence(duration=None,
 
 
 def new_quadratic_sequence(duration=None,
-                           number_inner_offsets=None, number_outer_offsets=None,
+                           number_inner_offsets=None,
+                           number_outer_offsets=None,
+                           pre_post_rotation=False,
                            **kwargs):
 
     """Quadratic Decoupling Sequence
@@ -514,6 +629,9 @@ def new_quadratic_sequence(duration=None,
     number_inner_offsets : int, optional
         Number of inner Z-pi Pulses. Defaults to None. Not used if number_of_offsets
         is supplied
+    pre_post_rotation : bool, optional
+        If True, a :math:`\\pi.2` rotation is added at the
+        start and end of the sequence.
     kwargs : dict
         Additional keywords required by
         qctrlopencontrols.sequences.DynamicDecouplingSequence
@@ -585,6 +703,16 @@ def new_quadratic_sequence(duration=None,
     rabi_rotations = rabi_rotations[0:-1]
     detuning_rotations = detuning_rotations[0:-1]
 
+    if pre_post_rotation:
+        offsets = np.append([0], offsets)
+        offsets = np.append(offsets, [duration])
+
+        rabi_rotations = np.append([np.pi/2], rabi_rotations)
+        detuning_rotations = np.append([0.], detuning_rotations)
+
+        rabi_rotations = np.append(rabi_rotations, [np.pi/2])
+        detuning_rotations = np.append(detuning_rotations, [0.])
+
     # finally create the azimuthal angles as all zeros
     azimuthal_angles = np.zeros(offsets.shape)
 
@@ -596,7 +724,10 @@ def new_quadratic_sequence(duration=None,
         **kwargs)
 
 
-def new_x_concatenated_sequence(duration=1.0, concatenation_order=None, **kwargs):
+def new_x_concatenated_sequence(duration=1.0,
+                                concatenation_order=None,
+                                pre_post_rotation=False,
+                                **kwargs):
 
     """X-Concatenated Dynamic Decoupling Sequence
     Concatenation of base sequence C(\tau/2)XC(\tau/2)X
@@ -609,6 +740,9 @@ def new_x_concatenated_sequence(duration=1.0, concatenation_order=None, **kwargs
     concatenation_order : int, optional
         defaults to None
         The number of concatenation of base sequence
+    pre_post_rotation : bool, optional
+        If True, a :math:`\\pi.2` rotation is added at the
+        start and end of the sequence.
     kwargs : dict
         Additional keywords required by
         qctrlopencontrols.sequences.DynamicDecouplingSequence
@@ -654,9 +788,24 @@ def new_x_concatenated_sequence(duration=1.0, concatenation_order=None, **kwargs
 
     offsets = np.array(offsets)
 
-    rabi_rotations = np.pi * np.ones(offsets.shape)
-    azimuthal_angles = np.zeros(offsets.shape)
-    detuning_rotations = np.zeros(offsets.shape)
+    if pre_post_rotation:
+        offsets = np.append([0], offsets)
+        offsets = np.append(offsets, [duration])
+
+        rabi_rotations = np.zeros(offsets.shape)
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
+
+        rabi_rotations[0] = np.pi/2
+        rabi_rotations[-1] = np.pi/2
+        rabi_rotations[1:-1] = np.pi
+    else:
+
+        rabi_rotations = np.zeros(offsets.shape)
+        azimuthal_angles = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros(offsets.shape)
+
+        rabi_rotations[0:] = np.pi
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -666,7 +815,10 @@ def new_x_concatenated_sequence(duration=1.0, concatenation_order=None, **kwargs
         **kwargs)
 
 
-def new_xy_concatenated_sequence(duration=1.0, concatenation_order=None, **kwargs):
+def new_xy_concatenated_sequence(duration=1.0,
+                                 concatenation_order=None,
+                                 pre_post_rotation=False,
+                                 **kwargs):
 
     """XY-Concatenated Dynamic Decoupling Sequence
     Concatenation of base sequence C(\tau/4)XC(\tau/4)YC(\tau/4)XC(\tau/4)Y
@@ -679,6 +831,9 @@ def new_xy_concatenated_sequence(duration=1.0, concatenation_order=None, **kwarg
     concatenation_order : int, optional
         defaults to None
         The number of concatenation of base sequence
+    pre_post_rotation : bool, optional
+        If True, a :math:`\\pi.2` rotation is added at the
+        start and end of the sequence.
     kwargs : dict
         Additional keywords required by
         qctrlopencontrols.sequences.DynamicDecouplingSequence
@@ -799,6 +954,15 @@ def new_xy_concatenated_sequence(duration=1.0, concatenation_order=None, **kwarg
                 z_idx += 1
             if z_idx >= len(detuning_offsets):
                 break
+
+    if pre_post_rotation:
+        offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration])
+        rabi_rotations = np.insert(rabi_rotations, [0, rabi_rotations.shape[0]],
+                                   [np.pi / 2, np.pi / 2])
+        azimuthal_angles = np.insert(azimuthal_angles, [0, azimuthal_angles.shape[0]],
+                                     [0, 0])
+        detuning_rotations = np.insert(detuning_rotations, [0, detuning_rotations.shape[0]],
+                                       [0, 0])
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,

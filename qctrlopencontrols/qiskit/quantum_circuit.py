@@ -27,8 +27,7 @@ from qiskit.qasm import pi
 from qctrlopencontrols.dynamic_decoupling_sequences import DynamicDecouplingSequence
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
-from .constants import (FIX_DURATION_UNITARY, INSTANT_UNITARY,
-                        DEFAULT_PRE_POST_GATE_PARAMETERS)
+from .constants import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
 
 
 def _get_circuit_gate_list(dynamic_decoupling_sequence,
@@ -132,7 +131,6 @@ def convert_dds_to_quantum_circuit(
         dynamic_decoupling_sequence,
         target_qubits=None,
         gate_time=0.1,
-        pre_post_gate_parameters=DEFAULT_PRE_POST_GATE_PARAMETERS,
         add_measurement=True,
         algorithm=FIX_DURATION_UNITARY,
         quantum_registers=None,
@@ -149,16 +147,6 @@ def convert_dds_to_quantum_circuit(
         defaults to None
     gate_time : float, optional
         Time (in seconds) delay introduced by a gate; defaults to 0.1
-    pre_post_gate_parameters : tuple or None, optional
-        Tuple of (length 3) floating point numbers that correspond to :math:`\\theta,
-        \\phi, \\lambda` parameters respectively in `U3` gate defined in Qiskit
-        as `U3Gate(theta, phi, lambda)`. Qiskit documentation suggests this to be
-        the most generalized definition of unitary gates. Defaults to
-        (pi/2, -pi/2, pi/2) that corresponds to a :math:`pi/2`
-        rotation around X-axis; if None, the resulting circuit will have no `pre` or `post`
-        gates. See `IBM-Q Documentation
-        <https://quantumexperience.ng.bluemix.net/proxy/tutorial/full-user-guide/
-        002-The_Weird_and_Wonderful_World_of_the_Qubit/004-advanced_qubit_gates.html?` _.
     add_measurement : bool, optional
         If True, the circuit contains a measurement operation for each of the
         target qubits and a set of ClassicalRegister objects created with length
@@ -197,7 +185,7 @@ def convert_dds_to_quantum_circuit(
     `duration` where a pulse occurs instantaneously. A series of appropriate circuit component
     is placed in order to represent these pulses. The `gaps` or idle time in between active
     pulses are filled up with `identity` gates. Each identity gate introduces a delay of
-    `gate_delay`. In this implementation, the number of identity gates is determined by
+    `gate_time`. In this implementation, the number of identity gates is determined by
     :math:`np.int(np.floor(offset_distance / gate_time))`. As a consequence, the duration of
     the real-circuit is :math:`gate_time \\times number_of_identity_gates +
     pulse_gate_time \\times number_of_pulses`.
@@ -219,15 +207,10 @@ def convert_dds_to_quantum_circuit(
     if target_qubits is None:
         target_qubits = [0]
 
-    if (pre_post_gate_parameters is not None and
-            len(pre_post_gate_parameters) != 3):
-        raise ArgumentsValueError('Pre-Post gate parameters must be a list of 3 '
-                                  'floating point numbers.',
-                                  {'pre_post_gate_params': pre_post_gate_parameters})
     if gate_time <= 0:
         raise ArgumentsValueError(
             'Time delay of identity gate must be greater than zero.',
-            {'identity_gate_time': gate_time})
+            {'gate_time': gate_time})
 
     if np.any(target_qubits) < 0:
         raise ArgumentsValueError(
@@ -266,14 +249,6 @@ def convert_dds_to_quantum_circuit(
         dynamic_decoupling_sequence=dynamic_decoupling_sequence,
         gate_time=gate_time,
         unitary_time=unitary_time)
-
-    if pre_post_gate_parameters is not None:
-        for qubit in target_qubits:
-            quantum_circuit.u3(pre_post_gate_parameters[0], #pylint: disable=no-member
-                               pre_post_gate_parameters[1],
-                               pre_post_gate_parameters[2],
-                               quantum_registers[qubit])
-            quantum_circuit.barrier(quantum_registers[qubit]) #pylint: disable=no-member
 
     offset_count = 0
     for gate in circuit_gate_list:
@@ -318,14 +293,6 @@ def convert_dds_to_quantum_circuit(
             quantum_circuit.barrier(quantum_registers[qubit])    #pylint: disable=no-member
 
         offset_count += 1
-
-    if pre_post_gate_parameters is not None:
-        for qubit in target_qubits:
-            quantum_circuit.u3(pre_post_gate_parameters[0], #pylint: disable=no-member
-                               pre_post_gate_parameters[1],
-                               pre_post_gate_parameters[2],
-                               quantum_registers[qubit])
-            quantum_circuit.barrier(quantum_registers)  # pylint: disable=no-member
 
     if add_measurement:
         for q_index, qubit in enumerate(target_qubits):
