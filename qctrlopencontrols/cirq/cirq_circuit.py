@@ -25,8 +25,7 @@ import cirq
 from qctrlopencontrols.dynamic_decoupling_sequences import DynamicDecouplingSequence
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
-from .constants import (SCHEDULED_CIRCUIT, STANDARD_CIRCUIT,
-                        DEFAULT_PRE_POST_ROTATION_MATRIX)
+from .constants import (SCHEDULED_CIRCUIT, STANDARD_CIRCUIT)
 
 
 def _get_circuit_gate_list(dynamic_decoupling_sequence,

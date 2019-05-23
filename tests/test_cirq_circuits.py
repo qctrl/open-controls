@@ -18,7 +18,6 @@ Tests converstion to Cirq Circuit
 ===================================
 """
 
-import numpy as np
 import cirq
 
 from qctrlopencontrols import (

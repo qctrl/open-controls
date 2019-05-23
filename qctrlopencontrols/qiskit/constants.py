@@ -18,7 +18,6 @@ qiskit.constants
 ================
 """
 
-import numpy as np
 
 FIX_DURATION_UNITARY = 'fixed duration unitary'
 """Algorithm to convert a DDS to Quantum circuit
@@ -28,8 +27,4 @@ where the unitaries are considered as gates with finite duration
 INSTANT_UNITARY = 'instant unitary'
 """Algorithm to convert a DDS to Quantum circuit where the
 unitaties are considered as instantaneous operation.
-"""
-
-DEFAULT_PRE_POST_GATE_PARAMETERS = (np.pi / 2, -np.pi / 2, np.pi / 2)
-"""Parameters of a default U3 gate for pre-post rotation for circuits.
 """

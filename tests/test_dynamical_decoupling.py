@@ -377,7 +377,7 @@ def test_free_evolution_conversion():
     _rabi_rates = np.array([_maximum_rabi_rate, 0., _maximum_rabi_rate])
     _azimuthal_angles = np.array([0, 0, 0])
     _detunings = np.array([0, 0, 0])
-    _durations = np.array([0.025, 9.95,  0.025])
+    _durations = np.array([0.025, 9.95, 0.025])
     assert np.allclose(driven_control.rabi_rates, _rabi_rates)
     assert np.allclose(driven_control.azimuthal_angles, _azimuthal_angles)
     assert np.allclose(driven_control.detunings, _detunings)

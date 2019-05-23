@@ -18,6 +18,5 @@ cirq module
 =============
 """
 
-from .constants import (SCHEDULED_CIRCUIT, STANDARD_CIRCUIT,
-                        DEFAULT_PRE_POST_ROTATION_MATRIX)
+from .constants import (SCHEDULED_CIRCUIT, STANDARD_CIRCUIT)
 from .cirq_circuit import convert_dds_to_cirq_circuit

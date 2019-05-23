@@ -22,7 +22,6 @@ import numpy as np
 
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
-
 from .constants import (RAMSEY, SPIN_ECHO, CARR_PURCELL,
                         CARR_PURCELL_MEIBOOM_GILL,
                         UHRIG_SINGLE_AXIS,
@@ -106,6 +105,32 @@ def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
     return sequence
 
 
+def _check_duration(duration):
+
+    """Validates sequence duration
+    Parameters
+    ----------
+    duration : float, optional
+        Total duration of the sequence. Defaults to None
+
+    Returns
+    -------
+    float
+        The validated duration
+
+    Raises
+    ------
+    ArgumentsValueError
+        If the duration is negative
+    """
+    if duration is None:
+        duration = 1.
+    if duration <= 0.:
+        raise ArgumentsValueError('Sequence duration must be above zero:',
+                                  {'duration': duration})
+    return duration
+
+
 def new_ramsey_sequence(duration=None,
                         pre_post_rotation=False,
                         **kwargs):
@@ -134,24 +159,17 @@ def new_ramsey_sequence(duration=None,
         Raised when an argument is invalid.
 
     """
-    if duration is None:
-        duration = 1.
-    if duration <= 0.:
-        raise ArgumentsValueError(
-            'Sequence duration must be above zero:',
-            {'duration': duration})
+    duration = _check_duration(duration)
+    offsets = []
+    rabi_rotations = []
+    azimuthal_angles = []
+    detuning_rotations = []
 
     if pre_post_rotation:
         offsets = duration * np.array([0.0, 1.])
         rabi_rotations = np.array([np.pi/2, np.pi/2])
         azimuthal_angles = np.zeros(offsets.shape)
         detuning_rotations = np.zeros(offsets.shape)
-
-    else:
-        offsets = []
-        rabi_rotations = []
-        azimuthal_angles = []
-        detuning_rotations = []
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -189,23 +207,17 @@ def new_spin_echo_sequence(duration=None,
         Raised when an argument is invalid.
     """
 
-    if duration is None:
-        duration = 1.
-    if duration <= 0.:
-        raise ArgumentsValueError(
-            'Sequence duration must be above zero:',
-            {'duration': duration})
+    duration = _check_duration(duration)
+    offsets = duration * np.array([0.5])
+    rabi_rotations = np.array([np.pi])
 
     if pre_post_rotation:
-        offsets = duration * np.array([0., 0.5, 1.])
-        rabi_rotations = np.array([np.pi/2, np.pi, np.pi/2])
-        azimuthal_angles = np.zeros(offsets.shape)
-        detuning_rotations = np.zeros(offsets.shape)
-    else:
-        offsets = duration * np.array([0.5])
-        rabi_rotations = np.array([np.pi])
-        azimuthal_angles = np.zeros(offsets.shape)
-        detuning_rotations = np.zeros(offsets.shape)
+        offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration])
+        rabi_rotations = np.insert(rabi_rotations, [0, rabi_rotations.shape[0]],
+                                   [np.pi/2, np.pi/2])
+
+    azimuthal_angles = np.zeros(offsets.shape)
+    detuning_rotations = np.zeros(offsets.shape)
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -245,13 +257,7 @@ def new_carr_purcell_sequence(duration=None,
     ArgumentsValueError
         Raised when an argument is invalid.
     """
-    if duration is None:
-        duration = 1.
-    if duration <= 0.:
-        raise ArgumentsValueError(
-            'Sequence duration must be above zero:',
-            {'duration': duration})
-
+    duration = _check_duration(duration)
     if number_of_offsets is None:
         number_of_offsets = 1
     number_of_offsets = int(number_of_offsets)
@@ -262,25 +268,16 @@ def new_carr_purcell_sequence(duration=None,
 
     offsets = _carr_purcell_meiboom_gill_offsets(duration, number_of_offsets)
 
+    rabi_rotations = np.zeros(offsets.shape)
+    # set all as X_pi
+    rabi_rotations[0:] = np.pi
+
     if pre_post_rotation:
-        offsets = np.append([0], offsets)
-        offsets = np.append(offsets, [duration])
-
-        rabi_rotations = np.zeros(offsets.shape)
-        azimuthal_angles = np.zeros(offsets.shape)
-        detuning_rotations = np.zeros(offsets.shape)
-
-        rabi_rotations[0] = np.pi/2
-        rabi_rotations[-1] = np.pi/2
-        rabi_rotations[1:-1] = np.pi
-    else:
-
-        rabi_rotations = np.zeros(offsets.shape)
-        azimuthal_angles = np.zeros(offsets.shape)
-        detuning_rotations = np.zeros(offsets.shape)
-
-        # set all as X_pi
-        rabi_rotations[0:] = np.pi
+        offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration])
+        rabi_rotations = np.insert(rabi_rotations, [0, rabi_rotations.shape[0]],
+                                   [np.pi/2, np.pi/2])
+    azimuthal_angles = np.zeros(offsets.shape)
+    detuning_rotations = np.zeros(offsets.shape)
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -317,13 +314,7 @@ def new_carr_purcell_meiboom_gill_sequence(duration=None,  # pylint: disable=inv
     ArgumentsValueError
         Raised when an argument is invalid.
     """
-    if duration is None:
-        duration = 1.
-    if duration <= 0.:
-        raise ArgumentsValueError(
-            'Sequence duration must be above zero:',
-            {'duration': duration})
-
+    duration = _check_duration(duration)
     if number_of_offsets is None:
         number_of_offsets = 1
     number_of_offsets = int(number_of_offsets)
@@ -333,28 +324,20 @@ def new_carr_purcell_meiboom_gill_sequence(duration=None,  # pylint: disable=inv
             {'number_of_offsets': number_of_offsets})
 
     offsets = _carr_purcell_meiboom_gill_offsets(duration, number_of_offsets)
+    rabi_rotations = np.zeros(offsets.shape)
+    azimuthal_angles = np.zeros(offsets.shape)
+
+    # set all azimuthal_angles=pi/2, rabi_rotations = pi
+    rabi_rotations[0:] = np.pi
+    azimuthal_angles[0:] = np.pi / 2
 
     if pre_post_rotation:
-        offsets = np.append([0], offsets)
-        offsets = np.append(offsets, [duration])
-
-        rabi_rotations = np.zeros(offsets.shape)
-        azimuthal_angles = np.zeros(offsets.shape)
-        detuning_rotations = np.zeros(offsets.shape)
-
-        rabi_rotations[0] = np.pi/2
-        rabi_rotations[-1] = np.pi/2
-        rabi_rotations[1:-1] = np.pi
-        azimuthal_angles[1:-1] = np.pi/2
-    else:
-
-        rabi_rotations = np.zeros(offsets.shape)
-        azimuthal_angles = np.zeros(offsets.shape)
-        detuning_rotations = np.zeros(offsets.shape)
-
-        # set all azimuthal_angles=pi/2, rabi_rotations = pi
-        rabi_rotations[0:] = np.pi
-        azimuthal_angles[0:] = np.pi/2
+        offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration])
+        rabi_rotations = np.insert(rabi_rotations, [0, rabi_rotations.shape[0]],
+                                   [np.pi/2, np.pi/2])
+        azimuthal_angles = np.insert(azimuthal_angles, [0, azimuthal_angles.shape[0]],
+                                     [0, 0])
+    detuning_rotations = np.zeros(offsets.shape)
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -393,44 +376,29 @@ def new_uhrig_single_axis_sequence(duration=None, number_of_offsets=None,
     ArgumentsValueError
         Raised when an argument is invalid.
     """
-    if duration is None:
-        duration = 1.
-    if duration <= 0.:
-        raise ArgumentsValueError(
-            'Sequence duration must be above zero:',
-            {'duration': duration})
-
+    duration = _check_duration(duration)
     if number_of_offsets is None:
         number_of_offsets = 1
     number_of_offsets = int(number_of_offsets)
     if number_of_offsets <= 0.:
-        raise ArgumentsValueError(
-            'Number of offsets must be above zero:',
-            {'number_of_offsets': number_of_offsets})
+        raise ArgumentsValueError('Number of offsets must be above zero:',
+                                  {'number_of_offsets': number_of_offsets})
 
     offsets = _uhrig_single_axis_offsets(duration, number_of_offsets)
+    rabi_rotations = np.zeros(offsets.shape)
+    azimuthal_angles = np.zeros(offsets.shape)
+
+    # set all azimuthal_angles=pi/2, rabi_rotations = pi
+    rabi_rotations[0:] = np.pi
+    azimuthal_angles[0:] = np.pi / 2
 
     if pre_post_rotation:
-        offsets = np.append([0], offsets)
-        offsets = np.append(offsets, [duration])
-
-        rabi_rotations = np.zeros(offsets.shape)
-        azimuthal_angles = np.zeros(offsets.shape)
-        detuning_rotations = np.zeros(offsets.shape)
-
-        rabi_rotations[0] = np.pi/2
-        rabi_rotations[-1] = np.pi/2
-        rabi_rotations[1:-1] = np.pi
-        azimuthal_angles[1:-1] = np.pi/2
-    else:
-
-        rabi_rotations = np.zeros(offsets.shape)
-        azimuthal_angles = np.zeros(offsets.shape)
-        detuning_rotations = np.zeros(offsets.shape)
-
-        # set all azimuthal_angles=pi/2, rabi_rotations = pi
-        rabi_rotations[0:] = np.pi
-        azimuthal_angles[0:] = np.pi/2
+        offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration])
+        rabi_rotations = np.insert(rabi_rotations, [0, rabi_rotations.shape[0]],
+                                   [np.pi/2, np.pi/2])
+        azimuthal_angles = np.insert(azimuthal_angles, [0, azimuthal_angles.shape[0]],
+                                     [0, 0])
+    detuning_rotations = np.zeros(offsets.shape)
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -470,45 +438,27 @@ def new_periodic_single_axis_sequence(duration=None,    # pylint: disable=invali
     ArgumentsValueError
         Raised when an argument is invalid.
     """
-    if duration is None:
-        duration = 1.
-    if duration <= 0.:
-        raise ArgumentsValueError(
-            'Sequence duration must be above zero:',
-            {'duration': duration})
-
+    duration = _check_duration(duration)
     if number_of_offsets is None:
         number_of_offsets = 1
     number_of_offsets = int(number_of_offsets)
     if number_of_offsets <= 0.:
-        raise ArgumentsValueError(
-            'Number of offsets must be above zero:',
-            {'number_of_offsets': number_of_offsets})
+        raise ArgumentsValueError('Number of offsets must be above zero:',
+                                  {'number_of_offsets': number_of_offsets})
 
     spacing = 1./(number_of_offsets+1)
-    # prepare the offsets for delta comb
     deltas = [k*spacing for k in range(1, number_of_offsets+1)]
     deltas = np.array(deltas)
     offsets = duration * deltas
+    rabi_rotations = np.zeros(offsets.shape)
+    rabi_rotations[0:] = np.pi
 
     if pre_post_rotation:
-        offsets = np.append([0], offsets)
-        offsets = np.append(offsets, [duration])
-
-        rabi_rotations = np.zeros(offsets.shape)
-        azimuthal_angles = np.zeros(offsets.shape)
-        detuning_rotations = np.zeros(offsets.shape)
-
-        rabi_rotations[0] = np.pi/2
-        rabi_rotations[-1] = np.pi/2
-        rabi_rotations[1:-1] = np.pi
-    else:
-
-        rabi_rotations = np.zeros(offsets.shape)
-        azimuthal_angles = np.zeros(offsets.shape)
-        detuning_rotations = np.zeros(offsets.shape)
-
-        rabi_rotations[0:] = np.pi
+        offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration])
+        rabi_rotations = np.insert(rabi_rotations, [0, rabi_rotations.shape[0]],
+                                   [np.pi / 2, np.pi / 2])
+    azimuthal_angles = np.zeros(offsets.shape)
+    detuning_rotations = np.zeros(offsets.shape)
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -548,13 +498,7 @@ def new_walsh_single_axis_sequence(duration=None,
     ArgumentsValueError
         Raised when an argument is invalid.
     """
-    if duration is None:
-        duration = 1.
-    if duration <= 0.:
-        raise ArgumentsValueError(
-            'Sequence duration must be above zero:',
-            {'duration': duration})
-
+    duration = _check_duration(duration)
     if paley_order is None:
         paley_order = 1
     paley_order = int(paley_order)
@@ -582,25 +526,17 @@ def new_walsh_single_axis_sequence(duration=None,
             walsh_relative_offsets.append((i + 1) * (1. / samples))
     walsh_relative_offsets = np.array(walsh_relative_offsets, dtype=np.float)
     offsets = duration * walsh_relative_offsets
+    rabi_rotations = np.zeros(offsets.shape)
+
+    rabi_rotations[0:] = np.pi
 
     if pre_post_rotation:
-        offsets = np.append([0], offsets)
-        offsets = np.append(offsets, [duration])
+        offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration])
+        rabi_rotations = np.insert(rabi_rotations, [0, rabi_rotations.shape[0]],
+                                   [np.pi / 2, np.pi / 2])
 
-        rabi_rotations = np.zeros(offsets.shape)
-        azimuthal_angles = np.zeros(offsets.shape)
-        detuning_rotations = np.zeros(offsets.shape)
-
-        rabi_rotations[0] = np.pi/2
-        rabi_rotations[-1] = np.pi/2
-        rabi_rotations[1:-1] = np.pi
-    else:
-
-        rabi_rotations = np.zeros(offsets.shape)
-        azimuthal_angles = np.zeros(offsets.shape)
-        detuning_rotations = np.zeros(offsets.shape)
-
-        rabi_rotations[0:] = np.pi
+    azimuthal_angles = np.zeros(offsets.shape)
+    detuning_rotations = np.zeros(offsets.shape)
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -646,31 +582,25 @@ def new_quadratic_sequence(duration=None,
     ArgumentsValueError
         Raised when an argument is invalid.
     """
-
-    if duration is None:
-        duration = 1.
-    if duration <= 0.:
-        raise ArgumentsValueError(
-            'Sequence duration must be above zero:',
-            {'duration': duration})
+    duration = _check_duration(duration)
 
     if number_inner_offsets is None:
         number_inner_offsets = 1
     number_inner_offsets = int(number_inner_offsets)
     if number_inner_offsets <= 0.:
-        raise ArgumentsValueError(
-            'Number of offsets of inner pulses must be above zero:',
-            {'number_inner_offsets': number_inner_offsets},
-            extras={'duration': duration, 'number_outer_offsets': number_outer_offsets})
+        raise ArgumentsValueError('Number of offsets of inner pulses must be above zero:',
+                                  {'number_inner_offsets': number_inner_offsets},
+                                  extras={'duration': duration,
+                                          'number_outer_offsets': number_outer_offsets})
 
     if number_outer_offsets is None:
         number_outer_offsets = 1
     number_outer_offsets = int(number_outer_offsets)
     if number_outer_offsets <= 0.:
-        raise ArgumentsValueError(
-            'Number of offsets of outer pulses must be above zero:',
-            {'number_inner_offsets': number_outer_offsets},
-            extras={'duration': duration, 'number_inner_offsets': number_inner_offsets})
+        raise ArgumentsValueError('Number of offsets of outer pulses must be above zero:',
+                                  {'number_inner_offsets': number_outer_offsets},
+                                  extras={'duration': duration,
+                                          'number_inner_offsets': number_inner_offsets})
 
     outer_offsets = _uhrig_single_axis_offsets(duration, number_outer_offsets)
     outer_offsets = np.insert(outer_offsets, [0, outer_offsets.shape[0]], [0, duration])
@@ -678,7 +608,6 @@ def new_quadratic_sequence(duration=None,
     ends = outer_offsets[1:]
     inner_durations = ends - starts
 
-    # inner_offsets = np.zeros((number_outer_offsets + 1, number_inner_offsets))
     offsets = np.zeros((inner_durations.shape[0], number_inner_offsets + 1))
     for inner_duration_idx in range(inner_durations.shape[0]):
         inn_off = _uhrig_single_axis_offsets(inner_durations[inner_duration_idx],
@@ -693,7 +622,6 @@ def new_quadratic_sequence(duration=None,
     rabi_rotations[0:number_outer_offsets, -1] = np.pi
     detuning_rotations[0:(number_outer_offsets + 1), 0:number_inner_offsets] = np.pi
 
-    # make all the arrays 1D;
     offsets = np.reshape(offsets, (-1,))
     rabi_rotations = np.reshape(rabi_rotations, (-1,))
     detuning_rotations = np.reshape(detuning_rotations, (-1,))
@@ -704,14 +632,11 @@ def new_quadratic_sequence(duration=None,
     detuning_rotations = detuning_rotations[0:-1]
 
     if pre_post_rotation:
-        offsets = np.append([0], offsets)
-        offsets = np.append(offsets, [duration])
-
-        rabi_rotations = np.append([np.pi/2], rabi_rotations)
-        detuning_rotations = np.append([0.], detuning_rotations)
-
-        rabi_rotations = np.append(rabi_rotations, [np.pi/2])
-        detuning_rotations = np.append(detuning_rotations, [0.])
+        offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration])
+        rabi_rotations = np.insert(rabi_rotations, [0, rabi_rotations.shape[0]],
+                                   [np.pi / 2, np.pi / 2])
+        detuning_rotations = np.insert(detuning_rotations, [0, detuning_rotations.shape[0]],
+                                       [0, 0])
 
     # finally create the azimuthal angles as all zeros
     azimuthal_angles = np.zeros(offsets.shape)
@@ -757,12 +682,7 @@ def new_x_concatenated_sequence(duration=1.0,
     ArgumentsValueError
         Raised when an argument is invalid.
     """
-    if duration is None:
-        duration = 1.
-    if duration <= 0.:
-        raise ArgumentsValueError(
-            'Sequence duration must be above zero:',
-            {'duration': duration})
+    duration = _check_duration(duration)
 
     if concatenation_order is None:
         concatenation_order = 1
@@ -787,25 +707,17 @@ def new_x_concatenated_sequence(duration=1.0,
         offsets = offsets[0:-1]
 
     offsets = np.array(offsets)
+    rabi_rotations = np.zeros(offsets.shape)
+    rabi_rotations[0:] = np.pi
 
     if pre_post_rotation:
-        offsets = np.append([0], offsets)
-        offsets = np.append(offsets, [duration])
+        offsets = np.insert(offsets, [0, offsets.shape[0]],
+                            [0, duration])
+        rabi_rotations = np.insert(rabi_rotations, [0, rabi_rotations.shape[0]],
+                                   [np.pi / 2, np.pi / 2])
 
-        rabi_rotations = np.zeros(offsets.shape)
-        azimuthal_angles = np.zeros(offsets.shape)
-        detuning_rotations = np.zeros(offsets.shape)
-
-        rabi_rotations[0] = np.pi/2
-        rabi_rotations[-1] = np.pi/2
-        rabi_rotations[1:-1] = np.pi
-    else:
-
-        rabi_rotations = np.zeros(offsets.shape)
-        azimuthal_angles = np.zeros(offsets.shape)
-        detuning_rotations = np.zeros(offsets.shape)
-
-        rabi_rotations[0:] = np.pi
+    azimuthal_angles = np.zeros(offsets.shape)
+    detuning_rotations = np.zeros(offsets.shape)
 
     return DynamicDecouplingSequence(
         duration=duration, offsets=offsets,
@@ -848,12 +760,7 @@ def new_xy_concatenated_sequence(duration=1.0,
     ArgumentsValueError
         Raised when an argument is invalid.
     """
-    if duration is None:
-        duration = 1.
-    if duration <= 0.:
-        raise ArgumentsValueError(
-            'Sequence duration must be above zero:',
-            {'duration': duration})
+    duration = _check_duration(duration)
 
     if concatenation_order is None:
         concatenation_order = 1
