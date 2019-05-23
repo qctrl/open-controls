@@ -113,7 +113,7 @@ def _get_rotations(operation):
     Returns
     -------
     numpy.ndarray
-        A 1-D array of length 3 containing x_rotation, y_rotation and z-rotation
+        A 1-D array of length 3 containing x_rotation, y_rotation and z_rotation
         calculated from sequence operation
     """
 
