@@ -408,8 +408,8 @@ def convert_dds_to_cirq_circuit(
         will return a 'cirq.Circuit'. In the case of 'scheduled circuit', the desired
         operations will be scheduled at offsets specified by the dynamic decoupling
         sequence; in this case a 'cirq.Schedule' object is returned.  Both `cirq.Circuit`
-        and 'cirq.Schedule' can be used with 'cirq.Simulator'; see example usage in
-        [XXXXX]. See `Circuits <https://cirq.readthedocs.io/en/stable/circuits.html>` _,
+        and 'cirq.Schedule' can be used with 'cirq.Simulator'.
+        See `Circuits <https://cirq.readthedocs.io/en/stable/circuits.html>` _,
         `Schedules <https://cirq.readthedocs.io/en/stable/schedules.html>` _ and
         `Simulation <https://cirq.readthedocs.io/en/stable/simulation.html>` _.
     device : cirq.Device, optional
