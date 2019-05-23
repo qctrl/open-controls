@@ -27,7 +27,7 @@ from qctrlopencontrols import (
     new_predefined_dds, convert_dds_to_quantum_circuit)
 
 
-def _create_test_sequence(sequence_scheme):
+def _create_test_sequence(sequence_scheme, pre_post_rotation):
 
     """Create a DD sequence of choice'''
 
@@ -38,6 +38,8 @@ def _create_test_sequence(sequence_scheme):
         'Uhrig single-axis', 'Periodic single-axis', 'Walsh single-axis',
         'Quadratic', 'X concatenated',
         'XY concatenated'
+    pre_post_rotation : bool
+        If True, adds a :math:`X_{\\pi/2}` gate on either ends
 
     Returns
     -------
@@ -49,6 +51,7 @@ def _create_test_sequence(sequence_scheme):
     dd_sequence_params = dict()
     dd_sequence_params['scheme'] = sequence_scheme
     dd_sequence_params['duration'] = 4
+    dd_sequence_params['pre_post_rotation'] = pre_post_rotation
 
     # 'spin_echo' does not need any additional parameter
 
@@ -75,7 +78,7 @@ def _create_test_sequence(sequence_scheme):
     return sequence
 
 
-def _check_circuit_unitary(pre_post_gate_parameters):
+def _check_circuit_unitary(pre_post_rotation, multiplier):
     """Check the unitary of a dynamic decoupling operation
     """
 
@@ -83,19 +86,13 @@ def _check_circuit_unitary(pre_post_gate_parameters):
     number_of_shots = 1
     backend_simulator = BasicAer.get_backend(backend)
 
-    if pre_post_gate_parameters is None:
-        multiplier = (1. / np.power(2, 0.5)) * np.array([[1, -1j], [-1j, 1]], dtype='complex')
-    else:
-        multiplier = np.array([[1, 0], [0, 1]])
-
     for sequence_scheme in ['Carr-Purcell', 'Carr-Purcell-Meiboom-Gill',
                             'Uhrig single-axis', 'periodic single-axis', 'Walsh single-axis',
                             'quadratic', 'X concatenated',
                             'XY concatenated']:
-        sequence = _create_test_sequence(sequence_scheme)
+        sequence = _create_test_sequence(sequence_scheme, pre_post_rotation)
         quantum_circuit = convert_dds_to_quantum_circuit(
             dynamic_decoupling_sequence=sequence,
-            pre_post_gate_parameters=pre_post_gate_parameters,
             add_measurement=False, algorithm='instant unitary')
 
         job = execute(quantum_circuit,
@@ -115,9 +112,11 @@ def test_identity_operation():
     """Tests if the Dynamic Decoupling Sequence gives rise to Identity
     operation in Qiskit
     """
+    _multiplier = np.array([[1, 0], [0, 1]])
+    _check_circuit_unitary(False, _multiplier)
 
-    _check_circuit_unitary([0., 0., 0.])
-    _check_circuit_unitary(None)
+    _multiplier = (1. / np.power(2, 0.5)) * np.array([[1, -1j], [-1j, 1]], dtype='complex')
+    _check_circuit_unitary(True, _multiplier)
 
 if __name__ == '__main__':
     pass
