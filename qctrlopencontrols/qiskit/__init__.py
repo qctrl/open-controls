@@ -18,5 +18,6 @@ qiskit module
 =============
 """
 
-from .constants import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
+from .constants import (FIX_DURATION_UNITARY, INSTANT_UNITARY,
+                        DEFAULT_PRE_POST_GATE_PARAMETERS)
 from .quantum_circuit import convert_dds_to_quantum_circuit
