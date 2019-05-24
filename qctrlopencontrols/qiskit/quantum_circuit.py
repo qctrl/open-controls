@@ -153,9 +153,10 @@ def convert_dds_to_quantum_circuit(
         equal to `len(target_qubits)`
     algorithm : str, optional
         One of 'fixed duration unitary' or 'instant unitary'; In the case of
-        'fixed duration unitary', the operations are assumed to be taking the amount of
-        gate_time while 'instant unitary' assumes unitaries to be instantaneous;
-        defaults to 'instant unitary'
+        'fixed duration unitary', the sequence operations are assumed to be
+        taking the amount of gate_time while 'instant unitary' assumes the sequence
+        operations are instantaneous (and hence does not contribute to the delay between
+        offsets). Defaults to 'instant unitary'.
     quantum_registers : QuantumRegister, optional
         The set of quantum registers; defaults to None
         If not None, it must have the target qubit specified in `target_qubit`

@@ -371,7 +371,7 @@ def convert_dds_to_cirq_circuit(
     circuit_type : str, optional
         One of 'scheduled circuit' or 'standard circuit'. In the case of
         'standard circuit', the circuit will be a sequence of desired operations
-        at offsets specified by the supplied dynamic decoupling sequence and the
+        at offsets specified by the dynamic decoupling sequence and the
         duration between any two offsets will have 'identity' gates; the method
         will return a 'cirq.Circuit'. In the case of 'scheduled circuit', the desired
         operations will be scheduled at offsets specified by the dynamic decoupling
@@ -382,9 +382,10 @@ def convert_dds_to_cirq_circuit(
         `Simulation <https://cirq.readthedocs.io/en/stable/simulation.html>` _.
     algorithm : str, optional
         One of 'fixed duration unitary' or 'instant unitary'; In the case of
-        'fixed duration unitary', the operations are assumed to be taking the amount of
-        gate_time while 'instant unitary' assumes unitaries to be instantaneous;
-        defaults to 'instant unitary'. Note that this option is only used for
+        'fixed duration unitary', the sequence operations are assumed to be
+        taking the amount of gate_time while 'instant unitary' assumes the sequence
+        operations are instantaneous (and hence does not contribute to the delay between
+        offsets). Defaults to 'instant unitary'. Note that this option is only used for
         'standard circuit'; 'scheduled circuit' always contains a 'fixed duration unitary'.
     device : cirq.Device, optional
         A cirq.Device that specifies hardware constraints for validating circuits
