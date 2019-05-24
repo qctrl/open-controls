@@ -103,7 +103,7 @@ def _get_circuit_gate_list(dynamic_decoupling_sequence,
 
 def _get_rotations(operation):
 
-    """Returns the pulses based of the rotation operation
+    """Returns the pulses based on the rotation operation
 
     Parameters
     ----------
@@ -114,8 +114,8 @@ def _get_rotations(operation):
     Returns
     -------
     numpy.ndarray
-        A 1-D array of length 3 containing x_rotation, y_rotation and z-rotation
-        calculate from sequence operation
+        A 1-D array of length 3 containing x_rotation, y_rotation and z_rotation
+        calculated from sequence operation
     """
 
     x_rotation = operation[0] * np.cos(operation[1])
