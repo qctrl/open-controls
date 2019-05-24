@@ -142,8 +142,8 @@ def new_ramsey_sequence(duration=None,
     duration : float, optional
         Total duration of the sequence. Defaults to None
     pre_post_rotation : bool, optional
-        If True, a :math:`\\pi.2` rotation is added at the
-        start and end of the sequence.
+        If True, a :math:`X_{\\pi.2}` rotation
+        is added at the start and end of the sequence.
     kwargs : dict
         Additional keywords required by
         qctrlopencontrols.sequences.DynamicDecouplingSequence
