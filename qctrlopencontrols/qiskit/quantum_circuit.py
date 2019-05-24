@@ -132,7 +132,7 @@ def convert_dds_to_quantum_circuit(
         target_qubits=None,
         gate_time=0.1,
         add_measurement=True,
-        algorithm=FIX_DURATION_UNITARY,
+        algorithm=INSTANT_UNITARY,
         quantum_registers=None,
         circuit_name=None):
 
@@ -152,10 +152,10 @@ def convert_dds_to_quantum_circuit(
         target qubits and a set of ClassicalRegister objects created with length
         equal to `len(target_qubits)`
     algorithm : str, optional
-        One of 'Fixed duration unitary' or 'Instant unitary'; In the case of
-        'Fixed duration unitary', the operations are assumed to be taking the amount of
-        gate_time while 'Instant unitary' assumes unitaries to be instantaneous;
-        defaults to 'Fixed duration unitary'
+        One of 'fixed duration unitary' or 'instant unitary'; In the case of
+        'fixed duration unitary', the operations are assumed to be taking the amount of
+        gate_time while 'instant unitary' assumes unitaries to be instantaneous;
+        defaults to 'instant unitary'
     quantum_registers : QuantumRegister, optional
         The set of quantum registers; defaults to None
         If not None, it must have the target qubit specified in `target_qubit`

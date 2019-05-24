@@ -28,3 +28,13 @@ STANDARD_CIRCUIT = 'standard circuit'
 """Constructs the circuit as a series of operations that include
 identity gates between desired rotation operations.
 """
+
+FIX_DURATION_UNITARY = 'fixed duration unitary'
+"""Algorithm to convert a DDS to Quantum circuit
+where the unitaries are considered as gates with finite duration
+"""
+
+INSTANT_UNITARY = 'instant unitary'
+"""Algorithm to convert a DDS to Quantum circuit where the
+unitaties are considered as instantaneous operation.
+"""

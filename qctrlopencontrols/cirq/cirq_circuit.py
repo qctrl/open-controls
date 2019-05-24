@@ -25,7 +25,8 @@ import cirq
 from qctrlopencontrols.dynamic_decoupling_sequences import DynamicDecouplingSequence
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
-from .constants import (SCHEDULED_CIRCUIT, STANDARD_CIRCUIT)
+from .constants import (SCHEDULED_CIRCUIT, STANDARD_CIRCUIT,
+                        FIX_DURATION_UNITARY, INSTANT_UNITARY)
 
 
 def _get_circuit_gate_list(dynamic_decoupling_sequence,
@@ -242,6 +243,7 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
 def _get_standard_circuit(dynamic_decoupling_sequence,
                           target_qubits,
                           gate_time,
+                          algorithm,
                           add_measurement):
 
     """Returns a standard circuit constructed from dynamic
@@ -256,6 +258,12 @@ def _get_standard_circuit(dynamic_decoupling_sequence,
         cirq.Qid type
     gate_time : float, optional
         Time (in seconds) delay introduced by a gate; defaults to 0.1
+    algorithm : str, optional
+        One of 'fixed duration unitary' or 'instant unitary'; In the case of
+        'fixed duration unitary', the operations are assumed to be taking the amount of
+        gate_time while 'instant unitary' assumes unitaries to be instantaneous;
+        defaults to 'instant unitary'. Note that this option is only used for
+        'standard circuit'; 'scheduled circuit' always contains a 'fixed duration unitary'.
     add_measurement : bool
         If True, a measurement operation is added to each of the qubits.
 
@@ -272,7 +280,10 @@ def _get_standard_circuit(dynamic_decoupling_sequence,
         If there is rotations around more than one axis at any of the offsets
     """
 
-    unitary_time = gate_time
+    unitary_time = 0.
+    if algorithm == FIX_DURATION_UNITARY:
+        unitary_time = gate_time
+
     circuit_gate_list = _get_circuit_gate_list(
         dynamic_decoupling_sequence=dynamic_decoupling_sequence,
         gate_time=gate_time,
@@ -336,6 +347,7 @@ def convert_dds_to_cirq_circuit(
         gate_time=0.1,
         add_measurement=True,
         circuit_type=STANDARD_CIRCUIT,
+        algorithm=INSTANT_UNITARY,
         device=None):
 
     """Converts a Dynamic Decoupling Sequence into quantum circuit
@@ -368,6 +380,12 @@ def convert_dds_to_cirq_circuit(
         See `Circuits <https://cirq.readthedocs.io/en/stable/circuits.html>` _,
         `Schedules <https://cirq.readthedocs.io/en/stable/schedules.html>` _ and
         `Simulation <https://cirq.readthedocs.io/en/stable/simulation.html>` _.
+    algorithm : str, optional
+        One of 'fixed duration unitary' or 'instant unitary'; In the case of
+        'fixed duration unitary', the operations are assumed to be taking the amount of
+        gate_time while 'instant unitary' assumes unitaries to be instantaneous;
+        defaults to 'instant unitary'. Note that this option is only used for
+        'standard circuit'; 'scheduled circuit' always contains a 'fixed duration unitary'.
     device : cirq.Device, optional
         A cirq.Device that specifies hardware constraints for validating circuits
         and schedules. If None, a unconstrained device is used. See `Cirq Documentation
@@ -435,9 +453,14 @@ def convert_dds_to_cirq_circuit(
             SCHEDULED_CIRCUIT, STANDARD_CIRCUIT), {'algorithm': circuit_type})
 
     if circuit_type == STANDARD_CIRCUIT:
+        if algorithm not in [FIX_DURATION_UNITARY, INSTANT_UNITARY]:
+            raise ArgumentsValueError('Algorithm must be one of {} or {}'.format(
+                INSTANT_UNITARY, FIX_DURATION_UNITARY), {'algorithm': algorithm})
+
         return _get_standard_circuit(dynamic_decoupling_sequence=dynamic_decoupling_sequence,
                                      target_qubits=target_qubits,
                                      gate_time=gate_time,
+                                     algorithm=algorithm,
                                      add_measurement=add_measurement)
 
     if device is None:
