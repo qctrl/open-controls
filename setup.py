@@ -47,7 +47,7 @@ def main():
         tests_require=['pytest'],
         install_requires=['numpy', 'scipy', 'pytest', 'nbval',
                           'qiskit-terra', 'qiskit-ibmq-provider',
-                          'cirq'],
+                          'cirq', 'pyquil'],
         author='Q-CTRL',
         author_email='support@q-ctrl.com',
         description='Q-CTRL Open Controls',
