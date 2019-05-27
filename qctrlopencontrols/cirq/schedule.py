@@ -28,14 +28,13 @@ from qctrlopencontrols.exceptions import ArgumentsValueError
 from qctrlopencontrols.qiskit import get_rotations
 
 
-def _get_scheduled_circuit(dynamic_decoupling_sequence,
-                           target_qubits,
-                           gate_time,
-                           add_measurement,
-                           device):
+def _get_cirq_schedule(dynamic_decoupling_sequence,
+                       target_qubits,
+                       gate_time,
+                       add_measurement,
+                       device):
 
-    """Returns a scheduled circuit operation constructed from
-    dynamic decoupling sequence
+    """Returns a scheduled operations constructed from dynamic decoupling sequence
 
     Parameters
     ----------
@@ -54,7 +53,7 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
     Returns
     -------
     cirq.Schedule
-        The scheduled circuit operations. The Schedule object contains a
+        The scheduled rotation operations. The Schedule object contains a
         series of desired gates at specific times measured from the start
         of the duration.
 
@@ -83,7 +82,7 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
     # offsets in nano seconds
     offsets = offsets * 1e9
 
-    circuit_operations = []
+    scheduled_operations = []
     offset_count = 0
     for op_idx in range(operations.shape[1]):
         instance_operation = np.array([dynamic_decoupling_sequence.rabi_rotations[op_idx],
@@ -127,7 +126,7 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
                         duration=cirq.Duration(nanos=gate_time),
                         operation=cirq.Rx(rotations[2])(qubit))
             offset_count += 1
-            circuit_operations.append(operation)
+            scheduled_operations.append(operation)
 
     if add_measurement:
         for idx, qubit in enumerate(target_qubits):
@@ -136,9 +135,9 @@ def _get_scheduled_circuit(dynamic_decoupling_sequence,
                 duration=cirq.Duration(nanos=gate_time),
                 operation=cirq.MeasurementGate(
                     1, key='qubit-{}'.format(idx))(qubit))
-            circuit_operations.append(operation)
+            scheduled_operations.append(operation)
 
-    schedule = cirq.Schedule(device=device, scheduled_operations=circuit_operations)
+    schedule = cirq.Schedule(device=device, scheduled_operations=scheduled_operations)
     return schedule
 
 
@@ -149,7 +148,7 @@ def convert_dds_to_cirq_schedule(
         add_measurement=True,
         device=None):
 
-    """Converts a Dynamic Decoupling Sequence into quantum circuit
+    """Converts a Dynamic Decoupling Sequence into schedule
     as defined in cirq
 
     Parameters
@@ -163,13 +162,13 @@ def convert_dds_to_cirq_schedule(
     gate_time : float, optional
         Time (in seconds) delay introduced by a gate; defaults to 0.1
     add_measurement : bool, optional
-        If True, the circuit contains a measurement operation for each of the
+        If True, the schedule contains a measurement operation for each of the
         target qubits. Measurement from each of the qubits is associated
         with a string as key. The string is formatted as 'qubit-X' where
         X is a number between 0 and len(target_qubits).
     device : cirq.Device, optional
-        A cirq.Device that specifies hardware constraints for validating circuits
-        and schedules. If None, a unconstrained device is used. See `Cirq Documentation
+        A cirq.Device that specifies hardware constraints for validating operations.
+        If None, a unconstrained device is used. See `Cirq Documentation
         <https://cirq.readthedocs.io/en/stable/schedules.html/>` _.
 
     Returns
@@ -189,13 +188,13 @@ def convert_dds_to_cirq_schedule(
     Dynamic Decoupling Sequences (DDS) consist of idealized pulse operation. Theoretically,
     these operations (pi-pulses in X,Y or Z) occur instantaneously. However, in practice,
     pulses require time. Therefore, this method of converting an idealized sequence
-    results to a circuit that is only an approximate implementation of the idealized sequence.
+    results to a schedule that is only an approximate implementation of the idealized sequence.
 
     In idealized definition of DDS, `offsets` represents the instances within sequence
-    `duration` where a pulse occurs instantaneously. A series of appropriate circuit components
-    is placed in order to represent these pulses.
+    `duration` where a pulse occurs instantaneously. A series of appropriate rotation
+    operations is placed in order to represent these pulses.
 
-    In 'scheduled circuit', the active pulses are scheduled to be activated at a certain
+    In cirq.schedule, the active pulses are scheduled to be activated at a certain
     instant calculated from the start of the sequence and continues for a duration
     of gate_time. This does not require identity gates to be placed between offsets.
 
@@ -228,8 +227,8 @@ def convert_dds_to_cirq_schedule(
         raise ArgumentsValueError('Device must be a cirq.Device type.',
                                   {'device': device})
 
-    return _get_scheduled_circuit(dynamic_decoupling_sequence=dynamic_decoupling_sequence,
-                                  target_qubits=target_qubits,
-                                  gate_time=gate_time,
-                                  add_measurement=add_measurement,
-                                  device=device)
+    return _get_cirq_schedule(dynamic_decoupling_sequence=dynamic_decoupling_sequence,
+                              target_qubits=target_qubits,
+                              gate_time=gate_time,
+                              add_measurement=add_measurement,
+                              device=device)

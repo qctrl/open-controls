@@ -30,11 +30,11 @@ from qctrlopencontrols.qiskit import (
     get_circuit_gate_list, get_rotations)
 
 
-def _get_standard_circuit(dynamic_decoupling_sequence,
-                          target_qubits,
-                          gate_time,
-                          algorithm,
-                          add_measurement):
+def _get_cirq_circuit(dynamic_decoupling_sequence,
+                      target_qubits,
+                      gate_time,
+                      algorithm,
+                      add_measurement):
 
     """Returns a standard circuit constructed from dynamic
     decoupling sequence
@@ -52,8 +52,7 @@ def _get_standard_circuit(dynamic_decoupling_sequence,
         One of 'fixed duration unitary' or 'instant unitary'; In the case of
         'fixed duration unitary', the operations are assumed to be taking the amount of
         gate_time while 'instant unitary' assumes unitaries to be instantaneous;
-        defaults to 'instant unitary'. Note that this option is only used for
-        'standard circuit'; 'scheduled circuit' always contains a 'fixed duration unitary'.
+        defaults to 'instant unitary'.
     add_measurement : bool
         If True, a measurement operation is added to each of the qubits.
 
@@ -161,8 +160,7 @@ def convert_dds_to_cirq_circuit(
         'fixed duration unitary', the sequence operations are assumed to be
         taking the amount of gate_time while 'instant unitary' assumes the sequence
         operations are instantaneous (and hence does not contribute to the delay between
-        offsets). Defaults to 'instant unitary'. Note that this option is only used for
-        'standard circuit'; 'scheduled circuit' always contains a 'fixed duration unitary'.
+        offsets). Defaults to 'instant unitary'.
 
     Returns
     -------
@@ -220,8 +218,8 @@ def convert_dds_to_cirq_circuit(
         raise ArgumentsValueError('Algorithm must be one of {} or {}'.format(
             INSTANT_UNITARY, FIX_DURATION_UNITARY), {'algorithm': algorithm})
 
-    return _get_standard_circuit(dynamic_decoupling_sequence=dynamic_decoupling_sequence,
-                                 target_qubits=target_qubits,
-                                 gate_time=gate_time,
-                                 algorithm=algorithm,
-                                 add_measurement=add_measurement)
+    return _get_cirq_circuit(dynamic_decoupling_sequence=dynamic_decoupling_sequence,
+                             target_qubits=target_qubits,
+                             gate_time=gate_time,
+                             algorithm=algorithm,
+                             add_measurement=add_measurement)
