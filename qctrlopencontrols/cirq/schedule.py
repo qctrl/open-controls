@@ -13,9 +13,9 @@
 # limitations under the License.
 
 """
-=================
-cirq.cirq_circuit
-=================
+=============
+cirq.schedule
+=============
 """
 
 import numpy as np
