@@ -19,4 +19,6 @@ qiskit module
 """
 
 from .constants import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
-from .quantum_circuit import convert_dds_to_quantum_circuit
+from .quantum_circuit import (convert_dds_to_quantum_circuit,
+                              get_circuit_gate_list,
+                              get_rotations)

@@ -30,9 +30,9 @@ from qctrlopencontrols.exceptions import ArgumentsValueError
 from .constants import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
 
 
-def _get_circuit_gate_list(dynamic_decoupling_sequence,
-                           gate_time,
-                           unitary_time):
+def get_circuit_gate_list(dynamic_decoupling_sequence,
+                          gate_time,
+                          unitary_time):
 
     """Converts the operations in a sequence into list of gates
     of a quantum circuit
@@ -101,7 +101,7 @@ def _get_circuit_gate_list(dynamic_decoupling_sequence,
     return circuit_operations
 
 
-def _get_rotations(operation):
+def get_rotations(operation):
 
     """Returns the pulses based on the rotation operation
 
@@ -246,7 +246,7 @@ def convert_dds_to_quantum_circuit(
     if algorithm == FIX_DURATION_UNITARY:
         unitary_time = gate_time
 
-    circuit_gate_list = _get_circuit_gate_list(
+    circuit_gate_list = get_circuit_gate_list(
         dynamic_decoupling_sequence=dynamic_decoupling_sequence,
         gate_time=gate_time,
         unitary_time=unitary_time)
@@ -265,7 +265,7 @@ def convert_dds_to_quantum_circuit(
                                        dynamic_decoupling_sequence.detuning_rotations[offset_count]
                                        ])
 
-        rotations = _get_rotations(instance_operation)
+        rotations = get_rotations(instance_operation)
         nonzero_pulse_counts = 0
         for rotation in rotations:
             if not np.isclose(rotation, 0.0):

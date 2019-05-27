@@ -21,7 +21,8 @@ Tests converstion to Cirq Circuit
 import cirq
 
 from qctrlopencontrols import (
-    new_predefined_dds, convert_dds_to_cirq_circuit)
+    new_predefined_dds, convert_dds_to_cirq_circuit,
+    convert_dds_to_cirq_schedule)
 
 
 def _create_test_sequence(sequence_scheme, pre_post_rotation):
@@ -77,8 +78,8 @@ def _create_test_sequence(sequence_scheme, pre_post_rotation):
     return sequence
 
 
-def _check_circuit_output(pre_post_rotation,
-                          circuit_type, expected_state):
+def _check_circuit_output(pre_post_rotation, conversion_method,
+                          expected_state):
     """Check the outcome of a circuit against expected outcome
     """
 
@@ -88,9 +89,9 @@ def _check_circuit_output(pre_post_rotation,
                             'Walsh single-axis', 'quadratic', 'X concatenated',
                             'XY concatenated']:
         sequence = _create_test_sequence(sequence_scheme, pre_post_rotation)
-        cirq_circuit = convert_dds_to_cirq_circuit(
+        cirq_circuit = conversion_method(
             dynamic_decoupling_sequence=sequence,
-            add_measurement=True, circuit_type=circuit_type)
+            add_measurement=True)
 
         results = simulator.run(cirq_circuit)
         assert results.measurements['qubit-0'] == expected_state
@@ -101,11 +102,11 @@ def test_cirq_circuit_operation():
     """Tests if the Dynamic Decoupling Sequence gives rise to expected
     state with different pre-post gates parameters in cirq circuits
     """
-    _check_circuit_output(False, 'scheduled circuit', 0)
-    _check_circuit_output(True, 'scheduled circuit', 1)
+    _check_circuit_output(False, convert_dds_to_cirq_circuit, 0)
+    _check_circuit_output(True, convert_dds_to_cirq_circuit, 1)
 
-    _check_circuit_output(False, 'standard circuit', 0)
-    _check_circuit_output(True, 'standard circuit', 1)
+    _check_circuit_output(False, convert_dds_to_cirq_schedule, 0)
+    _check_circuit_output(True, convert_dds_to_cirq_schedule, 1)
 
 
 if __name__ == '__main__':

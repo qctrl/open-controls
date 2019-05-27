@@ -18,5 +18,5 @@ cirq module
 =============
 """
 
-from .constants import (SCHEDULED_CIRCUIT, STANDARD_CIRCUIT)
-from .cirq_circuit import convert_dds_to_cirq_circuit
+from .circuit import convert_dds_to_cirq_circuit
+from .schedule import convert_dds_to_cirq_schedule
