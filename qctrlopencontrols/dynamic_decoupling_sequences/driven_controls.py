@@ -185,6 +185,23 @@ def convert_dds_to_driven_controls(
              'maximum_detuning_rate': maximum_detuning_rate},
             extras={'maximum_rabi_rate': maximum_rabi_rate})
 
+    if offsets.size == 0:
+        offsets = np.array([0, sequence_duration])
+        rabi_rotations = np.array([0, 0])
+        azimuthal_angles = np.array([0, 0])
+        detuning_rotations = np.array([0, 0])
+
+    if offsets[0] != 0:
+        offsets = np.append([0], offsets)
+        rabi_rotations = np.append([0], rabi_rotations)
+        azimuthal_angles = np.append([0], azimuthal_angles)
+        detuning_rotations = np.append([0], detuning_rotations)
+    if offsets[-1] != sequence_duration:
+        offsets = np.append(offsets, [sequence_duration])
+        rabi_rotations = np.append(rabi_rotations, [0])
+        azimuthal_angles = np.append(azimuthal_angles, [0])
+        detuning_rotations = np.append(detuning_rotations, [0])
+
     offsets = offsets[np.newaxis, :]
     rabi_rotations = rabi_rotations[np.newaxis, :]
     azimuthal_angles = azimuthal_angles[np.newaxis, :]

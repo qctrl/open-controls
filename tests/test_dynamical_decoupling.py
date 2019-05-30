@@ -41,12 +41,11 @@ def test_dynamical_decoupling_sequence():
     """
 
     _duration = 2.
-    _offsets = np.array([0., 0.25, 0.5, 0.75, 1.00, 1.25, 1.50, 1.75, 2.00])
-    _rabi_rotations = np.array([0., np.pi, np.pi, np.pi, np.pi, np.pi, np.pi, np.pi, 0.])
-    _azimthal_angles = 0.5*np.array([0., np.pi, np.pi, np.pi, np.pi, np.pi, np.pi, np.pi, 0.])
-    _detuning_rotations = np.array([0., 0., 0., 0., 0., 0., 0., 0., 0.])
+    _offsets = np.array([0.25, 0.5, 0.75, 1.00, 1.25, 1.50, 1.75])
+    _rabi_rotations = np.array([np.pi, np.pi, np.pi, np.pi, np.pi, np.pi, np.pi])
+    _azimthal_angles = 0.5*np.array([np.pi, np.pi, np.pi, np.pi, np.pi, np.pi, np.pi])
+    _detuning_rotations = np.array([0., 0., 0., 0., 0., 0., 0.])
     _name = 'test_sequence'
-    _pre_post_rotation = False
 
     sequence = DynamicDecouplingSequence(
         duration=_duration,
@@ -54,7 +53,6 @@ def test_dynamical_decoupling_sequence():
         rabi_rotations=_rabi_rotations,
         azimuthal_angles=_azimthal_angles,
         detuning_rotations=_detuning_rotations,
-        pre_post_rotation=_pre_post_rotation,
         name=_name
     )
 
@@ -77,71 +75,19 @@ def test_dynamical_decoupling_sequence():
 
     _duration = 2.
     _offsets = np.array([0., 0.25, 0.5, 0.75, 1.00, 1.25, 1.50, 1.75, 2.00])
-    _rabi_rotations = np.array([np.pi/2, np.pi, np.pi, np.pi, np.pi, np.pi, np.pi, np.pi, np.pi/2])
-    _azimthal_angles = 0.5 * np.array([0., np.pi, np.pi, np.pi, np.pi, np.pi, np.pi, np.pi, 0.])
-    _detuning_rotations = np.array([0., 0., 0., 0., 0., 0., 0., 0., 0.])
-    _name = 'test_sequence'
-    _pre_post_rotation = False
-
-    sequence = DynamicDecouplingSequence(
-        duration=_duration,
-        offsets=_offsets,
-        rabi_rotations=_rabi_rotations,
-        azimuthal_angles=_azimthal_angles,
-        detuning_rotations=_detuning_rotations,
-        pre_post_rotation=_pre_post_rotation,
-        name=_name
-    )
-
-    assert sequence.duration == _duration
-    assert np.allclose(sequence.offsets, _offsets)
-    assert np.allclose(sequence.rabi_rotations, _rabi_rotations)
-    assert np.allclose(sequence.azimuthal_angles, _azimthal_angles)
-    assert np.allclose(sequence.detuning_rotations, _detuning_rotations)
-    assert sequence.name == _name
-
-    _duration = 2.
-    _offsets = np.array([0., 0.25, 0.5, 0.75, 1.00, 1.25, 1.50, 1.75, 2.00])
-    _rabi_rotations = np.array([np.pi/2, np.pi, np.pi, np.pi, np.pi, np.pi, np.pi, np.pi, np.pi/2])
-    _azimthal_angles = 0.5 * np.array([0., np.pi, np.pi, np.pi, np.pi, np.pi, np.pi, np.pi, 0.])
-    _detuning_rotations = np.array([0., 0., 0., 0., 0., 0., 0., 0., 0.])
-    _name = 'test_sequence'
-    _pre_post_rotation = True
-
-    sequence = DynamicDecouplingSequence(
-        duration=_duration,
-        offsets=_offsets,
-        rabi_rotations=_rabi_rotations,
-        azimuthal_angles=_azimthal_angles,
-        detuning_rotations=_detuning_rotations,
-        pre_post_rotation=_pre_post_rotation,
-        name=_name
-    )
-
-    assert sequence.duration == _duration
-    assert np.allclose(sequence.offsets, _offsets)
-    assert np.allclose(sequence.rabi_rotations, _rabi_rotations)
-    assert np.allclose(sequence.azimuthal_angles, _azimthal_angles)
-    assert np.allclose(sequence.detuning_rotations, _detuning_rotations)
-    assert sequence.name == _name
-
-    _duration = 2.
-    _offsets = np.array([0., 0.25, 0.5, 0.75, 1.00, 1.25, 1.50, 1.75, 2.00])
     _rabi_rotations = np.array([np.pi / 2, np.pi, np.pi, np.pi, np.pi, np.pi,
                                 np.pi, np.pi, np.pi / 2])
     _azimthal_angles = 0.5 * np.array([0., np.pi, np.pi, np.pi, np.pi, np.pi,
                                        np.pi, np.pi, 0.])
     _detuning_rotations = np.array([0., 0., 0., 0., 0., 0., 0., 0., 0.])
     _name = 'test_sequence'
-    _pre_post_rotation = True
 
     sequence = DynamicDecouplingSequence(
         duration=_duration,
-        offsets=_offsets[1:-1],
-        rabi_rotations=_rabi_rotations[1:-1],
-        azimuthal_angles=_azimthal_angles[1:-1],
-        detuning_rotations=_detuning_rotations[1:-1],
-        pre_post_rotation=_pre_post_rotation,
+        offsets=_offsets,
+        rabi_rotations=_rabi_rotations,
+        azimuthal_angles=_azimthal_angles,
+        detuning_rotations=_detuning_rotations,
         name=_name
     )
 
@@ -151,37 +97,6 @@ def test_dynamical_decoupling_sequence():
     assert np.allclose(sequence.azimuthal_angles, _azimthal_angles)
     assert np.allclose(sequence.detuning_rotations, _detuning_rotations)
     assert sequence.name == _name
-
-    _duration = 2.
-    _offsets = np.array([0., 0.25, 0.5, 0.75, 1.00, 1.25, 1.50, 1.75, 2.00])
-    _rabi_rotations = np.array([0., np.pi, np.pi, np.pi, np.pi, np.pi,
-                                np.pi, np.pi, 0.])
-    _azimthal_angles = 0.5 * np.array([0., np.pi, np.pi, np.pi, np.pi, np.pi,
-                                       np.pi, np.pi, 0.])
-    _detuning_rotations = np.array([0., 0., 0., 0., 0., 0., 0., 0., 0.])
-    _name = 'test_sequence'
-    _pre_post_rotation = True
-
-    sequence = DynamicDecouplingSequence(
-        duration=_duration,
-        offsets=_offsets[1:-1],
-        rabi_rotations=_rabi_rotations[1:-1],
-        azimuthal_angles=_azimthal_angles[1:-1],
-        detuning_rotations=_detuning_rotations[1:-1],
-        pre_post_rotation=_pre_post_rotation,
-        name=_name
-    )
-
-    _rabi_rotations = np.array([np.pi/2, np.pi, np.pi, np.pi, np.pi, np.pi,
-                                np.pi, np.pi, np.pi/2])
-
-    assert sequence.duration == _duration
-    assert np.allclose(sequence.offsets, _offsets)
-    assert np.allclose(sequence.rabi_rotations, _rabi_rotations)
-    assert np.allclose(sequence.azimuthal_angles, _azimthal_angles)
-    assert np.allclose(sequence.detuning_rotations, _detuning_rotations)
-    assert sequence.name == _name
-
 
     with pytest.raises(ArgumentsValueError):
 
@@ -367,10 +282,10 @@ def test_conversion_to_driven_controls():
     """Tests the method to convert a DDS to Driven Control
     """
     _duration = 2.
-    _offsets = 2*np.array([0., 0.25, 0.5, 0.75, 1.])
-    _rabi_rotations = np.array([0., np.pi, 0., np.pi, 0.])
-    _azimuthal_angles = np.array([0., np.pi / 2, 0., 0., 0.])
-    _detuning_rotations = np.array([0., 0., np.pi, 0., 0.])
+    _offsets = 2*np.array([0.25, 0.5, 0.75])
+    _rabi_rotations = np.array([np.pi, 0., np.pi])
+    _azimuthal_angles = np.array([np.pi / 2, 0., 0.])
+    _detuning_rotations = np.array([0., np.pi, 0.])
     _name = 'test_sequence'
 
     dd_sequence = DynamicDecouplingSequence(
@@ -387,13 +302,13 @@ def test_conversion_to_driven_controls():
                                                     maximum_rabi_rate=_maximum_rabi_rate,
                                                     maximum_detuning_rate=_maximum_detuning_rate,
                                                     name=_name)
-    assert np.sum(driven_control.durations) == _duration
+
     assert np.allclose(driven_control.rabi_rates, np.array(
         [0., _maximum_rabi_rate, 0., 0., 0.,
          _maximum_rabi_rate, 0.]))
     assert np.allclose(driven_control.azimuthal_angles, np.array(
-        [0., _azimuthal_angles[1], 0., 0., 0.,
-         _azimuthal_angles[3], 0.]))
+        [0., _azimuthal_angles[0], 0., 0., 0.,
+         _azimuthal_angles[2], 0.]))
     assert np.allclose(driven_control.detunings, np.array(
         [0., 0., 0., np.pi, 0., 0., 0]))
     assert np.allclose(driven_control.durations, np.array(
@@ -405,11 +320,11 @@ def test_free_evolution_conversion():
     """Tests the conversion of free evolution
     """
     _duration = 10.
-    _offsets = np.array([0., _duration])
-    _rabi_rotations = np.array([0., 0.])
-    _azimuthal_angles = np.array([0., 0.])
-    _detuning_rotations = np.array([0., 0.])
     _name = 'test_sequence'
+    _offsets = []
+    _rabi_rotations = []
+    _azimuthal_angles = []
+    _detuning_rotations = []
 
     dd_sequence = DynamicDecouplingSequence(
         duration=_duration,
@@ -431,6 +346,38 @@ def test_free_evolution_conversion():
     _azimuthal_angles = np.array([0.])
     _detunings = np.array([0.])
     _durations = np.array([_duration])
+    assert np.allclose(driven_control.rabi_rates, _rabi_rates)
+    assert np.allclose(driven_control.azimuthal_angles, _azimuthal_angles)
+    assert np.allclose(driven_control.detunings, _detunings)
+    assert np.allclose(driven_control.durations, _durations)
+
+    _duration = 10.
+    _name = 'test_sequence'
+    _offsets = [0, _duration]
+    _rabi_rotations = [np.pi/2, np.pi/2]
+    _azimuthal_angles = [0, 0]
+    _detuning_rotations = [0, 0]
+
+    dd_sequence = DynamicDecouplingSequence(
+        duration=_duration,
+        offsets=_offsets,
+        rabi_rotations=_rabi_rotations,
+        azimuthal_angles=_azimuthal_angles,
+        detuning_rotations=_detuning_rotations,
+        name=_name)
+
+    _maximum_rabi_rate = 20 * np.pi
+    _maximum_detuning_rate = 20 * np.pi
+    driven_control = convert_dds_to_driven_controls(
+        dd_sequence,
+        maximum_rabi_rate=_maximum_rabi_rate,
+        maximum_detuning_rate=_maximum_detuning_rate,
+        name=_name)
+
+    _rabi_rates = np.array([_maximum_rabi_rate, 0., _maximum_rabi_rate])
+    _azimuthal_angles = np.array([0, 0, 0])
+    _detunings = np.array([0, 0, 0])
+    _durations = np.array([0.025, 9.95, 0.025])
     assert np.allclose(driven_control.rabi_rates, _rabi_rates)
     assert np.allclose(driven_control.azimuthal_angles, _azimuthal_angles)
     assert np.allclose(driven_control.detunings, _detunings)

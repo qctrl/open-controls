@@ -55,13 +55,6 @@ class DynamicDecouplingSequence(QctrlObject):   #pylint: disable=too-few-public-
         Default to None.
         The detuning rotations at each time offset.
         If None, defaults to 0 at each time offset.
-    pre_post_rotation : bool
-        If True, the sequence will have a :math:`X_{\\pi/2}`
-        rotations at start (offset=0) and end(offset=duration);
-        this will overwrite any operation at the start and the end (if provided).
-        If False, it either uses rotations at the start and end (if those are
-        supplied) or inserts '0' (no operation) at the start and end
-        (if no operation ar those offsets is supplied). Defaults to False.
     name : str
         Name of the sequence; Defaults to None
 
@@ -77,7 +70,6 @@ class DynamicDecouplingSequence(QctrlObject):   #pylint: disable=too-few-public-
                  rabi_rotations=None,
                  azimuthal_angles=None,
                  detuning_rotations=None,
-                 pre_post_rotation=False,
                  name=None
                  ):
 
@@ -87,7 +79,6 @@ class DynamicDecouplingSequence(QctrlObject):   #pylint: disable=too-few-public-
             'rabi_rotations',
             'azimuthal_angles',
             'detuning_rotations',
-            'pre_post_rotation',
             'name'])
 
         self.duration = duration
@@ -125,34 +116,6 @@ class DynamicDecouplingSequence(QctrlObject):   #pylint: disable=too-few-public-
         self.rabi_rotations = np.array(rabi_rotations, dtype=np.float)
         self.azimuthal_angles = np.array(azimuthal_angles, dtype=np.float)
         self.detuning_rotations = np.array(detuning_rotations, dtype=np.float)
-
-        self.pre_post_rotation = pre_post_rotation
-
-        if self.offsets[0] != 0.:
-            self.offsets = np.append([0], self.offsets)
-            if self.pre_post_rotation:
-                self.rabi_rotations = np.append([np.pi/2], self.rabi_rotations)
-            else:
-                self.rabi_rotations = np.append([0], self.rabi_rotations)
-
-            self.azimuthal_angles = np.append([0], self.azimuthal_angles)
-            self.detuning_rotations = np.append([0], self.detuning_rotations)
-        else:
-            if self.pre_post_rotation:
-                self.rabi_rotations[0] = np.pi/2
-
-        if self.offsets[-1] != self.duration:
-            self.offsets = np.append(self.offsets, [self.duration])
-            if self.pre_post_rotation:
-                self.rabi_rotations = np.append(self.rabi_rotations, [np.pi/2])
-            else:
-                self.rabi_rotations = np.append(self.rabi_rotations, [0])
-
-            self.azimuthal_angles = np.append(self.azimuthal_angles, [0])
-            self.detuning_rotations = np.append(self.detuning_rotations, [0])
-        else:
-            if self.pre_post_rotation:
-                self.rabi_rotations[-1] = np.pi/2
 
         self.number_of_offsets = len(self.offsets)
 

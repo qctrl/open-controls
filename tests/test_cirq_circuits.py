@@ -14,17 +14,15 @@
 
 """
 ===================================
-Tests converstion to Qiskit Circuit
+Tests converstion to Cirq Circuit
 ===================================
 """
 
-import numpy as np
-
-from qiskit import execute
-from qiskit import BasicAer
+import cirq
 
 from qctrlopencontrols import (
-    new_predefined_dds, convert_dds_to_quantum_circuit)
+    new_predefined_dds, convert_dds_to_cirq_circuit,
+    convert_dds_to_cirq_schedule)
 
 
 def _create_test_sequence(sequence_scheme, pre_post_rotation):
@@ -80,52 +78,35 @@ def _create_test_sequence(sequence_scheme, pre_post_rotation):
     return sequence
 
 
-def _check_circuit_unitary(pre_post_rotation, multiplier, algorithm):
-    """Check the unitary of a dynamic decoupling operation
+def _check_circuit_output(pre_post_rotation, conversion_method,
+                          expected_state):
+    """Check the outcome of a circuit against expected outcome
     """
 
-    backend = 'unitary_simulator'
-    number_of_shots = 1
-    backend_simulator = BasicAer.get_backend(backend)
-
+    simulator = cirq.Simulator()
     for sequence_scheme in ['Carr-Purcell', 'Carr-Purcell-Meiboom-Gill',
-                            'Uhrig single-axis', 'periodic single-axis', 'Walsh single-axis',
-                            'quadratic', 'X concatenated',
+                            'Uhrig single-axis', 'periodic single-axis',
+                            'Walsh single-axis', 'quadratic', 'X concatenated',
                             'XY concatenated']:
         sequence = _create_test_sequence(sequence_scheme, pre_post_rotation)
-        quantum_circuit = convert_dds_to_quantum_circuit(
+        cirq_circuit = conversion_method(
             dynamic_decoupling_sequence=sequence,
-            add_measurement=False, algorithm=algorithm)
+            add_measurement=True)
 
-        job = execute(quantum_circuit,
-                      backend_simulator,
-                      shots=number_of_shots)
-        result = job.result()
-        unitary = result.get_unitary(quantum_circuit)
-
-        assert np.allclose(np.array([[1, 0], [0, 1]]),
-                           np.abs(
-                               np.dot(np.linalg.inv(multiplier),
-                                      np.dot(unitary, np.linalg.inv(multiplier)))))
+        results = simulator.run(cirq_circuit)
+        assert results.measurements['qubit-0'] == expected_state
 
 
-def test_identity_operation():
+def test_cirq_circuit_operation():
 
-    """Tests if the Dynamic Decoupling Sequence gives rise to Identity
-    operation in Qiskit
+    """Tests if the Dynamic Decoupling Sequence gives rise to expected
+    state with different pre-post gates parameters in cirq circuits
     """
-    _multiplier = np.array([[1, 0], [0, 1]])
-    _check_circuit_unitary(False, _multiplier, 'instant unitary')
+    _check_circuit_output(False, convert_dds_to_cirq_circuit, 0)
+    _check_circuit_output(True, convert_dds_to_cirq_circuit, 1)
 
-    _multiplier = (1. / np.power(2, 0.5)) * np.array([[1, -1j], [-1j, 1]], dtype='complex')
-    _check_circuit_unitary(True, _multiplier, 'instant unitary')
-
-    _multiplier = np.array([[1, 0], [0, 1]])
-    _check_circuit_unitary(False, _multiplier, 'fixed duration unitary')
-
-    _multiplier = (1. / np.power(2, 0.5)) * np.array([[1, -1j], [-1j, 1]], dtype='complex')
-    _check_circuit_unitary(True, _multiplier, 'fixed duration unitary')
-
+    _check_circuit_output(False, convert_dds_to_cirq_schedule, 0)
+    _check_circuit_output(True, convert_dds_to_cirq_schedule, 1)
 
 
 if __name__ == '__main__':

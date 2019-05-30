@@ -13,68 +13,61 @@
 # limitations under the License.
 
 """
-======================
-qiskit.quantum_circuit
-======================
+============
+cirq.circuit
+============
 """
 
 import numpy as np
 
-from qiskit import (
-    QuantumRegister, ClassicalRegister, QuantumCircuit)
-from qiskit.qasm import pi
+import cirq
 
 from qctrlopencontrols.dynamic_decoupling_sequences import DynamicDecouplingSequence
 from qctrlopencontrols.exceptions import ArgumentsValueError
 from qctrlopencontrols.globals import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
 
 
-def convert_dds_to_quantum_circuit(
+def convert_dds_to_cirq_circuit(
         dynamic_decoupling_sequence,
         target_qubits=None,
         gate_time=0.1,
         add_measurement=True,
-        algorithm=INSTANT_UNITARY,
-        quantum_registers=None,
-        circuit_name=None):
+        algorithm=INSTANT_UNITARY):
 
-    """Converts a Dynamic Decoupling Sequence into QuantumCircuit
-    as defined in Qiskit
+    """Converts a Dynamic Decoupling Sequence into quantum circuit
+    as defined in cirq
+
     Parameters
     ----------
     dynamic_decoupling_sequence : DynamicDecouplingSequence
         The dynamic decoupling sequence
     target_qubits : list, optional
-        List of integers specifying target qubits for the sequence operation;
-        defaults to None
+        List of target qubits for the sequence operation; the qubits must be
+        cirq.Qid type; defaults to None in which case a 1-D lattice of one
+        qubit is used (indexed as 0).
     gate_time : float, optional
         Time (in seconds) delay introduced by a gate; defaults to 0.1
     add_measurement : bool, optional
         If True, the circuit contains a measurement operation for each of the
-        target qubits and a set of ClassicalRegister objects created with length
-        equal to `len(target_qubits)`
+        target qubits. Measurement from each of the qubits is associated
+        with a string as key. The string is formatted as 'qubit-X' where
+        X is a number between 0 and len(target_qubits).
     algorithm : str, optional
         One of 'fixed duration unitary' or 'instant unitary'; In the case of
         'fixed duration unitary', the sequence operations are assumed to be
         taking the amount of gate_time while 'instant unitary' assumes the sequence
         operations are instantaneous (and hence does not contribute to the delay between
         offsets). Defaults to 'instant unitary'.
-    quantum_registers : QuantumRegister, optional
-        The set of quantum registers; defaults to None
-        If not None, it must have the target qubit specified in `target_qubit`
-        indices list
-    circuit_name : str, optional
-        A string indicating the name of the circuit; defaults to None
 
     Returns
     -------
-    QuantumCircuit
-        The circuit defined from the specified dynamic decoupling sequence
+    cirq.Circuit
+        The circuit containing gates corresponding to sequence operation.
 
     Raises
     ------
     ArgumentsValueError
-        If any of the input parameters are invalid
+        If any of the input parameters result in an invalid operation.
 
     Notes
     -----
@@ -85,12 +78,15 @@ def convert_dds_to_quantum_circuit(
     results to a circuit that is only an approximate implementation of the idealized sequence.
 
     In idealized definition of DDS, `offsets` represents the instances within sequence
-    `duration` where a pulse occurs instantaneously. A series of appropriate circuit component
-    is placed in order to represent these pulses. The `gaps` or idle time in between active
-    pulses are filled up with `identity` gates. Each identity gate introduces a delay of
-    `gate_time`. In this implementation, the number of identity gates is determined by
-    :math:`np.int(np.floor(offset_distance / gate_time))`. As a consequence, the duration of
-    the real-circuit is :math:`gate_time \\times number_of_identity_gates +
+    `duration` where a pulse occurs instantaneously. A series of appropriate circuit components
+    is placed in order to represent these pulses.
+
+    In 'standard circuit', the `gaps` or idle time in between active pulses are filled up
+    with `identity` gates. Each identity gate introduces a delay of `gate_time`. In this
+    implementation, the number of identity gates is determined by
+    :math:`np.int(np.floor(offset_distance / gate_time))`. As a consequence,
+    :math:`np.int(np.floor(offset_distance / gate_time))`. As a consequence,
+    the duration of the real-circuit is :math:`gate_time \\times number_of_identity_gates +
     pulse_gate_time \\times number_of_pulses`.
 
     Q-CTRL Open Controls support operation resulting in rotation around at most one axis at
@@ -107,42 +103,17 @@ def convert_dds_to_quantum_circuit(
                                   {'type(dynamic_decoupling_sequence)':
                                        type(dynamic_decoupling_sequence)})
 
-    if target_qubits is None:
-        target_qubits = [0]
-
     if gate_time <= 0:
         raise ArgumentsValueError(
-            'Time delay of identity gate must be greater than zero.',
+            'Time delay of gates must be greater than zero.',
             {'gate_time': gate_time})
 
-    if np.any(target_qubits) < 0:
-        raise ArgumentsValueError(
-            'Every target qubits index must be positive.',
-            {'target_qubits': target_qubits})
+    if target_qubits is None:
+        target_qubits = [cirq.LineQubit(0)]
 
     if algorithm not in [FIX_DURATION_UNITARY, INSTANT_UNITARY]:
         raise ArgumentsValueError('Algorithm must be one of {} or {}'.format(
             INSTANT_UNITARY, FIX_DURATION_UNITARY), {'algorithm': algorithm})
-
-    if quantum_registers is not None:
-        if (max(target_qubits)+1) > len(quantum_registers):
-            raise ArgumentsValueError('Target qubit is not present in quantum_registers',
-                                      {'target_qubits': target_qubits,
-                                       'size(quantum_registers)': len(quantum_registers)},
-                                      extras={'max(target_qubits)': max(target_qubits)})
-        quantum_registers = quantum_registers
-    else:
-        quantum_registers = QuantumRegister(max(target_qubits)+1)
-
-    classical_registers = None
-    if add_measurement:
-        classical_registers = ClassicalRegister(len(target_qubits))
-        quantum_circuit = QuantumCircuit(quantum_registers, classical_registers)
-    else:
-        quantum_circuit = QuantumCircuit(quantum_registers)
-
-    if circuit_name is not None:
-        quantum_circuit.name = circuit_name
 
     unitary_time = 0.
     if algorithm == FIX_DURATION_UNITARY:
@@ -163,6 +134,7 @@ def convert_dds_to_quantum_circuit(
     offsets = dynamic_decoupling_sequence.offsets
 
     time_covered = 0
+    circuit = cirq.Circuit()
     for operation_idx in range(operations.shape[1]):
 
         offset_distance = offsets[operation_idx] - time_covered
@@ -176,10 +148,11 @@ def convert_dds_to_quantum_circuit(
 
         if offset_distance > 0:
             while (time_covered+gate_time) <= offsets[operation_idx]:
+                gate_list = []
                 for qubit in target_qubits:
-                    quantum_circuit.iden(quantum_registers[qubit])  # pylint: disable=no-member
-                    quantum_circuit.barrier(quantum_registers[qubit])  # pylint: disable=no-member
+                    gate_list.append(cirq.I(qubit))
                 time_covered += gate_time
+                circuit.append(gate_list)
 
         rabi_rotation = operations[0, operation_idx]
         azimuthal_angle = operations[1, operation_idx]
@@ -205,34 +178,26 @@ def convert_dds_to_quantum_circuit(
                      operation_idx]}
             )
 
+        gate_list = []
         for qubit in target_qubits:
             if nonzero_pulse_counts == 0:
-                quantum_circuit.u3(
-                    0., 0., 0.,  # pylint: disable=no-member
-                    quantum_registers[qubit])
+                gate_list.append(cirq.I(qubit))
             else:
                 if not np.isclose(rotations[0], 0.0):
-                    quantum_circuit.u3(
-                        rotations[0], -pi / 2, pi / 2,  # pylint: disable=no-member
-                        quantum_registers[qubit])
+                    gate_list.append(cirq.Rx(rotations[0])(qubit))
                 elif not np.isclose(rotations[1], 0.0):
-                    quantum_circuit.u3(
-                        rotations[1], 0., 0.,  # pylint: disable=no-member
-                        quantum_registers[qubit])
+                    gate_list.append(cirq.Ry(rotations[1])(qubit))
                 elif not np.isclose(rotations[2], 0.):
-                    quantum_circuit.u1(
-                        rotations[2],  # pylint: disable=no-member
-                        quantum_registers[qubit])
-            quantum_circuit.barrier(quantum_registers[qubit])  # pylint: disable=no-member
-
+                    gate_list.append(cirq.Rz(rotations[2])(qubit))
+        circuit.append(gate_list)
         if np.isclose(np.sum(rotations), 0.0):
             time_covered = offsets[operation_idx]
         else:
             time_covered = offsets[operation_idx] + unitary_time
-
     if add_measurement:
-        for q_index, qubit in enumerate(target_qubits):
-            quantum_circuit.measure(quantum_registers[qubit],   #pylint: disable=no-member
-                                    classical_registers[q_index])
+        gate_list = []
+        for idx, qubit in enumerate(target_qubits):
+            gate_list.append(cirq.measure(qubit, key='qubit-{}'.format(idx)))
+        circuit.append(gate_list)
 
-    return quantum_circuit
+    return circuit
