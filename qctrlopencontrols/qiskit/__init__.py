@@ -18,5 +18,4 @@ qiskit module
 =============
 """
 
-from .quantum_circuit import (convert_dds_to_quantum_circuit,
-                              get_circuit_gate_list)
+from .quantum_circuit import (convert_dds_to_quantum_circuit)
