@@ -142,20 +142,21 @@ def convert_dds_to_cirq_schedule(
         z_rotation = dynamic_decoupling_sequence.detuning_rotations[offset_count]
 
         rotations = np.array([x_rotation, y_rotation, z_rotation])
-        nonzero_pulse_counts = 0
-        for rotation in rotations:
-            if not np.isclose(rotation, 0.0):
-                nonzero_pulse_counts += 1
+        zero_pulses = np.isclose(rotations, 0.0).astype(np.int)
+        nonzero_pulse_counts = 3 - np.sum(zero_pulses)
         if nonzero_pulse_counts > 1:
             raise ArgumentsValueError(
                 'Open Controls support a sequence with one '
                 'valid pulse at any offset. Found sequence '
                 'with multiple rotation operations at an offset.',
                 {'dynamic_decoupling_sequence': str(dynamic_decoupling_sequence),
-                 'offset': dynamic_decoupling_sequence.offsets[offset_count],
-                 'rabi_rotation': dynamic_decoupling_sequence.rabi_rotations[offset_count],
-                 'azimuthal_angle': dynamic_decoupling_sequence.azimuthal_angles[offset_count],
-                 'detuning_rotaion': dynamic_decoupling_sequence.detuning_rotations[offset_count]}
+                 'offset': dynamic_decoupling_sequence.offsets[op_idx],
+                 'rabi_rotation': dynamic_decoupling_sequence.rabi_rotations[
+                     op_idx],
+                 'azimuthal_angle': dynamic_decoupling_sequence.azimuthal_angles[
+                     op_idx],
+                 'detuning_rotaion': dynamic_decoupling_sequence.detuning_rotations[
+                     op_idx]}
             )
 
         for qubit in target_qubits:

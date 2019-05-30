@@ -147,7 +147,7 @@ def convert_dds_to_cirq_circuit(
                                       {'sequence_operations': operations})
 
         if offset_distance > 0:
-            while (time_covered <= offsets[operation_idx]):
+            while time_covered <= offsets[operation_idx]:
                 gate_list = []
                 for qubit in target_qubits:
                     gate_list.append(cirq.I(qubit))
