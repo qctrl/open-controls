@@ -246,7 +246,7 @@ def convert_dds_to_quantum_circuit(
                                       {'sequence_operations': operations})
 
         if offset_distance > 0:
-            while time_covered <= offsets[operation_idx]:
+            while (time_covered+gate_time) <= offsets[operation_idx]:
                 for qubit in target_qubits:
                     quantum_circuit.iden(quantum_registers[qubit])  # pylint: disable=no-member
                     quantum_circuit.barrier(quantum_registers[qubit])  # pylint: disable=no-member
