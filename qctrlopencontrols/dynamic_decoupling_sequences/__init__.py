@@ -26,4 +26,4 @@ from .constants import (
 
 from .dynamic_decoupling_sequence import DynamicDecouplingSequence
 from .predefined import new_predefined_dds
-from .driven_controls import convert_dds_to_driven_controls
+from .driven_controls import convert_dds_to_driven_control

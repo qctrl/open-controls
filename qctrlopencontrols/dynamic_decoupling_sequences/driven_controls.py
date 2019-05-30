@@ -95,7 +95,7 @@ def _check_maximum_rotation_rate(
                     'allowed_maximum_detuning_rate': UPPER_BOUND_DETUNING_RATE})
 
 
-def convert_dds_to_driven_controls(
+def convert_dds_to_driven_control(
         dynamic_decoupling_sequence=None,
         maximum_rabi_rate=2*np.pi,
         maximum_detuning_rate=2*np.pi,

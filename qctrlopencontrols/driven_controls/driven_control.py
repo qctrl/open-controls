@@ -31,54 +31,6 @@ from .constants import (
     UPPER_BOUND_DURATION, LOWER_BOUND_DURATION)
 
 
-def get_plot_data_from_segments(segments):
-    """
-    Generates arrays that can be used to produce a plot representing the shape of the driven control
-    constructed from the segments.
-
-    Parameters
-    ----------
-    segments : list
-        List of segments formatted as described in qctrlopencontrols.driven_controls.DrivenControl
-
-    Returns
-    -------
-    tuple
-        Tuple made up of arrays for plotting formatted as
-        (amplitude_x,amplitude_y,amplitude_z,time) where:
-        - amplitude_k is the amplitude values.
-        - times the time corresponding to each amplitude_k coordinate.
-        Note that plot will have repeated times and for amplitudes, this is because it is
-        expected that these coordinates are to be used with plotting software that 'joins
-        the dots' with linear lines between each coordinate. The time array gives the x
-        values for all the amplitude arrays, which give the y values.
-
-    """
-    segment_times = np.insert(np.cumsum(segments[:, 3]), 0, 0.)
-    coords = len(segment_times)
-    coord_amplitude_x = np.concatenate([[0.], segments[:, 0], [0.]])
-    coord_amplitude_y = np.concatenate([[0.], segments[:, 1], [0.]])
-    coord_amplitude_z = np.concatenate([[0.], segments[:, 2], [0.]])
-    plot_time = []
-    plot_amplitude_x = []
-    plot_amplitude_y = []
-    plot_amplitude_z = []
-    for i in range(coords):
-        plot_time.append(segment_times[i])
-        plot_time.append(segment_times[i])
-        plot_amplitude_x.append(coord_amplitude_x[i])
-        plot_amplitude_x.append(coord_amplitude_x[i + 1])
-        plot_amplitude_y.append(coord_amplitude_y[i])
-        plot_amplitude_y.append(coord_amplitude_y[i + 1])
-        plot_amplitude_z.append(coord_amplitude_z[i])
-        plot_amplitude_z.append(coord_amplitude_z[i + 1])
-
-    return (np.array(plot_amplitude_x),
-            np.array(plot_amplitude_y),
-            np.array(plot_amplitude_z),
-            np.array(plot_time))
-
-
 class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
     """
     Creates a driven control. A driven is a set of segments made up of amplitude vectors
@@ -545,28 +497,57 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
         ArgumentsValueError
             Raised when an argument is invalid.
         """
+        if coordinates not in [CARTESIAN, CYLINDRICAL]:
+            raise ArgumentsValueError(
+                'Unsupported coordinates provided: ',
+                arguments={'coordinates': coordinates})
+
+
         if dimensionless_rabi_rate:
             normalizer = self.maximum_rabi_rate
         else:
             normalizer = 1
 
         if coordinates == CARTESIAN:
-            (x_amplitudes, y_amplitudes, detunings, times) = get_plot_data_from_segments(
-                np.vstack((self.amplitude_x / normalizer, self.amplitude_y / normalizer,
-                           self.detunings, self.durations)).T
-            )
-            plot_dictionary = {
-                'amplitudes_x': x_amplitudes,
-                'amplitudes_y': y_amplitudes,
-                'detunings': detunings,
-                'times': times
-            }
-
+            segments = np.vstack((self.amplitude_x / normalizer,
+                                  self.amplitude_y / normalizer,
+                                  self.detunings,
+                                  self.durations)).T
         elif coordinates == CYLINDRICAL:
-            (x_plot, y_plot, detunings, times) = get_plot_data_from_segments(
-                np.vstack((self.rabi_rates / normalizer, self.azimuthal_angles,
-                           self.detunings, self.durations)).T
-            )
+            segments = np.vstack((self.rabi_rates / normalizer,
+                                  self.azimuthal_angles,
+                                  self.detunings,
+                                  self.durations)).T
+
+        segment_times = np.insert(np.cumsum(segments[:, 3]), 0, 0.)
+        coords = len(segment_times)
+        coord_amplitude_x = np.concatenate([[0.], segments[:, 0], [0.]])
+        coord_amplitude_y = np.concatenate([[0.], segments[:, 1], [0.]])
+        coord_amplitude_z = np.concatenate([[0.], segments[:, 2], [0.]])
+        plot_time = []
+        plot_amplitude_x = []
+        plot_amplitude_y = []
+        plot_amplitude_z = []
+        for i in range(coords):
+            plot_time.append(segment_times[i])
+            plot_time.append(segment_times[i])
+            plot_amplitude_x.append(coord_amplitude_x[i])
+            plot_amplitude_x.append(coord_amplitude_x[i + 1])
+            plot_amplitude_y.append(coord_amplitude_y[i])
+            plot_amplitude_y.append(coord_amplitude_y[i + 1])
+            plot_amplitude_z.append(coord_amplitude_z[i])
+            plot_amplitude_z.append(coord_amplitude_z[i + 1])
+
+        plot_dictionary = {
+            'amplitudes_x': plot_amplitude_x,
+            'amplitudes_y': plot_amplitude_y,
+            'detunings': plot_amplitude_z,
+            'times': plot_time
+        }
+
+        if coordinates == CYLINDRICAL:
+            x_plot = plot_amplitude_x
+            y_plot = plot_amplitude_y
             x_plot[np.equal(x_plot, -0.0)] = 0.
             y_plot[np.equal(y_plot, -0.0)] = 0.
             azimuthal_angles_plot = np.arctan2(y_plot, x_plot)
@@ -574,13 +555,9 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             plot_dictionary = {
                 'rabi_rates': amplitudes_plot,
                 'azimuthal_angles': azimuthal_angles_plot,
-                'detunings': detunings,
-                'times': times
+                'detunings': plot_amplitude_z,
+                'times': plot_time
             }
-        else:
-            raise ArgumentsValueError(
-                'Unsupported coordinates provided: ',
-                arguments={'coordinates': coordinates})
 
         return plot_dictionary
 
