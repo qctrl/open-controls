@@ -502,7 +502,6 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                 'Unsupported coordinates provided: ',
                 arguments={'coordinates': coordinates})
 
-
         if dimensionless_rabi_rate:
             normalizer = self.maximum_rabi_rate
         else:
@@ -537,6 +536,11 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             plot_amplitude_y.append(coord_amplitude_y[i + 1])
             plot_amplitude_z.append(coord_amplitude_z[i])
             plot_amplitude_z.append(coord_amplitude_z[i + 1])
+
+        plot_amplitude_x = np.array(plot_amplitude_x)
+        plot_amplitude_y = np.array(plot_amplitude_y)
+        plot_amplitude_z = np.array(plot_amplitude_z)
+        plot_time = np.array(plot_time)
 
         plot_dictionary = {
             'amplitudes_x': plot_amplitude_x,
