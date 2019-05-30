@@ -26,8 +26,7 @@ from qiskit.qasm import pi
 
 from qctrlopencontrols.dynamic_decoupling_sequences import DynamicDecouplingSequence
 from qctrlopencontrols.exceptions import ArgumentsValueError
-
-from .constants import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
+from qctrlopencontrols.globals import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
 
 
 def get_circuit_gate_list(dynamic_decoupling_sequence,
@@ -99,32 +98,6 @@ def get_circuit_gate_list(dynamic_decoupling_sequence,
             time_covered = offsets[operation_idx] + unitary_time
 
     return circuit_operations
-
-
-def get_rotations(operation):
-
-    """Returns the pulses based on the rotation operation
-
-    Parameters
-    ----------
-    operation : numpy.ndarray
-        1-D array (length=3) consisting of rabi rotation, azimuthal_angle
-        and detuning_rotation at an offset of a sequence
-
-    Returns
-    -------
-    numpy.ndarray
-        A 1-D array of length 3 containing x_rotation, y_rotation and z_rotation
-        calculated from sequence operation
-    """
-
-    x_rotation = operation[0] * np.cos(operation[1])
-    y_rotation = operation[0] * np.sin(operation[1])
-    z_rotation = operation[2]
-
-    pulses = np.array([x_rotation, y_rotation, z_rotation])
-
-    return pulses
 
 
 def convert_dds_to_quantum_circuit(
@@ -246,54 +219,88 @@ def convert_dds_to_quantum_circuit(
     if algorithm == FIX_DURATION_UNITARY:
         unitary_time = gate_time
 
-    circuit_gate_list = get_circuit_gate_list(
-        dynamic_decoupling_sequence=dynamic_decoupling_sequence,
-        gate_time=gate_time,
-        unitary_time=unitary_time)
+    rabi_rotations = dynamic_decoupling_sequence.rabi_rotations
+    azimuthal_angles = dynamic_decoupling_sequence.azimuthal_angles
+    detuning_rotations = dynamic_decoupling_sequence.detuning_rotations
 
-    offset_count = 0
-    for gate in circuit_gate_list:
+    if len(rabi_rotations.shape) == 1:
+        rabi_rotations = rabi_rotations[np.newaxis, :]
+    if len(azimuthal_angles.shape) == 1:
+        azimuthal_angles = azimuthal_angles[np.newaxis, :]
+    if len(detuning_rotations.shape) == 1:
+        detuning_rotations = detuning_rotations[np.newaxis, :]
 
-        if gate == 'id':
-            for qubit in target_qubits:
-                quantum_circuit.iden(quantum_registers[qubit])  # pylint: disable=no-member
-                quantum_circuit.barrier(quantum_registers[qubit])  # pylint: disable=no-member
-            continue
+    operations = np.vstack((rabi_rotations, azimuthal_angles, detuning_rotations))
+    offsets = dynamic_decoupling_sequence.offsets
 
-        instance_operation = np.array([dynamic_decoupling_sequence.rabi_rotations[offset_count],
-                                       dynamic_decoupling_sequence.azimuthal_angles[offset_count],
-                                       dynamic_decoupling_sequence.detuning_rotations[offset_count]
-                                       ])
+    time_covered = 0
+    for operation_idx in range(operations.shape[1]):
 
-        rotations = get_rotations(instance_operation)
-        nonzero_pulse_counts = 0
-        for rotation in rotations:
-            if not np.isclose(rotation, 0.0):
-                nonzero_pulse_counts += 1
+        offset_distance = offsets[operation_idx] - time_covered
+
+        if np.isclose(offset_distance, 0.0):
+            offset_distance = 0.0
+
+        if offset_distance < 0:
+            raise ArgumentsValueError("Offsets cannot be placed properly",
+                                      {'sequence_operations': operations})
+
+        if offset_distance > 0:
+            while (time_covered <= offsets[operation_idx]):
+                for qubit in target_qubits:
+                    quantum_circuit.iden(quantum_registers[qubit])  # pylint: disable=no-member
+                    quantum_circuit.barrier(quantum_registers[qubit])  # pylint: disable=no-member
+                time_covered += gate_time
+            # circuit_operations.append('offset')
+
+        rabi_rotation = operations[0, operation_idx]
+        azimuthal_angle = operations[1, operation_idx]
+        x_rotation = rabi_rotation * np.cos(azimuthal_angle)
+        y_rotation = rabi_rotation * np.sin(azimuthal_angle)
+        z_rotation = operations[2, operation_idx]
+
+        rotations = np.array([x_rotation, y_rotation, z_rotation])
+        zero_pulses = np.isclose(rotations, 0.0).astype(np.int)
+        nonzero_pulse_counts = 3 - np.sum(zero_pulses)
         if nonzero_pulse_counts > 1:
-            raise ArgumentsValueError('Open Controls support a sequence with one '
-                                      'valid pulse at any offset. Found sequence '
-                                      'with multiple rotation operations at an offset.',
-                                      {'dynamic_decoupling_sequence': str(
-                                          dynamic_decoupling_sequence),
-                                       'instance_operation': instance_operation})
+            raise ArgumentsValueError(
+                'Open Controls support a sequence with one '
+                'valid pulse at any offset. Found sequence '
+                'with multiple rotation operations at an offset.',
+                {'dynamic_decoupling_sequence': str(dynamic_decoupling_sequence),
+                 'offset': dynamic_decoupling_sequence.offsets[operation_idx],
+                 'rabi_rotation': dynamic_decoupling_sequence.rabi_rotations[
+                     operation_idx],
+                 'azimuthal_angle': dynamic_decoupling_sequence.azimuthal_angles[
+                     operation_idx],
+                 'detuning_rotaion': dynamic_decoupling_sequence.detuning_rotations[
+                     operation_idx]}
+            )
+
         for qubit in target_qubits:
             if nonzero_pulse_counts == 0:
-                quantum_circuit.u3(0., 0., 0.,  #pylint: disable=no-member
-                                   quantum_registers[qubit])
+                quantum_circuit.u3(
+                    0., 0., 0.,  # pylint: disable=no-member
+                    quantum_registers[qubit])
             else:
                 if not np.isclose(rotations[0], 0.0):
-                    quantum_circuit.u3(rotations[0], -pi/2, pi/2, #pylint: disable=no-member
-                                       quantum_registers[qubit])
+                    quantum_circuit.u3(
+                        rotations[0], -pi / 2, pi / 2,  # pylint: disable=no-member
+                        quantum_registers[qubit])
                 elif not np.isclose(rotations[1], 0.0):
-                    quantum_circuit.u3(rotations[1], 0., 0.,  #pylint: disable=no-member
-                                       quantum_registers[qubit])
+                    quantum_circuit.u3(
+                        rotations[1], 0., 0.,  # pylint: disable=no-member
+                        quantum_registers[qubit])
                 elif not np.isclose(rotations[2], 0.):
-                    quantum_circuit.u1(rotations[2],      #pylint: disable=no-member
-                                       quantum_registers[qubit])
-            quantum_circuit.barrier(quantum_registers[qubit])    #pylint: disable=no-member
+                    quantum_circuit.u1(
+                        rotations[2],  # pylint: disable=no-member
+                        quantum_registers[qubit])
+            quantum_circuit.barrier(quantum_registers[qubit])  # pylint: disable=no-member
 
-        offset_count += 1
+        if np.isclose(np.sum(rotations), 0.0):
+            time_covered = offsets[operation_idx]
+        else:
+            time_covered = offsets[operation_idx] + unitary_time
 
     if add_measurement:
         for q_index, qubit in enumerate(target_qubits):

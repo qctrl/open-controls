@@ -25,121 +25,6 @@ import cirq
 from qctrlopencontrols.dynamic_decoupling_sequences import DynamicDecouplingSequence
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
-from qctrlopencontrols.qiskit import get_rotations
-
-
-def _get_cirq_schedule(dynamic_decoupling_sequence,
-                       target_qubits,
-                       gate_time,
-                       add_measurement,
-                       device):
-
-    """Returns a scheduled operations constructed from dynamic decoupling sequence
-
-    Parameters
-    ----------
-    dynamic_decoupling_sequence : DynamicDecouplingSequence
-        The dynamic decoupling sequence
-    target_qubits : list
-        List of target qubits for the sequence operation; the qubits must be
-        cirq.Qid type
-    gate_time : float, optional
-        Time (in seconds) delay introduced by a gate; defaults to 0.1
-    add_measurement : bool
-        If True, a measurement operation is added to each of the qubits.
-    device : cirq.Device
-        The device where these operations will be running.
-
-    Returns
-    -------
-    cirq.Schedule
-        The scheduled rotation operations. The Schedule object contains a
-        series of desired gates at specific times measured from the start
-        of the duration.
-
-    Raises
-    ------
-    ArgumentsValueError
-        If there is rotations around more than one axis at any of the offsets
-    """
-
-    # time in nano seconds
-    gate_time = gate_time * 1e9
-
-    rabi_rotations = dynamic_decoupling_sequence.rabi_rotations
-    azimuthal_angles = dynamic_decoupling_sequence.azimuthal_angles
-    detuning_rotations = dynamic_decoupling_sequence.detuning_rotations
-
-    if len(rabi_rotations.shape) == 1:
-        rabi_rotations = rabi_rotations[np.newaxis, :]
-    if len(azimuthal_angles.shape) == 1:
-        azimuthal_angles = azimuthal_angles[np.newaxis, :]
-    if len(detuning_rotations.shape) == 1:
-        detuning_rotations = detuning_rotations[np.newaxis, :]
-
-    operations = np.vstack((rabi_rotations, azimuthal_angles, detuning_rotations))
-    offsets = dynamic_decoupling_sequence.offsets
-    # offsets in nano seconds
-    offsets = offsets * 1e9
-
-    scheduled_operations = []
-    offset_count = 0
-    for op_idx in range(operations.shape[1]):
-        instance_operation = np.array([dynamic_decoupling_sequence.rabi_rotations[op_idx],
-                                       dynamic_decoupling_sequence.azimuthal_angles[op_idx],
-                                       dynamic_decoupling_sequence.detuning_rotations[op_idx]
-                                       ])
-
-        rotations = get_rotations(instance_operation)
-        nonzero_pulse_counts = 0
-        for rotation in rotations:
-            if not np.isclose(rotation, 0.0):
-                nonzero_pulse_counts += 1
-        if nonzero_pulse_counts > 1:
-            raise ArgumentsValueError(
-                'Open Controls support a sequence with one '
-                'valid pulse at any offset. Found sequence '
-                'with multiple rotation operations at an offset.',
-                {'dynamic_decoupling_sequence': str(dynamic_decoupling_sequence),
-                 'instance_operation': instance_operation})
-
-        for qubit in target_qubits:
-            if nonzero_pulse_counts == 0:
-                operation = cirq.ScheduledOperation(
-                    time=cirq.Timestamp(nanos=offsets[op_idx]),
-                    duration=cirq.Duration(nanos=gate_time),
-                    operation=cirq.I(qubit))
-            else:
-                if not np.isclose(rotations[0], 0.0):
-                    operation = cirq.ScheduledOperation(
-                        time=cirq.Timestamp(nanos=offsets[op_idx]),
-                        duration=cirq.Duration(nanos=gate_time),
-                        operation=cirq.Rx(rotations[0])(qubit))
-                elif not np.isclose(rotations[1], 0.0):
-                    operation = cirq.ScheduledOperation(
-                        time=cirq.Timestamp(nanos=offsets[op_idx]),
-                        duration=cirq.Duration(nanos=gate_time),
-                        operation=cirq.Rx(rotations[1])(qubit))
-                elif not np.isclose(rotations[2], 0.):
-                    operation = cirq.ScheduledOperation(
-                        time=cirq.Timestamp(nanos=offsets[op_idx]),
-                        duration=cirq.Duration(nanos=gate_time),
-                        operation=cirq.Rx(rotations[2])(qubit))
-            offset_count += 1
-            scheduled_operations.append(operation)
-
-    if add_measurement:
-        for idx, qubit in enumerate(target_qubits):
-            operation = cirq.ScheduledOperation(
-                time=cirq.Timestamp(nanos=offsets[-1] + gate_time),
-                duration=cirq.Duration(nanos=gate_time),
-                operation=cirq.MeasurementGate(
-                    1, key='qubit-{}'.format(idx))(qubit))
-            scheduled_operations.append(operation)
-
-    schedule = cirq.Schedule(device=device, scheduled_operations=scheduled_operations)
-    return schedule
-
 
 def convert_dds_to_cirq_schedule(
         dynamic_decoupling_sequence,
@@ -227,8 +112,85 @@ def convert_dds_to_cirq_schedule(
         raise ArgumentsValueError('Device must be a cirq.Device type.',
                                   {'device': device})
 
-    return _get_cirq_schedule(dynamic_decoupling_sequence=dynamic_decoupling_sequence,
-                              target_qubits=target_qubits,
-                              gate_time=gate_time,
-                              add_measurement=add_measurement,
-                              device=device)
+    # time in nano seconds
+    gate_time = gate_time * 1e9
+
+    rabi_rotations = dynamic_decoupling_sequence.rabi_rotations
+    azimuthal_angles = dynamic_decoupling_sequence.azimuthal_angles
+    detuning_rotations = dynamic_decoupling_sequence.detuning_rotations
+
+    if len(rabi_rotations.shape) == 1:
+        rabi_rotations = rabi_rotations[np.newaxis, :]
+    if len(azimuthal_angles.shape) == 1:
+        azimuthal_angles = azimuthal_angles[np.newaxis, :]
+    if len(detuning_rotations.shape) == 1:
+        detuning_rotations = detuning_rotations[np.newaxis, :]
+
+    operations = np.vstack((rabi_rotations, azimuthal_angles, detuning_rotations))
+    offsets = dynamic_decoupling_sequence.offsets
+    # offsets in nano seconds
+    offsets = offsets * 1e9
+
+    scheduled_operations = []
+    offset_count = 0
+    for op_idx in range(operations.shape[1]):
+
+        rabi_rotation = dynamic_decoupling_sequence.rabi_rotations[offset_count]
+        azimuthal_angle = dynamic_decoupling_sequence.azimuthal_angles[offset_count]
+        x_rotation = rabi_rotation * np.cos(azimuthal_angle)
+        y_rotation = rabi_rotation * np.sin(azimuthal_angle)
+        z_rotation = dynamic_decoupling_sequence.detuning_rotations[offset_count]
+
+        rotations = np.array([x_rotation, y_rotation, z_rotation])
+        nonzero_pulse_counts = 0
+        for rotation in rotations:
+            if not np.isclose(rotation, 0.0):
+                nonzero_pulse_counts += 1
+        if nonzero_pulse_counts > 1:
+            raise ArgumentsValueError(
+                'Open Controls support a sequence with one '
+                'valid pulse at any offset. Found sequence '
+                'with multiple rotation operations at an offset.',
+                {'dynamic_decoupling_sequence': str(dynamic_decoupling_sequence),
+                 'offset': dynamic_decoupling_sequence.offsets[offset_count],
+                 'rabi_rotation': dynamic_decoupling_sequence.rabi_rotations[offset_count],
+                 'azimuthal_angle': dynamic_decoupling_sequence.azimuthal_angles[offset_count],
+                 'detuning_rotaion': dynamic_decoupling_sequence.detuning_rotations[offset_count]}
+            )
+
+        for qubit in target_qubits:
+            if nonzero_pulse_counts == 0:
+                operation = cirq.ScheduledOperation(
+                    time=cirq.Timestamp(nanos=offsets[op_idx]),
+                    duration=cirq.Duration(nanos=gate_time),
+                    operation=cirq.I(qubit))
+            else:
+                if not np.isclose(rotations[0], 0.0):
+                    operation = cirq.ScheduledOperation(
+                        time=cirq.Timestamp(nanos=offsets[op_idx]),
+                        duration=cirq.Duration(nanos=gate_time),
+                        operation=cirq.Rx(rotations[0])(qubit))
+                elif not np.isclose(rotations[1], 0.0):
+                    operation = cirq.ScheduledOperation(
+                        time=cirq.Timestamp(nanos=offsets[op_idx]),
+                        duration=cirq.Duration(nanos=gate_time),
+                        operation=cirq.Rx(rotations[1])(qubit))
+                elif not np.isclose(rotations[2], 0.):
+                    operation = cirq.ScheduledOperation(
+                        time=cirq.Timestamp(nanos=offsets[op_idx]),
+                        duration=cirq.Duration(nanos=gate_time),
+                        operation=cirq.Rx(rotations[2])(qubit))
+            offset_count += 1
+            scheduled_operations.append(operation)
+
+    if add_measurement:
+        for idx, qubit in enumerate(target_qubits):
+            operation = cirq.ScheduledOperation(
+                time=cirq.Timestamp(nanos=offsets[-1] + gate_time),
+                duration=cirq.Duration(nanos=gate_time),
+                operation=cirq.MeasurementGate(
+                    1, key='qubit-{}'.format(idx))(qubit))
+            scheduled_operations.append(operation)
+
+    schedule = cirq.Schedule(device=device, scheduled_operations=scheduled_operations)
+    return schedule

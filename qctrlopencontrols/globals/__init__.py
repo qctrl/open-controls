@@ -39,3 +39,13 @@ CARTESIAN = 'cartesian'
 CYLINDRICAL = 'cylindrical'
 """Defines Cylindrical coordinate system
 """
+
+FIX_DURATION_UNITARY = 'fixed duration unitary'
+"""Algorithm to convert a DDS to Quantum circuit
+where the unitaries are considered as gates with finite duration
+"""
+
+INSTANT_UNITARY = 'instant unitary'
+"""Algorithm to convert a DDS to Quantum circuit where the
+unitaties are considered as instantaneous operation.
+"""
