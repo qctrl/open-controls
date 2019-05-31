@@ -541,7 +541,8 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                 'detunings': plot_amplitude_z,
                 'times': plot_time}
 
-        elif coordinates == CYLINDRICAL:
+        if coordinates == CYLINDRICAL:
+
             x_plot = plot_amplitude_x
             y_plot = plot_amplitude_y
             x_plot[np.equal(x_plot, -0.0)] = 0.
