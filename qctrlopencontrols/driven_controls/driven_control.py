@@ -533,27 +533,27 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
         plot_amplitude_z = np.concatenate(
             ([0.], (plot_amplitude_z[:, np.newaxis] * np.ones((1, 2))).flatten(), [0.]))
 
-        plot_dictionary = {
-            'amplitudes_x': plot_amplitude_x,
-            'amplitudes_y': plot_amplitude_y,
-            'detunings': plot_amplitude_z,
-            'times': plot_time
-        }
+        plot_dictionary = {}
+        if coordinates == CARTESIAN:
+            plot_dictionary = {
+                'amplitudes_x': plot_amplitude_x,
+                'amplitudes_y': plot_amplitude_y,
+                'detunings': plot_amplitude_z,
+                'times': plot_time}
 
-        if coordinates == CYLINDRICAL:
+        elif coordinates == CYLINDRICAL:
             x_plot = plot_amplitude_x
             y_plot = plot_amplitude_y
             x_plot[np.equal(x_plot, -0.0)] = 0.
             y_plot[np.equal(y_plot, -0.0)] = 0.
             azimuthal_angles_plot = np.arctan2(y_plot, x_plot)
             amplitudes_plot = np.sqrt(np.abs(x_plot**2 + y_plot**2))
+
             plot_dictionary = {
                 'rabi_rates': amplitudes_plot,
                 'azimuthal_angles': azimuthal_angles_plot,
                 'detunings': plot_amplitude_z,
-                'times': plot_time
-            }
-
+                'times': plot_time}
         return plot_dictionary
 
     def __str__(self):
