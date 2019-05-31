@@ -508,39 +508,30 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
             normalizer = 1
 
         if coordinates == CARTESIAN:
-            segments = np.vstack((self.amplitude_x / normalizer,
-                                  self.amplitude_y / normalizer,
-                                  self.detunings,
-                                  self.durations)).T
+            control_segments = np.vstack((
+                self.amplitude_x / normalizer,
+                self.amplitude_y / normalizer,
+                self.detunings,
+                self.durations)).T
         elif coordinates == CYLINDRICAL:
-            segments = np.vstack((self.rabi_rates / normalizer,
-                                  self.azimuthal_angles,
-                                  self.detunings,
-                                  self.durations)).T
+            control_segments = np.vstack((
+                self.rabi_rates / normalizer,
+                self.azimuthal_angles,
+                self.detunings,
+                self.durations)).T
 
-        segment_times = np.insert(np.cumsum(segments[:, 3]), 0, 0.)
-        coords = len(segment_times)
-        coord_amplitude_x = np.concatenate([[0.], segments[:, 0], [0.]])
-        coord_amplitude_y = np.concatenate([[0.], segments[:, 1], [0.]])
-        coord_amplitude_z = np.concatenate([[0.], segments[:, 2], [0.]])
-        plot_time = []
-        plot_amplitude_x = []
-        plot_amplitude_y = []
-        plot_amplitude_z = []
-        for i in range(coords):
-            plot_time.append(segment_times[i])
-            plot_time.append(segment_times[i])
-            plot_amplitude_x.append(coord_amplitude_x[i])
-            plot_amplitude_x.append(coord_amplitude_x[i + 1])
-            plot_amplitude_y.append(coord_amplitude_y[i])
-            plot_amplitude_y.append(coord_amplitude_y[i + 1])
-            plot_amplitude_z.append(coord_amplitude_z[i])
-            plot_amplitude_z.append(coord_amplitude_z[i + 1])
+        segment_times = np.insert(np.cumsum(control_segments[:, 3]), 0, 0.)
+        plot_time = (segment_times[:, np.newaxis] * np.ones((1, 2))).flatten()
+        plot_amplitude_x = control_segments[:, 0]
+        plot_amplitude_y = control_segments[:, 1]
+        plot_amplitude_z = control_segments[:, 2]
 
-        plot_amplitude_x = np.array(plot_amplitude_x)
-        plot_amplitude_y = np.array(plot_amplitude_y)
-        plot_amplitude_z = np.array(plot_amplitude_z)
-        plot_time = np.array(plot_time)
+        plot_amplitude_x = np.concatenate(
+            ([0.], (plot_amplitude_x[:, np.newaxis] * np.ones((1, 2))).flatten(), [0.]))
+        plot_amplitude_y = np.concatenate(
+            ([0.], (plot_amplitude_y[:, np.newaxis] * np.ones((1, 2))).flatten(), [0.]))
+        plot_amplitude_z = np.concatenate(
+            ([0.], (plot_amplitude_z[:, np.newaxis] * np.ones((1, 2))).flatten(), [0.]))
 
         plot_dictionary = {
             'amplitudes_x': plot_amplitude_x,
