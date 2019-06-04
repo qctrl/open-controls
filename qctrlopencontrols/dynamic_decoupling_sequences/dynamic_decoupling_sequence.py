@@ -27,7 +27,7 @@ from qctrlopencontrols.globals import (
     QCTRL_EXPANDED, CSV, CYLINDRICAL)
 
 from .constants import (UPPER_BOUND_OFFSETS, MATPLOTLIB)
-from .driven_controls import convert_dds_to_driven_controls
+from .driven_controls import convert_dds_to_driven_control
 
 
 class DynamicDecouplingSequence(QctrlObject):   #pylint: disable=too-few-public-methods
@@ -292,7 +292,7 @@ class DynamicDecouplingSequence(QctrlObject):   #pylint: disable=too-few-public-
         integration with Q-CTRL BLACK OPAL's 1-Qubit workspace.
         """
 
-        driven_control = convert_dds_to_driven_controls(
+        driven_control = convert_dds_to_driven_control(
             dynamic_decoupling_sequence=self,
             maximum_rabi_rate=maximum_rabi_rate,
             maximum_detuning_rate=maximum_detuning_rate,

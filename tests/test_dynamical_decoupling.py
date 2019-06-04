@@ -22,7 +22,7 @@ import pytest
 import numpy as np
 from qctrlopencontrols.exceptions import ArgumentsValueError
 from qctrlopencontrols import (
-    DynamicDecouplingSequence, convert_dds_to_driven_controls)
+    DynamicDecouplingSequence, convert_dds_to_driven_control)
 
 
 def _remove_file(filename):
@@ -298,10 +298,10 @@ def test_conversion_to_driven_controls():
 
     _maximum_rabi_rate = 20*np.pi
     _maximum_detuning_rate = 20*np.pi
-    driven_control = convert_dds_to_driven_controls(dd_sequence,
-                                                    maximum_rabi_rate=_maximum_rabi_rate,
-                                                    maximum_detuning_rate=_maximum_detuning_rate,
-                                                    name=_name)
+    driven_control = convert_dds_to_driven_control(dd_sequence,
+                                                   maximum_rabi_rate=_maximum_rabi_rate,
+                                                   maximum_detuning_rate=_maximum_detuning_rate,
+                                                   name=_name)
 
     assert np.allclose(driven_control.rabi_rates, np.array(
         [0., _maximum_rabi_rate, 0., 0., 0.,
@@ -336,7 +336,7 @@ def test_free_evolution_conversion():
 
     _maximum_rabi_rate = 20 * np.pi
     _maximum_detuning_rate = 20 * np.pi
-    driven_control = convert_dds_to_driven_controls(
+    driven_control = convert_dds_to_driven_control(
         dd_sequence,
         maximum_rabi_rate=_maximum_rabi_rate,
         maximum_detuning_rate=_maximum_detuning_rate,
@@ -368,7 +368,7 @@ def test_free_evolution_conversion():
 
     _maximum_rabi_rate = 20 * np.pi
     _maximum_detuning_rate = 20 * np.pi
-    driven_control = convert_dds_to_driven_controls(
+    driven_control = convert_dds_to_driven_control(
         dd_sequence,
         maximum_rabi_rate=_maximum_rabi_rate,
         maximum_detuning_rate=_maximum_detuning_rate,
@@ -405,10 +405,11 @@ def test_export_to_file():
 
     _maximum_rabi_rate = 20 * np.pi
     _maximum_detuning_rate = 20 * np.pi
-    driven_control = convert_dds_to_driven_controls(dd_sequence,
-                                                    maximum_rabi_rate=_maximum_rabi_rate,
-                                                    maximum_detuning_rate=_maximum_detuning_rate,
-                                                    name=_name)
+    driven_control = convert_dds_to_driven_control(
+        dd_sequence,
+        maximum_rabi_rate=_maximum_rabi_rate,
+        maximum_detuning_rate=_maximum_detuning_rate,
+        name=_name)
 
     _filename = 'dds_qctrl_cylindrical.csv'
     driven_control.export_to_file(
@@ -446,7 +447,6 @@ def test_export_to_file():
     _remove_file('dds_qctrl_cartesian.csv')
     _remove_file('dds_qctrl_cylindrical.json')
     _remove_file('dds_qctrl_cartesian.json')
-
 
 
 if __name__ == '__main__':
