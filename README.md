@@ -71,11 +71,11 @@ Q-CTRL Open Controls can create a large library of standard DDS which can be exp
 
 #### Export a DDS to Qiskit
 
-[`examples/export_a_dds_on_qiskit.ipynb`](examples/export_a_dds_on_qiskit.ipynb) demonstrates how to take a DDS and convert it to a Qiskit circuit so it can be run on IBM's quantum computers. It also demonstrates using a DDS to improve the performance of a quantum circuit execution by extending the coherence time of a qubit.
+[`examples/export_a_dds_to_qiskit.ipynb`](examples/export_a_dds_to_qiskit.ipynb) demonstrates how to take a DDS and convert it to a Qiskit circuit so it can be run on IBM's quantum computers. It also demonstrates using a DDS to improve the performance of a quantum circuit execution by extending the coherence time of a qubit.
 
 #### Export a DDS to Cirq
 
-[`examples/export_a_dds_on_cirq.ipynb`](examples/export_a_dds_on_cirq.ipynb) demonstrates how to take a DDS and convert it to a Cirq circuit or schdule. It also shows how to run a circuit or schedule in a Cirq simulator.
+[`examples/export_a_dds_to_cirq.ipynb`](examples/export_a_dds_to_cirq.ipynb) demonstrates how to take a DDS and convert it to a Cirq circuit or schdule. It also shows how to run a circuit or schedule in a Cirq simulator.
 
 
 ## Contributing
