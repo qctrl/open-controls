@@ -49,3 +49,6 @@ INSTANT_UNITARY = 'instant unitary'
 """Algorithm to convert a DDS to Quantum circuit where the
 unitaties are considered as instantaneous operation.
 """
+
+__all__ = ['QCTRL_EXPANDED', 'CSV', 'JSON', 'CARTESIAN',
+           'CYLINDRICAL', 'FIX_DURATION_UNITARY', 'INSTANT_UNITARY']

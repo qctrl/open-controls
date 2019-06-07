@@ -18,4 +18,6 @@ qiskit module
 =============
 """
 
-from .quantum_circuit import (convert_dds_to_quantum_circuit)
+from .quantum_circuit import (convert_dds_to_qiskit_quantum_circuit)
+
+__all__ = ['convert_dds_to_qiskit_quantum_circuit']

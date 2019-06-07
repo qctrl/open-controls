@@ -24,7 +24,7 @@ import pytest
 from qctrlopencontrols.exceptions import ArgumentsValueError
 from qctrlopencontrols import DrivenControl
 
-from qctrlopencontrols.driven_controls.constants import (
+from qctrlopencontrols import (
     UPPER_BOUND_SEGMENTS, UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE)
 
 

@@ -14,14 +14,21 @@
 
 """
 =================
-qcrtlopencontrols
+qctrlopencontrols
 =================
 """
 
-from .dynamic_decoupling_sequences import (DynamicDecouplingSequence,
-                                           new_predefined_dds,
-                                           convert_dds_to_driven_control)
-from .driven_controls import DrivenControl, new_predefined_driven_control
-from .qiskit import convert_dds_to_quantum_circuit
-from .cirq import (convert_dds_to_cirq_circuit,
-                   convert_dds_to_cirq_schedule)
+from . import dynamic_decoupling_sequences
+from .dynamic_decoupling_sequences import *
+from . import driven_controls
+from .driven_controls import *
+from . import qiskit
+from .qiskit import *
+from . import cirq
+from .cirq import *
+
+__all__ = []
+__all__.extend(dynamic_decoupling_sequences.__all__)
+__all__.extend(driven_controls.__all__)
+__all__.extend(qiskit.__all__)
+__all__.extend(cirq.__all__)

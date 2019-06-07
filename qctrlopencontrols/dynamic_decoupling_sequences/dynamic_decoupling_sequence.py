@@ -13,14 +13,14 @@
 # limitations under the License.
 
 """
-===================
-sequences.sequences
-===================
+========================================================
+dynamic_decoupling_sequences.dynamic_decoupling_sequence
+========================================================
 """
 
 import numpy as np
 
-from qctrlopencontrols.base import QctrlObject
+from qctrlopencontrols.base import create_repr_from_attributes
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
 from qctrlopencontrols.globals import (
@@ -30,7 +30,7 @@ from .constants import (UPPER_BOUND_OFFSETS, MATPLOTLIB)
 from .driven_controls import convert_dds_to_driven_control
 
 
-class DynamicDecouplingSequence(QctrlObject):   #pylint: disable=too-few-public-methods
+class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-methods
     """
     Create a dynamic decoupling sequence.
     Can be made of perfect operations, or realistic pulses.
@@ -72,7 +72,7 @@ class DynamicDecouplingSequence(QctrlObject):   #pylint: disable=too-few-public-
                  detuning_rotations=None,
                  name=None
                  ):
-
+        """
         super(DynamicDecouplingSequence, self).__init__([
             'duration',
             'offsets',
@@ -80,6 +80,7 @@ class DynamicDecouplingSequence(QctrlObject):   #pylint: disable=too-few-public-
             'azimuthal_angles',
             'detuning_rotations',
             'name'])
+        """
 
         self.duration = duration
         if self.duration <= 0.:
@@ -117,8 +118,6 @@ class DynamicDecouplingSequence(QctrlObject):   #pylint: disable=too-few-public-
         self.azimuthal_angles = np.array(azimuthal_angles, dtype=np.float)
         self.detuning_rotations = np.array(detuning_rotations, dtype=np.float)
 
-        self.number_of_offsets = len(self.offsets)
-
         if len(self.rabi_rotations) != self.number_of_offsets:
             raise ArgumentsValueError(
                 'rabi rotations must have the same length as offsets. ',
@@ -142,6 +141,19 @@ class DynamicDecouplingSequence(QctrlObject):   #pylint: disable=too-few-public-
         self.name = name
         if self.name is not None:
             self.name = str(self.name)
+
+    @property
+    def number_of_offsets(self):
+
+        """Returns the number of offsets
+
+        Returns
+        ------
+        int
+            The number of offsets in the dynamic decoupling sequence
+        """
+
+        return len(self.offsets)
 
     def get_plot_formatted_arrays(self, plot_format=MATPLOTLIB):
 
@@ -205,6 +217,30 @@ class DynamicDecouplingSequence(QctrlObject):   #pylint: disable=too-few-public-
         plot_data['times'] = plot_times
 
         return plot_data
+
+    def __repr__(self):
+
+        """Returns a string representation for the object. The returned string looks like a valid
+        Python expression that could be used to recreate the object, including default arguments.
+
+        Returns
+        -------
+        str
+            String representation of the object including the values of the arguments.
+        """
+
+        attributes = {
+            'duration': self.duration,
+            'offsets': self.offsets,
+            'rabi_rotations': self.rabi_rotations,
+            'azimuthal_angles': self.azimuthal_angles,
+            'detuning_rotations': self.detuning_rotations,
+            'name': self.name
+        }
+
+        class_name = '{0.__class__.__name__!s}'.format(self)
+
+        return create_repr_from_attributes(class_name, **attributes)
 
     def __str__(self):
         """Prepares a friendly string format for a Dynamic Decoupling Sequence
