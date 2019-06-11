@@ -33,9 +33,19 @@ from .constants import (
 
 from .predefined import new_predefined_driven_control
 
-__all__ = ['UPPER_BOUND_RABI_RATE', 'UPPER_BOUND_DETUNING_RATE',
-           'UPPER_BOUND_DURATION', 'LOWER_BOUND_DURATION', 'UPPER_BOUND_SEGMENTS',
-           'PRIMITIVE', 'BB1', 'SK1',
-           'WAMF1', 'CORPSE', 'CORPSE_IN_SK1', 'CORPSE_IN_BB1', 'SCROFULOUS',
-           'CORPSE_IN_SCROFULOUS', 'new_predefined_driven_control',
-           'DrivenControl']
+__all__ = ['BB1',
+           'CORPSE',
+           'CORPSE_IN_BB1',
+           'CORPSE_IN_SCROFULOUS',
+           'CORPSE_IN_SK1',
+           'LOWER_BOUND_DURATION',
+           'PRIMITIVE',
+           'SCROFULOUS',
+           'SK1',
+           'UPPER_BOUND_DETUNING_RATE',
+           'UPPER_BOUND_DURATION',
+           'UPPER_BOUND_RABI_RATE',
+           'UPPER_BOUND_SEGMENTS',
+           'WAMF1',
+           'DrivenControl',
+           'new_predefined_driven_control']

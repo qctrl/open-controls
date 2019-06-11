@@ -21,24 +21,25 @@ base.utils
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
 
-def create_repr_from_attributes(class_name, **attributes):
+def create_repr_from_attributes(class_instance=None, attributes=None):
 
     """Returns a string representation of an object
 
     Parameters
     ----------
-    class_name : str
-        The name of the class
-    attributes : dict
-        A dict of attributes in (attribute_name:attribute_value) format.
-        The attribute name must be a string.
+    class_instance : object, optional
+        The instance of a class (object)l defaults to None
+    attributes : list, optional
+        A list of string where each entry is the name of the attribute to collect
+        from the class instance.
 
     Returns
     -------
     str
         A string representing the attributes; If no attribute is provided
         a constant string is returned
-        'No attributes provided for object of class {0}".format(class_name)'
+        'No attributes provided for object of class {0.__class__.__name__}".
+        format(class_instance)'
 
     Raises
     ------
@@ -46,10 +47,15 @@ def create_repr_from_attributes(class_name, **attributes):
         If class name is not a string or any of the attribute name is not string type
     """
 
-    if not isinstance(class_name, str):
-        raise ArgumentsValueError('The class name must be a string',
-                                  {'class_name': class_name,
-                                   'type(class_name)': type(class_name)})
+    if class_instance is None:
+        raise ArgumentsValueError('Class instance must be a valid object.',
+                                  {'class_instance': class_instance})
+
+    class_name = '{0.__class__.__name__}'.format(class_instance)
+
+    if attributes is None:
+        raise ArgumentsValueError('Attributes must be a list of string',
+                                  {'attributes': attributes})
 
     if not attributes:
         return "No attributes provided for object of class {0}".format(class_name)
@@ -63,7 +69,7 @@ def create_repr_from_attributes(class_name, **attributes):
 
     repr_string = '{0}('.format(class_name)
     attributes_string = ','.join('{0}={1}'.format(attribute,
-                                                  repr(attributes[attribute]))
+                                                  repr(getattr(class_instance, attribute)))
                                  for attribute in attributes)
     repr_string += attributes_string
     repr_string += ')'

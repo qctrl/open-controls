@@ -613,17 +613,14 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
             String representation of the object including the values of the arguments.
         """
 
-        attributes = {
-            'rabi_rates': self.rabi_rates,
-            'azimuthal_angles': self.azimuthal_angles,
-            'detunings': self.detunings,
-            'durations': self.durations,
-            'name': self.name
-        }
+        attributes = [
+            'rabi_rates',
+            'azimuthal_angles',
+            'detunings',
+            'durations',
+            'name']
 
-        class_name = '{0.__class__.__name__!s}'.format(self)
-
-        return create_repr_from_attributes(class_name, **attributes)
+        return create_repr_from_attributes(self, attributes)
 
 
 if __name__ == '__main__':

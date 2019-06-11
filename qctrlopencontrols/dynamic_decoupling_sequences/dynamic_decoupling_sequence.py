@@ -72,15 +72,6 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
                  detuning_rotations=None,
                  name=None
                  ):
-        """
-        super(DynamicDecouplingSequence, self).__init__([
-            'duration',
-            'offsets',
-            'rabi_rotations',
-            'azimuthal_angles',
-            'detuning_rotations',
-            'name'])
-        """
 
         self.duration = duration
         if self.duration <= 0.:
@@ -229,18 +220,15 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
             String representation of the object including the values of the arguments.
         """
 
-        attributes = {
-            'duration': self.duration,
-            'offsets': self.offsets,
-            'rabi_rotations': self.rabi_rotations,
-            'azimuthal_angles': self.azimuthal_angles,
-            'detuning_rotations': self.detuning_rotations,
-            'name': self.name
-        }
+        attributes = [
+            'duration',
+            'offsets',
+            'rabi_rotations',
+            'azimuthal_angles',
+            'detuning_rotations',
+            'name']
 
-        class_name = '{0.__class__.__name__!s}'.format(self)
-
-        return create_repr_from_attributes(class_name, **attributes)
+        return create_repr_from_attributes(self, attributes)
 
     def __str__(self):
         """Prepares a friendly string format for a Dynamic Decoupling Sequence

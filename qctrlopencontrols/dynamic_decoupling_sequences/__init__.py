@@ -28,8 +28,16 @@ from .dynamic_decoupling_sequence import DynamicDecouplingSequence
 from .predefined import new_predefined_dds
 from .driven_controls import convert_dds_to_driven_control
 
-__all__ = ['UPPER_BOUND_OFFSETS', 'SPIN_ECHO', 'CARR_PURCELL',
-           'CARR_PURCELL_MEIBOOM_GILL', 'UHRIG_SINGLE_AXIS',
-           'PERIODIC_SINGLE_AXIS', 'WALSH_SINGLE_AXIS', 'QUADRATIC',
-           'X_CONCATENATED', 'XY_CONCATENATED', 'DynamicDecouplingSequence',
-           'new_predefined_dds', 'convert_dds_to_driven_control']
+__all__ = ['CARR_PURCELL',
+           'CARR_PURCELL_MEIBOOM_GILL',
+           'UPPER_BOUND_OFFSETS',
+           'PERIODIC_SINGLE_AXIS',
+           'QUADRATIC',
+           'SPIN_ECHO',
+           'UHRIG_SINGLE_AXIS',
+           'WALSH_SINGLE_AXIS',
+           'X_CONCATENATED',
+           'XY_CONCATENATED',
+           'DynamicDecouplingSequence',
+           'convert_dds_to_driven_control',
+           'new_predefined_dds']
