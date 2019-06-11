@@ -30,18 +30,26 @@ def create_repr_from_attributes(class_name, **attributes):
     class_name : str
         The name of the class
     attributes : dict
-        A dict of attributes in (attribute_name:attribute_value) format
+        A dict of attributes in (attribute_name:attribute_value) format.
+        The attribute name must be a string.
 
     Returns
     -------
     str
-        A string representing the attributes
+        A string representing the attributes; If no attribute is provided
+        a constant string is returned
+        'No attributes provided for object of class {0}".format(class_name)'
 
     Raises
     ------
     ArgumentsValueError
-        If no class name is provided or any of the attribute name is not string type
+        If class name is not a string or any of the attribute name is not string type
     """
+
+    if not isinstance(class_name, str):
+        raise ArgumentsValueError('The class name must be a string',
+                                  {'class_name': class_name,
+                                   'type(class_name)': type(class_name)})
 
     if not attributes:
         return "No attributes provided for object of class {0}".format(class_name)
