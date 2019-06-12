@@ -25,7 +25,7 @@ from pyquil.quil import Pragma
 
 from qctrlopencontrols import (
     DynamicDecouplingSequence,
-    convert_dds_to_program)
+    convert_dds_to_pyquil_program)
 
 def test_pyquil_program():
 
@@ -45,7 +45,7 @@ def test_pyquil_program():
         azimuthal_angles=_azimuthal_angles,
         detuning_rotations=_detuning_rotations)
 
-    program = convert_dds_to_program(
+    program = convert_dds_to_pyquil_program(
         sequence,
         [0],
         gate_time=1e-6)
