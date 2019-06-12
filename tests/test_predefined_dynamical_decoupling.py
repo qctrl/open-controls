@@ -23,9 +23,9 @@ import numpy as np
 import pytest
 
 
-from qctrlopencontrols.exceptions import ArgumentsValueError
+from qctrlopencontrols.exceptions.exceptions import ArgumentsValueError
 from qctrlopencontrols import new_predefined_dds
-from qctrlopencontrols import (
+from qctrlopencontrols.dynamic_decoupling_sequences import (
     SPIN_ECHO, CARR_PURCELL, CARR_PURCELL_MEIBOOM_GILL,
     WALSH_SINGLE_AXIS, PERIODIC_SINGLE_AXIS,
     UHRIG_SINGLE_AXIS, QUADRATIC, X_CONCATENATED,

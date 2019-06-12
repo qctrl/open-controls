@@ -18,7 +18,7 @@ base.utils
 ==========
 """
 
-from qctrlopencontrols.exceptions import ArgumentsValueError
+from ..exceptions.exceptions import ArgumentsValueError
 
 
 def create_repr_from_attributes(class_instance=None, attributes=None):

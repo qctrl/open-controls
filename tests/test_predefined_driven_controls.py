@@ -20,10 +20,10 @@ Tests for Predefined Driven Controls
 import numpy as np
 import pytest
 
-from qctrlopencontrols.exceptions import ArgumentsValueError
+from qctrlopencontrols.exceptions.exceptions import ArgumentsValueError
 
-from qctrlopencontrols import (
-    new_predefined_driven_control,
+from qctrlopencontrols import new_predefined_driven_control
+from qctrlopencontrols.driven_controls import(
     PRIMITIVE, BB1, SK1, CORPSE, SCROFULOUS, CORPSE_IN_SCROFULOUS,
     CORPSE_IN_BB1, CORPSE_IN_SK1, WAMF1)
 
