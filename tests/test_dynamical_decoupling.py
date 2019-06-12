@@ -65,9 +65,18 @@ def test_dynamical_decoupling_sequence():
 
     _repr_string = '{0.__class__.__name__!s}('.format(sequence)
 
+    attributes = {
+        'duration': sequence.duration,
+        'offsets': sequence.offsets,
+        'rabi_rotations': sequence.rabi_rotations,
+        'azimuthal_angles': sequence.azimuthal_angles,
+        'detuning_rotations': sequence.detuning_rotations,
+        'name': sequence.name
+    }
+
     attributes_string = ','.join('{0}={1}'.format(attribute,
                                                   repr(getattr(sequence, attribute)))
-                                 for attribute in sequence.base_attributes)
+                                 for attribute in attributes)
     _repr_string += attributes_string
     _repr_string += ')'
 

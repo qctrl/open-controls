@@ -13,9 +13,9 @@
 # limitations under the License.
 
 """
-===================
-sequences.constants
-===================
+======================================
+dynamic_decoupling_sequences.constants
+======================================
 """
 
 UPPER_BOUND_OFFSETS = 10000

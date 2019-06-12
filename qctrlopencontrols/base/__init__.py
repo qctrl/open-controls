@@ -18,4 +18,6 @@ Base module
 ===========
 """
 
-from .qctrl_object import QctrlObject
+from .utils import create_repr_from_attributes
+
+__all__ = ['create_repr_from_attributes']

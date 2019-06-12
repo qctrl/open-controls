@@ -73,30 +73,30 @@ def new_predefined_driven_control(
     # Forced to import here to avoid cyclic imports, need to review
     # Raise error if the input driven_control_type is not known
     if scheme == PRIMITIVE:
-        driven_control = new_primitive_control(**kwargs)
+        driven_control = _new_primitive_control(**kwargs)
     elif scheme == BB1:
-        driven_control = new_wimperis_1_control(**kwargs)
+        driven_control = _new_wimperis_1_control(**kwargs)
     elif scheme == SK1:
-        driven_control = new_solovay_kitaev_1_control(**kwargs)
+        driven_control = _new_solovay_kitaev_1_control(**kwargs)
     elif scheme == WAMF1:
-        driven_control = new_walsh_amplitude_modulated_filter_1_control(**kwargs)
+        driven_control = _new_walsh_amplitude_modulated_filter_1_control(**kwargs)
     elif scheme == CORPSE:
-        driven_control = new_compensating_for_off_resonance_with_a_pulse_sequence_control(
+        driven_control = _new_compensating_for_off_resonance_with_a_pulse_sequence_control(
             **kwargs)
     elif scheme == CORPSE_IN_BB1:
         driven_control = \
-            new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control(
+            _new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control(
                 **kwargs)
     elif scheme == \
         CORPSE_IN_SK1:
         driven_control = \
-            new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control(
+            _new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control(
                 **kwargs)
     elif scheme == SCROFULOUS:
         driven_control = \
-            new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(**kwargs)
+            _new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(**kwargs)
     elif scheme == CORPSE_IN_SCROFULOUS:
-        driven_control = new_corpse_in_scrofulous_control(**kwargs)
+        driven_control = _new_corpse_in_scrofulous_control(**kwargs)
     else:
         raise ArgumentsValueError(
             'Unknown predefined pulse type. See help(new_predefined_driven_control) to display all'
@@ -204,7 +204,7 @@ def _derive_segments(angles, amplitude=2. * np.pi):
     return segments
 
 
-def new_primitive_control(
+def _new_primitive_control(
         rabi_rotation=None,
         azimuthal_angle=0.,
         maximum_rabi_rate=2. * np.pi,
@@ -240,7 +240,7 @@ def new_primitive_control(
         **kwargs)
 
 
-def new_wimperis_1_control(
+def _new_wimperis_1_control(
         rabi_rotation=None,
         azimuthal_angle=0.,
         maximum_rabi_rate=2. * np.pi,
@@ -285,7 +285,7 @@ def new_wimperis_1_control(
         durations=durations,
         **kwargs)
 
-def new_solovay_kitaev_1_control(
+def _new_solovay_kitaev_1_control(
         rabi_rotation=None,
         azimuthal_angle=0.,
         maximum_rabi_rate=2. * np.pi,
@@ -330,7 +330,7 @@ def new_solovay_kitaev_1_control(
         **kwargs)
 
 
-def new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(  # pylint: disable=invalid-name
+def _new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(  # pylint: disable=invalid-name
         rabi_rotation=None,
         azimuthal_angle=0.,
         maximum_rabi_rate=2. * np.pi,
@@ -410,7 +410,7 @@ def new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control
         **kwargs)
 
 
-def new_compensating_for_off_resonance_with_a_pulse_sequence_control(  # pylint: disable=invalid-name
+def _new_compensating_for_off_resonance_with_a_pulse_sequence_control(  # pylint: disable=invalid-name
         rabi_rotation=None,
         azimuthal_angle=0.,
         maximum_rabi_rate=2. * np.pi,
@@ -455,7 +455,7 @@ def new_compensating_for_off_resonance_with_a_pulse_sequence_control(  # pylint:
         **kwargs)
 
 
-def new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control(  # pylint: disable=invalid-name
+def _new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control(  # pylint: disable=invalid-name
         rabi_rotation=None,
         azimuthal_angle=0.,
         maximum_rabi_rate=2. * np.pi,
@@ -505,7 +505,7 @@ def new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_contr
         **kwargs)
 
 
-def new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control(  # pylint: disable=invalid-name
+def _new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control(  # pylint: disable=invalid-name
         rabi_rotation=None,
         azimuthal_angle=0.,
         maximum_rabi_rate=2. * np.pi,
@@ -554,7 +554,7 @@ def new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev
         **kwargs)
 
 
-def new_corpse_in_scrofulous_control( # pylint: disable=invalid-name
+def _new_corpse_in_scrofulous_control( # pylint: disable=invalid-name
         rabi_rotation=None,
         azimuthal_angle=0.,
         maximum_rabi_rate=2. * np.pi,
@@ -647,7 +647,7 @@ def new_corpse_in_scrofulous_control( # pylint: disable=invalid-name
         **kwargs)
 
 
-def new_walsh_amplitude_modulated_filter_1_control(  # pylint: disable=invalid-name
+def _new_walsh_amplitude_modulated_filter_1_control(  # pylint: disable=invalid-name
         rabi_rotation=None,
         azimuthal_angle=0.,
         maximum_rabi_rate=2. * np.pi,

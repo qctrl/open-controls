@@ -13,9 +13,9 @@
 # limitations under the License.
 
 """
-=========================
-sequences.driven_controls
-=========================
+=============================================
+dynamic_decoupling_sequences.driven_controls
+=============================================
 """
 
 import numpy as np

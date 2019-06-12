@@ -13,9 +13,9 @@
 # limitations under the License.
 
 """
-=============
+======================
 driven_controls module
-=============
+======================
 """
 
 from .driven_control import DrivenControl
@@ -31,12 +31,21 @@ from .constants import (
     SCROFULOUS,
     CORPSE_IN_SCROFULOUS)
 
-from .predefined import (
-    new_predefined_driven_control,
-    new_primitive_control, new_wimperis_1_control, new_solovay_kitaev_1_control,
-    new_compensating_for_off_resonance_with_a_pulse_sequence_control,
-    new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control,
-    new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control,
-    new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control,
-    new_walsh_amplitude_modulated_filter_1_control,
-    new_corpse_in_scrofulous_control)
+from .predefined import new_predefined_driven_control
+
+__all__ = ['BB1',
+           'CORPSE',
+           'CORPSE_IN_BB1',
+           'CORPSE_IN_SCROFULOUS',
+           'CORPSE_IN_SK1',
+           'LOWER_BOUND_DURATION',
+           'PRIMITIVE',
+           'SCROFULOUS',
+           'SK1',
+           'UPPER_BOUND_DETUNING_RATE',
+           'UPPER_BOUND_DURATION',
+           'UPPER_BOUND_RABI_RATE',
+           'UPPER_BOUND_SEGMENTS',
+           'WAMF1',
+           'DrivenControl',
+           'new_predefined_driven_control']

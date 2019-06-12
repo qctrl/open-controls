@@ -22,17 +22,10 @@ import pytest
 
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
-from qctrlopencontrols.driven_controls import (
+from qctrlopencontrols import (
     new_predefined_driven_control,
-    new_primitive_control, new_wimperis_1_control, new_solovay_kitaev_1_control,
-    PRIMITIVE, BB1, SK1, CORPSE,
-    new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control,
-    new_corpse_in_scrofulous_control,
-    new_compensating_for_off_resonance_with_a_pulse_sequence_control,
-    new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control,
-    new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control,
-    new_walsh_amplitude_modulated_filter_1_control
-)
+    PRIMITIVE, BB1, SK1, CORPSE, SCROFULOUS, CORPSE_IN_SCROFULOUS,
+    CORPSE_IN_BB1, CORPSE_IN_SK1, WAMF1)
 
 
 def test_new_predefined_driven_control():
@@ -69,7 +62,8 @@ def test_primitive_control_segments():
         _rabi_rotation
     ]
 
-    primitive_control_1 = new_primitive_control(
+    primitive_control_1 = new_predefined_driven_control(
+        scheme=PRIMITIVE,
         rabi_rotation=_rabi_rotation,
         maximum_rabi_rate=_rabi_rate,
         azimuthal_angle=_azimuthal_angle
@@ -77,10 +71,10 @@ def test_primitive_control_segments():
 
     # Test the new_predefined_driven_control function also
     primitive_control_2 = new_predefined_driven_control(
+        scheme=PRIMITIVE,
         rabi_rotation=_rabi_rotation,
         maximum_rabi_rate=_rabi_rate,
         azimuthal_angle=_azimuthal_angle,
-        scheme=PRIMITIVE
     )
 
     for control in [primitive_control_1, primitive_control_2]:
@@ -110,16 +104,17 @@ def test_wimperis_1_control():
         [np.cos(phi_p + _azimuthal_angle), np.sin(phi_p + _azimuthal_angle)]
     ])
 
-    wimperis_control_1 = new_wimperis_1_control(
+    wimperis_control_1 = new_predefined_driven_control(
+        scheme=BB1,
         rabi_rotation=_rabi_rotation,
         azimuthal_angle=_azimuthal_angle,
         maximum_rabi_rate=_maximum_rabi_rate
     )
     wimperis_control_2 = new_predefined_driven_control(
+        scheme=BB1,
         rabi_rotation=_rabi_rotation,
         azimuthal_angle=_azimuthal_angle,
         maximum_rabi_rate=_maximum_rabi_rate,
-        scheme=BB1
     )
 
     durations = [np.pi, np.pi, np.pi * 2, np.pi]
@@ -149,7 +144,8 @@ def test_solovay_kitaev_1_control():
          np.sin(phi_p + _azimuthal_angle)]
     ]
 
-    sk1_control_1 = new_solovay_kitaev_1_control(
+    sk1_control_1 = new_predefined_driven_control(
+        scheme=SK1,
         rabi_rotation=_rabi_rotation,
         azimuthal_angle=_azimuthal_angle,
         maximum_rabi_rate=1
@@ -180,12 +176,14 @@ def test_scofulous_control():
     # Test that exceptions are raised upon wrong inputs for rabi_rotation
     # (SCROFULOUS is only defined for pi/4, pi/2 and pi pulses)
     with pytest.raises(ArgumentsValueError):
-        _ = new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(
+        _ = new_predefined_driven_control(
+            scheme=SCROFULOUS,
             rabi_rotation=0.3
         )
 
     # Construct SCROFULOUS controls for target rotations pi/4, pi/2 and pi
-    scrofulous_pi = new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(
+    scrofulous_pi = new_predefined_driven_control(
+        scheme=SCROFULOUS,
         rabi_rotation=np.pi, azimuthal_angle=0.5, maximum_rabi_rate=2*np.pi
     )
 
@@ -201,7 +199,8 @@ def test_scofulous_control():
 
     assert np.allclose(pi_segments, _pi_segments)
 
-    scrofulous_pi2 = new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(
+    scrofulous_pi2 = new_predefined_driven_control(
+        scheme=SCROFULOUS,
         rabi_rotation=np.pi/2, azimuthal_angle=-0.5, maximum_rabi_rate=2*np.pi
     )
 
@@ -217,7 +216,8 @@ def test_scofulous_control():
 
     assert np.allclose(pi_on_2_segments, _pi_on_2_segments)
 
-    scrofulous_pi4 = new_short_composite_rotation_for_undoing_length_over_and_under_shoot_control(
+    scrofulous_pi4 = new_predefined_driven_control(
+        scheme=SCROFULOUS,
         rabi_rotation=np.pi/4, azimuthal_angle=0, maximum_rabi_rate=2*np.pi
     )
 
@@ -239,7 +239,8 @@ def test_corpse_in_scrofulous_control():
        defined numerically as well.
     """
     # Test pi and pi/2 rotations
-    cs_pi = new_corpse_in_scrofulous_control(
+    cs_pi = new_predefined_driven_control(
+        scheme=CORPSE_IN_SCROFULOUS,
         rabi_rotation=np.pi, azimuthal_angle=0.5, maximum_rabi_rate=2*np.pi
     )
 
@@ -261,7 +262,8 @@ def test_corpse_in_scrofulous_control():
 
     assert np.allclose(pi_segments, _pi_segments)
 
-    cs_pi_on_2 = new_corpse_in_scrofulous_control(
+    cs_pi_on_2 = new_predefined_driven_control(
+        scheme=CORPSE_IN_SCROFULOUS,
         rabi_rotation=np.pi/2, azimuthal_angle=0.25, maximum_rabi_rate=np.pi
     )
 
@@ -300,7 +302,8 @@ def test_corpse_control():
         [np.cos(_azimuthal_angle), np.sin(_azimuthal_angle), 0., _rabi_rotation / 2. - k]
     ]
 
-    corpse_control_1 = new_compensating_for_off_resonance_with_a_pulse_sequence_control(
+    corpse_control_1 = new_predefined_driven_control(
+        scheme=CORPSE,
         rabi_rotation=_rabi_rotation,
         azimuthal_angle=_azimuthal_angle,
         maximum_rabi_rate=1
@@ -323,7 +326,8 @@ def test_corpse_control():
 def test_cinbb_control():
     """Test the segments of the CinBB (BB1 made up of CORPSEs) driven control
     """
-    cinbb = new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control(
+    cinbb = new_predefined_driven_control(
+        scheme=CORPSE_IN_BB1,
         rabi_rotation=np.pi/3, azimuthal_angle=0.25, maximum_rabi_rate=np.pi
     )
 
@@ -342,7 +346,8 @@ def test_cinbb_control():
 
     assert np.allclose(segments, _segments)
 
-    cinbb = new_compensating_for_off_resonance_with_a_pulse_sequence_with_wimperis_control(
+    cinbb = new_predefined_driven_control(
+        scheme=CORPSE_IN_BB1,
         rabi_rotation=np.pi/5, azimuthal_angle=-0.25, maximum_rabi_rate=np.pi
     )
 
@@ -365,7 +370,8 @@ def test_cinbb_control():
 def test_cinsk1_control():
     """Test the segments of the CinSK1 (SK1 made up of CORPSEs) driven control
     """
-    cinsk = new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control(
+    cinsk = new_predefined_driven_control(
+        scheme=CORPSE_IN_SK1,
         rabi_rotation=np.pi/2, azimuthal_angle=0.5, maximum_rabi_rate=2*np.pi
     )
 
@@ -383,7 +389,8 @@ def test_cinsk1_control():
 
     assert np.allclose(segments, _segments)
 
-    cinsk = new_compensating_for_off_resonance_with_a_pulse_sequence_with_solovay_kitaev_control(
+    cinsk = new_predefined_driven_control(
+        scheme=CORPSE_IN_SK1,
         rabi_rotation=2*np.pi, azimuthal_angle=-0.5, maximum_rabi_rate=2*np.pi
     )
 
@@ -407,11 +414,13 @@ def test_walsh_control():
     # Test that exceptions are raised upon wrong inputs for rabi_rotation
     # (WALSH control is only defined for pi/4, pi/2 and pi pulses)
     with pytest.raises(ArgumentsValueError):
-        _ = new_walsh_amplitude_modulated_filter_1_control(
+        _ = new_predefined_driven_control(
+            scheme=WAMF1,
             rabi_rotation=0.3
         )
     # test pi rotation
-    walsh_pi = new_walsh_amplitude_modulated_filter_1_control(
+    walsh_pi = new_predefined_driven_control(
+        scheme=WAMF1,
         rabi_rotation=np.pi, azimuthal_angle=-0.35, maximum_rabi_rate=2*np.pi
     )
 
@@ -429,7 +438,8 @@ def test_walsh_control():
     assert np.allclose(pi_segments, _pi_segments)
 
     # test pi/2 rotation
-    walsh_pi_on_2 = new_walsh_amplitude_modulated_filter_1_control(
+    walsh_pi_on_2 = new_predefined_driven_control(
+        scheme=WAMF1,
         rabi_rotation=np.pi/2, azimuthal_angle=0.57, maximum_rabi_rate=2*np.pi
     )
 
@@ -447,7 +457,8 @@ def test_walsh_control():
     assert np.allclose(pi_on_2_segments, _pi_on_2_segments)
 
     # test pi/4 rotation
-    walsh_pi_on_4 = new_walsh_amplitude_modulated_filter_1_control(
+    walsh_pi_on_4 = new_predefined_driven_control(
+        scheme=WAMF1,
         rabi_rotation=np.pi/4, azimuthal_angle=-0.273, maximum_rabi_rate=2*np.pi
     )
     pi_on_4_segments = np.vstack((
