@@ -18,4 +18,6 @@ pyquil module
 =============
 """
 
-from .program import convert_dds_to_program
+from .program import convert_dds_to_pyquil_program
+
+__all__ = ['convert_dds_to_pyquil_program']
