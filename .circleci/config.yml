@@ -1,14 +1,36 @@
-version: 2
+version: 2.1
 
-jobs:
-  build:
-    working_directory: ~/open-controls
-    docker:
-      - image: continuumio/anaconda3
-    steps:
-      - checkout
-      - run: python3 setup.py install
-      - run: pytest
-      - run: pytest --nbval-lax examples/*.ipynb --sanitize-with examples/notebook-sanitize.cfg
-      - run: pylint qctrlopencontrols --rcfile=.pylintrc
-      - run: pylint tests --rcfile=.pylintrc
+orbs:
+  q-ctrl: q-ctrl/python@dev:0.0.47
+
+workflows:
+  version: 2
+
+  "PyPi Project":
+    jobs:
+      - q-ctrl/open_test:
+          context: q-ctrl-api-development      
+          filters:
+            tags:  # Tag filter required because the release job has a tag filter
+              only: /.*/
+      - q-ctrl/build:
+          context: q-ctrl-api-development
+          filters:
+            branches:
+              only: 
+                - master
+                - development
+            tags:  # Tag filter required because the release job has a tag filter
+              only: /.*/                
+      - q-ctrl/pypi_publish:
+          context: q-ctrl-api-production
+          requires:
+            - q-ctrl/open_test          
+            - q-ctrl/build
+          filters:
+            branches:
+              only: 
+                - master
+                - development
+            tags:
+              only: /^v?\d+(\.\d+){1,2}(rc\d+)?$/

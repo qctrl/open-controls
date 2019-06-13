@@ -105,6 +105,7 @@ ENV/
 
 # pytest
 .pytest_cache/*
+junit.xml
 
 #Mac related files
 *.DS_Store
@@ -115,3 +116,4 @@ qctrl_library.code-workspace
 # docs
 docs-source
 docs
+

@@ -40,7 +40,7 @@ Use ``pip`` to install the latest version of Q-CTRL Open Controls.
 
 .. code-block:: shell
 
-   $ pip install qctrl-open-controls
+   pip install qctrl-open-controls
 
 From Source
 ^^^^^^^^^^^
@@ -49,27 +49,45 @@ The source code is hosted on `Github <https://github.com/qctrl/python-open-contr
 
 .. code-block:: shell
 
-   $ git clone git@github.com:qctrl/python-open-controls.git
+   git clone git@github.com:qctrl/python-open-controls.git
 
-Once the clone is complete, you can run the install script.
+Once the clone is complete, you have two options:
+
+
+#. Using setup.py
 
 .. code-block:: shell
 
-   $ cd python-open-controls
-   $ python setup.py develop
+   cd python-open-controls
+   python setup.py develop
 
 **Note:** We recommend installing using ``develop`` to point your installation at the source code in the directory where you cloned the repository.
 
-To test your installation run ``pytest`` in the ``python-open-controls`` directory.
+
+#. Using Poetry
 
 .. code-block:: shell
 
-   $ pytest
+   cd python-open-controls
+   ./setup-poetry.sh
+
+**Note:** if you are on Windows, you'll need to install `Poetry <https://poetry.eustace.io>`_ manually, and use:
+
+.. code-block:: cmd
+
+   cd python-open-controls
+   poetry install
+
+Once installed via one of the above methods, test your installation by running ``pytest`` in the ``python-open-controls`` directory.
+
+.. code-block:: shell
+
+   pytest
 
 Usage
 -----
 
-Usage depends on the application. We've provided a set of `example Jupyter notebooks <examples>`_ addressing a variety of quantum control problems. Below is a short description of each notebook grouped by application. For further details on usage, use the inline documentation in the source code. 
+Usage depends on the application. We've provided a set of `example Jupyter notebooks <examples>`_ addressing a variety of quantum control problems. Below is a short description of each notebook grouped by application. For further details on usage, use the inline documentation in the source code.
 
 Dynamical Decoupling Sequences (DDS)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
