@@ -22,9 +22,9 @@ import numpy as np
 
 import cirq
 
-from qctrlopencontrols.dynamic_decoupling_sequences import DynamicDecouplingSequence
-from qctrlopencontrols.exceptions import ArgumentsValueError
-from qctrlopencontrols.globals import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
+from ..dynamic_decoupling_sequences.dynamic_decoupling_sequence import DynamicDecouplingSequence
+from ..exceptions.exceptions import ArgumentsValueError
+from ..globals import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
 
 
 def convert_dds_to_cirq_circuit(

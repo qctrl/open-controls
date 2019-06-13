@@ -24,9 +24,9 @@ from pyquil import Program
 from pyquil.gates import I, RX, RY, RZ, MEASURE
 from pyquil.quil import Pragma
 
-from qctrlopencontrols.dynamic_decoupling_sequences import DynamicDecouplingSequence
-from qctrlopencontrols.exceptions import ArgumentsValueError
-from qctrlopencontrols.globals import (
+from ..dynamic_decoupling_sequences.dynamic_decoupling_sequence import DynamicDecouplingSequence
+from ..exceptions.exceptions import ArgumentsValueError
+from ..globals import (
     FIX_DURATION_UNITARY, INSTANT_UNITARY)
 
 

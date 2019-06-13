@@ -20,7 +20,7 @@ Tests for Dynamical Decoupling Sequences
 import os
 import pytest
 import numpy as np
-from qctrlopencontrols.exceptions import ArgumentsValueError
+from qctrlopencontrols.exceptions.exceptions import ArgumentsValueError
 from qctrlopencontrols import (
     DynamicDecouplingSequence, convert_dds_to_driven_control)
 

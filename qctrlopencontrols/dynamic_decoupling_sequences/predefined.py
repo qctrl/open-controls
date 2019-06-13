@@ -20,16 +20,11 @@ dynamic_decoupling_sequences.predefined
 
 import numpy as np
 
-from qctrlopencontrols.exceptions import ArgumentsValueError
+from ..exceptions.exceptions import ArgumentsValueError
 
-from .constants import (RAMSEY, SPIN_ECHO, CARR_PURCELL,
-                        CARR_PURCELL_MEIBOOM_GILL,
-                        UHRIG_SINGLE_AXIS,
-                        PERIODIC_SINGLE_AXIS,
-                        WALSH_SINGLE_AXIS,
-                        QUADRATIC,
-                        X_CONCATENATED,
-                        XY_CONCATENATED)
+from ..dynamic_decoupling_sequences import (
+    CARR_PURCELL, CARR_PURCELL_MEIBOOM_GILL, PERIODIC_SINGLE_AXIS, QUADRATIC, RAMSEY,
+    SPIN_ECHO, UHRIG_SINGLE_AXIS, WALSH_SINGLE_AXIS, X_CONCATENATED, XY_CONCATENATED)
 
 from .dynamic_decoupling_sequence import DynamicDecouplingSequence
 

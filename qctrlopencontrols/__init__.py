@@ -18,20 +18,26 @@ qctrlopencontrols
 =================
 """
 
-from . import dynamic_decoupling_sequences
-from .dynamic_decoupling_sequences import *
-from . import driven_controls
-from .driven_controls import *
-from . import qiskit
-from .qiskit import *
-from . import cirq
-from .cirq import *
-from . import pyquil
-from .pyquil import *
+from .cirq.circuit import convert_dds_to_cirq_circuit
+from .cirq.schedule import convert_dds_to_cirq_schedule
 
-__all__ = []
-__all__.extend(dynamic_decoupling_sequences.__all__)
-__all__.extend(driven_controls.__all__)
-__all__.extend(qiskit.__all__)
-__all__.extend(cirq.__all__)
-__all__.extend(pyquil.__all__)
+from .driven_controls.driven_control import DrivenControl
+from .driven_controls.predefined import new_predefined_driven_control
+
+from .dynamic_decoupling_sequences.dynamic_decoupling_sequence import DynamicDecouplingSequence
+from .dynamic_decoupling_sequences.predefined import new_predefined_dds
+from .dynamic_decoupling_sequences.driven_controls import convert_dds_to_driven_control
+
+from .pyquil.program import convert_dds_to_pyquil_program
+
+from .qiskit.quantum_circuit import convert_dds_to_qiskit_quantum_circuit
+
+__all__ = ['convert_dds_to_cirq_circuit',
+           'convert_dds_to_cirq_schedule',
+           'convert_dds_to_driven_control',
+           'convert_dds_to_pyquil_program',
+           'convert_dds_to_qiskit_quantum_circuit',
+           'new_predefined_dds',
+           'new_predefined_driven_control',
+           'DrivenControl',
+           'DynamicDecouplingSequence']

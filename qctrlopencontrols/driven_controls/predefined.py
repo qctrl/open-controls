@@ -23,17 +23,12 @@ can be found at https://docs.q-ctrl.com/control-library
 
 import numpy as np
 
-from qctrlopencontrols.exceptions import ArgumentsValueError
-from .driven_control import DrivenControl
+from ..exceptions.exceptions import ArgumentsValueError
+from ..driven_controls import (
+    BB1, CORPSE, CORPSE_IN_BB1, CORPSE_IN_SCROFULOUS, CORPSE_IN_SK1,
+    PRIMITIVE, SCROFULOUS, SK1, WAMF1)
 
-from .constants import (
-    PRIMITIVE, BB1, SK1,
-    WAMF1,
-    CORPSE,
-    CORPSE_IN_SK1,
-    CORPSE_IN_BB1,
-    SCROFULOUS,
-    CORPSE_IN_SCROFULOUS)
+from .driven_control import DrivenControl
 
 
 def new_predefined_driven_control(
@@ -70,7 +65,6 @@ def new_predefined_driven_control(
         Raised when an argument is invalid.
     """
 
-    # Forced to import here to avoid cyclic imports, need to review
     # Raise error if the input driven_control_type is not known
     if scheme == PRIMITIVE:
         driven_control = _new_primitive_control(**kwargs)
@@ -103,6 +97,7 @@ def new_predefined_driven_control(
             + ' allowed inputs.',
             {'scheme': scheme})
     return driven_control
+
 
 def _predefined_common_attributes(maximum_rabi_rate,
                                   rabi_rotation,
