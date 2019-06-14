@@ -11,12 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-"""
-=============
-cirq module
-=============
-"""
-
-from .circuit import convert_dds_to_cirq_circuit
-from .schedule import convert_dds_to_cirq_schedule

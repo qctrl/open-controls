@@ -20,18 +20,18 @@ driven_controls.driven_controls
 import json
 import numpy as np
 
-from qctrlopencontrols.exceptions import ArgumentsValueError
-from qctrlopencontrols.base import QctrlObject
+from ..exceptions.exceptions import ArgumentsValueError
+from ..base.utils import create_repr_from_attributes
 
-from qctrlopencontrols.globals import (
+from ..globals import (
     QCTRL_EXPANDED, CSV, JSON, CARTESIAN, CYLINDRICAL)
 
-from .constants import (
+from ..driven_controls import (
     UPPER_BOUND_SEGMENTS, UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE,
     UPPER_BOUND_DURATION, LOWER_BOUND_DURATION)
 
 
-class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
+class DrivenControl(object):   #pylint: disable=too-few-public-methods
     """
     Creates a driven control. A driven is a set of segments made up of amplitude vectors
     and corresponding durations.
@@ -136,16 +136,11 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                                       + ' than zero.',
                                       {'durations': self.durations})
 
-        self.number_of_segments = rabi_rates.shape[0]
         if self.number_of_segments > UPPER_BOUND_SEGMENTS:
             raise ArgumentsValueError(
                 'The number of segments must be smaller than the upper bound:'
                 + str(UPPER_BOUND_SEGMENTS),
                 {'number_of_segments': self.number_of_segments})
-
-        super(DrivenControl, self).__init__(
-            base_attributes=['rabi_rates', 'azimuthal_angles', 'detunings',
-                             'durations', 'name'])
 
         if self.maximum_rabi_rate > UPPER_BOUND_RABI_RATE:
             raise ArgumentsValueError(
@@ -168,6 +163,19 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
                 'Minimum duration of segments must be larger than the lower bound: '
                 + str(LOWER_BOUND_DURATION),
                 {'minimum_duration': self.minimum_duration})
+
+    @property
+    def number_of_segments(self):
+
+        """Returns the number of segments
+
+        Returns
+        -------
+        int
+            The number of segments in the driven control
+        """
+
+        return self.rabi_rates.shape[0]
 
     @property
     def maximum_rabi_rate(self):
@@ -593,6 +601,26 @@ class DrivenControl(QctrlObject):   #pylint: disable=too-few-public-methods
         driven_control_string = '\n'.join(driven_control_string)
 
         return driven_control_string
+
+    def __repr__(self):
+
+        """Returns a string representation for the object. The returned string looks like a valid
+        Python expression that could be used to recreate the object, including default arguments.
+
+        Returns
+        -------
+        str
+            String representation of the object including the values of the arguments.
+        """
+
+        attributes = [
+            'rabi_rates',
+            'azimuthal_angles',
+            'detunings',
+            'durations',
+            'name']
+
+        return create_repr_from_attributes(self, attributes)
 
 
 if __name__ == '__main__':
