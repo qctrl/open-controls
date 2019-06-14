@@ -9,6 +9,7 @@ workflows:
   "PyPi Project":
     jobs:
       - q-ctrl/open_test:
+          context: q-ctrl-api-development      
           filters:
             tags:  # Tag filter required because the release job has a tag filter
               only: /.*/
