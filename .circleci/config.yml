@@ -1,14 +1,14 @@
 version: 2.1
 
 orbs:
-  q-ctrl: q-ctrl/python@dev:0.0.43
+  q-ctrl: q-ctrl/python@dev:0.0.45
 
 workflows:
   version: 2
 
   "PyPi Project":
     jobs:
-      - q-ctrl/test_python37:
+      - q-ctrl/open_test:
           filters:
             tags:  # Tag filter required because the release job has a tag filter
               only: /.*/
@@ -24,7 +24,7 @@ workflows:
       - q-ctrl/pypi_publish:
           context: q-ctrl-api-production
           requires:
-            - q-ctrl/test_python37          
+            - q-ctrl/open_test          
             - q-ctrl/build
           filters:
             branches:
