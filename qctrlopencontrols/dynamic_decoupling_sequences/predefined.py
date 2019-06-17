@@ -13,23 +13,18 @@
 # limitations under the License.
 
 """
-===================
-sequence.predefined
-===================
+========================================
+dynamic_decoupling_sequences.predefined
+========================================
 """
 
 import numpy as np
 
-from qctrlopencontrols.exceptions import ArgumentsValueError
+from ..exceptions.exceptions import ArgumentsValueError
 
-from .constants import (RAMSEY, SPIN_ECHO, CARR_PURCELL,
-                        CARR_PURCELL_MEIBOOM_GILL,
-                        UHRIG_SINGLE_AXIS,
-                        PERIODIC_SINGLE_AXIS,
-                        WALSH_SINGLE_AXIS,
-                        QUADRATIC,
-                        X_CONCATENATED,
-                        XY_CONCATENATED)
+from ..dynamic_decoupling_sequences import (
+    CARR_PURCELL, CARR_PURCELL_MEIBOOM_GILL, PERIODIC_SINGLE_AXIS, QUADRATIC, RAMSEY,
+    SPIN_ECHO, UHRIG_SINGLE_AXIS, WALSH_SINGLE_AXIS, X_CONCATENATED, XY_CONCATENATED)
 
 from .dynamic_decoupling_sequence import DynamicDecouplingSequence
 
@@ -69,25 +64,25 @@ def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
     """
 
     if scheme == RAMSEY:
-        sequence = new_ramsey_sequence(**kwargs)
+        sequence = _new_ramsey_sequence(**kwargs)
     elif scheme == SPIN_ECHO:
-        sequence = new_spin_echo_sequence(**kwargs)
+        sequence = _new_spin_echo_sequence(**kwargs)
     elif scheme == CARR_PURCELL:
-        sequence = new_carr_purcell_sequence(**kwargs)
+        sequence = _new_carr_purcell_sequence(**kwargs)
     elif scheme == CARR_PURCELL_MEIBOOM_GILL:
-        sequence = new_carr_purcell_meiboom_gill_sequence(**kwargs)
+        sequence = _new_carr_purcell_meiboom_gill_sequence(**kwargs)
     elif scheme == UHRIG_SINGLE_AXIS:
-        sequence = new_uhrig_single_axis_sequence(**kwargs)
+        sequence = _new_uhrig_single_axis_sequence(**kwargs)
     elif scheme == PERIODIC_SINGLE_AXIS:
-        sequence = new_periodic_single_axis_sequence(**kwargs)
+        sequence = _new_periodic_single_axis_sequence(**kwargs)
     elif scheme == WALSH_SINGLE_AXIS:
-        sequence = new_walsh_single_axis_sequence(**kwargs)
+        sequence = _new_walsh_single_axis_sequence(**kwargs)
     elif scheme == QUADRATIC:
-        sequence = new_quadratic_sequence(**kwargs)
+        sequence = _new_quadratic_sequence(**kwargs)
     elif scheme == X_CONCATENATED:
-        sequence = new_x_concatenated_sequence(**kwargs)
+        sequence = _new_x_concatenated_sequence(**kwargs)
     elif scheme == XY_CONCATENATED:
-        sequence = new_xy_concatenated_sequence(**kwargs)
+        sequence = _new_xy_concatenated_sequence(**kwargs)
     # Raise an error if the input sequence is not known
     else:
         raise ArgumentsValueError(
@@ -131,9 +126,9 @@ def _check_duration(duration):
     return duration
 
 
-def new_ramsey_sequence(duration=None,
-                        pre_post_rotation=False,
-                        **kwargs):
+def _new_ramsey_sequence(duration=None,
+                         pre_post_rotation=False,
+                         **kwargs):
 
     """Ramsey sequence
 
@@ -179,9 +174,9 @@ def new_ramsey_sequence(duration=None,
         **kwargs)
 
 
-def new_spin_echo_sequence(duration=None,
-                           pre_post_rotation=False,
-                           **kwargs):
+def _new_spin_echo_sequence(duration=None,
+                            pre_post_rotation=False,
+                            **kwargs):
 
     """Spin Echo Sequence.
 
@@ -227,10 +222,10 @@ def new_spin_echo_sequence(duration=None,
         **kwargs)
 
 
-def new_carr_purcell_sequence(duration=None,
-                              number_of_offsets=None,
-                              pre_post_rotation=False,
-                              **kwargs):
+def _new_carr_purcell_sequence(duration=None,
+                               number_of_offsets=None,
+                               pre_post_rotation=False,
+                               **kwargs):
 
     """Carr-Purcell Sequence.
 
@@ -285,10 +280,10 @@ def new_carr_purcell_sequence(duration=None,
         detuning_rotations=detuning_rotations, **kwargs)
 
 
-def new_carr_purcell_meiboom_gill_sequence(duration=None,  # pylint: disable=invalid-name
-                                           number_of_offsets=None,
-                                           pre_post_rotation=False,
-                                           **kwargs):
+def _new_carr_purcell_meiboom_gill_sequence(duration=None,  # pylint: disable=invalid-name
+                                            number_of_offsets=None,
+                                            pre_post_rotation=False,
+                                            **kwargs):
     """Carr-Purcell-Meiboom-Gill Sequences.
 
     Parameters
@@ -347,9 +342,9 @@ def new_carr_purcell_meiboom_gill_sequence(duration=None,  # pylint: disable=inv
         **kwargs)
 
 
-def new_uhrig_single_axis_sequence(duration=None, number_of_offsets=None,
-                                   pre_post_rotation=False,
-                                   **kwargs):
+def _new_uhrig_single_axis_sequence(duration=None, number_of_offsets=None,
+                                    pre_post_rotation=False,
+                                    **kwargs):
 
     """Uhrig Single Axis Sequence.
 
@@ -408,10 +403,10 @@ def new_uhrig_single_axis_sequence(duration=None, number_of_offsets=None,
         **kwargs)
 
 
-def new_periodic_single_axis_sequence(duration=None,    # pylint: disable=invalid-name
-                                      number_of_offsets=None,
-                                      pre_post_rotation=False,
-                                      **kwargs):
+def _new_periodic_single_axis_sequence(duration=None,  # pylint: disable=invalid-name
+                                       number_of_offsets=None,
+                                       pre_post_rotation=False,
+                                       **kwargs):
 
     """Periodic Single Axis Sequence.
 
@@ -468,10 +463,10 @@ def new_periodic_single_axis_sequence(duration=None,    # pylint: disable=invali
         **kwargs)
 
 
-def new_walsh_single_axis_sequence(duration=None,
-                                   paley_order=None,
-                                   pre_post_rotation=False,
-                                   **kwargs):
+def _new_walsh_single_axis_sequence(duration=None,
+                                    paley_order=None,
+                                    pre_post_rotation=False,
+                                    **kwargs):
 
     """Welsh Single Axis Sequence.
 
@@ -546,11 +541,11 @@ def new_walsh_single_axis_sequence(duration=None,
         **kwargs)
 
 
-def new_quadratic_sequence(duration=None,
-                           number_inner_offsets=None,
-                           number_outer_offsets=None,
-                           pre_post_rotation=False,
-                           **kwargs):
+def _new_quadratic_sequence(duration=None,
+                            number_inner_offsets=None,
+                            number_outer_offsets=None,
+                            pre_post_rotation=False,
+                            **kwargs):
 
     """Quadratic Decoupling Sequence
 
@@ -649,10 +644,10 @@ def new_quadratic_sequence(duration=None,
         **kwargs)
 
 
-def new_x_concatenated_sequence(duration=1.0,
-                                concatenation_order=None,
-                                pre_post_rotation=False,
-                                **kwargs):
+def _new_x_concatenated_sequence(duration=1.0,
+                                 concatenation_order=None,
+                                 pre_post_rotation=False,
+                                 **kwargs):
 
     """X-Concatenated Dynamic Decoupling Sequence
     Concatenation of base sequence C(\tau/2)XC(\tau/2)X
@@ -727,10 +722,10 @@ def new_x_concatenated_sequence(duration=1.0,
         **kwargs)
 
 
-def new_xy_concatenated_sequence(duration=1.0,
-                                 concatenation_order=None,
-                                 pre_post_rotation=False,
-                                 **kwargs):
+def _new_xy_concatenated_sequence(duration=1.0,
+                                  concatenation_order=None,
+                                  pre_post_rotation=False,
+                                  **kwargs):
 
     """XY-Concatenated Dynamic Decoupling Sequence
     Concatenation of base sequence C(\tau/4)XC(\tau/4)YC(\tau/4)XC(\tau/4)Y

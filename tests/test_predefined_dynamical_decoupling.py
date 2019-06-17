@@ -23,8 +23,8 @@ import numpy as np
 import pytest
 
 
-from qctrlopencontrols.exceptions import ArgumentsValueError
-import qctrlopencontrols.dynamic_decoupling_sequences.predefined as pre
+from qctrlopencontrols.exceptions.exceptions import ArgumentsValueError
+from qctrlopencontrols import new_predefined_dds
 from qctrlopencontrols.dynamic_decoupling_sequences import (
     SPIN_ECHO, CARR_PURCELL, CARR_PURCELL_MEIBOOM_GILL,
     WALSH_SINGLE_AXIS, PERIODIC_SINGLE_AXIS,
@@ -39,8 +39,9 @@ def test_ramsey():
 
     duration = 10.
 
-    sequence = pre.new_predefined_dds(scheme='Ramsey',
-                                      duration=duration)
+    sequence = new_predefined_dds(
+        scheme='Ramsey',
+        duration=duration)
 
     _offsets = np.array([])
     _rabi_rotations = np.array([])
@@ -52,8 +53,11 @@ def test_ramsey():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = pre.new_predefined_dds(scheme='Ramsey', duration=duration,
-                                      pre_post_rotation=True)
+    sequence = new_predefined_dds(
+        scheme='Ramsey',
+        duration=duration,
+        pre_post_rotation=True)
+
     _rabi_rotations = np.array([np.pi/2, np.pi/2])
     _azimuthal_angles = np.array([0., 0.])
     _detuning_rotations = np.array([0., 0.])
@@ -71,8 +75,9 @@ def test_spin_echo():
 
     duration = 10.
 
-    sequence = pre.new_predefined_dds(scheme=SPIN_ECHO,
-                                      duration=duration)
+    sequence = new_predefined_dds(
+        scheme=SPIN_ECHO,
+        duration=duration)
 
     _offsets = np.array([duration/2.])
     _rabi_rotations = np.array([np.pi])
@@ -84,9 +89,10 @@ def test_spin_echo():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = pre.new_predefined_dds(scheme=SPIN_ECHO,
-                                      duration=duration,
-                                      pre_post_rotation=True)
+    sequence = new_predefined_dds(
+        scheme=SPIN_ECHO,
+        duration=duration,
+        pre_post_rotation=True)
 
     _offsets = np.array([0, duration / 2., duration])
     _rabi_rotations = np.array([np.pi/2, np.pi, np.pi/2])
@@ -107,9 +113,10 @@ def test_curr_purcell():
     duration = 10.
     number_of_offsets = 4
 
-    sequence = pre.new_predefined_dds(scheme=CARR_PURCELL,
-                                      duration=duration,
-                                      number_of_offsets=number_of_offsets)
+    sequence = new_predefined_dds(
+        scheme=CARR_PURCELL,
+        duration=duration,
+        number_of_offsets=number_of_offsets)
 
     _spacing = duration/number_of_offsets
     _offsets = np.array([_spacing*0.5, _spacing*0.5+_spacing,
@@ -123,10 +130,11 @@ def test_curr_purcell():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = pre.new_predefined_dds(scheme=CARR_PURCELL,
-                                      duration=duration,
-                                      number_of_offsets=number_of_offsets,
-                                      pre_post_rotation=True)
+    sequence = new_predefined_dds(
+        scheme=CARR_PURCELL,
+        duration=duration,
+        number_of_offsets=number_of_offsets,
+        pre_post_rotation=True)
 
     _offsets = np.array([0, _spacing * 0.5, _spacing * 0.5 + _spacing,
                          _spacing * 0.5 + 2 * _spacing, _spacing * 0.5 + 3 * _spacing,
@@ -149,9 +157,10 @@ def test_curr_purcell_meiboom_sequence():   # pylint: disable=invalid-name
     duration = 10.
     number_of_offsets = 4
 
-    sequence = pre.new_predefined_dds(scheme=CARR_PURCELL_MEIBOOM_GILL,
-                                      duration=duration,
-                                      number_of_offsets=number_of_offsets)
+    sequence = new_predefined_dds(
+        scheme=CARR_PURCELL_MEIBOOM_GILL,
+        duration=duration,
+        number_of_offsets=number_of_offsets)
 
     _spacing = duration/number_of_offsets
     _offsets = np.array([_spacing*0.5, _spacing*0.5+_spacing,
@@ -165,10 +174,11 @@ def test_curr_purcell_meiboom_sequence():   # pylint: disable=invalid-name
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = pre.new_predefined_dds(scheme=CARR_PURCELL_MEIBOOM_GILL,
-                                      duration=duration,
-                                      number_of_offsets=number_of_offsets,
-                                      pre_post_rotation=True)
+    sequence = new_predefined_dds(
+        scheme=CARR_PURCELL_MEIBOOM_GILL,
+        duration=duration,
+        number_of_offsets=number_of_offsets,
+        pre_post_rotation=True)
 
     _offsets = np.array([0, _spacing * 0.5, _spacing * 0.5 + _spacing,
                          _spacing * 0.5 + 2 * _spacing, _spacing * 0.5 + 3 * _spacing, duration])
@@ -190,9 +200,10 @@ def test_uhrig_single_axis_sequence():
     duration = 10.
     number_of_offsets = 4
 
-    sequence = pre.new_predefined_dds(scheme=UHRIG_SINGLE_AXIS,
-                                      duration=duration,
-                                      number_of_offsets=number_of_offsets)
+    sequence = new_predefined_dds(
+        scheme=UHRIG_SINGLE_AXIS,
+        duration=duration,
+        number_of_offsets=number_of_offsets)
 
     constant = 0.5 / (number_of_offsets+1)
     _delta_positions = [duration*(np.sin(np.pi*(k+1)*constant))**2
@@ -208,10 +219,11 @@ def test_uhrig_single_axis_sequence():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = pre.new_predefined_dds(scheme=UHRIG_SINGLE_AXIS,
-                                      duration=duration,
-                                      number_of_offsets=number_of_offsets,
-                                      pre_post_rotation=True)
+    sequence = new_predefined_dds(
+        scheme=UHRIG_SINGLE_AXIS,
+        duration=duration,
+        number_of_offsets=number_of_offsets,
+        pre_post_rotation=True)
 
     _offsets = np.array(_delta_positions)
     _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
@@ -234,9 +246,10 @@ def test_periodic_single_axis_sequence():      # pylint: disable=invalid-name
     duration = 10.
     number_of_offsets = 4
 
-    sequence = pre.new_predefined_dds(scheme=PERIODIC_SINGLE_AXIS,
-                                      duration=duration,
-                                      number_of_offsets=number_of_offsets)
+    sequence = new_predefined_dds(
+        scheme=PERIODIC_SINGLE_AXIS,
+        duration=duration,
+        number_of_offsets=number_of_offsets)
 
     constant = 1 / (number_of_offsets+1)
     # prepare the offsets for delta comb
@@ -251,10 +264,11 @@ def test_periodic_single_axis_sequence():      # pylint: disable=invalid-name
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = pre.new_predefined_dds(scheme=PERIODIC_SINGLE_AXIS,
-                                      duration=duration,
-                                      number_of_offsets=number_of_offsets,
-                                      pre_post_rotation=True)
+    sequence = new_predefined_dds(
+        scheme=PERIODIC_SINGLE_AXIS,
+        duration=duration,
+        number_of_offsets=number_of_offsets,
+        pre_post_rotation=True)
 
     _offsets = np.array(_delta_positions)
     _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
@@ -277,9 +291,10 @@ def test_walsh_single_axis_sequence():
     duration = 10.
     paley_order = 20
 
-    sequence = pre.new_predefined_dds(scheme=WALSH_SINGLE_AXIS,
-                                      duration=duration,
-                                      paley_order=paley_order)
+    sequence = new_predefined_dds(
+        scheme=WALSH_SINGLE_AXIS,
+        duration=duration,
+        paley_order=paley_order)
 
     hamming_weight = 5
     samples = 2 ** hamming_weight
@@ -308,10 +323,12 @@ def test_walsh_single_axis_sequence():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = pre.new_predefined_dds(scheme=WALSH_SINGLE_AXIS,
-                                      duration=duration,
-                                      paley_order=paley_order,
-                                      pre_post_rotation=True)
+    sequence = new_predefined_dds(
+        scheme=WALSH_SINGLE_AXIS,
+        duration=duration,
+        paley_order=paley_order,
+        pre_post_rotation=True)
+
     _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
     _rabi_rotations = np.insert(_rabi_rotations, [0, _rabi_rotations.shape[0]],
                                 [np.pi/2, np.pi/2])
@@ -333,9 +350,10 @@ def test_quadratic_sequence():
     number_inner_offsets = 4
     number_outer_offsets = 4
 
-    sequence = pre.new_predefined_dds(scheme=QUADRATIC, duration=duration,
-                                      number_inner_offsets=number_inner_offsets,
-                                      number_outer_offsets=number_outer_offsets)
+    sequence = new_predefined_dds(
+        scheme=QUADRATIC, duration=duration,
+        number_inner_offsets=number_inner_offsets,
+        number_outer_offsets=number_outer_offsets)
 
     _offsets = np.zeros((number_outer_offsets+1, number_inner_offsets + 1))
 
@@ -379,10 +397,11 @@ def test_quadratic_sequence():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = pre.new_predefined_dds(scheme=QUADRATIC, duration=duration,
-                                      number_inner_offsets=number_inner_offsets,
-                                      number_outer_offsets=number_outer_offsets,
-                                      pre_post_rotation=True)
+    sequence = new_predefined_dds(
+        scheme=QUADRATIC, duration=duration,
+        number_inner_offsets=number_inner_offsets,
+        number_outer_offsets=number_outer_offsets,
+        pre_post_rotation=True)
 
     _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
     _rabi_rotations = np.insert(_rabi_rotations, [0, _rabi_rotations.shape[0]],
@@ -406,9 +425,10 @@ def test_xconcatenated_sequence():
     duration = 10.
     concatenation_order = 3
 
-    sequence = pre.new_predefined_dds(scheme=X_CONCATENATED,
-                                      duration=duration,
-                                      concatenation_order=concatenation_order)
+    sequence = new_predefined_dds(
+        scheme=X_CONCATENATED,
+        duration=duration,
+        concatenation_order=concatenation_order)
 
     _spacing = duration/(2**concatenation_order)
     _offsets = [_spacing, 3*_spacing, 4 * _spacing, 5 * _spacing, 7 * _spacing]
@@ -423,10 +443,11 @@ def test_xconcatenated_sequence():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = pre.new_predefined_dds(scheme=X_CONCATENATED,
-                                      duration=duration,
-                                      concatenation_order=concatenation_order,
-                                      pre_post_rotation=True)
+    sequence = new_predefined_dds(
+        scheme=X_CONCATENATED,
+        duration=duration,
+        concatenation_order=concatenation_order,
+        pre_post_rotation=True)
 
     _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
     _rabi_rotations = np.insert(_rabi_rotations, [0, _rabi_rotations.shape[0]],
@@ -448,9 +469,10 @@ def test_xyconcatenated_sequence():
     duration = 10.
     concatenation_order = 2
 
-    sequence = pre.new_predefined_dds(scheme=XY_CONCATENATED,
-                                      duration=duration,
-                                      concatenation_order=concatenation_order)
+    sequence = new_predefined_dds(
+        scheme=XY_CONCATENATED,
+        duration=duration,
+        concatenation_order=concatenation_order)
 
     _spacing = duration / (2 ** (concatenation_order*2))
     _offsets = [_spacing, 2*_spacing, 3 * _spacing, 4 * _spacing,
@@ -471,10 +493,11 @@ def test_xyconcatenated_sequence():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = pre.new_predefined_dds(scheme=XY_CONCATENATED,
-                                      duration=duration,
-                                      concatenation_order=concatenation_order,
-                                      pre_post_rotation=True)
+    sequence = new_predefined_dds(
+        scheme=XY_CONCATENATED,
+        duration=duration,
+        concatenation_order=concatenation_order,
+        pre_post_rotation=True)
 
     _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
     _rabi_rotations = np.insert(_rabi_rotations, [0, _rabi_rotations.shape[0]],
@@ -499,29 +522,39 @@ def test_attribute_values():
 
     # duration cannot be <= 0
     with pytest.raises(ArgumentsValueError):
-        _ = pre.new_predefined_dds(scheme=SPIN_ECHO, duration=-2)
+        _ = new_predefined_dds(scheme=SPIN_ECHO, duration=-2)
 
         # number_of_offsets cannot be <= 0
-        _ = pre.new_predefined_dds(scheme=CARR_PURCELL_MEIBOOM_GILL, duration=2,
-                                   number_of_offsets=-1)
+        _ = new_predefined_dds(
+            scheme=CARR_PURCELL_MEIBOOM_GILL, duration=2,
+            number_of_offsets=-1)
         # for QDD, none of the offsets can be <=0
-        _ = pre.new_predefined_dds(scheme=QUADRATIC, duration=2,
-                                   number_inner_offsets=-1, number_outer_offsets=2)
-        _ = pre.new_predefined_dds(scheme=QUADRATIC, duration=2,
-                                   number_inner_offsets=1, number_outer_offsets=-2)
-        _ = pre.new_predefined_dds(scheme=QUADRATIC, duration=2,
-                                   number_inner_offsets=-1, number_outer_offsets=-2)
+        _ = new_predefined_dds(
+            scheme=QUADRATIC, duration=2,
+            number_inner_offsets=-1, number_outer_offsets=2)
+        _ = new_predefined_dds(
+            scheme=QUADRATIC, duration=2,
+            number_inner_offsets=1, number_outer_offsets=-2)
+        _ = new_predefined_dds(
+            scheme=QUADRATIC, duration=2,
+            number_inner_offsets=-1, number_outer_offsets=-2)
 
         # for x-cdd and xy-cdd concatenation_order cannot be <=0
-        _ = pre.new_predefined_dds(scheme=X_CONCATENATED, duration=2,
-                                   concatenation_order=-1)
-        _ = pre.new_predefined_dds(scheme=X_CONCATENATED, duration=-2,
-                                   concatenation_order=1)
-        _ = pre.new_predefined_dds(scheme=X_CONCATENATED, duration=-2,
-                                   concatenation_order=-1)
-        _ = pre.new_predefined_dds(scheme=XY_CONCATENATED, duration=2,
-                                   concatenation_order=-1)
-        _ = pre.new_predefined_dds(scheme=XY_CONCATENATED, duration=-2,
-                                   concatenation_order=1)
-        _ = pre.new_predefined_dds(scheme=XY_CONCATENATED, duration=-2,
-                                   concatenation_order=-1)
+        _ = new_predefined_dds(
+            scheme=X_CONCATENATED, duration=2,
+            concatenation_order=-1)
+        _ = new_predefined_dds(
+            scheme=X_CONCATENATED, duration=-2,
+            concatenation_order=1)
+        _ = new_predefined_dds(
+            scheme=X_CONCATENATED, duration=-2,
+            concatenation_order=-1)
+        _ = new_predefined_dds(
+            scheme=XY_CONCATENATED, duration=2,
+            concatenation_order=-1)
+        _ = new_predefined_dds(
+            scheme=XY_CONCATENATED, duration=-2,
+            concatenation_order=1)
+        _ = new_predefined_dds(
+            scheme=XY_CONCATENATED, duration=-2,
+            concatenation_order=-1)
