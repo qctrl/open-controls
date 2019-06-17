@@ -59,7 +59,15 @@ $ pytest
 
 ## Usage
 
-Usage depends on the application. We've provided a set of [example Jupyter notebooks](examples) addressing a variety of quantum control problems. Below is a short description of each notebook grouped by application. For further details on usage, use the inline documentation in the source code. 
+Usage depends on the application. We've provided a set of Jupyter [notebooks](https://github.com/qctrl/notebooks/tree/master/qctrl-open-controls) addressing a variety of quantum control problems. Below is a short description of each notebook grouped by application. For further details on usage, use the inline documentation in the source code. 
+
+### Driven Control
+
+Q-CTRL Open Controls can create a large library of driven controls on individual qubits than enact dynamically corrected gates. 
+
+#### Create a Driven Control
+
+[`creating_a_driven_control.ipynb`](https://github.com/qctrl/notebooks/blob/master/qctrl-open-controls/creating_a_driven_control.ipynb) demonstrates how to use Q-CTRL Open Controls to create a driven control from a large library of published dynamical corrected gate protocols. It also shows how to make custom driven control with rabi rate, detunings and durations defined by the user. The notebook shows how to export a driven control to other [Q-CTRL products](https://q-ctrl.com/products/) or your quantum hardware.
 
 ### Dynamical Decoupling Sequences (DDS)
 
@@ -67,15 +75,15 @@ Q-CTRL Open Controls can create a large library of standard DDS which can be exp
 
 #### Create a DDS
 
-[`examples/creating_a_dds.ipynb`](examples/creating_a_dds.ipynb) demonstrates how to use Q-CTRL Open Controls to create a DDS from a large library of published dynamical decoupling protocols. It also shows how to make Custom DDS with timings, offsets and unitaries defined by the user. The notebook shows how to export a DDS for deployment in the [Q-CTRL products](https://q-ctrl.com/products/) or your quantum hardware.
+[`creating_a_dds.ipynb`](https://github.com/qctrl/notebooks/blob/master/qctrl-open-controls/creating_a_dds.ipynb) demonstrates how to use Q-CTRL Open Controls to create a DDS from a large library of published dynamical decoupling protocols. It also shows how to make custom DDS with timings, offsets and unitaries defined by the user. The notebook shows how to export a DDS to other [Q-CTRL products](https://q-ctrl.com/products/) or your quantum hardware.
 
 #### Export a DDS to Qiskit
 
-[`examples/export_a_dds_to_qiskit.ipynb`](examples/export_a_dds_to_qiskit.ipynb) demonstrates how to take a DDS and convert it to a Qiskit circuit so it can be run on IBM's quantum computers. It also demonstrates using a DDS to improve the performance of a quantum circuit execution by extending the coherence time of a qubit.
+[`export_a_dds_to_qiskit.ipynb`](https://github.com/qctrl/notebooks/blob/master/qctrl-open-controls/export_a_dds_to_qiskit.ipynb) demonstrates how to take a DDS and convert it to a Qiskit circuit so it can be run on IBM's quantum computers. It also demonstrates using a DDS to improve the performance of a quantum circuit execution by extending the coherence time of a qubit.
 
 #### Export a DDS to Cirq
 
-[`examples/export_a_dds_to_cirq.ipynb`](examples/export_a_dds_to_cirq.ipynb) demonstrates how to take a DDS and convert it to a Cirq circuit or schdule. It also shows how to run a circuit or schedule in a Cirq simulator.
+[`export_a_dds_to_cirq.ipynb`](https://github.com/qctrl/notebooks/blob/master/qctrl-open-controls/export_a_dds_to_cirq.ipynb) demonstrates how to take a DDS and convert it to a Cirq circuit or schdule. It also shows how to run a circuit or schedule in a Cirq simulator.
 
 
 ## Contributing
