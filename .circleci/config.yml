@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  q-ctrl: q-ctrl/python@dev:0.0.49
+  q-ctrl: q-ctrl/python@dev:0.0.51
 
 workflows:
   version: 2
@@ -13,7 +13,7 @@ workflows:
           filters:
             tags:  # Tag filter required because the release job has a tag filter
               only: /.*/
-      - q-ctrl/build:
+      - q-ctrl/open_build:
           context: q-ctrl-api-development
           filters:
             branches:
@@ -22,22 +22,22 @@ workflows:
                 - development
             tags:  # Tag filter required because the release job has a tag filter
               only: /.*/                
-      - q-ctrl/pypi_publish_dev:
+      - q-ctrl/pypi_publish:
           context: q-ctrl-api-development
           requires:
-            - q-ctrl/test          
-            - q-ctrl/build
+            - q-ctrl/open_test          
+            - q-ctrl/open_build
           filters:
             branches:
               only: 
                 - development
             tags:
               only: /^v?\d+(\.\d+){1,2}rc\d+$/       # RC version required for publish from development                     
-      - q-ctrl/pypi_publish_prod:
+      - q-ctrl/pypi_publish:
           context: q-ctrl-api-production
           requires:
-            - q-ctrl/test          
-            - q-ctrl/build
+            - q-ctrl/open_test          
+            - q-ctrl/open_build
           filters:
             branches:
               only: 
