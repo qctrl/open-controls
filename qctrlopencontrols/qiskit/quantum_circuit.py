@@ -24,12 +24,12 @@ from qiskit import (
     QuantumRegister, ClassicalRegister, QuantumCircuit)
 from qiskit.qasm import pi
 
-from qctrlopencontrols.dynamic_decoupling_sequences import DynamicDecouplingSequence
-from qctrlopencontrols.exceptions import ArgumentsValueError
-from qctrlopencontrols.globals import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
+from ..dynamic_decoupling_sequences.dynamic_decoupling_sequence import DynamicDecouplingSequence
+from ..exceptions.exceptions import ArgumentsValueError
+from ..globals import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
 
 
-def convert_dds_to_quantum_circuit(
+def convert_dds_to_qiskit_quantum_circuit(
         dynamic_decoupling_sequence,
         target_qubits=None,
         gate_time=0.1,

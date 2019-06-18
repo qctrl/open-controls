@@ -24,7 +24,7 @@ from qiskit import execute
 from qiskit import BasicAer
 
 from qctrlopencontrols import (
-    new_predefined_dds, convert_dds_to_quantum_circuit)
+    new_predefined_dds, convert_dds_to_qiskit_quantum_circuit)
 
 
 def _create_test_sequence(sequence_scheme, pre_post_rotation):
@@ -93,7 +93,7 @@ def _check_circuit_unitary(pre_post_rotation, multiplier, algorithm):
                             'quadratic', 'X concatenated',
                             'XY concatenated']:
         sequence = _create_test_sequence(sequence_scheme, pre_post_rotation)
-        quantum_circuit = convert_dds_to_quantum_circuit(
+        quantum_circuit = convert_dds_to_qiskit_quantum_circuit(
             dynamic_decoupling_sequence=sequence,
             add_measurement=False, algorithm=algorithm)
 
