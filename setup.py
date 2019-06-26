@@ -36,5 +36,5 @@ setup(
     packages=['qctrlopencontrols', 'qctrlopencontrols.base', 'qctrlopencontrols.cirq', 'qctrlopencontrols.driven_controls', 'qctrlopencontrols.dynamic_decoupling_sequences', 'qctrlopencontrols.exceptions', 'qctrlopencontrols.globals', 'qctrlopencontrols.qiskit'],
     package_data={},
     install_requires=['cirq==0.*,>=0.5.0', 'numpy==1.*,>=1.16.0', 'qiskit-ibmq-provider==0.*,>=0.2.2', 'qiskit-terra==0.*,>=0.8.1', 'scipy==1.*,>=1.3.0'],
-    extras_require={'dev': ['nbval', 'pylama', 'pylint', 'pylint-runner', 'pytest']},
+    extras_require={'dev': ['pylama', 'pylint', 'pylint-runner', 'pytest']},
 )
