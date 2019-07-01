@@ -203,7 +203,7 @@ def convert_dds_to_pyquil_program(
         readout = program.declare('ro', 'BIT', len(target_qubits))
         for idx, qubit in enumerate(target_qubits):
             program += MEASURE(qubit, readout[idx])
-           
+
     program += Pragma('END_PRESERVE_BLOCK')
 
     return program
