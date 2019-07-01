@@ -1,15 +1,46 @@
-version: 2
+version: 2.1
 
-jobs:
-  build:
-    working_directory: ~/open-controls
-    docker:
-      - image: continuumio/anaconda3
-    steps:
-      - run: apt-get -y install build-essential
-      - checkout
-      - run: python3 setup.py install
-      - run: pytest
-      - run: pytest --nbval-lax examples/*.ipynb --sanitize-with examples/notebook-sanitize.cfg
-      - run: pylint qctrlopencontrols --rcfile=.pylintrc
-      - run: pylint tests --rcfile=.pylintrc
+orbs:
+  q-ctrl: q-ctrl/python@dev:0.1.0
+
+workflows:
+  version: 2
+
+  "PyPi Project":
+    jobs:
+      - q-ctrl/pytest_python_36_open:
+          context: q-ctrl-api-development      
+          filters:
+            tags:  # Tag filter required because the release job has a tag filter
+              only: /.*/
+      - q-ctrl/open_build:
+          context: q-ctrl-api-development
+          filters:
+            branches:
+              only: 
+                - master
+                - development
+            tags:  # Tag filter required because the release job has a tag filter
+              only: /.*/                
+      - q-ctrl/pypi_publish:
+          context: q-ctrl-api-development
+          requires:
+            - q-ctrl/pytest_python_36_open          
+            - q-ctrl/open_build
+          filters:
+            branches:
+              only: 
+                - development
+            tags:
+              only: /^v?\d+(\.\d+){1,2}rc\d+$/       # RC version required for publish from development                     
+      - q-ctrl/pypi_publish:
+          context: q-ctrl-api-production
+          requires:
+            - q-ctrl/pytest_python_36_open          
+            - q-ctrl/open_build
+          filters:
+            branches:
+              only: 
+                - master
+            tags:
+              only: /^v?\d+(\.\d+){1,2}$/
