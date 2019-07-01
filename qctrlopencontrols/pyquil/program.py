@@ -140,7 +140,6 @@ def convert_dds_to_pyquil_program(
 
     time_covered = 0
     program = Program()
-    #program += Pragma('INITIAL_REWIRING', ['"GREEDY"'])
     program += Pragma('PRESERVE_BLOCK')
 
     for operation_idx in range(operations.shape[1]):
@@ -201,10 +200,6 @@ def convert_dds_to_pyquil_program(
             time_covered = offsets[operation_idx] + unitary_time
 
     if add_measurement:
-        #for qubit in target_qubits:
-        #    bit_name = 'ro'.format(qubit)
-        #    measurement_bit = program.declare(bit_name, 'BIT', 1)
-        #    program += MEASURE(qubit, measurement_bit)
         readout = program.declare('ro', 'BIT', len(target_qubits))
         for idx, qubit in enumerate(target_qubits):
             program += MEASURE(qubit, readout[idx])
