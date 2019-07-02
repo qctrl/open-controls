@@ -46,7 +46,7 @@ def convert_dds_to_pyquil_program(
         The dynamic decoupling sequence
     target_qubits : list, optional
         List of integers specifying target qubits for the sequence operation;
-        defaults to None
+        defaults to None in which case 0-th Qubit is used
     gate_time : float, optional
         Time (in seconds) delay introduced by a gate; defaults to 0.1
     add_measurement : bool, optional
@@ -103,8 +103,7 @@ def convert_dds_to_pyquil_program(
                                   {'type(dynamic_decoupling_sequence)':
                                        type(dynamic_decoupling_sequence)})
 
-    if target_qubits is None:
-        target_qubits = [0]
+    target_qubits = target_qubits or [0]
 
     if gate_time <= 0:
         raise ArgumentsValueError(
@@ -113,7 +112,7 @@ def convert_dds_to_pyquil_program(
 
     if np.any(target_qubits) < 0:
         raise ArgumentsValueError(
-            'Every target qubits index must be positive.',
+            'Every target qubits index must be non-negative.',
             {'target_qubits': target_qubits})
 
     if algorithm not in [FIX_DURATION_UNITARY, INSTANT_UNITARY]:
@@ -128,42 +127,32 @@ def convert_dds_to_pyquil_program(
     azimuthal_angles = dynamic_decoupling_sequence.azimuthal_angles
     detuning_rotations = dynamic_decoupling_sequence.detuning_rotations
 
-    if len(rabi_rotations.shape) == 1:
-        rabi_rotations = rabi_rotations[np.newaxis, :]
-    if len(azimuthal_angles.shape) == 1:
-        azimuthal_angles = azimuthal_angles[np.newaxis, :]
-    if len(detuning_rotations.shape) == 1:
-        detuning_rotations = detuning_rotations[np.newaxis, :]
-
-    operations = np.vstack((rabi_rotations, azimuthal_angles, detuning_rotations))
     offsets = dynamic_decoupling_sequence.offsets
 
     time_covered = 0
     program = Program()
     program += Pragma('PRESERVE_BLOCK')
 
-    for operation_idx in range(operations.shape[1]):
+    for offset, rabi_rotation, azimuthal_angle, detuning_rotation in zip(
+        list(offsets), list(rabi_rotations), list(azimuthal_angles), list(detuning_rotations)):
 
-        offset_distance = offsets[operation_idx] - time_covered
+        offset_distance = offset - time_covered
 
         if np.isclose(offset_distance, 0.0):
             offset_distance = 0.0
 
         if offset_distance < 0:
             raise ArgumentsValueError("Offsets cannot be placed properly",
-                                      {'sequence_operations': operations})
+                                      {'sequence_operations': str(dynamic_decoupling_sequence)})
 
-        if offset_distance > 0:
-            while (time_covered+gate_time) <= offsets[operation_idx]:
-                for qubit in target_qubits:
-                    program += I(qubit)
-                time_covered += gate_time
+        while (time_covered+gate_time) <= offset:
+            for qubit in target_qubits:
+                program += I(qubit)
+            time_covered += gate_time
 
-        rabi_rotation = operations[0, operation_idx]
-        azimuthal_angle = operations[1, operation_idx]
         x_rotation = rabi_rotation * np.cos(azimuthal_angle)
         y_rotation = rabi_rotation * np.sin(azimuthal_angle)
-        z_rotation = operations[2, operation_idx]
+        z_rotation = detuning_rotation
 
         rotations = np.array([x_rotation, y_rotation, z_rotation])
         zero_pulses = np.isclose(rotations, 0.0).astype(np.int)
@@ -174,13 +163,10 @@ def convert_dds_to_pyquil_program(
                 'valid pulse at any offset. Found sequence '
                 'with multiple rotation operations at an offset.',
                 {'dynamic_decoupling_sequence': str(dynamic_decoupling_sequence),
-                 'offset': dynamic_decoupling_sequence.offsets[operation_idx],
-                 'rabi_rotation': dynamic_decoupling_sequence.rabi_rotations[
-                     operation_idx],
-                 'azimuthal_angle': dynamic_decoupling_sequence.azimuthal_angles[
-                     operation_idx],
-                 'detuning_rotaion': dynamic_decoupling_sequence.detuning_rotations[
-                     operation_idx]}
+                 'offset': offset,
+                 'rabi_rotation': rabi_rotation,
+                 'azimuthal_angle': azimuthal_angle,
+                 'detuning_rotaion': detuning_rotation}
             )
 
         for qubit in target_qubits:
@@ -194,10 +180,7 @@ def convert_dds_to_pyquil_program(
                 elif not np.isclose(rotations[2], 0.):
                     program += RZ(rotations[2], qubit)
 
-        if np.isclose(np.sum(rotations), 0.0):
-            time_covered = offsets[operation_idx]
-        else:
-            time_covered = offsets[operation_idx] + unitary_time
+        time_covered = offset + unitary_time
 
     if add_measurement:
         readout = program.declare('ro', 'BIT', len(target_qubits))

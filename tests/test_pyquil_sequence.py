@@ -30,7 +30,7 @@ from qctrlopencontrols import (
 def test_pyquil_program():
 
     """Tests if the Dynamic Decoupling Sequence gives rise to Identity
-    operation in Qiskit
+    operation in Pyquil
     """
     _duration = 5e-6
     _offsets = [0, 1e-6, 2.5e-6, 4e-6, 5e-6]
@@ -64,4 +64,4 @@ def test_pyquil_program():
     assert program[9] == RX(np.pi / 2, 0)
 
 if __name__ == '__main__':
-    pass
+    test_pyquil_program()
