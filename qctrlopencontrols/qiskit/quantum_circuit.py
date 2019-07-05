@@ -155,7 +155,8 @@ def convert_dds_to_qiskit_quantum_circuit(
 
     time_covered = 0
     for offset, rabi_rotation, azimuthal_angle, detuning_rotation in zip(
-        list(offsets), list(rabi_rotations), list(azimuthal_angles), list(detuning_rotations)):
+                list(offsets), list(rabi_rotations),
+                list(azimuthal_angles), list(detuning_rotations)):
 
         offset_distance = offset - time_covered
 
@@ -163,8 +164,12 @@ def convert_dds_to_qiskit_quantum_circuit(
             offset_distance = 0.0
 
         if offset_distance < 0:
-            raise ArgumentsValueError("Offsets cannot be placed properly",
-                                      {'sequence_operations': str(dynamic_decoupling_sequence)})
+            raise ArgumentsValueError(
+                "Offsets cannot be placed properly. Spacing between the rotations"
+                "is smaller than the time required to perform the rotation. Provide"
+                "a longer dynamic decoupling sequence or shorted gate time.",
+                {'dynamic_decoupling_sequence': dynamic_decoupling_sequence,
+                 'gate_time': gate_time})
 
         while (time_covered+gate_time) <= offset:
             for qubit in target_qubits:
@@ -182,13 +187,13 @@ def convert_dds_to_qiskit_quantum_circuit(
         if nonzero_pulse_counts > 1:
             raise ArgumentsValueError(
                 'Open Controls support a sequence with one '
-                'valid pulse at any offset. Found sequence '
+                'valid rotation at any offset. Found a sequence '
                 'with multiple rotation operations at an offset.',
-                {'dynamic_decoupling_sequence': str(dynamic_decoupling_sequence),
-                 'offset': offset,
-                 'rabi_rotation': rabi_rotation,
-                 'azimuthal_angle': azimuthal_angle,
-                 'detuning_rotaion': detuning_rotation}
+                {'dynamic_decoupling_sequence': dynamic_decoupling_sequence},
+                extras={'offset': offset,
+                        'rabi_rotation': rabi_rotation,
+                        'azimuthal_angle': azimuthal_angle,
+                        'detuning_rotation': detuning_rotation}
             )
 
         for qubit in target_qubits:
