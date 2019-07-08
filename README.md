@@ -67,8 +67,8 @@ Once the clone is complete, you have two options:
    python setup.py develop
    ```
 
-   **Note:** We recommend installing using `develop` to point your installation at
-   the source code in the directory where you cloned the repository.
+   **Note:** We recommend installing using `develop` to point your installation
+   at the source code in the directory where you cloned the repository.
 
 1. Using Poetry
 
@@ -86,7 +86,8 @@ Once the clone is complete, you have two options:
    ```
 
 Once installed via one of the above methods, test your installation by running
-`pytest` in the `python-open-controls` directory.
+`pytest`
+in the `python-open-controls` directory.
 
 ```shell
 pytest

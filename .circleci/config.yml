@@ -8,7 +8,7 @@ workflows:
 
   "PyPi Project":
     jobs:
-      - q-ctrl/open_test:
+      - q-ctrl/pytest_python_36_open:
           context: q-ctrl-api-development      
           filters:
             tags:  # Tag filter required because the release job has a tag filter
@@ -25,7 +25,7 @@ workflows:
       - q-ctrl/pypi_publish:
           context: q-ctrl-api-development
           requires:
-            - q-ctrl/open_test          
+            - q-ctrl/pytest_python_36_open          
             - q-ctrl/open_build
           filters:
             branches:
@@ -36,7 +36,7 @@ workflows:
       - q-ctrl/pypi_publish:
           context: q-ctrl-api-production
           requires:
-            - q-ctrl/open_test          
+            - q-ctrl/pytest_python_36_open          
             - q-ctrl/open_build
           filters:
             branches:

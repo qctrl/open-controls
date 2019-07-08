@@ -41,7 +41,6 @@ cirq = "^0.5.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
-nbval = "*"
 pylama = "*"
 pylint = "*"
 pylint_runner = "*"
