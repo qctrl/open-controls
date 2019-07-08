@@ -13,11 +13,10 @@
 # limitations under the License.
 
 """
-===============
-driven_controls
-===============
+======================
+driven_controls module
+======================
 """
-
 ##### Maximum and Minimum bounds ######
 
 UPPER_BOUND_RABI_RATE = 1e10

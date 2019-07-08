@@ -28,11 +28,14 @@ from .dynamic_decoupling_sequences.dynamic_decoupling_sequence import DynamicDec
 from .dynamic_decoupling_sequences.predefined import new_predefined_dds
 from .dynamic_decoupling_sequences.driven_controls import convert_dds_to_driven_control
 
+from .pyquil.program import convert_dds_to_pyquil_program
+
 from .qiskit.quantum_circuit import convert_dds_to_qiskit_quantum_circuit
 
 __all__ = ['convert_dds_to_cirq_circuit',
            'convert_dds_to_cirq_schedule',
            'convert_dds_to_driven_control',
+           'convert_dds_to_pyquil_program',
            'convert_dds_to_qiskit_quantum_circuit',
            'new_predefined_dds',
            'new_predefined_driven_control',

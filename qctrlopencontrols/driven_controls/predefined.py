@@ -65,7 +65,6 @@ def new_predefined_driven_control(
         Raised when an argument is invalid.
     """
 
-    # Forced to import here to avoid cyclic imports, need to review
     # Raise error if the input driven_control_type is not known
     if scheme == PRIMITIVE:
         driven_control = _new_primitive_control(**kwargs)
@@ -98,6 +97,7 @@ def new_predefined_driven_control(
             + ' allowed inputs.',
             {'scheme': scheme})
     return driven_control
+
 
 def _predefined_common_attributes(maximum_rabi_rate,
                                   rabi_rotation,

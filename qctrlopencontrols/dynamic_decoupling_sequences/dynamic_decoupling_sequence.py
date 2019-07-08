@@ -22,7 +22,6 @@ import numpy as np
 
 from ..base.utils import create_repr_from_attributes
 from ..exceptions.exceptions import ArgumentsValueError
-
 from ..globals import (
     QCTRL_EXPANDED, CSV, CYLINDRICAL)
 
