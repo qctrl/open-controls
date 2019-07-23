@@ -108,7 +108,7 @@ in the ``python-open-controls`` directory.
 Usage
 -----
 
-See the `Jupyter notebooks <https://github.com/qctrl/notebooks/tree/master/qctrl-open-controls>`_
+See the `Jupyter notebooks <https://github.com/qctrl/notebooks/tree/master/qctrl-open-controls>`_.
 
 Contributing
 ------------
