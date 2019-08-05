@@ -13,7 +13,7 @@ workflows:
           filters:
             tags:  # Tag filter required because the release job has a tag filter
               only: /.*/
-      - q-ctrl/open_build:
+      - q-ctrl/open_build_and_publish_internally:
           context: q-ctrl-api-development
           filters:
             branches:
@@ -22,22 +22,22 @@ workflows:
                 - development
             tags:  # Tag filter required because the release job has a tag filter
               only: /.*/                
-      - q-ctrl/pypi_publish:
+      - q-ctrl/publish_publicly:
           context: q-ctrl-api-development
           requires:
             - q-ctrl/pytest_python_36_open          
-            - q-ctrl/open_build
+            - q-ctrl/open_build_and_publish_internally
           filters:
             branches:
               only: 
                 - development
             tags:
               only: /^v?\d+(\.\d+){1,2}rc\d+$/       # RC version required for publish from development                     
-      - q-ctrl/pypi_publish:
+      - q-ctrl/publish_publicly:
           context: q-ctrl-api-production
           requires:
             - q-ctrl/pytest_python_36_open          
-            - q-ctrl/open_build
+            - q-ctrl/open_build_and_publish_internally
           filters:
             branches:
               only: 
