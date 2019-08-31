@@ -690,11 +690,12 @@ def _new_walsh_amplitude_modulated_filter_1_control(  # pylint: disable=invalid-
             {'rabi_rotation': rabi_rotation})
 
     rabi_rotations = [theta_plus, theta_minus, theta_minus, theta_plus]
+    segment_duration = theta_plus / maximum_rabi_rate
 
-    rabi_rates = [maximum_rabi_rate] * 4
+    rabi_rates = [rabi_rotation_ / segment_duration for rabi_rotation_ in rabi_rotations]
     azimuthal_angles = [azimuthal_angle] * 4
     detunings = [0] * 4
-    durations = [rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rotations]
+    durations = [segment_duration] * 4
 
     return DrivenControl(
         rabi_rates=rabi_rates,
