@@ -440,7 +440,7 @@ def test_walsh_control():
     # test pi/2 rotation
     walsh_pi_on_2 = new_predefined_driven_control(
         scheme=WAMF1,
-        rabi_rotation=np.pi/2, azimuthal_angle=0.57, maximum_rabi_rate=2*np.pi
+        rabi_rotation=np.pi/2., azimuthal_angle=0.57, maximum_rabi_rate=2*np.pi
     )
 
     pi_on_2_segments = np.vstack((
@@ -450,8 +450,8 @@ def test_walsh_control():
 
     _pi_on_2_segments = np.array([
         [5.28981984, 3.39060816, 0., 0.39458478],
-        [5.28981984, 3.39060816, 0., 0.23041522],
-        [5.28981984, 3.39060816, 0., 0.23041522],
+        [3.08895592, 1.9799236, 0., 0.39458478],
+        [3.08895592, 1.9799236, 0., 0.39458478],
         [5.28981984, 3.39060816, 0., 0.39458478]])
 
     assert np.allclose(pi_on_2_segments, _pi_on_2_segments)
@@ -459,7 +459,7 @@ def test_walsh_control():
     # test pi/4 rotation
     walsh_pi_on_4 = new_predefined_driven_control(
         scheme=WAMF1,
-        rabi_rotation=np.pi/4, azimuthal_angle=-0.273, maximum_rabi_rate=2*np.pi
+        rabi_rotation=np.pi/4., azimuthal_angle=-0.273, maximum_rabi_rate=2*np.pi
     )
     pi_on_4_segments = np.vstack((
         walsh_pi_on_4.amplitude_x, walsh_pi_on_4.amplitude_y, walsh_pi_on_4.detunings,
@@ -468,8 +468,8 @@ def test_walsh_control():
 
     _pi_on_4_segments = np.array([
         [6.05049612, -1.69408213, 0., 0.3265702],
-        [6.05049612, -1.69408213, 0., 0.2359298],
-        [6.05049612, -1.69408213, 0., 0.2359298],
+        [4.37116538, -1.22388528, 0., 0.3265702],
+        [4.37116538, -1.22388528, 0., 0.3265702],
         [6.05049612, -1.69408213, 0., 0.3265702]])
 
     assert np.allclose(pi_on_4_segments, _pi_on_4_segments)
