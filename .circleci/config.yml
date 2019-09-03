@@ -6,29 +6,38 @@ orbs:
 workflows:
   version: 2
 
-  "PyPi Project":
+  "PyPI Project":
     jobs:
-      - q-ctrl/pytest_python_36_open:
-          context: q-ctrl-api-development      
+      - q-ctrl/pytest_python_36_test:
+          name: pytest 3.6 (Production)
+          context: q-ctrl-api-production
           filters:
-            tags:  # Tag filter required because the release job has a tag filter
-              only: /.*/
-      - q-ctrl/open_build_and_publish_internally:
+            branches:
+              only: 
+                - master
+            tags:
+              only: /^v?\d+(\.\d+){1,2}$/
+      - q-ctrl/pytest_python_37_test:
+          name: pytest 3.7 (Production)
+          context: q-ctrl-api-production
+          filters:
+            branches:
+              only: 
+                - master       
+            tags:
+              only: /^v?\d+(\.\d+){1,2}$/
+      - q-ctrl/build_and_publish_internally:
+          name: Build & Publish Internally
           context: q-ctrl-api-development
           filters:
             branches:
               only: 
                 - master
-            tags:  # Tag filter required because the release job has a tag filter
-              only: /.*/                
+            tags:
+              only: /^v?\d+(\.\d+){1,2}$/              
       - q-ctrl/publish_publicly:
           context: q-ctrl-api-production
-          requires:
-            - q-ctrl/pytest_python_36_open          
-            - q-ctrl/open_build_and_publish_internally
+            - Build & Publish Internally
           filters:
-            branches:
-              only: 
-                - master
             tags:
               only: /^v?\d+(\.\d+){1,2}$/
