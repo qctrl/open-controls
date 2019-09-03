@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  q-ctrl: q-ctrl/python@dev:0.1.0
+  q-ctrl: q-ctrl/python@dev:0.1.1
 
 workflows:
   version: 2
