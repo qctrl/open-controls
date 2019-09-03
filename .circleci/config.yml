@@ -36,7 +36,9 @@ workflows:
             tags:
               only: /^v?\d+(\.\d+){1,2}$/              
       - q-ctrl/publish_publicly:
+          name: Publish Publicly
           context: q-ctrl-api-production
+          requires:
             - Build & Publish Internally
           filters:
             tags:
