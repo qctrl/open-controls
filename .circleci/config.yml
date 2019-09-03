@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  q-ctrl: q-ctrl/python@dev:0.1.0
+  q-ctrl: q-ctrl/python@dev:0.1.2
 
 workflows:
   version: 2
@@ -19,20 +19,8 @@ workflows:
             branches:
               only: 
                 - master
-                - development
             tags:  # Tag filter required because the release job has a tag filter
               only: /.*/                
-      - q-ctrl/publish_publicly:
-          context: q-ctrl-api-development
-          requires:
-            - q-ctrl/pytest_python_36_open          
-            - q-ctrl/open_build_and_publish_internally
-          filters:
-            branches:
-              only: 
-                - development
-            tags:
-              only: /^v?\d+(\.\d+){1,2}rc\d+$/       # RC version required for publish from development                     
       - q-ctrl/publish_publicly:
           context: q-ctrl-api-production
           requires:
