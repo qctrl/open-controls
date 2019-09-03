@@ -1,16 +1,13 @@
 version: 2.1
 
 orbs:
-  q-ctrl: q-ctrl/python@dev:0.1.2
+  q-ctrl: q-ctrl/python@dev:0.1.3
 
 workflows:
   version: 2
 
   "PyPI Project":
     jobs:
-      - q-ctrl/pytest_python_36_test:
-          name: pytest 3.6 (Production)
-          context: q-ctrl-api-production
       - q-ctrl/pytest_python_37_test:
           name: pytest 3.7 (Production)
           context: q-ctrl-api-production
