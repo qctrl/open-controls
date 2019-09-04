@@ -8,6 +8,9 @@ workflows:
 
   "PyPI Project":
     jobs:
+      - q-ctrl/pytest_python_36_test:
+          name: pytest 3.6 (Production)
+          context: q-ctrl-api-production    
       - q-ctrl/pytest_python_37_test:
           name: pytest 3.7 (Production)
           context: q-ctrl-api-production
