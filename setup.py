@@ -26,7 +26,7 @@ setup(
     name='qctrl-open-controls',
     version='2.0.3',
     description='Q-CTRL Open Controls',
-    python_requires='>=3.7.3',
+    python_requires='<3.8,>=3.6.4',
     project_urls={'repository': 'https://github.com/qctrl/python-open-controls'},
     author='Q-CTRL',
     author_email='support@q-ctrl.com',
