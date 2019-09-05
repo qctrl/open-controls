@@ -10,10 +10,12 @@ workflows:
     jobs:
       - q-ctrl/pytest_python_36_test:
           name: pytest 3.6 (Production)
-          context: q-ctrl-api-production    
+          context: q-ctrl-api-production
+          noroot: true    
       - q-ctrl/pytest_python_37_test:
           name: pytest 3.7 (Production)
           context: q-ctrl-api-production
+          noroot: true
       - q-ctrl/build_and_publish_internally:
           name: Build & Publish Internally
           context: q-ctrl-api-development
