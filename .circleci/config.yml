@@ -19,7 +19,6 @@ workflows:
       - q-ctrl/build_and_publish_internally:
           name: Build & Publish Internally
           context: q-ctrl-api-development
-          noroot: true          
           filters:
             branches:
               only: 
