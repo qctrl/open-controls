@@ -15,16 +15,6 @@ with easy to use export functions allowing users to deploy these controls on:
 
 Anyone interested in quantum control is welcome to contribute to this project.
 
-Table of Contents
------------------
-
-
-* `Installation <#installation>`_
-* `Usage <#usage>`_
-* `Contributing <#contributing>`_
-* `Credits <#credits>`_
-* `License <#license>`_
-
 Installation
 ------------
 
