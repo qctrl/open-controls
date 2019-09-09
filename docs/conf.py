@@ -12,7 +12,6 @@
 #
 import os
 import sys
-# import qctrl
 import toml
 
 sys.path.insert(0, os.path.abspath('../qctrl'))
@@ -32,7 +31,7 @@ copyright = '2019, Q-CTRL <support@q-ctrl.com>'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.coverage', 
+    'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon'
 ]
@@ -60,13 +59,3 @@ html_static_path = ['_static']
 html_css_files = [
     'css/custom.css',
 ]
-
-# token = os.environ.get("QCTRL_TEST_TOKEN")
-# if not token:
-#     raise EnvironmentError("QCTRL_TEST_TOKEN is not defined")
-    
-# api_url = os.getenv("QCTRL_API_HOST", "https://api.q-ctrl.com/")
-
-# print("Connecting to API at %s" % api_url)
-# q = qctrl.Qctrl(token, api_url)
-# print("Connected")
