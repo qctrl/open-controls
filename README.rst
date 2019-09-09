@@ -92,7 +92,7 @@ Once the clone is complete, you have two options:
    **Note:** if you are on Windows, you'll need to install
    `Poetry <https://poetry.eustace.io>`_ manually, and use:
 
-   .. code-block:: cmd
+   .. code-block:: bash
 
       cd python-open-controls
       poetry install
@@ -113,8 +113,37 @@ See the `Jupyter notebooks <https://github.com/qctrl/notebooks/tree/master/qctrl
 Contributing
 ------------
 
-See
-`Contributing <https://github.com/qctrl/.github/blob/master/CONTRIBUTING.md>`_.
+For general guidelines, see `Contributing <https://github.com/qctrl/.github/blob/master/CONTRIBUTING.md>`_.
+
+Building documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+Documentation generation relies on `Spinx <http://www.sphinx-doc.org>`_. Automated builds are done by `Read The Docs <https://readthedocs.com>`_.
+
+To build locally:
+
+
+#. Ensure you have used one of the install options above.
+#. Ensure you have the environment variable APITOKEN set to a valid token.
+#. 
+   Execute the make file from the docs directory:
+
+    If using Poetry:
+
+   .. code-block:: bash
+
+       cd docs
+       poetry run make html
+
+    If using setuptools:
+
+   .. code-block:: bash
+
+       cd docs
+       # Activate your virtual environment if required
+       make html
+
+The generated HTML will appear in the ``docs/_build/html`` directory.
 
 Credits
 -------
