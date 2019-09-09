@@ -113,7 +113,4 @@ qctrl_library/.vscode/*
 .vscode/*
 qctrl_library.code-workspace
 
-# docs
-docs-source
-docs
 

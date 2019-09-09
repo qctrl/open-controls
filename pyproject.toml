@@ -39,6 +39,8 @@ qiskit-terra = "^0.8.1"
 qiskit-ibmq-provider = "^0.2.2"
 cirq = "^0.5.0"
 pyquil = "^2.9"
+sphinx = "^2.2.0"
+toml = "^0.10.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
