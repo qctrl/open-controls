@@ -124,7 +124,6 @@ To build locally:
 
 
 #. Ensure you have used one of the install options above.
-#. Ensure you have the environment variable APITOKEN set to a valid token.
 #. 
    Execute the make file from the docs directory:
 
