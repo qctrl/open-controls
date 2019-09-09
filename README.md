@@ -108,7 +108,6 @@ Documentation generation relies on [Spinx](http://www.sphinx-doc.org). Automated
 To build locally:
 
 1. Ensure you have used one of the install options above.
-1. Ensure you have the environment variable APITOKEN set to a valid token.
 1. Execute the make file from the docs directory:
 
     If using Poetry:
