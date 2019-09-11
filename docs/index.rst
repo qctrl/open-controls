@@ -15,16 +15,6 @@ with easy to use export functions allowing users to deploy these controls on:
 
 Anyone interested in quantum control is welcome to contribute to this project.
 
-Table of Contents
------------------
-
-
-* `Installation <#installation>`_
-* `Usage <#usage>`_
-* `Contributing <#contributing>`_
-* `Credits <#credits>`_
-* `License <#license>`_
-
 Installation
 ------------
 
@@ -92,7 +82,7 @@ Once the clone is complete, you have two options:
    **Note:** if you are on Windows, you'll need to install
    `Poetry <https://poetry.eustace.io>`_ manually, and use:
 
-   .. code-block:: bash
+   .. code-block:: cmd
 
       cd python-open-controls
       poetry install
@@ -110,47 +100,25 @@ Usage
 
 See the `Jupyter notebooks <https://github.com/qctrl/notebooks/tree/master/qctrl-open-controls>`_.
 
-Contributing
-------------
+Reference
+---------
 
-For general guidelines, see `Contributing <https://github.com/qctrl/.github/blob/master/CONTRIBUTING.md>`_.
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
 
-Building documentation
-^^^^^^^^^^^^^^^^^^^^^^
+   qctrlopencontrols
 
-Documentation generation relies on `Spinx <http://www.sphinx-doc.org>`_. Automated builds are done by `Read The Docs <https://readthedocs.com>`_.
-
-To build locally:
-
-
-#. Ensure you have used one of the install options above.
-#. 
-   Execute the make file from the docs directory:
-
-    If using Poetry:
-
-   .. code-block:: bash
-
-       cd docs
-       poetry run make html
-
-    If using setuptools:
-
-   .. code-block:: bash
-
-       cd docs
-       # Activate your virtual environment if required
-       make html
-
-The generated HTML will appear in the ``docs/_build/html`` directory.
-
-Credits
+Licence
 -------
 
-See
-`Contributors <https://github.com/qctrl/python-open-controls/graphs/contributors>`_.
+.. toctree::
 
-License
--------
+   licence
 
-See `LICENSE <LICENSE>`_.
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

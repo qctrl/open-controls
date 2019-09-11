@@ -45,6 +45,8 @@ pytest = "*"
 pylama = "*"
 pylint = "*"
 pylint_runner = "*"
+sphinx = "^2.2.0"
+toml = "^0.10.0"
 
 [tool.dephell.main]
 from = {format = "poetry", path = "pyproject.toml"}
