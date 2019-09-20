@@ -39,6 +39,7 @@ qiskit-terra = "^0.8.1"
 qiskit-ibmq-provider = "^0.2.2"
 cirq = "^0.5.0"
 pyquil = "^2.9"
+toml = "^0.10.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
@@ -46,7 +47,6 @@ pylama = "*"
 pylint = "*"
 pylint_runner = "*"
 sphinx = "^2.2.0"
-toml = "^0.10.0"
 
 [tool.dephell.main]
 from = {format = "poetry", path = "pyproject.toml"}
