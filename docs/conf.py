@@ -14,7 +14,7 @@ import os
 import sys
 import toml
 
-sys.path.insert(0, os.path.abspath('../qctrlopencontrols'))
+sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 parsed = toml.load("../pyproject.toml")
