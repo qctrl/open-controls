@@ -20,13 +20,11 @@ qiskit.quantum_circuit
 
 import numpy as np
 
-from qiskit import (
-    QuantumRegister, ClassicalRegister, QuantumCircuit)
-from qiskit.qasm import pi
-
-from ..dynamic_decoupling_sequences.dynamic_decoupling_sequence import DynamicDecouplingSequence
-from ..exceptions.exceptions import ArgumentsValueError
 from ..globals import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
+from ..qiskit import qiskit_minimum_version
+from ..dynamic_decoupling_sequences.dynamic_decoupling_sequence import DynamicDecouplingSequence
+from ..exceptions.exceptions import ArgumentsValueError, PackageImportError
+from ..utility.check_packages import check_package
 
 
 def convert_dds_to_qiskit_quantum_circuit(
@@ -75,6 +73,12 @@ def convert_dds_to_qiskit_quantum_circuit(
     ------
     ArgumentsValueError
         If any of the input parameters are invalid
+    PackageNotFoundError
+        If Qiskit is not found
+    PackageVersionMismatchError
+        If the required minimum version of Qiskit is not found
+    PackageImportError
+        If Qiskit cannot be imported
 
     Notes
     -----
@@ -96,6 +100,17 @@ def convert_dds_to_qiskit_quantum_circuit(
     Q-CTRL Open Controls support operation resulting in rotation around at most one axis at
     any offset.
     """
+
+    check_package('qiskit-terra', qiskit_minimum_version)
+
+    try:
+        from qiskit import (
+            QuantumRegister, ClassicalRegister, QuantumCircuit)
+        from qiskit.qasm import pi
+    except ImportError:
+        raise PackageImportError(
+            'Error while trying to import Qiskit.'
+        )
 
     if dynamic_decoupling_sequence is None:
         raise ArgumentsValueError('No dynamic decoupling sequence provided.',

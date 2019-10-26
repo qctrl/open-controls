@@ -14,7 +14,7 @@
 
 """
 ===================================
-Tests converstion to Qiskit Circuit
+Tests conversion to Qiskit Circuit
 ===================================
 """
 
@@ -125,7 +125,6 @@ def test_identity_operation():
 
     _multiplier = (1. / np.power(2, 0.5)) * np.array([[1, -1j], [-1j, 1]], dtype='complex')
     _check_circuit_unitary(True, _multiplier, 'fixed duration unitary')
-
 
 
 if __name__ == '__main__':

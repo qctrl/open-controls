@@ -57,3 +57,79 @@ class ArgumentsValueError(QctrlError):
             for key in self.extras:
                 self.message += '\n' + str(key) + '=' + repr(self.extras[key])
         super(ArgumentsValueError, self).__init__(self.message)
+
+
+class PackageVersionMismatchError(QctrlError):
+    """Exception raised when the version of required third party packages found but is
+    below the minimum required.
+
+    Parameters
+    ----------
+    description : string
+        Description of the why the error is raised.
+    arguments : dict
+        Dictionary that contains the package name, required minimum version.
+    extras : dict, optional
+        Other variables, such as the version found in the system,
+        that may be relevant to the error. Defaults to None.
+    """
+
+    def __init__(self, description, arguments, extras=None):
+        self.description = description
+        self.arguments = arguments
+        self.extras = extras
+        self.message = self.description
+
+        for key in self.arguments:
+            self.message += '\n' + str(key) + '=' + repr(self.arguments[key])
+        if extras is not None:
+            for key in self.extras:
+                self.message += '\n' + str(key) + '=' + repr(self.extras[key])
+        super(PackageVersionMismatchError, self).__init__(self.message)
+
+
+class PackageNotFoundError(QctrlError):
+    """Exception raised when the required third party packages is not found.
+
+    Parameters
+    ----------
+    description : string
+        Description of the why the error is raised.
+    arguments : dict
+        Dictionary that contains the package name and the required minimum version.
+    extras : dict, optional
+        Other variables that may be relevant to the error. Defaults to None.
+    """
+
+    def __init__(self, description, arguments, extras=None):
+        self.description = description
+        self.arguments = arguments
+        self.extras = extras
+        self.message = self.description
+
+        for key in self.arguments:
+            self.message += '\n' + str(key) + '=' + repr(self.arguments[key])
+        if extras is not None:
+            for key in self.extras:
+                self.message += '\n' + str(key) + '=' + repr(self.extras[key])
+        super(PackageNotFoundError, self).__init__(self.message)
+
+
+class PackageImportError(QctrlError):
+    """Exception raised when a package cannot be imported.
+
+    Parameters
+    ----------
+    description : string
+        Description of the why the error is raised.
+    package_name : string, optional
+        The name of the package that could not be imported. Defaults to None.
+    """
+    def __init__(self, description, package_name=None):
+        self.description = description
+        self.package_name = package_name
+        self.message = self.description
+
+        if package_name:
+            self.message += '\n' + 'package' + '=' + repr(self.arguments[package_name])
+        super(PackageImportError, self).__init__(self.message)
