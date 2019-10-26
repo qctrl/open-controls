@@ -36,6 +36,13 @@ def check_package(package_name, minimum_package_version):
         The name of the package
     minimum_package_version: str
         The minimum version of the package
+
+    Raises
+    ------
+    PackageNotFoundError
+        If the required package is not found.
+    PackageVersionMismatchError
+        If the version of the package is found but lower than the minimum required.
     """
 
     try:

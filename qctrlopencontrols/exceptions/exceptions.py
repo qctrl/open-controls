@@ -131,5 +131,5 @@ class PackageImportError(QctrlError):
         self.message = self.description
 
         if package_name:
-            self.message += '\n' + 'package' + '=' + repr(self.arguments[package_name])
+            self.message += '\n' + 'package' + '=' + repr(self.package_name)
         super(PackageImportError, self).__init__(self.message)

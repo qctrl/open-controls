@@ -12,5 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+==============
+qiskit module
+==============
+"""
+
 # Minimum Qiskit version required
-qiskit_minimum_version = '0.10.0'
+QISKIT_MINIMUM_VERSION = '0.10.0'
