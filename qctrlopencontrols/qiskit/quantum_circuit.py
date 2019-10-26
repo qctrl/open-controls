@@ -24,7 +24,7 @@ from ..globals import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
 from ..qiskit import QISKIT_MINIMUM_VERSION
 from ..dynamic_decoupling_sequences.dynamic_decoupling_sequence import DynamicDecouplingSequence
 from ..exceptions.exceptions import ArgumentsValueError, PackageImportError
-from ..utility.check_packages import check_package
+from ..base.check_packages import check_package
 
 
 def convert_dds_to_qiskit_quantum_circuit(
