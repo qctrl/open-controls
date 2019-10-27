@@ -19,4 +19,4 @@ qiskit module
 """
 
 # Minimum Qiskit version required
-QISKIT_MINIMUM_VERSION = '0.10.0'
+QISKIT_TERRA_MINIMUM_VERSION = '0.10.0'

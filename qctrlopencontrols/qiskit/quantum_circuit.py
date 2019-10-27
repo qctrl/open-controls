@@ -21,7 +21,7 @@ qiskit.quantum_circuit
 import numpy as np
 
 from ..globals import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
-from ..qiskit import QISKIT_MINIMUM_VERSION
+from ..qiskit import QISKIT_TERRA_MINIMUM_VERSION
 from ..dynamic_decoupling_sequences.dynamic_decoupling_sequence import DynamicDecouplingSequence
 from ..exceptions.exceptions import ArgumentsValueError, PackageImportError
 from ..base.check_packages import check_package
@@ -101,7 +101,7 @@ def convert_dds_to_qiskit_quantum_circuit(
     any offset.
     """
 
-    check_package('qiskit-terra', QISKIT_MINIMUM_VERSION)
+    check_package('qiskit-terra', QISKIT_TERRA_MINIMUM_VERSION)
 
     try:
         from qiskit import (
@@ -109,7 +109,7 @@ def convert_dds_to_qiskit_quantum_circuit(
         from qiskit.qasm import pi
     except ImportError:
         raise PackageImportError(
-            'Error while trying to import Qiskit.'
+            'Error while trying to import qiskit-terra.'
         )
 
     if dynamic_decoupling_sequence is None:
