@@ -27,8 +27,8 @@ from qctrlopencontrols.exceptions.exceptions import (
 
 
 def check_package(package_name, minimum_package_version):
-    """Checks if the specified package and its minimum version
-    exists.
+    """Checks if the specified third party package and its minimum version
+    is available.
 
     Parameters
     ---------
