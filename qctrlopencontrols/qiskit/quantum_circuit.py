@@ -180,8 +180,8 @@ def convert_dds_to_qiskit_quantum_circuit(
 
         if offset_distance < 0:
             raise ArgumentsValueError(
-                "Offsets cannot be placed properly. Spacing between the rotations "
-                "is smaller than the time required to perform the rotation. Provide "
+                "Offsets cannot be placed properly. Spacing between the rotations"
+                "is smaller than the time required to perform the rotation. Provide"
                 "a longer dynamic decoupling sequence or shorted gate time.",
                 {'dynamic_decoupling_sequence': dynamic_decoupling_sequence,
                  'gate_time': gate_time})
@@ -192,11 +192,14 @@ def convert_dds_to_qiskit_quantum_circuit(
                 quantum_circuit.barrier(quantum_registers[qubit])  # pylint: disable=no-member
             time_covered += gate_time
 
-        rotations = np.array([rabi_rotation * np.cos(azimuthal_angle),
-                              rabi_rotation * np.sin(azimuthal_angle),
-                              detuning_rotation])
-        zero_pulse_count = np.sum(np.isclose(rotations, 0.0).astype(np.int))
-        if zero_pulse_count < 2:
+        x_rotation = rabi_rotation * np.cos(azimuthal_angle)
+        y_rotation = rabi_rotation * np.sin(azimuthal_angle)
+        z_rotation = detuning_rotation
+
+        rotations = np.array([x_rotation, y_rotation, z_rotation])
+        zero_pulses = np.isclose(rotations, 0.0).astype(np.int)
+        nonzero_pulse_counts = 3 - np.sum(zero_pulses)
+        if nonzero_pulse_counts > 1:
             raise ArgumentsValueError(
                 'Open Controls support a sequence with one '
                 'valid rotation at any offset. Found a sequence '
@@ -209,7 +212,7 @@ def convert_dds_to_qiskit_quantum_circuit(
             )
 
         for qubit in target_qubits:
-            if zero_pulse_count == 3:
+            if nonzero_pulse_counts == 0:
                 quantum_circuit.u3(
                     0., 0., 0.,  # pylint: disable=no-member
                     quantum_registers[qubit])
