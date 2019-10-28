@@ -20,13 +20,11 @@ cirq.schedule
 
 import numpy as np
 
-import cirq
-
 from ..dynamic_decoupling_sequences.dynamic_decoupling_sequence import DynamicDecouplingSequence
 from ..exceptions.exceptions import ArgumentsValueError
 
 
-def convert_dds_to_cirq_schedule(
+def convert_dds_to_cirq_schedule(   #pylint: disable=too-many-locals
         dynamic_decoupling_sequence,
         target_qubits=None,
         gate_time=0.1,
@@ -87,6 +85,8 @@ def convert_dds_to_cirq_schedule(
     any offset.
     """
 
+    import cirq
+
     if dynamic_decoupling_sequence is None:
         raise ArgumentsValueError('No dynamic decoupling sequence provided.',
                                   {'dynamic_decoupling_sequence': dynamic_decoupling_sequence})
@@ -146,8 +146,8 @@ def convert_dds_to_cirq_schedule(
         nonzero_pulse_counts = 3 - np.sum(zero_pulses)
         if nonzero_pulse_counts > 1:
             raise ArgumentsValueError(
-                'Open Controls support a sequence with one '
-                'valid pulse at any offset. Found sequence '
+                'Open Controls support a sequence with one'
+                'valid pulse at any offset. Found sequence'
                 'with multiple rotation operations at an offset.',
                 {'dynamic_decoupling_sequence': str(dynamic_decoupling_sequence),
                  'offset': dynamic_decoupling_sequence.offsets[op_idx],

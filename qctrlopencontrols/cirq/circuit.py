@@ -20,14 +20,12 @@ cirq.circuit
 
 import numpy as np
 
-import cirq
-
 from ..dynamic_decoupling_sequences.dynamic_decoupling_sequence import DynamicDecouplingSequence
 from ..exceptions.exceptions import ArgumentsValueError
 from ..globals import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
 
 
-def convert_dds_to_cirq_circuit(
+def convert_dds_to_cirq_circuit(    #pylint: disable=too-many-locals
         dynamic_decoupling_sequence,
         target_qubits=None,
         gate_time=0.1,
@@ -92,6 +90,8 @@ def convert_dds_to_cirq_circuit(
     Q-CTRL Open Controls support operation resulting in rotation around at most one axis at
     any offset.
     """
+
+    import cirq
 
     if dynamic_decoupling_sequence is None:
         raise ArgumentsValueError('No dynamic decoupling sequence provided.',

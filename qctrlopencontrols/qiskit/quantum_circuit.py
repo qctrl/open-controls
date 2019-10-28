@@ -21,10 +21,8 @@ qiskit.quantum_circuit
 import numpy as np
 
 from ..globals import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
-from ..qiskit import QISKIT_TERRA_MINIMUM_VERSION
 from ..dynamic_decoupling_sequences.dynamic_decoupling_sequence import DynamicDecouplingSequence
-from ..exceptions.exceptions import ArgumentsValueError, PackageImportError
-from ..base.check_packages import check_package
+from ..exceptions.exceptions import ArgumentsValueError
 
 
 def convert_dds_to_qiskit_quantum_circuit(
@@ -73,12 +71,6 @@ def convert_dds_to_qiskit_quantum_circuit(
     ------
     ArgumentsValueError
         If any of the input parameters are invalid
-    PackageNotFoundError
-        If Qiskit is not found
-    PackageVersionMismatchError
-        If the required minimum version of Qiskit is not found
-    PackageImportError
-        If Qiskit cannot be imported
 
     Notes
     -----
@@ -101,16 +93,9 @@ def convert_dds_to_qiskit_quantum_circuit(
     any offset.
     """
 
-    check_package('qiskit-terra', QISKIT_TERRA_MINIMUM_VERSION)
-
-    try:
-        from qiskit import (
-            QuantumRegister, ClassicalRegister, QuantumCircuit)
-        from qiskit.qasm import pi
-    except ImportError:
-        raise PackageImportError(
-            'Error while trying to import qiskit-terra.'
-        )
+    from qiskit import (
+        QuantumRegister, ClassicalRegister, QuantumCircuit)
+    from qiskit.qasm import pi
 
     if dynamic_decoupling_sequence is None:
         raise ArgumentsValueError('No dynamic decoupling sequence provided.',
