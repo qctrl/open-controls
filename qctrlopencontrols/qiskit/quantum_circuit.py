@@ -20,13 +20,9 @@ qiskit.quantum_circuit
 
 import numpy as np
 
-from qiskit import (
-    QuantumRegister, ClassicalRegister, QuantumCircuit)
-from qiskit.qasm import pi
-
+from ..globals import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
 from ..dynamic_decoupling_sequences.dynamic_decoupling_sequence import DynamicDecouplingSequence
 from ..exceptions.exceptions import ArgumentsValueError
-from ..globals import (FIX_DURATION_UNITARY, INSTANT_UNITARY)
 
 
 def convert_dds_to_qiskit_quantum_circuit(
@@ -96,6 +92,10 @@ def convert_dds_to_qiskit_quantum_circuit(
     Q-CTRL Open Controls support operation resulting in rotation around at most one axis at
     any offset.
     """
+
+    from qiskit import (
+        QuantumRegister, ClassicalRegister, QuantumCircuit)
+    from qiskit.qasm import pi
 
     if dynamic_decoupling_sequence is None:
         raise ArgumentsValueError('No dynamic decoupling sequence provided.',
