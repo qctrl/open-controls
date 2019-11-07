@@ -18,7 +18,7 @@ qctrlopencontrols
 =================
 """
 
-__version__ = "2.0.5"
+__version__ = "2.0.6"
 
 from .cirq.circuit import convert_dds_to_cirq_circuit
 from .cirq.schedule import convert_dds_to_cirq_schedule
