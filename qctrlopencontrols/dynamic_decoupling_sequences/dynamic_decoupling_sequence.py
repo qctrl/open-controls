@@ -20,7 +20,7 @@ dynamic_decoupling_sequences.dynamic_decoupling_sequence
 
 import numpy as np
 
-from ..base.utils import create_repr_from_attributes
+from qctrlopencontrols.base.utils import create_repr_from_attributes
 from ..exceptions.exceptions import ArgumentsValueError
 from ..globals import (
     QCTRL_EXPANDED, CSV, CYLINDRICAL)
@@ -82,10 +82,10 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
             offsets = [0.5]
 
         self.offsets = np.array(offsets, dtype=np.float)
-        if self.offsets.shape[0] > UPPER_BOUND_OFFSETS:
+        if self.offsets.shape[0] > UPPER_BOUND_OFFSETS: # pylint: disable=unsubscriptable-object
             raise ArgumentsValueError(
                 'Number of offsets is above the allowed number of maximum offsets. ',
-                {'number_of_offsets': self.offsets.shape[0],
+                {'number_of_offsets': self.offsets.shape[0],    # pylint: disable=unsubscriptable-object
                  'allowed_maximum_offsets': UPPER_BOUND_OFFSETS})
 
         if np.any(self.offsets < 0.) or np.any(self.offsets > self.duration):
@@ -134,7 +134,6 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
 
     @property
     def number_of_offsets(self):
-
         """Returns the number of offsets
 
         Returns
@@ -146,7 +145,6 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
         return len(self.offsets)
 
     def get_plot_formatted_arrays(self, plot_format=MATPLOTLIB):
-
         """Gets arrays for plotting a pulse.
 
         Parameters
@@ -209,7 +207,6 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
         return plot_data
 
     def __repr__(self):
-
         """Returns a string representation for the object. The returned string looks like a valid
         Python expression that could be used to recreate the object, including default arguments.
 
@@ -274,7 +271,6 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
                        coordinates=CYLINDRICAL,
                        maximum_rabi_rate=2*np.pi,
                        maximum_detuning_rate=2*np.pi):
-
         """Prepares and saves the dynamic decoupling sequence in a file.
 
         Parameters
@@ -301,7 +297,7 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
         References
         ----------
         `Q-CTRL Control Data Format
-            <https://docs.q-ctrl.com/output-data-formats#q-ctrl-hardware>` _.
+        <https://docs.q-ctrl.com/output-data-formats#q-ctrl-hardware>` _.
 
         Raises
         ------

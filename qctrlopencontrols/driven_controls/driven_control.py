@@ -83,7 +83,8 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
             input_array_lengths = []
             if not check_none_values[0]:
                 rabi_rates = np.array(rabi_rates, dtype=np.float).reshape((-1,))
-                input_array_lengths.append(rabi_rates.shape[0])
+                input_array_lengths.append(
+                    rabi_rates.shape[0])    #pylint: disable=unsubscriptable-object
 
             if not check_none_values[1]:
                 azimuthal_angles = np.array(azimuthal_angles, dtype=np.float).reshape((-1,))
@@ -166,7 +167,6 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
 
     @property
     def number_of_segments(self):
-
         """Returns the number of segments
 
         Returns
@@ -317,7 +317,6 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
         return np.sum(self.durations)
 
     def _qctrl_expanded_export_content(self, file_type, coordinates):
-
         """Private method to prepare the content to be saved in Q-CTRL expanded format
 
         Parameters
@@ -390,7 +389,6 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
     def _export_to_qctrl_expanded_format(self, filename=None,
                                          file_type=CSV,
                                          coordinates=CYLINDRICAL):
-
         """Private method to save control in qctrl_expanded_format
 
         Parameters
@@ -420,7 +418,6 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
                        file_format=QCTRL_EXPANDED,
                        file_type=CSV,
                        coordinates=CYLINDRICAL):
-
         """Prepares and saves the driven control in a file.
 
         Parameters
@@ -443,7 +440,7 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
         References
         ----------
         `Q-CTRL Control Data Format
-            <https://docs.q-ctrl.com/output-data-formats#q-ctrl-hardware>` _.
+        <https://docs.q-ctrl.com/output-data-formats#q-ctrl-hardware>` _.
 
         Raises
         ------
@@ -603,7 +600,6 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
         return driven_control_string
 
     def __repr__(self):
-
         """Returns a string representation for the object. The returned string looks like a valid
         Python expression that could be used to recreate the object, including default arguments.
 
