@@ -18,10 +18,7 @@ qctrlopencontrols
 =================
 """
 
-__version__ = "2.0.6"
-
-from .cirq.circuit import convert_dds_to_cirq_circuit
-from .cirq.schedule import convert_dds_to_cirq_schedule
+__version__ = "3.0.0"
 
 from .driven_controls.driven_control import DrivenControl
 from .driven_controls.predefined import new_predefined_driven_control
@@ -30,15 +27,7 @@ from .dynamic_decoupling_sequences.dynamic_decoupling_sequence import DynamicDec
 from .dynamic_decoupling_sequences.predefined import new_predefined_dds
 from .dynamic_decoupling_sequences.driven_controls import convert_dds_to_driven_control
 
-from .pyquil.program import convert_dds_to_pyquil_program
-
-from .qiskit.quantum_circuit import convert_dds_to_qiskit_quantum_circuit
-
-__all__ = ['convert_dds_to_cirq_circuit',
-           'convert_dds_to_cirq_schedule',
-           'convert_dds_to_driven_control',
-           'convert_dds_to_pyquil_program',
-           'convert_dds_to_qiskit_quantum_circuit',
+__all__ = ['convert_dds_to_driven_control',
            'new_predefined_dds',
            'new_predefined_driven_control',
            'DrivenControl',

@@ -226,7 +226,9 @@ def test_uhrig_single_axis_sequence():
         pre_post_rotation=True)
 
     _offsets = np.array(_delta_positions)
-    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
+    _offsets = np.insert(_offsets,
+                         [0, _offsets.shape[0]],    # pylint: disable=unsubscriptable-object
+                         [0, duration])
 
     _rabi_rotations = np.array([np.pi/2, np.pi, np.pi, np.pi, np.pi, np.pi/2])
     _azimuthal_angles = np.array([0., np.pi / 2, np.pi / 2, np.pi / 2, np.pi / 2, 0.])
@@ -271,7 +273,9 @@ def test_periodic_single_axis_sequence():      # pylint: disable=invalid-name
         pre_post_rotation=True)
 
     _offsets = np.array(_delta_positions)
-    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
+    _offsets = np.insert(_offsets,
+                         [0, _offsets.shape[0]],    # pylint: disable=unsubscriptable-object
+                         [0, duration])
 
     _rabi_rotations = np.array([np.pi/2, np.pi, np.pi, np.pi, np.pi, np.pi/2])
     _azimuthal_angles = np.array([0, 0, 0, 0, 0, 0])
@@ -329,7 +333,9 @@ def test_walsh_single_axis_sequence():
         paley_order=paley_order,
         pre_post_rotation=True)
 
-    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
+    _offsets = np.insert(_offsets,
+                         [0, _offsets.shape[0]],    # pylint: disable=unsubscriptable-object
+                         [0, duration])
     _rabi_rotations = np.insert(_rabi_rotations, [0, _rabi_rotations.shape[0]],
                                 [np.pi/2, np.pi/2])
     _azimuthal_angles = np.zeros(_offsets.shape)
@@ -364,7 +370,10 @@ def test_quadratic_sequence():
     _outer_offsets = np.array(_delta_positions)
     _offsets[0:number_outer_offsets, -1] = _outer_offsets
 
-    _outer_offsets = np.insert(_outer_offsets, [0, _outer_offsets.shape[0]], [0, duration])
+    _outer_offsets = np.insert(
+        _outer_offsets,
+        [0, _outer_offsets.shape[0]],   # pylint: disable=unsubscriptable-object
+        [0, duration])
     _inner_durations = _outer_offsets[1:] - _outer_offsets[0:-1]
 
     constant = 0.5 / (number_inner_offsets+1)
@@ -449,9 +458,14 @@ def test_xconcatenated_sequence():
         concatenation_order=concatenation_order,
         pre_post_rotation=True)
 
-    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
-    _rabi_rotations = np.insert(_rabi_rotations, [0, _rabi_rotations.shape[0]],
-                                [np.pi/2, np.pi/2])
+    _offsets = np.insert(
+        _offsets,
+        [0, _offsets.shape[0]], # pylint: disable=unsubscriptable-object
+        [0, duration])
+    _rabi_rotations = np.insert(
+        _rabi_rotations,
+        [0, _rabi_rotations.shape[0]],  # pylint: disable=unsubscriptable-object
+        [np.pi/2, np.pi/2])
     _azimuthal_angles = np.zeros(_offsets.shape)
     _detuning_rotations = np.zeros(_offsets.shape)
 
@@ -499,13 +513,21 @@ def test_xyconcatenated_sequence():
         concatenation_order=concatenation_order,
         pre_post_rotation=True)
 
-    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
-    _rabi_rotations = np.insert(_rabi_rotations, [0, _rabi_rotations.shape[0]],
-                                [np.pi/2, np.pi/2])
-    _azimuthal_angles = np.insert(_azimuthal_angles, [0, _azimuthal_angles.shape[0]],
-                                  [0, 0])
-    _detuning_rotations = np.insert(_detuning_rotations, [0, _detuning_rotations.shape[0]],
-                                    [0, 0])
+    _offsets = np.insert(_offsets,
+                         [0, _offsets.shape[0]],    # pylint: disable=unsubscriptable-object
+                         [0, duration])
+    _rabi_rotations = np.insert(
+        _rabi_rotations,
+        [0, _rabi_rotations.shape[0]],  # pylint: disable=unsubscriptable-object
+        [np.pi/2, np.pi/2])
+    _azimuthal_angles = np.insert(
+        _azimuthal_angles,
+        [0, _azimuthal_angles.shape[0]],    # pylint: disable=unsubscriptable-object
+        [0, 0])
+    _detuning_rotations = np.insert(
+        _detuning_rotations,
+        [0, _detuning_rotations.shape[0]],  # pylint: disable=unsubscriptable-object
+        [0, 0])
 
     assert np.allclose(_offsets, sequence.offsets)
     assert np.allclose(_rabi_rotations, sequence.rabi_rotations)

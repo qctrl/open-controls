@@ -82,7 +82,7 @@ Once the clone is complete, you have two options:
    **Note:** if you are on Windows, you'll need to install
    `Poetry <https://poetry.eustace.io>`_ manually, and use:
 
-   .. code-block:: cmd
+   .. code-block:: shell
 
       cd python-open-controls
       poetry install

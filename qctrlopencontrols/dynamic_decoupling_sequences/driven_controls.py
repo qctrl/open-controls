@@ -58,7 +58,6 @@ def _check_valid_operation(rabi_rotations, detuning_rotations):
 
 def _check_maximum_rotation_rate(
         maximum_rabi_rate, maximum_detuning_rate):
-
     """Checks if the maximum rabi and detuning rate are
     within valid limits
 
@@ -101,13 +100,12 @@ def convert_dds_to_driven_control(
         maximum_rabi_rate=2*np.pi,
         maximum_detuning_rate=2*np.pi,
         **kwargs):
-
     """Creates a Driven Control based on the supplied DDS and
     other relevant information
 
     Parameters
     ----------
-    dynamic_decoupling_sequence : DynamicDecouplingSequence
+    dynamic_decoupling_sequence : qctrlopencontrols.DynamicDecouplingSequence
         The base DDS; Defaults to None
     maximum_rabi_rate : float, optional
         Maximum Rabi Rate; Defaults to 1.0
@@ -214,9 +212,10 @@ def convert_dds_to_driven_control(
 
     pulse_mid_points = operations[0, :]
 
-    pulse_start_ends = np.zeros((operations.shape[1], 2))
+    pulse_start_ends = np.zeros((
+        operations.shape[1], 2))   # pylint: disable=unsubscriptable-object
 
-    for op_idx in range(operations.shape[1]):
+    for op_idx in range(operations.shape[1]):   # pylint: disable=unsubscriptable-object
 
         if np.isclose(np.sum(operations[:, op_idx]), 0.0):
             continue
@@ -282,13 +281,17 @@ def convert_dds_to_driven_control(
                              durations=[sequence_duration],
                              **kwargs)
 
-    control_rabi_rates = np.zeros((operations.shape[1]*2,))
-    control_azimuthal_angles = np.zeros((operations.shape[1] * 2,))
-    control_detunings = np.zeros((operations.shape[1] * 2,))
-    control_durations = np.zeros((operations.shape[1] * 2,))
+    control_rabi_rates = np.zeros((
+        operations.shape[1]*2,))    # pylint: disable=unsubscriptable-object
+    control_azimuthal_angles = np.zeros((
+        operations.shape[1] * 2,))  # pylint: disable=unsubscriptable-object
+    control_detunings = np.zeros((
+        operations.shape[1] * 2,))  # pylint: disable=unsubscriptable-object
+    control_durations = np.zeros((
+        operations.shape[1] * 2,))  # pylint: disable=unsubscriptable-object
 
     pulse_segment_idx = 0
-    for op_idx in range(0, operations.shape[1]):
+    for op_idx in range(0, operations.shape[1]):    # pylint: disable=unsubscriptable-object
 
         if operations[3, op_idx] == 0.0:
             control_rabi_rates[pulse_segment_idx] = maximum_rabi_rate
@@ -300,7 +303,7 @@ def convert_dds_to_driven_control(
             control_durations[pulse_segment_idx] = (pulse_start_ends[op_idx, 1] -
                                                     pulse_start_ends[op_idx, 0])
 
-        if op_idx != (operations.shape[1]-1):
+        if op_idx != (operations.shape[1]-1):   # pylint: disable=unsubscriptable-object
             control_rabi_rates[pulse_segment_idx+1] = 0.
             control_azimuthal_angles[pulse_segment_idx+1] = 0.
             control_detunings[pulse_segment_idx+1] = 0.
