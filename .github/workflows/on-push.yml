@@ -1,0 +1,70 @@
+name: Push workflow
+
+on: push
+
+jobs:
+
+  housekeeping:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Perform housekeeping checks
+      env:
+        GCLOUD_CONTAINER_AUTH: ${{ secrets.GCLOUD_CONTAINER_AUTH }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        source <(curl -sL http://ci.q-ctrl.com)
+        ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}        
+        ./ci docker run asia.gcr.io/q-ctrl-api-development/python-37 /scripts/housekeeping.sh
+
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install Python dependencies
+      env:
+        GCLOUD_CONTAINER_AUTH: ${{ secrets.GCLOUD_CONTAINER_AUTH }}
+      run: |
+        source <(curl -sL http://ci.q-ctrl.com)
+        ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+        ./ci docker run asia.gcr.io/q-ctrl-api-development/python-37 /scripts/install-python-dependencies.sh
+    - name: Run Pylint
+      run: |
+        ./ci docker run asia.gcr.io/q-ctrl-api-development/python-37 poetry run pylint_runner || true
+    - name: Run Pylama
+      run: |
+        ./ci docker run asia.gcr.io/q-ctrl-api-development/python-37 poetry run pylama || true
+    - name: Run Markdownlint
+      run: |
+        ./ci docker run asia.gcr.io/q-ctrl-api-development/python-37 mdl -- -ig . || true
+
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [36, 37]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install Python dependencies
+      env:
+        GCLOUD_CONTAINER_AUTH: ${{ secrets.GCLOUD_CONTAINER_AUTH }}
+      run: |
+        source <(curl -sL http://ci.q-ctrl.com)
+        ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+        ./ci docker run asia.gcr.io/q-ctrl-api-development/python-${{ matrix.python }} /scripts/install-python-dependencies.sh
+    - name: Run Pytest
+      run: |
+        ./ci docker run asia.gcr.io/q-ctrl-api-development/python-${{ matrix.python }} /scripts/pytest.sh
+
+  publish_internally:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Publish development version
+      env:
+        GCLOUD_CONTAINER_AUTH: ${{ secrets.GCLOUD_CONTAINER_AUTH }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        source <(curl -sL http://ci.q-ctrl.com)
+        ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+        ./ci docker run asia.gcr.io/q-ctrl-api-development/python-37 /scripts/publish-dev-version.sh
