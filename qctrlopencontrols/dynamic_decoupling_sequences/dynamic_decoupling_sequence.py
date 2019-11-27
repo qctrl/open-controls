@@ -150,7 +150,7 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
         Returns
         -------
         dict
-            Dictionary with plot data that can be used by the plot_series
+            Dictionary with plot data that can be used by the plot_sequences
             method of the qctrl-visualizer package. It has keywords 'Rabi'
             and 'Detuning'.
         """
