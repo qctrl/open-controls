@@ -12,21 +12,17 @@ jobs:
     - uses: actions/checkout@v1
     - name: Update version in code
       env:
-        GCLOUD_CONTAINER_AUTH: ${{ secrets.GCLOUD_CONTAINER_AUTH }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
         ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci docker run asia.gcr.io/q-ctrl-api-development/python-37 /scripts/housekeeping.sh
+        ./ci docker run qctrl/python-build:3.7 /scripts/housekeeping.sh
     - name: Publish publicly
       env:
-        GCLOUD_CONTAINER_AUTH: ${{ secrets.GCLOUD_CONTAINER_AUTH }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
-        ./ci docker run asia.gcr.io/q-ctrl-api-development/python-37 /scripts/publish-release-publicly.sh        
+        ./ci docker run qctrl/python-build:3.7 /scripts/publish-release-publicly.sh
     - name: Publish internally
-      env:
-        GCLOUD_CONTAINER_AUTH: ${{ secrets.GCLOUD_CONTAINER_AUTH }}
       run: |
-        ./ci docker run asia.gcr.io/q-ctrl-api-development/python-37 /scripts/publish-release-internally.sh
+        ./ci docker run qctrl/python-build:3.7 /scripts/publish-release-internally.sh
