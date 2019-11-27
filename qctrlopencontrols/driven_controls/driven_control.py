@@ -606,17 +606,9 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
                 'times': plot_time}
 
         if coordinates == CYLINDRICAL:
-
-            x_plot = plot_amplitude_x
-            y_plot = plot_amplitude_y
-            x_plot[np.equal(x_plot, -0.0)] = 0.
-            y_plot[np.equal(y_plot, -0.0)] = 0.
-            azimuthal_angles_plot = np.arctan2(y_plot, x_plot)
-            amplitudes_plot = np.sqrt(np.abs(x_plot**2 + y_plot**2))
-
             plot_dictionary = {
-                'rabi_rates': amplitudes_plot,
-                'azimuthal_angles': azimuthal_angles_plot,
+                'rabi_rates': plot_amplitude_x,
+                'azimuthal_angles': plot_amplitude_y,
                 'detunings': plot_amplitude_z,
                 'times': plot_time}
         return plot_dictionary
