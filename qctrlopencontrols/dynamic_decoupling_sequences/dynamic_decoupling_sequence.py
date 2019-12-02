@@ -144,6 +144,32 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
 
         return len(self.offsets)
 
+    def export(self):
+        """ Returns a dictionary formatted for plotting using the qctrl-visualizer package.
+
+        Returns
+        -------
+        dict
+            Dictionary with plot data that can be used by the plot_sequences
+            method of the qctrl-visualizer package. It has keywords 'Rabi'
+            and 'Detuning'.
+        """
+
+        plot_dictionary = {}
+
+        plot_r = self.rabi_rotations
+        plot_theta = self.azimuthal_angles
+        plot_offsets = self.offsets
+        plot_detunings = self.detuning_rotations
+
+        plot_dictionary["Rabi"] = [{'rotation': r*np.exp(1.j*theta), 'offset': t}
+            for r, theta, t in zip(plot_r, plot_theta, plot_offsets) ]
+
+        plot_dictionary["Detuning"] = [{'rotation': v, 'offset': t}
+            for v, t in zip(plot_detunings, plot_offsets) ]
+
+        return plot_dictionary
+
     def get_plot_formatted_arrays(self, plot_format=MATPLOTLIB):
         """Gets arrays for plotting a pulse.
 

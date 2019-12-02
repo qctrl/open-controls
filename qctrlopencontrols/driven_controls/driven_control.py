@@ -472,6 +472,65 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
                                                   file_type=file_type,
                                                   coordinates=coordinates)
 
+    def export(self, coordinates=CYLINDRICAL, dimensionless_rabi_rate=True):
+        """ Returns a dictionary formatted for plotting using the qctrl-visualizer package.
+
+        Parameters
+        ----------
+        dimensionless_rabi_rate: boolean
+            If True, normalizes the Rabi rate so that its largest absolute value is 1.
+        coordinates: string
+            Indicates whether the Rabi frequency should be plotted in terms of its
+            'cylindrical' or 'cartesian' components.
+
+        Returns
+        -------
+        dict
+            Dictionary with plot data that can be used by the plot_controls
+            method of the qctrl-visualizer package. It has keywords 'Rabi rate'
+            and 'Detuning' for 'cylindrical' coordinates and 'X amplitude', 'Y amplitude',
+            and 'Detuning' for 'cartesian' coordinates.
+
+        Raises
+        ------
+        ArgumentsValueError
+            Raised when an argument is invalid.
+        """
+
+        if coordinates not in [CARTESIAN, CYLINDRICAL]:
+            raise ArgumentsValueError(
+                'Unsupported coordinates provided: ',
+                arguments={'coordinates': coordinates})
+
+        if dimensionless_rabi_rate:
+            normalizer = self.maximum_rabi_rate
+        else:
+            normalizer = 1
+
+        plot_dictionary = {}
+
+        plot_x = self.amplitude_x/normalizer
+        plot_y = self.amplitude_y/normalizer
+        plot_r = self.rabi_rates/normalizer
+        plot_theta = self.azimuthal_angles
+        plot_durations = self.durations
+        plot_detunings = self.detunings
+
+        if coordinates==CARTESIAN:
+            plot_dictionary["X amplitude"] = [{'value': v, 'duration': t}
+                for v, t in zip(plot_x, plot_durations) ]
+            plot_dictionary["Y amplitude"] = [{'value': v, 'duration': t}
+                for v, t in zip(plot_y, plot_durations) ]
+
+        if coordinates==CYLINDRICAL:
+            plot_dictionary["Rabi rate"] = [{'value': r*np.exp(1.j*theta), 'duration': t}
+                for r, theta, t in zip(plot_r, plot_theta, plot_durations) ]
+
+        plot_dictionary["Detuning"] = [{'value': v, 'duration': t}
+            for v, t in zip(plot_detunings, plot_durations) ]
+
+        return plot_dictionary
+
     def get_plot_formatted_arrays(self, coordinates=CARTESIAN, dimensionless_rabi_rate=True):
         """ Gets arrays for plotting a driven control.
 
@@ -547,17 +606,9 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
                 'times': plot_time}
 
         if coordinates == CYLINDRICAL:
-
-            x_plot = plot_amplitude_x
-            y_plot = plot_amplitude_y
-            x_plot[np.equal(x_plot, -0.0)] = 0.
-            y_plot[np.equal(y_plot, -0.0)] = 0.
-            azimuthal_angles_plot = np.arctan2(y_plot, x_plot)
-            amplitudes_plot = np.sqrt(np.abs(x_plot**2 + y_plot**2))
-
             plot_dictionary = {
-                'rabi_rates': amplitudes_plot,
-                'azimuthal_angles': azimuthal_angles_plot,
+                'rabi_rates': plot_amplitude_x,
+                'azimuthal_angles': plot_amplitude_y,
                 'detunings': plot_amplitude_z,
                 'times': plot_time}
         return plot_dictionary
