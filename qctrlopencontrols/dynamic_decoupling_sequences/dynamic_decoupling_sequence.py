@@ -170,68 +170,6 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
 
         return plot_dictionary
 
-    def get_plot_formatted_arrays(self, plot_format=MATPLOTLIB):
-        """Gets arrays for plotting a pulse.
-
-        Parameters
-        ----------
-        plot_format : string, optional
-            Indicates the format of the plot; Defaults to `matplotlib`
-
-        Returns
-        -------
-        dict
-            A dict with keywords 'rabi_rotations', 'azimuthal_angles',
-            'detuning_rotations' and 'times'.
-
-        Raises
-        ------
-        ArgumentsValueError
-            Raised if `plot_format` is not recognized.
-        """
-
-        if plot_format != MATPLOTLIB:
-            raise ArgumentsValueError("Open Controls currently supports `matplotlib` "
-                                      "data format only.",
-                                      {'data_format': plot_format})
-
-        offsets = self.offsets
-        number_of_offsets = self.number_of_offsets
-
-        plot_data = dict()
-
-        rabi_rotations = self.rabi_rotations
-        azimuthal_angles = self.azimuthal_angles
-        detuning_rotations = self.detuning_rotations
-
-        rabi_rotations = np.reshape(rabi_rotations, (-1, 1))
-        azimuthal_angles = np.reshape(azimuthal_angles, (-1, 1))
-        detuning_rotations = np.reshape(detuning_rotations, (-1, 1))
-
-        plot_times = offsets[:, np.newaxis]
-        plot_times = np.repeat(plot_times, 3, axis=1)
-
-        multiplier = np.array([0, 1, 0])
-        multiplier = multiplier[np.newaxis, :]
-        multiplier = np.repeat(multiplier, number_of_offsets, axis=0)
-        multiplier = multiplier[np.newaxis, :]
-
-        rabi_rotations = rabi_rotations * multiplier
-        azimuthal_angles = azimuthal_angles * multiplier
-        detuning_rotations = detuning_rotations * multiplier
-
-        plot_times = plot_times.flatten()
-        rabi_rotations = rabi_rotations.flatten()
-        azimuthal_angles = azimuthal_angles.flatten()
-        detuning_rotations = detuning_rotations.flatten()
-
-        plot_data['rabi_rotations'] = rabi_rotations
-        plot_data['azimuthal_angles'] = azimuthal_angles
-        plot_data['detuning_rotations'] = detuning_rotations
-        plot_data['times'] = plot_times
-
-        return plot_data
-
     def __repr__(self):
         """Returns a string representation for the object. The returned string looks like a valid
         Python expression that could be used to recreate the object, including default arguments.

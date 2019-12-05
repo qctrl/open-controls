@@ -197,19 +197,20 @@ def test_plot_data():
         durations=_durations
     )
 
-    x_amplitude = [0., np.pi, np.pi, 0., 0., 0., 0., 0.]
-    y_amplitude = [0., 0., 0., 2*np.pi, 2*np.pi, -np.pi, -np.pi, 0.]
-    z_amplitude = [0., 0., 0., 1., 1., 0., 0., 0.]
-    times = [0., 0., 1., 1., 2.25, 2.25, 3.75, 3.75]
+    x_amplitude = [np.pi, 0., 0.]
+    y_amplitude = [0., 2*np.pi, -np.pi]
 
-    plot_data = driven_control.get_plot_formatted_arrays(
+    plot_data = driven_control.export(
         dimensionless_rabi_rate=False, coordinates='cartesian'
     )
 
-    assert np.allclose(plot_data['times'], times)
-    assert np.allclose(plot_data['amplitudes_x'], x_amplitude)
-    assert np.allclose(plot_data['amplitudes_y'], y_amplitude)
-    assert np.allclose(plot_data['detunings'], z_amplitude)
+    assert np.allclose([point['duration'] for point in plot_data['X amplitude']], _durations)
+    assert np.allclose([point['duration'] for point in plot_data['Y amplitude']], _durations)
+    assert np.allclose([point['duration'] for point in plot_data['Detuning']], _durations)
+
+    assert np.allclose([point['value'] for point in plot_data['X amplitude']], x_amplitude)
+    assert np.allclose([point['value'] for point in plot_data['Y amplitude']], y_amplitude)
+    assert np.allclose([point['value'] for point in plot_data['Detuning']], _detunings)
 
 def test_pretty_print():
 
