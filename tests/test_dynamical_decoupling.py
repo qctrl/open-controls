@@ -142,12 +142,13 @@ def test_sequence_plot():
 
     plot_data = seq.export()
 
-    _plot_offsets = [pulse['offset'] for pulse in plot_data['Rabi']]
+    _plot_rabi_offsets = [pulse['offset'] for pulse in plot_data['Rabi']]
+    _plot_detuning_offsets = [pulse['offset'] for pulse in plot_data['Detuning']]
     _plot_rabi_rotations = [pulse['rotation'] for pulse in plot_data['Rabi']]
     _plot_detuning_rotations = [pulse['rotation'] for pulse in plot_data['Detuning']]
 
-    assert np.allclose(_plot_offsets, _offsets)
-    assert np.allclose(_plot_offsets, _offsets)
+    assert np.allclose(_plot_rabi_offsets, _offsets)
+    assert np.allclose(_plot_detuning_offsets, _offsets)
 
     assert np.allclose(np.abs(_plot_rabi_rotations), _rabi_rotations)
     assert np.allclose(np.angle(_plot_rabi_rotations), _azimuthal_angle)
@@ -169,12 +170,13 @@ def test_sequence_plot():
 
     plot_data = seq.export()
 
-    _plot_offsets = [pulse['offset'] for pulse in plot_data['Rabi']]
+    _plot_rabi_offsets = [pulse['offset'] for pulse in plot_data['Rabi']]
+    _plot_detuning_offsets = [pulse['offset'] for pulse in plot_data['Detuning']]
     _plot_rabi_rotations = [pulse['rotation'] for pulse in plot_data['Rabi']]
     _plot_detuning_rotations = [pulse['rotation'] for pulse in plot_data['Detuning']]
 
-    assert np.allclose(_plot_offsets, _offsets)
-    assert np.allclose(_plot_offsets, _offsets)
+    assert np.allclose(_plot_rabi_offsets, _offsets)
+    assert np.allclose(_plot_detuning_offsets, _offsets)
 
     assert np.allclose(np.abs(_plot_rabi_rotations), _rabi_rotations)
     assert np.allclose(np.angle(_plot_rabi_rotations), _azimuthal_angle)
