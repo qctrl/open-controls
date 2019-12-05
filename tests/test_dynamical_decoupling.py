@@ -142,20 +142,24 @@ def test_sequence_plot():
 
     plot_data = seq.export()
 
-    assert np.allclose([pulse['offset'] for pulse in plot_data['Rabi']], _offsets)
-    assert np.allclose([pulse['offset'] for pulse in plot_data['Detuning']], _offsets)
+    _plot_offsets = [pulse['offset'] for pulse in plot_data['Rabi']]
+    _plot_rabi_rotations = [pulse['rotation'] for pulse in plot_data['Rabi']]
+    _plot_detuning_rotations = [pulse['rotation'] for pulse in plot_data['Detuning']]
 
-    assert np.allclose(np.abs([pulse['rotation'] for pulse in plot_data['Rabi']]), _rabi_rotations)
-    assert np.allclose(np.angle([pulse['rotation'] for pulse in plot_data['Rabi']]), _azimuthal_angle)
+    assert np.allclose(_plot_offsets, _offsets)
+    assert np.allclose(_plot_offsets, _offsets)
 
-    assert np.allclose([pulse['rotation'] for pulse in plot_data['Detuning']], _detuning_rotations)
+    assert np.allclose(np.abs(_plot_rabi_rotations), _rabi_rotations)
+    assert np.allclose(np.angle(_plot_rabi_rotations), _azimuthal_angle)
+
+    assert np.allclose(_plot_detuning_rotations, _detuning_rotations)
 
     # with both X and Y pi
     _offsets = np.array([0, 0.25, 0.5, 0.75, 1.00])
     _rabi_rotations = np.array([0, np.pi, 0, np.pi, 0])
     _azimuthal_angle = np.array([0, np.pi/2, 0, np.pi/2, 0])
     _detuning_rotations = np.array([0, 0, 0, 0, 0])
-    
+
     seq = DynamicDecouplingSequence(
         duration=1.0,
         offsets=_offsets,
@@ -165,13 +169,17 @@ def test_sequence_plot():
 
     plot_data = seq.export()
 
-    assert np.allclose([pulse['offset'] for pulse in plot_data['Rabi']], _offsets)
-    assert np.allclose([pulse['offset'] for pulse in plot_data['Detuning']], _offsets)
+    _plot_offsets = [pulse['offset'] for pulse in plot_data['Rabi']]
+    _plot_rabi_rotations = [pulse['rotation'] for pulse in plot_data['Rabi']]
+    _plot_detuning_rotations = [pulse['rotation'] for pulse in plot_data['Detuning']]
 
-    assert np.allclose(np.abs([pulse['rotation'] for pulse in plot_data['Rabi']]), _rabi_rotations)
-    assert np.allclose(np.angle([pulse['rotation'] for pulse in plot_data['Rabi']]), _azimuthal_angle)
+    assert np.allclose(_plot_offsets, _offsets)
+    assert np.allclose(_plot_offsets, _offsets)
 
-    assert np.allclose([pulse['rotation'] for pulse in plot_data['Detuning']], _detuning_rotations)
+    assert np.allclose(np.abs(_plot_rabi_rotations), _rabi_rotations)
+    assert np.allclose(np.angle(_plot_rabi_rotations), _azimuthal_angle)
+
+    assert np.allclose(_plot_detuning_rotations, _detuning_rotations)
 
 
 def test_pretty_string_format():
