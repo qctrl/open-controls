@@ -118,7 +118,7 @@ For general guidelines, see `Contributing <https://github.com/qctrl/.github/blob
 Building documentation
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Documentation generation relies on `Spinx <http://www.sphinx-doc.org>`_. Automated builds are done by `Read The Docs <https://readthedocs.com>`_.
+Documentation generation relies on `Sphinx <http://www.sphinx-doc.org>`_. Automated builds are done by `Read The Docs <https://readthedocs.com>`_.
 
 To build locally:
 
