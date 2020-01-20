@@ -62,6 +62,6 @@ html_css_files = [
     'css/custom.css',
 ]
 html_js_files = [
-    "https://dev.docs.q-ctrl.com/assets/js/sphinx.js",
+    'https://dev.docs.q-ctrl.com/assets/js/sphinx.js',
 ]
-html_logo = "_static/logo.svg"
+html_logo = '_static/logo.svg'
