@@ -61,3 +61,7 @@ html_static_path = ['_static']
 html_css_files = [
     'css/custom.css',
 ]
+html_js_files = [
+    "https://dev.docs.q-ctrl.com/assets/js/sphinx.js",
+]
+html_logo = "https://dev.docs.q-ctrl.com/assets/img/header_logo_sphinx.svg"
