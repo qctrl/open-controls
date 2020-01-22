@@ -59,9 +59,9 @@ html_theme = 'default'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 html_css_files = [
-    'css/custom.css',
+    'https://dev.docs.q-ctrl.com/assets/css/readthedocs.css',
 ]
 html_js_files = [
-    "https://dev.docs.q-ctrl.com/assets/js/sphinx.js",
+    'https://dev.docs.q-ctrl.com/assets/js/readthedocs.js',
 ]
-html_logo = "https://dev.docs.q-ctrl.com/assets/img/header_logo_sphinx.svg"
+html_logo = '_static/logo.svg'
