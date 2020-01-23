@@ -1,4 +1,15 @@
 
+
+.. image:: https://github.com/qctrl/python-open-controls/workflows/Push%20workflow/badge.svg
+   :target: https://github.com/qctrl/python-open-controls/actions?query=workflow%3A"Push+workflow"
+   :alt: Actions Status
+
+
+.. image:: https://github.com/qctrl/python-open-controls/workflows/Release%20workflow/badge.svg
+   :target: https://github.com/qctrl/python-open-controls/actions?query=workflow%3A"Release+workflow"
+   :alt: Actions Status
+
+
 Q-CTRL Open Controls
 ====================
 
