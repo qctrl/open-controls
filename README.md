@@ -1,4 +1,6 @@
 # Q-CTRL Open Controls
+[![Actions Status](https://github.com/qctrl/python-open-controls/workflows/Push%20workflow/badge.svg)](https://github.com/qctrl/python-open-controls/actions?query=workflow%3A"Push+workflow")
+[![Actions Status](https://github.com/qctrl/python-open-controls/workflows/Release%20workflow/badge.svg)](https://github.com/qctrl/python-open-controls/actions?query=workflow%3A"Release+workflow")
 
 Q-CTRL Open Controls is an open-source Python package that makes it easy to
 create and deploy established error-robust quantum control protocols from the
