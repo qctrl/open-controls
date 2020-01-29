@@ -25,6 +25,17 @@ author = ", ".join(package_info['authors'])
 release = package_info['version']
 copyright = '2019, Q-CTRL <support@q-ctrl.com>'
 
+# -- HTML Variables ----------------------------------------------------------
+# Variables to insert into _templates/layout.html
+# Taken from qctrl/docs, see head.html in the repo
+html_context = {
+    "var_url": "https://docs.q-ctrl.com",
+    "var_title": "Open Controls Python package | Q-CTRL",
+    "var_description": "Module, class and method reference for the Q-CTRL Open Controls Python package",
+    "var_image": "https://docs.q-ctrl.com/assets/img/social.jpg",
+    "var_twitter_username": "qctrlHQ",
+}
+
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -55,6 +66,8 @@ exclude_patterns = []
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
+
+html_title = html_context['var_title']
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
