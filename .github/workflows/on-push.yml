@@ -68,7 +68,7 @@ jobs:
         ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
         ./ci docker run qctrl/python-build:3.7 /scripts/publish-dev-version.sh
 
-   sphinx_documentation:
+    sphinx_documentation:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
