@@ -67,3 +67,41 @@ jobs:
         source <(curl -sL http://ci.q-ctrl.com)
         ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
         ./ci docker run qctrl/python-build:3.7 /scripts/publish-dev-version.sh
+
+  sphinx_documentation:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Sphinx Image
+      run: |
+        source <(curl -sL http://ci.q-ctrl.com)
+        ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+        ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_user -o .hub_user
+        ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_pass -o .hub_pass
+        ./ci docker buildPush \
+          -f ./docs/Dockerfile \
+          -t qctrl/python-open-controls-docs:development
+    - name: Push Sphinx Image to Dockerhub
+      run: |
+        ./ci docker push \
+          -u $(cat .hub_user) \
+          -p $(cat .hub_pass) \
+          qctrl/python-open-controls-docs:development
+
+  sphinx_documentation_test:
+    if: github.ref != 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Sphinx Image and Push to DockerHub
+      run: |
+        source <(curl -sL http://ci.q-ctrl.com)
+        ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+        ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_user -o .hub_user
+        ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_pass -o .hub_pass
+        ./ci docker buildPush \
+          -f ./docs/Dockerfile \
+          -u $(cat .hub_user) \
+          -p $(cat .hub_pass) \
+          --suffix -docs
