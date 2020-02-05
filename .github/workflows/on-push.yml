@@ -79,7 +79,7 @@ jobs:
         ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
         ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_user -o .hub_user
         ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_pass -o .hub_pass
-        ./ci docker buildPush \
+        ./ci docker build \
           -f ./docs/Dockerfile \
           -t qctrl/python-open-controls-docs:development
     - name: Push Sphinx Image to Dockerhub
