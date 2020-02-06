@@ -1,201 +1,765 @@
-                                 Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
 
-   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+                            Q-CTRL Terms of service
+                            Updated 1 February 2020
+                            https://q-ctrl.com/terms
 
-   1. Definitions.
+BY ACCEPTING THESE TERMS OF SERVICE YOU ARE ENTERING INTO A BINDING AGREEMENT
+THAT APPLIES TO ANY USE OF THE PLATFORM. WE HAVE ENDEAVORED TO MAKE THE TERMS
+SIMPLE AND CLEAR. YOU ACKNOWLEDGE THAT YOU HAVE READ AND UNDERSTOOD THIS
+AGREEMENT, AND REPRESENT THAT YOU HAVE THE AUTHORITY TO ENTER INTO THIS
+AGREEMENT ON BEHALF OF ANY ORGANIZATION OR PERSON FOR WHOM YOU ARE USING THE
+PLATFORM.
 
-      "License" shall mean the terms and conditions for use, reproduction,
-      and distribution as defined by Sections 1 through 9 of this document.
+Summary
 
-      "Licensor" shall mean the copyright owner or entity authorized by
-      the copyright owner that is granting the License.
+   1. Definitions
+      We introduce key nomenclature used in this agreement.
 
-      "Legal Entity" shall mean the union of the acting entity and all
-      other entities that control, are controlled by, or are under common
-      control with that entity. For the purposes of this definition,
-      "control" means (i) the power, direct or indirect, to cause the
-      direction or management of such entity, whether by contract or
-      otherwise, or (ii) ownership of fifty percent (50%) or more of the
-      outstanding shares, or (iii) beneficial ownership of such entity.
+   2. Use of the platform
+      We describe your rights to access the platform.
 
-      "You" (or "Your") shall mean an individual or Legal Entity
-      exercising permissions granted by this License.
+   3. Your obligations
+      We explain what we expect of you to maintain access.
 
-      "Source" form shall mean the preferred form for making modifications,
-      including but not limited to software source code, documentation
-      source, and configuration files.
+   4. Payment
+      We describe terms of payment and refunds.
 
-      "Object" form shall mean any form resulting from mechanical
-      transformation or translation of a Source form, including but
-      not limited to compiled object code, generated documentation,
-      and conversions to other media types.
+   5. Intellectual property
+      We describe your ownership rights and our ability to use data in order to
+      provide you with access to the platform.
 
-      "Work" shall mean the work of authorship, whether in Source or
-      Object form, made available under the License, as indicated by a
-      copyright notice that is included in or attached to the work
-      (an example is provided in the Appendix below).
+   6. Confidentiality and privacy
+      We explain privacy rights and discuss use of the Q-CTRL name in public -
+      including in publications (which we encourage).
 
-      "Derivative Works" shall mean any work, whether in Source or Object
-      form, that is based on (or derived from) the Work and for which the
-      editorial revisions, annotations, elaborations, or other modifications
-      represent, as a whole, an original work of authorship. For the purposes
-      of this License, Derivative Works shall not include works that remain
-      separable from, or merely link (or bind by name) to the interfaces of,
-      the Work and Derivative Works thereof.
+   7. Warranties and liability
+      We explain limits on warranties offered on the capabilities of the
+      platform.
 
-      "Contribution" shall mean any work of authorship, including
-      the original version of the Work and any modifications or additions
-      to that Work or Derivative Works thereof, that is intentionally
-      submitted to Licensor for inclusion in the Work by the copyright owner
-      or by an individual or Legal Entity authorized to submit on behalf of
-      the copyright owner. For the purposes of this definition, "submitted"
-      means any form of electronic, verbal, or written communication sent
-      to the Licensor or its representatives, including but not limited to
-      communication on electronic mailing lists, source code control systems,
-      and issue tracking systems that are managed by, or on behalf of, the
-      Licensor for the purpose of discussing and improving the Work, but
-      excluding communication that is conspicuously marked or otherwise
-      designated in writing by the copyright owner as "Not a Contribution."
+   8. Termination
+      We describe both parties rights in terminating this agreement.
 
-      "Contributor" shall mean Licensor and any individual or Legal Entity
-      on behalf of whom a Contribution has been received by Licensor and
-      subsequently incorporated within the Work.
+   9. Technical support and hosting
+      We introduce the parameters under which we provide support for the
+      platform.
 
-   2. Grant of Copyright License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      copyright license to reproduce, prepare Derivative Works of,
-      publicly display, publicly perform, sublicense, and distribute the
-      Work and such Derivative Works in Source or Object form.
+  10. General
+      A few miscellaneous legal issues.
 
-   3. Grant of Patent License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      (except as stated in this section) patent license to make, have made,
-      use, offer to sell, sell, import, and otherwise transfer the Work,
-      where such license applies only to those patent claims licensable
-      by such Contributor that are necessarily infringed by their
-      Contribution(s) alone or by combination of their Contribution(s)
-      with the Work to which such Contribution(s) was submitted. If You
-      institute patent litigation against any entity (including a
-      cross-claim or counterclaim in a lawsuit) alleging that the Work
-      or a Contribution incorporated within the Work constitutes direct
-      or contributory patent infringement, then any patent licenses
-      granted to You under this License for that Work shall terminate
-      as of the date such litigation is filed.
+  11. Interpretation
+      Legal information on how to read and interpret this agreement.
 
-   4. Redistribution. You may reproduce and distribute copies of the
-      Work or Derivative Works thereof in any medium, with or without
-      modifications, and in Source or Object form, provided that You
-      meet the following conditions:
+  12. Addendum for free trial and non-paying users
+      Information on what changes when you're using a free or trial version of
+      the platform.
 
-      (a) You must give any other recipients of the Work or
-          Derivative Works a copy of this License; and
+1. Definitions
 
-      (b) You must cause any modified files to carry prominent notices
-          stating that You changed the files; and
+"Access Method" shall mean the means through which we make the platform
+available to users, such as websites, mobile applications, application
+programming interfaces (APIs), software development kits (SDKs), software
+packages, or any form of user interface.
 
-      (c) You must retain, in the Source form of any Derivative Works
-          that You distribute, all copyright, patent, trademark, and
-          attribution notices from the Source form of the Work,
-          excluding those notices that do not pertain to any part of
-          the Derivative Works; and
+"Confidential Information" shall mean all information exchanged between you and
+us, whether in writing, electronically or orally, including via the platform,
+but does not include any information that:
 
-      (d) If the Work includes a "NOTICE" text file as part of its
-          distribution, then any Derivative Works that You distribute must
-          include a readable copy of the attribution notices contained
-          within such NOTICE file, excluding those notices that do not
-          pertain to any part of the Derivative Works, in at least one
-          of the following places: within a NOTICE text file distributed
-          as part of the Derivative Works; within the Source form or
-          documentation, if provided along with the Derivative Works; or,
-          within a display generated by the Derivative Works, if and
-          wherever such third-party notices normally appear. The contents
-          of the NOTICE file are for informational purposes only and
-          do not modify the License. You may add Your own attribution
-          notices within Derivative Works that You distribute, alongside
-          or as an addendum to the NOTICE text from the Work, provided
-          that such additional attribution notices cannot be construed
-          as modifying the License.
+  (a) is or becomes public knowledge other than by a breach of this agreement;
 
-      You may add Your own copyright statement to Your modifications and
-      may provide additional or different license terms and conditions
-      for use, reproduction, or distribution of Your modifications, or
-      for any such Derivative Works as a whole, provided Your use,
-      reproduction, and distribution of the Work otherwise complies with
-      the conditions stated in this License.
+  (b) is received from a third party who lawfully acquired it and who is under
+      no obligation restricting its disclosure; or
 
-   5. Submission of Contributions. Unless You explicitly state otherwise,
-      any Contribution intentionally submitted for inclusion in the Work
-      by You to the Licensor shall be under the terms and conditions of
-      this License, without any additional terms or conditions.
-      Notwithstanding the above, nothing herein shall supersede or modify
-      the terms of any separate license agreement you may have executed
-      with Licensor regarding such Contributions.
+  (c) is in the possession of the receiving party without restriction in
+      relation to disclosure before the date of receipt from the disclosing
+      party; or
 
-   6. Trademarks. This License does not grant permission to use the trade
-      names, trademarks, service marks, or product names of the Licensor,
-      except as required for reasonable and customary use in describing the
-      origin of the Work and reproducing the content of the NOTICE file.
+  (d) is independently developed without access to the confidential information.
 
-   7. Disclaimer of Warranty. Unless required by applicable law or
-      agreed to in writing, Licensor provides the Work (and each
-      Contributor provides its Contributions) on an "AS IS" BASIS,
-      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-      implied, including, without limitation, any warranties or conditions
-      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
-      PARTICULAR PURPOSE. You are solely responsible for determining the
-      appropriateness of using or redistributing the Work and assume any
-      risks associated with Your exercise of permissions under this License.
+"Credentials" shall mean credentials used by users to access the platform,
+including email addresses, passwords, authentication tokens and other log in
+methods.
 
-   8. Limitation of Liability. In no event and under no legal theory,
-      whether in tort (including negligence), contract, or otherwise,
-      unless required by applicable law (such as deliberate and grossly
-      negligent acts) or agreed to in writing, shall any Contributor be
-      liable to You for damages, including any direct, indirect, special,
-      incidental, or consequential damages of any character arising as a
-      result of this License or out of the use or inability to use the
-      Work (including but not limited to damages for loss of goodwill,
-      work stoppage, computer failure or malfunction, or any and all
-      other commercial damages or losses), even if such Contributor
-      has been advised of the possibility of such damages.
+"Data" shall mean any data inputted or uploaded by you, or with your authority,
+into the platform, including that automatically inputted by your computer
+systems or other equipment.
 
-   9. Accepting Warranty or Additional Liability. While redistributing
-      the Work or Derivative Works thereof, You may choose to offer,
-      and charge a fee for, acceptance of support, warranty, indemnity,
-      or other liability obligations and/or rights consistent with this
-      License. However, in accepting such obligations, You may act only
-      on Your own behalf and on Your sole responsibility, not on behalf
-      of any other Contributor, and only if You agree to indemnify,
-      defend, and hold each Contributor harmless for any liability
-      incurred by, or claims asserted against, such Contributor by reason
-      of your accepting any such warranty or additional liability.
+"Fee" shall mean the periodic fee (including value added, goods and services or
+similar taxes if applicable) payable by you in accordance with your plan for
+access to the platform and the provision of support, as may be varied pursuant
+to clause 4.1.
 
-   END OF TERMS AND CONDITIONS
+"Hosting Provider" shall mean the company or companies contracted by us to host
+the platform, provide the access method and store or process your data.
 
-   APPENDIX: How to apply the Apache License to your work.
+"Intellectual Property" shall mean any pending or granted patent, trademark,
+copyright, design, know-how or any other intellectual or industrial property
+rights, anywhere in the world whether or not registered, other than moral rights
+of individual creators of copyright work.
 
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
+"Plan" shall mean the particular subscription plan for the platform that you
+subscribed to (or subsequently change to) with such access rights, support,
+features and limitations published by us at the time of subscription (or
+change).
 
-   Copyright [yyyy] [name of copyright owner]
+"Platform" shall mean the software platform made available by us from time to
+time via the access method, as may be changed or updated from time to time by
+us. The features of the platform available to you will depend on the plan you
+have subscribed to.
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+"Q-CTRL" shall mean Q-CTRL Pty Ltd (ABN 78 622 325 535) of Level 10, 171
+Clarence Street, SYDNEY NSW 2000 Australia (also referred to as "we", "us" or
+"our").
 
-       http://www.apache.org/licenses/LICENSE-2.0
+"Subscriber" shall mean the person who registers to use the platform and, where
+the context permits, includes any entity on whose behalf that person registers
+to use the platform.
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+"Support" shall mean the support services offered to you by us, the nature and
+extent of such are determined by your plan.
+
+"User" shall mean anyone that uses the platform with the authorization of the
+subscriber from time to time.
+
+"You" shall mean the subscriber and, where the context permits, a user.
+
+2. Use of the platform
+
+We grant you the right to access and use the platform according to your plan.
+This right is non-exclusive, non-transferable and limited by, and subject to,
+this agreement.
+
+You acknowledge and agree that, subject to any applicable written agreement
+between the subscriber and the users, or any other applicable laws:
+
+  (a) the subscriber determines who is a user;
+
+  (b) the subscriber is responsible for all users use of the platform;
+
+  (c) the subscriber controls each user's level of access to the platform at all
+      times and can revoke or change a user's access at any time, and for any
+      reason, in which case that person or entity will cease to be a user and
+
+  (d) if there is any dispute between a subscriber and a user regarding access
+      to the platform, the subscriber shall decide what access, or level of
+      access, to the platform that user shall have, if any.
+
+3. Your obligations
+
+3.1 General obligations
+
+You must only use the platform and the access method for your own lawful
+internal business purposes and in accordance with this agreement. You must never
+use the platform and the access method for the creation of publicly accessible
+tools and applications.
+
+You acknowledge that the platform is continuously evolving, subject to ongoing
+development and improvement, and may not be suitable for all uses. The platform
+must not be used for any purposes on which critical infrastructure or human life
+depends, or in circumstances where any failure or malfunction may result in
+personal injury.
+
+In most circumstances, you are solely responsible for the interoperability of
+the platform with your computer systems, software and hardware. We accept no
+responsibility for any liability in connection with the manner in which the
+platform interoperates (or fails to interoperate) with your, or any third party,
+systems, software or hardware.
+
+In the case of a subscription to an enterprise plan, which includes the
+incorporation of software customization and professional services,
+specifications on interoperability will be covered under a separate agreement.
+
+3.2 Access conditions
+
+You must ensure that all credentials required to access the platform are kept
+secure and confidential. You must immediately notify us of any unauthorized use
+of your credentials or any other breach of security and you must take all other
+actions that we reasonably deem necessary to maintain or enhance the security of
+our computing systems and networks and your access to the platform.
+
+When accessing and using the platform, you must:
+
+  (a) not attempt to undermine the security or integrity of our computing
+      systems or networks or, where the platform is hosted by a third party,
+      that third party's computing systems and networks;
+
+  (b) not use, or misuse, the platform in any way which may impair the
+      functionality of the platform or the access method, or other systems used
+      to deliver the platform or impair the ability of any other user to use the
+      platform or the access method;
+
+  (c) not attempt to gain unauthorized access to any data, information or
+      materials (other than those to which you have been given express
+      permission to access) or to the computer systems on which the platform is
+      hosted;
+
+  (d) not transmit via, or input into, the platform any files that may damage
+      any computing devices or software, content that may be offensive, or
+      material or data in violation of any law (including data or other material
+      protected by copyright or trade secrets which you do not have the right to
+      use); and
+
+  (e) not attempt to modify, copy, adapt, reproduce, disassemble, decompile or
+      reverse engineer any computer programs or algorithms forming part of, or
+      used to deliver, the platform or the access method.
+
+3.3 Communication conditions
+
+If you use any communication tools available through the access method (such as
+email, chat or forums), you must agree only to use such communication tools for
+lawful and legitimate purposes. You must not use any such communication tool for
+posting or disseminating any material unrelated to the use of the platform,
+including: offers of goods or services for sale, unsolicited commercial email,
+files that may harm any other person's computing devices or software, content
+that may be offensive or in violation of any law (including material that is
+protected by copyright or trade secrets which you do not have the right to use).
+
+When you make any communication via the access method, you represent that you
+are permitted to make such communication. We are under no obligation to ensure
+that any communications are legitimate or that relate only to the use of the
+platform. As with any other software, you must exercise caution when using
+communication tools available via, or relating to, the platform. However, we
+reserve the right to remove any communication at any time in our sole
+discretion.
+
+4. Payment
+
+4.1 Fee
+
+Unless you are accessing a trial or free version of the platform, an invoice for
+the fee will be issued either annually or each month starting one month (the
+"billing period") from the date you first agreed to the terms of this agreement.
+All invoices will include the fee for the following billing period. We will
+continue invoicing you according to the agreed schedule until this agreement is
+terminated in accordance with clause 8.
+
+The fee may be varied by us no more than once every 12 months. We will give you
+at least 30 days' notice of any changes. If you do not accept any increase in
+the fee then you may terminate this agreement or elect to change to a different
+plan within such notice period.
+
+If you elect to upgrade to a plan with additional features, your fee will
+increase to our then current list price for such plan, unless we have agreed to
+give you access at a different price. You may elect to downgrade to a plan with
+fewer features, however, no refund will be given for any fee previously paid or
+payable. The fee for the subsequent billing period will decrease to our then
+current list price for such plan, unless we have agreed to give you access at a
+different price.
+
+4.2 Invoicing and payment
+
+All invoices will be sent to your nominated email address. You must pay all
+amounts specified in any invoice by the due date on the invoice. If you have set
+up auto-billing arrangements with us then we will deduct the payment
+automatically under the terms of those arrangements. You must ensure that you
+have adequate funds in your nominated bank account or a valid credit card to
+enable all automatic payments to be processed when due.
+
+If invoices are not paid in full by the due date (including due to any failure
+of an automatic payment) then, in addition to any other rights we have, we may:
+
+  (a) suspend your access to the platform immediately and without further
+      notice, and
+
+  (b) charge you interest on the overdue amount at the United States Federal
+      Reserve Federal Funds Rate plus four per cent (4%) per annum, calculated
+      from the date the payment became due to the date of full and final
+      payment.
+
+4.3 Taxes
+
+Unless expressly stated otherwise, all amounts stated to be payable in this
+agreement (or related documents such as quotations or invoices) exclude GST.
+
+If GST is imposed on any supply made under, or in accordance with, this
+agreement, the recipient of the taxable supply must pay an additional amount
+equal to the GST payable on or for the taxable supply. Payment of the additional
+amount will be made at the same time as payment of the taxable supply is
+required to be made in accordance with this agreement.
+
+If this document requires a party to pay for, reimburse or contribute to any
+expense, loss, indemnity or outgoing (reimbursable expense) suffered or incurred
+by another party, the amount required to be paid, reimbursed or contributed by
+the first party will be the sum of:
+
+  (a) the amount of the reimbursable expense less the input tax credits (if any)
+      to which the other party is entitled in respect of the reimbursable
+      expense; and
+
+  (b) if the other party's recovery from the first party is a taxable supply,
+      any GST payable in respect of that supply.
+
+In this clause, "GST" and other words defined in the "A New Tax System (Goods
+and Services Tax) Act 1999 (Cth)" or subordinate legislation have the meaning
+given in that legislation.
+
+If we are required to charge you value added, goods and services or similar
+taxes and duties under the laws of any other jurisdiction, you must pay all such
+additional amounts at the same time as payment of the taxable supply is required
+to be made.
+
+5. Intellectual property
+
+5.1 General
+
+Title to, and all intellectual property rights in and relating to the platform,
+the access method and any documentation relating to the platform remain the
+property of us (or our licensors).
+
+5.2 Ownership and licenses of data
+
+Title to, and all intellectual property rights in, the data remain your
+property. However, your access to the data is contingent on full payment of the
+fee when it is due.
+
+You grant us a non-exclusive, royalty-free license to use, copy, transmit,
+store, and backup your information and data for the purposes of enabling you to
+access and use the platform and for any other purpose related to the provision
+of services to you.
+
+We will also collect information relating to your use of the platform, such as
+the access method used, profile of your system, type and brands of hardware, and
+configuration settings. You irrevocably grant us and our collaborators the
+non-exclusive right to use such information for further research, product
+development and benchmarking purposes. We will not publish such information in a
+manner that identifies it as yours.
+
+5.3 Backup of data
+
+We adhere to our best practice policies and procedures to prevent data loss,
+including a frequent system data backup regime, but do not make any guarantees
+that there will be no loss of data. We expressly exclude liability for any loss
+of data no matter how caused.
+
+You can request a backup of your data at any time. Backups will be provided in a
+common export format determined by us. Additional costs may apply depending on
+the frequency, size, and delivery requirements of the backups.
+
+5.4 Third-party applications and your data
+
+If you enable third-party applications for use in conjunction with the platform,
+you acknowledge that we may allow the providers of those third-party
+applications to access your data as required for the interoperation of such
+third-party applications with the platform. We will not be responsible for any
+disclosure, modification or deletion of your data resulting from any such access
+by third-party application providers.
+
+5.5 Ownership and protection of proprietary rights
+
+You acknowledge that all intellectual proprietary rights in the platform and the
+access method belong exclusively to us or our licensors and that you will not
+dispute such ownership. In the event that we provide new or customized features
+or improvements based on requests or suggestions made by you, you acknowledge
+that all rights in any such features or improvements belong exclusively to us,
+and that you will not be compensated for the request or suggestion. You hereby
+assign to us all intellectual property rights you may have in any features or
+improvements suggested by you, and agree to sign such documentation as we may
+reasonably require to further assure our title to such features or improvements.
+
+In the event you, or anyone on your behalf, obtains patent protection for any
+invention regarding, involving or derived from the use of the platform or the
+access method, you grant us a perpetual, irrevocable, non-exclusive, worldwide,
+fully paid up license (capable of sublicense and transfer) of such patent right,
+including the right to make, have made, use, sell, offer for sale, and import
+any product and to practice any method the subject of such patent right and to
+authorize others to do so. Any assignment of such patent rights is, and must be
+made subject to, such license.
+
+5.6 Open source files and libraries
+
+Certain files and libraries used in the platform may be the subject of open
+source licenses. The terms of such licenses apply to your use of such files and
+libraries, and prevail in the event of any inconsistency with this agreement.
+
+6. Confidentiality and privacy
+
+6.1 Confidentiality
+
+Each party will preserve the confidentiality of all confidential information of
+the other obtained in connection with this agreement. Neither party will,
+without the prior written consent of the other, disclose or make any
+confidential information available to any person, or use the same for its own
+benefit, other than as contemplated by this agreement.
+
+This clause above does not apply to the extent that any information is required
+to be disclosed by law.
+
+6.2 Publications
+
+We encourage our users to publish or present the results of their use of the
+platform in peer-reviewed journals and at academic conferences. Any such
+publications must not be misleading or deceptive in any respect, or contain
+material relating to us, our personnel or products that are libelous, defamatory
+or otherwise likely to bring us into disrepute or prejudice the goodwill of our
+brand. We encourage you to share copies of proposed publications with us
+beforehand. If publishable outcomes arise from joint development or efforts in
+collaboration with our personnel, you must adhere to accepted principles of
+academic honesty and credit.
+
+6.3 Use of names
+
+You will not issue any media release or use our name, brands or logos in any
+promotional materials regarding this agreement without prior written consent.
+
+We will not use any personally identifying information in any media release or
+promotional materials regarding this agreement without prior written consent of
+the other party. We may use non-identifying information, such as your
+organization name or logo, for general promotional purposes.
+
+6.4 Privacy
+
+We will comply with our obligations under the "Privacy Act 1998 (Cth)", and if
+you are a European resident we will comply with our obligations to you under the
+European Union General Data Protection Regulation (GDPR).
+
+Our privacy policy located at https://q-ctrl.com/privacy sets out the parties'
+obligations in respect of personal information. You should read that policy and
+you will be taken to have accepted that policy when you accept this agreement.
+We will usually only collect personal information from you and use such
+information for the purposes of administering your account. We will not provide
+your personal information to third parties, other than to our contractors, for
+the purposes of making the platform available to you or otherwise in connection
+with this agreement.
+
+7. Warranties and liability
+
+7.1 Authority
+
+You warrant that:
+
+  (a) where you have registered to use the platform on behalf of another person,
+      you have the authority to agree to this agreement on behalf of that person
+      and agree that by registering to use the platform you bind the person on
+      whose behalf you act to the performance of any and all obligations that
+      you become subject to by virtue of this agreement, without limiting your
+      own personal obligations under this agreement; and
+
+  (b) you are authorized to use the platform and that you are authorized to
+      access the information and data that is made available to you through your
+      use of the  platform (whether that information and data is your own or
+      that of anyone else).
+
+7.2 Acknowledgment
+
+Subject to clause 7.3, you acknowledge and agree that:
+
+  (a) quantum computing is at an early stage of development and the provision
+      of, access to, and use of, the platform and support is on an "as is" basis
+      and at your own risk;
+
+  (b) it is your sole responsibility to determine that the platform meets the
+      needs of your business and is suitable for the purposes for which it is
+      used, including that the plan you have subscribed to is adequate for your
+      needs;
+
+  (c) the platform and support are supplied without any representations,
+      assurances, or warranties (express or implied), including warranties as to
+      quality, safety, merchantability, fitness for any purpose, or
+      non-infringement of intellectual property and other rights of third
+      parties;
+
+  (d) We do not warrant that the use of the platform will be uninterrupted or
+      error free. Among other things, the operation and availability of the
+      systems used for accessing the platform, including telephone services,
+      computer networks and the Internet, can be unpredictable and may, from
+      time to time, interfere with or prevent access to the platform. We are not
+      in any way responsible for any such interference or prevention of your
+      access to, or use of, the platform or access method; and
+
+  (e) it is your responsibility to check that storage of, and access to, your
+      data via the platform and the access method will comply with laws
+      applicable to you.
+
+7.3 Limitation on warranties
+
+Where any prescribed terms apply, the liability of us to you for a breach of
+such a term is limited to the maximum extent permitted by law. Certain
+guarantees and rights may be conferred on you which cannot be excluded,
+restricted or modified. If so, then the parties agree that, to the maximum
+extent permitted by law, our liability under those guarantees and rights is
+limited to the re-supply of the relevant goods or services or the payment of the
+cost of re-supplying the relevant goods or services (at our option). "Prescribed
+terms" means terms, conditions and warranties implied by law into some contracts
+for the supply of goods or services, and which the law expressly provides, may
+not be excluded, restricted or modified or may be excluded, restricted or
+modified only to a limited extent (including rights you may have as a consumer
+under the "Competition and Consumer Act 2010 (Cth)").
+
+7.4 Indemnity
+
+You indemnify us, our affiliates, licensors and our respective employees,
+officers, agents and contractors against all claims, costs, damage and loss
+arising from your breach of this agreement, including our legal fees and
+expenses, and any costs relating to the recovery of any fees that are due but
+have not been paid by you.
+
+7.5 Limitation of liability
+
+To the maximum extent permitted by law, we excludes all liability and
+responsibility to you (or any other person) in contract, tort (including
+negligence) or otherwise, for any loss (including loss of information, data,
+profits and savings) or damage resulting, directly or indirectly, from any use
+of, or reliance on, the platform, the access method or support.
+
+If you suffer loss or damage as a result of our negligence or failure to comply
+with this agreement, any claim by you against us arising from such negligence or
+failure will be limited in respect of any one incident, or series of connected
+incidents, to the fees paid by you in the previous 12 months.
+
+If you are not satisfied with the platform or the support, your sole and
+exclusive remedy is to terminate this agreement in accordance with clause 8.2.
+
+8. Termination
+
+8.1 No-fault termination and refunds by us
+
+We may terminate this agreement at any time without cause and in such an event
+we will refund such fees paid in advance in respect of the period after
+termination to your nominated credit card or bank account in the same currency
+as the fees were originally paid by you.
+
+We will not otherwise provide any refund for any remaining prepaid period for a
+prepaid fee subscription unless required to do so under a legal obligation that
+cannot be contracted out of.
+
+8.2 No-fault termination by you
+
+This agreement will continue for the period covered by the fee paid or payable.
+At the end of each billing period this agreement will automatically continue for
+another period of the same duration as that period, provided you continue to pay
+the prescribed fee when it is due, unless either party terminates this agreement
+by giving notice to the other party at least 30 days before the end of the
+relevant payment period.
+
+If you terminate this agreement you remain liable for all relevant fees for the
+then current billing period up to and including the day of termination of this
+agreement. No refunds will be given if you terminate prior to the end of a
+billing period.
+
+8.3 Breach
+
+If you:
+
+  (a) breach any provision of this agreement (including by non-payment of any
+      fees) and do not remedy the breach within 10 business days after receiving
+      notice of the breach if the breach is capable of being remedied;
+
+  (b) breach any provision of this agreement and the breach is not capable of
+      being remedied; or
+
+  (c) become insolvent, go into liquidation, have a receiver or manager
+      appointed over any of your assets, make any arrangement with your
+      creditors or become subject to any similar insolvency event in any
+      jurisdiction, then we may take any or all of the following actions, at our
+      sole discretion:
+
+  (d) terminate this agreement and your use of the platform and the access
+      method;
+
+  (e) suspend, for any definite or indefinite period of time, your use of the
+      platform and the access method;
+
+  (f) suspend or terminate access to all or any data;
+
+  (g) limit, suspend or terminate provision of support to you; or
+
+  (h) take any or all of the above actions in respect of any or all other
+      persons whom you have authorized to have access to your information or
+      data.
+
+We may also terminate this agreement immediately if it becomes unlawful for us
+to supply access to the platform to you. No refunds will be made in such an
+event.
+
+8.4 Accrued rights
+
+Termination of this agreement is without prejudice to any rights and obligations
+of the parties accrued up to and including the date of termination or which
+relate to the consequences of termination. On termination of this agreement you
+will:
+
+  (a) remain liable for any accrued charges and amounts which become due for
+      payment before or after termination; and
+
+  (b) immediately cease using the platform and the access method.
+
+Clauses 5 (other than 5.3), 6, 7, 10 and 11 survive the expiry or termination of
+this agreement.
+
+8.5 Deletion of data
+
+We are entitled to delete all copies of your data after 30 days following
+termination of this agreement. You are entitled to receive a backup of your data
+provided the request is made within 20 days following termination of this
+agreement.
+
+9. Technical support and hosting
+
+9.1 Support
+
+We will provide you with the support as described in your plan, subject to the
+following conditions and any other conditions, limitations or exclusions
+described in your plan:
+
+  (a) all fees due under this agreement are fully paid at the time of the
+      support request;
+
+  (b) the person making the request has valid credentials;
+
+  (c) the support request is solely related to the platform as delivered by us,
+      and not related to ancillary hardware, software or systems such as
+      computers or networks used by you to access, or in conjunction with, the
+      platform.
+
+Unless otherwise specified in your plan, the support provided under this
+agreement is not intended to be a replacement for end-user training, system
+configuration or consulting. If we consider that a support request does not meet
+the criteria for support under your plan then we may decline to respond to the
+support request and may suggest alternative means of satisfying the support
+request such as via professional services for additional training or consulting
+or by entering into a more comprehensive support agreement that better meets
+your requirements.
+
+9.2 Service availability
+
+We will use all reasonable endeavors to ensure that the platform is available to
+the user for 90.0% of all scheduled available time, solely as it relates to the
+hosting provider's network and server Internet access. Scheduled available time
+shall be defined as 24 hours per day, seven days per week, excluding:
+
+  (a) routine system maintenance downtime of up to six hours per week, which
+      shall be scheduled outside of normal business hours if practical;
+
+  (b) downtime to address specific critical software issues; and
+
+  (c) any downtime caused by circumstances beyond the immediate control of us or
+      our contractors.
+
+9.3 Data sovereignty
+
+Your data will be hosted in the United States. Users will be able to connect to
+the platform from anywhere on the Internet and thus some of your data may be
+transmitted outside the United States in response to user queries.
+
+10. General
+
+10.1 Entire agreement
+
+This agreement, together with our privacy policy located at
+https://q-ctrl.com/privacy, supersede and extinguish all prior agreements,
+representations (whether oral or written) and understandings and constitute the
+entire agreement between you and us relating to the platform and other matters
+dealt with in this agreement.
+
+10.2 Amendment and waiver
+
+This agreement may only be amended by agreement of the parties in writing. No
+delay or indulgence by a party in enforcing this agreement will prejudice or
+restrict the rights of that party. Any waiver of a party's rights must be
+expressly stated in writing and will not operate as a waiver of any subsequent
+breach.
+
+10.3 Delays
+
+Neither party will be liable for any delay or failure in performance of its
+obligations under this agreement if the delay or failure is due to any cause
+outside its reasonable control. This clause does not apply to any obligation to
+pay money.
+
+10.4 No assignment
+
+You may not assign or novate any of your rights or obligations under this
+agreement to any other person without our prior written consent (not to be
+unreasonably withheld). We may assign or novate all or some of our rights or
+obligations under this agreement to an affiliate, a purchaser of our business or
+as we otherwise see fit.
+
+10.5 Governing law and jurisdiction
+
+This agreement is governed by the laws of New South Wales, Australia and the
+parties submit to the exclusive jurisdiction of the courts of that state
+(without regard to its conflicts of laws principles). lf you breach your
+obligations under this agreement then we may suffer irreparable harm. In
+addition and without prejudice to any other remedies that we may have, we are
+entitled to seek and obtain injunctive relief in any court of competent
+jurisdiction
+
+10.6 Severability
+
+The provisions of this agreement are severable. If any provision is found or
+held to be invalid or unenforceable or capable of termination by a party in any
+jurisdiction in which this agreement is performed, then the meaning of that
+provision will be construed, to the extent feasible, to render the provision
+enforceable.
+
+10.7 Notices
+
+Any notice given under this agreement by either party to the other must be in
+writing by email and will be deemed to have been given on transmission. Notices
+to us must be sent via the contact form located at https://q-ctrl.com/contact or
+as we otherwise notify to your nominated email address. Notices to you will be
+sent to the email address that you provided when setting up your access to the
+platform.
+
+11. Interpretation
+
+The following rules of interpretation apply unless the context requires
+otherwise.
+
+  (a) Headings and the summary above are for convenience only and do not affect
+      interpretation.
+
+  (b) The singular includes the plural and conversely and a reference to "a
+      thing" (including a right) includes a reference to a part of that thing.
+
+  (c) A reference to:
+
+      (i) a person includes incorporated and unincorporated bodies and other
+          entities;
+
+     (ii) any party to this agreement or any other entity includes the party's
+          or entity's successors and permitted assigns;
+
+    (iii) any document is to that document as amended, novated, supplemented or
+          replaced from time to time, except to the extent prohibited by this
+          agreement or that other document;
+
+     (iv) legislation includes any amendment or superseding legislation; and
+
+      (v) conduct includes any omission and any statement or undertaking,
+          whether or not in writing.
+
+  (d) Where examples of a thing or set of things are given by reference to the
+      word "including", the meaning of references to the thing or set of things
+      is not to be limited by reference to the examples.
+
+  (e) This document, or any part of it, is not to be construed against a party
+      because that party drafted or proposed it.
+
+12. Addendum for free trial and non-paying users
+
+The only terms of use that apply to free trial and non-paying users are listed
+in this addendum, and, unless specifically referenced in this addendum, none of
+the other clauses of this agreement apply.
+
+The following clauses apply to free trial and non-paying users:
+
+   1. Definitions
+   2. Use of the platform
+   3. Your obligations
+   5. Intellectual property (except for 5.3 Backup of data)
+   6. Confidentiality and privacy
+   7. Warranties and liability
+   8. Termination
+  10. General
+  11. Interpretation
+
+The following additional terms apply to free trial and non-paying users and if
+any conflict arises these additional terms will prevail:
+
+  (a) We may terminate your use of the platform at any time and for any reason;
+
+  (b) you agree that your data has no commercial value and that we may delete
+      your data upon termination of your access to the platform, and
+
+  (c) you will not be entitled to technical support, although we may elect to
+      provide this at our sole discretion.
