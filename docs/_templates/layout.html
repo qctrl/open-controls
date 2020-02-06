@@ -1,22 +1,28 @@
 {% extends "!layout.html" %}
 {% block extrahead %}
-  <meta name="title" content="{{ var_title }}">
-  <meta name="description" content="{{ var_description }}">
-  <meta name="image" content="{{ var_image }}">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="{{ var_title }}">
-  <meta property="og:url" content="{{ var_url }}">
-  <meta property="og:title" content="{{ var_title }}">
-  <meta property="og:description" content="{{ var_description }}">
-  <meta property="og:image" content="{{ var_image }}">
-  <meta property="og:image:type" content="image/jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="675">
-  <meta property="og:image:alt" content="{{ var_title }}">
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="{{ var_url }}">
-  <meta property="twitter:title" content="{{ var_title }}">
-  <meta property="twitter:description" content="{{ var_description }}">
-  <meta property="twitter:site" content="{{ var_twitter_username }}">
-  <meta property="twitter:image" content="{{ var_image }}">
+<meta name="title" content="{{ var_title }}">
+<meta name="description" content="{{ var_description }}">
+<meta name="image" content="{{ var_image }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ var_title }}">
+<meta property="og:url" content="{{ var_url }}">
+<meta property="og:title" content="{{ var_title }}">
+<meta property="og:description" content="{{ var_description }}">
+<meta property="og:image" content="{{ var_image }}">
+<meta property="og:image:type" content="image/jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="675">
+<meta property="og:image:alt" content="{{ var_title }}">
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="{{ var_url }}">
+<meta property="twitter:title" content="{{ var_title }}">
+<meta property="twitter:description" content="{{ var_description }}">
+<meta property="twitter:site" content="{{ var_twitter_username }}">
+<meta property="twitter:image" content="{{ var_image }}">
+<script>
+  !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t,e){var n=document.createElement("script");n.type="text/javascript";n.async=!0;n.src="https://cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(n,a);analytics._loadOptions=e};analytics.SNIPPET_VERSION="4.1.0";
+  analytics.load("XOb2NWg1wZZsUZtkwJWvP60VEVdAHA4k");
+  analytics.page();
+  }}();
+</script>
 {% endblock %}
