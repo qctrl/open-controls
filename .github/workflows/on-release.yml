@@ -46,3 +46,11 @@ jobs:
             -u $(cat .hub_user) \
             -p $(cat .hub_pass) \
             qctrl/python-open-controls-docs:latest
+      - name: Update Sphinx deployment in Kubernetes (Production)
+        run: |
+          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+          ./ci vault gcpKey -t $(cat .token) --proj q-ctrl-documentation -r docs -o ./gcloud-service-key.json
+          gcloud auth activate-service-account --key-file=./gcloud-service-key.json
+          gcloud config set project q-ctrl-documentation
+          gcloud container clusters get-credentials docs-prod --zone us-central1-c
+          kubectl -n docs delete pod -l app=python-open-controls-docs
