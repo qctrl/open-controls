@@ -1,4 +1,4 @@
-Q-CTRL open controls Python package
+Q-CTRL Open Controls Python package
 ===================================
 
 .. automodule:: qctrlopencontrols
