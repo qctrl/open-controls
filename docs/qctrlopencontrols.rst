@@ -1,19 +1,5 @@
-qctrlopencontrols package
-=========================
-
-Subpackages
------------
-
-.. toctree::
-
-   qctrlopencontrols.base
-   qctrlopencontrols.driven_controls
-   qctrlopencontrols.dynamic_decoupling_sequences
-   qctrlopencontrols.exceptions
-   qctrlopencontrols.globals
-
-Module contents
----------------
+Q-CTRL Open Controls Python package
+===================================
 
 .. automodule:: qctrlopencontrols
    :members:
