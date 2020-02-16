@@ -17,7 +17,7 @@ qctrlopencontrols
 =================
 """
 
-__version__ = "4.1.1"
+__version__ = "4.2.0"
 
 from .driven_controls.driven_control import DrivenControl
 from .driven_controls.predefined import new_predefined_driven_control
