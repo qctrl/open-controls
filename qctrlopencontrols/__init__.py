@@ -12,9 +12,7 @@
 # License for the specific language.
 
 """
-=================
-qctrlopencontrols
-=================
+Top-level package for Q-CTRL Open Controls.
 """
 
 __version__ = "4.2.0"

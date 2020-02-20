@@ -24,7 +24,7 @@ Anyone interested in quantum control is welcome to contribute to this project.
 
 ## Installation
 
-Q-CTRL Open Controls can be install through `pip` or from source. We recommend
+Q-CTRL Open Controls can be installed through `pip` or from source. We recommend
 the `pip` distribution to get the most recent stable release. If you want the
 latest features then install from source.
 
