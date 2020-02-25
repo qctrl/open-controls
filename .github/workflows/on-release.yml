@@ -53,4 +53,4 @@ jobs:
           gcloud auth activate-service-account --key-file=./gcloud-service-key.json
           gcloud config set project q-ctrl-documentation
           gcloud container clusters get-credentials docs-prod --zone us-central1-c
-          kubectl -n docs delete pod -l app=python-open-controls-docs
+          kubectl -n docs rollout restart deployment/python-open-controls-docs
