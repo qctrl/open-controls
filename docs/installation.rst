@@ -1,7 +1,7 @@
 Installation
 ============
 
-Q-CTRL Open Controls can be install through ``pip`` or from source. We recommend
+Q-CTRL Open Controls can be installed through ``pip`` or from source. We recommend
 the ``pip`` distribution to get the most recent stable release. If you want the
 latest features then install from source.
 
@@ -23,7 +23,7 @@ jupyter notebook editor <https://jupyter.org/install>`_ on its own.
 From PyPi
 ---------
 
-Use ``pip`` to install the latest version of the Q-CTRL ppen controls Python package.
+Use ``pip`` to install the latest version of the Q-CTRL Open Controls Python package.
 
 .. code-block:: shell
 
