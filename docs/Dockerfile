@@ -8,7 +8,7 @@ RUN /scripts/install-python-dependencies.sh
 
 WORKDIR /docs
 
-RUN QCTRL_TEST_TOKEN=$(cat .qctrl_token) poetry run make html
+RUN poetry run make html
 
 FROM nginx:1.17-alpine
 
