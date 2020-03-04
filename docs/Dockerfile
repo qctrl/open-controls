@@ -2,11 +2,11 @@ FROM qctrl/python-build:3.7 AS builder
 
 COPY . .
 
-WORKDIR /docs
-
 RUN apt-get update && apt-get install make
 
 RUN /scripts/install-python-dependencies.sh
+
+WORKDIR /docs
 
 RUN poetry run make html
 
