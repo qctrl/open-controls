@@ -52,5 +52,5 @@ jobs:
           ./ci vault gcpKey -t $(cat .token) --proj q-ctrl-documentation -r docs -o ./gcloud-service-key.json
           gcloud auth activate-service-account --key-file=./gcloud-service-key.json
           gcloud config set project q-ctrl-documentation
-          gcloud container clusters get-credentials docs-prod --zone us-central1-c
+          gcloud container clusters get-credentials docs-production --zone us-central1-c
           kubectl -n docs rollout restart deployment/python-open-controls-docs
