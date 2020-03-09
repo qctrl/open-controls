@@ -39,13 +39,15 @@ jobs:
           ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_pass -o .hub_pass
           ./ci docker build \
             -f ./docs/Dockerfile \
-            -t qctrl/python-open-controls-docs:latest
+            -t qctrl/python-open-controls-docs:latest \
+            --suffix -docs
       - name: Push Sphinx Image to Dockerhub
         run: |
           ./ci docker push \
             -u $(cat .hub_user) \
             -p $(cat .hub_pass) \
-            qctrl/python-open-controls-docs:latest
+            qctrl/python-open-controls-docs:latest \
+            --suffix -docs
       - name: Update Sphinx deployment in Kubernetes (Production)
         run: |
           ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
