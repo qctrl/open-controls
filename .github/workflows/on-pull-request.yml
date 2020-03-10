@@ -1,0 +1,25 @@
+#################### Maintained by repositories-manager - do not edit directly ####################
+name: Pull request workflow
+
+on:
+  pull_request:
+    # Defaults are opened, reopened, synchronize
+    types: [opened, ready_for_review, reopened, synchronize]
+    branches:
+      - 'master'
+    tags-ignore:
+      - '*.*'
+
+jobs:
+  pytest:
+    # Filter out Draft Pull Requests
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Ensure no development packages have been set
+        run: |
+          source <(curl -sL http://ci.q-ctrl.com)
+          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+          ./ci docker run qctrl/python-build:3.7 /scripts/check-for-internal-versions.sh
+#################### Maintained by repositories-manager - do not edit directly ####################
