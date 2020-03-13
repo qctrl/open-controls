@@ -1,10 +1,11 @@
+# Please consult with the DevOps team if you wish to make changes to this file
+
 * @qctrl/support
 
 .dockerignore @qctrl/devops-engineering
 .github/* @qctrl/devops-engineering
 app*.yaml @qctrl/devops-engineering
+CODEOWNERS @qctrl/devops-engineering
 deployment/* @qctrl/devops-engineering
 docker* @qctrl/devops-engineering
 Docker* @qctrl/devops-engineering
-README.rst @qctrl/devops-engineering
-setup.py @qctrl/devops-engineering
