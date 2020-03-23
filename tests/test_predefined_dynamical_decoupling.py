@@ -709,13 +709,13 @@ def test_if_uhrig_sequence_with_odd_pulses_is_identity():
     Tests if the product of the pulses in an Uhrig sequence with pre/post
     pi/2-pulses is an identity, when the number of pulses is odd.
     """
-    even_uhrig_sequence = new_predefined_dds(
+    odd_uhrig_sequence = new_predefined_dds(
         scheme=UHRIG_SINGLE_AXIS,
         duration=10.,
         number_of_offsets=7,
         pre_post_rotation=True)
 
-    assert _pulses_produce_identity(even_uhrig_sequence,
+    assert _pulses_produce_identity(odd_uhrig_sequence,
                                     expect_sigma_z=True)
 
 def test_if_uhrig_sequence_with_even_pulses_is_identity():
