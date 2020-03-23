@@ -35,8 +35,7 @@ def _add_pre_post_rotations(
         rabi_rotations,
         azimuthal_angles,
         detuning_rotations):
-    """
-    Adds a pre-post pi.2 rotation at the
+    """Adds a pre-post pi.2 rotation at the
     start and end of the sequence.
 
     The sign of the final pi/2-pulse is inverted if the number of pulses (offsets)
@@ -89,7 +88,7 @@ def _add_pre_post_rotations(
 
 
 def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
-    """Create a new instance of one of the predefined
+    """Create a new instance of ne of the predefined
     dynamic decoupling sequence
 
     Parameters
