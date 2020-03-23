@@ -41,7 +41,7 @@ def _add_pre_post_rotations(
     The sign of the final pi/2-pulse is inverted if the number of X or Y pi-pulses
     in the original sequence is even (odd), as long as the number of Y or Z pi-pulses
     is also even (odd). This is necessary to make sure that all the contributions of
-    X gates cancel out.
+    the X gates cancel out.
 
     Parameters
     ----------
@@ -63,13 +63,14 @@ def _add_pre_post_rotations(
         resulting after the addition of pi/2 pulses at the start and end of the sequence.
     """
 
-    # The azimuthal angle of the final pulse is 0 if the number of X/Y pi-pulses is odd,
-    # and pi if the number of offsets is even. However, these two values invert again if
-    # there is an odd number of Y/Z pi-pulses in the sequence. These conditions mean that
-    # the sign of the final pi/2-pulse should be inverted is the numbers X/Y pulses and
-    # Y/Z pulses are either both odd or both even.
+    # If there is an even number of Y and Z pi-pulses in the sequence, the azimuthal angle
+    # of the final pulse is 0 if the number of X and Y pi-pulses is odd, and pi if the number
+    # of X/Y pulses is even. These two values are swapped if there is an odd number of Y/Z
+    # pi-pulses in the sequence. Together, these conditions mean that the azimuthal angle of
+    # the final pi/2-pulse is pi if the numbers of X/Y pulses and Y/Z pulses have the same parity.
     final_azimuthal = 0.
 
+    # These lists have True if the pulse is of the specificed type, False if it is not
     is_x_pi_pulse = np.logical_and(np.isclose(rabi_rotations, np.pi),
                                    np.isclose(azimuthal_angles, 0.))
     is_y_pi_pulse = np.logical_and(np.isclose(rabi_rotations, np.pi),
@@ -77,9 +78,11 @@ def _add_pre_post_rotations(
     is_z_pi_pulse = np.logical_and(np.isclose(rabi_rotations, 0.),
                                    np.isclose(detuning_rotations, np.pi))
 
+    # These lists have '1' if the pulse is X/Y (Y/Z), and '0' if it is not
     is_xy_pi_pulse = np.where(np.logical_or(is_x_pi_pulse, is_y_pi_pulse), 1, 0)
     is_yz_pi_pulse = np.where(np.logical_or(is_y_pi_pulse, is_z_pi_pulse), 1, 0)
 
+    # Azimuthal angles is pi if the parity is the same
     if (sum(is_xy_pi_pulse)%2 == sum(is_yz_pi_pulse)%2):
         final_azimuthal = np.pi
 

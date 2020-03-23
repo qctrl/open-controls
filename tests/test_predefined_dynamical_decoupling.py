@@ -583,11 +583,11 @@ def test_attribute_values():
             scheme=XY_CONCATENATED, duration=-2,
             concatenation_order=-1)
 
-def _pulses_produce_identity(sequence, accept_sigma_z=False):
+def _pulses_produce_identity(sequence, expect_sigma_z=False):
     """
     Tests if the pulses of a DDS sequence produce an identity in absence of noise.
     We check this by creating the unitary of each pulse and then multiplying them
-    together to check their evolution
+    by each other to check the complete evolution.
     """
     sigma_x = np.array([[0., 1.], [1., 0.]])
     sigma_y = np.array([[0., -1.j], [1.j, 0.]])
@@ -616,14 +616,16 @@ def _pulses_produce_identity(sequence, accept_sigma_z=False):
         )
         matrix_product = np.matmul(unitary, matrix_product)
 
-    # Removes global phase
+    # Remove global phase
     matrix_product *= np.exp(-1.j* np.angle(matrix_product[0][0]))
 
-    if accept_sigma_z:
-        print (matrix_product)
-        matrix_product[1][1] *= -1.
+    expected_matrix_product = np.identity(2)
 
-    return np.allclose(matrix_product, np.identity(2))
+    # In case the expected output is sigma_z rather than identity
+    if expect_sigma_z:
+        expected_matrix_product = sigma_z
+
+    return np.allclose(matrix_product, expected_matrix_product)
 
 def test_if_ramsey_sequence_is_identity():
     """
@@ -687,7 +689,7 @@ def test_if_cpmg_sequence_with_odd_pulses_is_identity():
         pre_post_rotation=True)
 
     assert _pulses_produce_identity(odd_cpmg_sequence,
-                                    accept_sigma_z=True)
+                                    expect_sigma_z=True)
 
 def test_if_cpmg_sequence_with_even_pulses_is_identity():
     """
@@ -704,7 +706,7 @@ def test_if_cpmg_sequence_with_even_pulses_is_identity():
 
 def test_if_uhrig_sequence_with_odd_pulses_is_identity():
     """
-    Tests if the product of the pulses in a Uhrig sequence with pre/post
+    Tests if the product of the pulses in an Uhrig sequence with pre/post
     pi/2-pulses is an identity, when the number of pulses is odd.
     """
     even_uhrig_sequence = new_predefined_dds(
@@ -714,11 +716,11 @@ def test_if_uhrig_sequence_with_odd_pulses_is_identity():
         pre_post_rotation=True)
 
     assert _pulses_produce_identity(even_uhrig_sequence,
-                                    accept_sigma_z=True)
+                                    expect_sigma_z=True)
 
 def test_if_uhrig_sequence_with_even_pulses_is_identity():
     """
-    Tests if the product of the pulses in a Uhrig sequence with pre/post
+    Tests if the product of the pulses in an Uhrig sequence with pre/post
     pi/2-pulses is an identity, when the number of pulses is even.
     """
     even_uhrig_sequence = new_predefined_dds(
@@ -843,7 +845,26 @@ def test_if_quadratic_sequence_with_odd_inner_pulses_is_identity():
     assert len(inner_odd_quadratic_sequence.offsets) == 8 + 7 * (8+1) + 2
 
     assert _pulses_produce_identity(inner_odd_quadratic_sequence,
-                                    accept_sigma_z=True)
+                                    expect_sigma_z=True)
+
+
+def test_if_quadratic_sequence_with_even_inner_pulses_is_identity():
+    """
+    Tests if the product of the pulses in a quadratic sequence with pre/post
+    pi/2-pulses is an identity, when the total number of inner pulses is even.
+    """
+    inner_odd_quadratic_sequence = new_predefined_dds(
+        scheme=QUADRATIC,
+        duration=10.,
+        number_inner_offsets=8,
+        number_outer_offsets=7,
+        pre_post_rotation=True)
+
+    # n_outer + n_inner*(n_outer+1) pi-pulses + 2 pi/2-pulses
+    # total number here is even
+    assert len(inner_odd_quadratic_sequence.offsets) == 7 + 8 * (7+1) + 2
+
+    assert _pulses_produce_identity(inner_odd_quadratic_sequence)
 
 def test_if_x_concatenated_sequence_is_identity():
     """
