@@ -113,7 +113,7 @@ def convert_dds_to_driven_control(
         Maximum Detuning Rate; Defaults to None
     kwargs : dict, optional
         options to make the corresponding filter type.
-        I.e. the options for primitive is described in doc for the PrimitivePulse class.
+        I.e. the options for primitive are described in doc for the PrimitivePulse class.
 
     Returns
     -------

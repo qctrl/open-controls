@@ -48,7 +48,7 @@ def _add_pre_post_rotations(
     rabi_rotations: numpy.ndarray
         Rabi rotations at each of the offsets.
     azimuthal_angles : numpy.ndarray
-        Azimuthal anfles at each of the offsets.
+        Azimuthal angles at each of the offsets.
     detuning_rotations: numpy.ndarray
         Detuning rotations at each of the offsets
 
@@ -79,8 +79,8 @@ def _add_pre_post_rotations(
 
 
 def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
-    """Create a new instance of ne of the predefined
-    dynamic decoupling sequence
+    """Create a new instance of one of the predefined
+    dynamic decoupling sequences
 
     Parameters
     ----------
@@ -500,7 +500,7 @@ def _new_walsh_single_axis_sequence(duration=None,
                                     paley_order=None,
                                     pre_post_rotation=False,
                                     **kwargs):
-    """Welsh Single Axis Sequence.
+    """Walsh Single Axis Sequence.
 
     Parameters
     ---------
@@ -778,7 +778,7 @@ def _new_xy_concatenated_sequence(duration=1.0,
     concatenation_order = int(concatenation_order)
     if concatenation_order <= 0.:
         raise ArgumentsValueError(
-            'Concatenation oder must be above zero:',
+            'Concatenation order must be above zero:',
             {'concatenation_order': concatenation_order},
             extras={'duration': duration})
 
