@@ -38,9 +38,10 @@ def _add_pre_post_rotations(
     """Adds a pre-post pi.2 rotation at the
     start and end of the sequence.
 
-    The sign of the final pi/2-pulse is inverted if the number of pulses (offsets)
-    in the original sequence is even, in order to make sure that the output is an
-    identity gate.
+    The sign of the final pi/2-pulse is inverted if the number of X or Y pi-pulses
+    in the original sequence is even (odd), as long as the number of Y or Z pi-pulses
+    is also even (odd). This is necessary to make sure that all the contributions of
+    X gates cancel out.
 
     Parameters
     ----------
@@ -62,10 +63,24 @@ def _add_pre_post_rotations(
         resulting after the addition of pi/2 pulses at the start and end of the sequence.
     """
 
-    # The azimuthal angle of the final pulse is 0 if the number of offsets is odd,
-    # and pi if the number of offsets is even.
+    # The azimuthal angle of the final pulse is 0 if the number of X/Y pi-pulses is odd,
+    # and pi if the number of offsets is even. However, these two values invert again if
+    # there is an odd number of Y/Z pi-pulses in the sequence. These conditions mean that
+    # the sign of the final pi/2-pulse should be inverted is the numbers X/Y pulses and
+    # Y/Z pulses are either both odd or both even.
     final_azimuthal = 0.
-    if len(offsets)%2 == 0:
+
+    is_x_pi_pulse = np.logical_and(np.isclose(rabi_rotations, np.pi),
+                                   np.isclose(azimuthal_angles, 0.))
+    is_y_pi_pulse = np.logical_and(np.isclose(rabi_rotations, np.pi),
+                                   np.isclose(azimuthal_angles, np.pi))
+    is_z_pi_pulse = np.logical_and(np.isclose(rabi_rotations, 0.),
+                                   np.isclose(detuning_rotations, np.pi))
+
+    is_xy_pi_pulse = np.where(np.logical_or(is_x_pi_pulse, is_y_pi_pulse), 1, 0)
+    is_yz_pi_pulse = np.where(np.logical_or(is_y_pi_pulse, is_z_pi_pulse), 1, 0)
+
+    if (sum(is_xy_pi_pulse)%2 == sum(is_yz_pi_pulse)%2):
         final_azimuthal = np.pi
 
     offsets = np.insert(offsets,
