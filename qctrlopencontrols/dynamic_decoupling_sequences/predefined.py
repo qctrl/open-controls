@@ -35,9 +35,13 @@ def _add_pre_post_rotations(
         rabi_rotations,
         azimuthal_angles,
         detuning_rotations):
-    """Adds a pre-post pi.2 rotation at the
+    """
+    Adds a pre-post pi.2 rotation at the
     start and end of the sequence.
 
+    The sign of the final pi/2-pulse is inverted if the number of pulses (offsets)
+    in the original sequence is even, in order to make sure that the output is an
+    identity gate.
 
     Parameters
     ----------
@@ -59,6 +63,12 @@ def _add_pre_post_rotations(
         resulting after the addition of pi/2 pulses at the start and end of the sequence.
     """
 
+    # The azimuthal angle of the final pulse is 0 if the number of offsets is odd,
+    # and pi if the number of offsets is even.
+    final_azimuthal = 0.
+    if len(offsets)%2 == 0:
+        final_azimuthal = np.pi
+
     offsets = np.insert(offsets,
                         [0, offsets.shape[0]],  # pylint: disable=unsubscriptable-object
                         [0, duration])
@@ -69,7 +79,7 @@ def _add_pre_post_rotations(
     azimuthal_angles = np.insert(
         azimuthal_angles,
         [0, azimuthal_angles.shape[0]],  # pylint: disable=unsubscriptable-object
-        [0, 0])
+        [0, final_azimuthal])
     detuning_rotations = np.insert(
         detuning_rotations,
         [0, detuning_rotations.shape[0]],  # pylint: disable=unsubscriptable-object
@@ -79,7 +89,7 @@ def _add_pre_post_rotations(
 
 
 def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
-    """Create a new instance of ne of the predefined
+    """Create a new instance of one of the predefined
     dynamic decoupling sequence
 
     Parameters
@@ -209,7 +219,7 @@ def _new_ramsey_sequence(duration=None,
     if pre_post_rotation:
         offsets = duration * np.array([0.0, 1.])
         rabi_rotations = np.array([np.pi/2, np.pi/2])
-        azimuthal_angles = np.zeros(offsets.shape)
+        azimuthal_angles = np.array([0., np.pi])
         detuning_rotations = np.zeros(offsets.shape)
 
     return DynamicDecouplingSequence(
