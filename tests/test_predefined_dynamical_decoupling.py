@@ -805,7 +805,7 @@ def test_if_quadratic_sequence_with_odd_pulses_is_identity():
 
     # n_outer + n_inner*(n_outer+1) pi-pulses + 2 pi/2-pulses
     # total number here is odd
-    assert len(odd_quadratic_sequence.offsets) ==  7 + 7 * (7+1) + 2
+    assert len(odd_quadratic_sequence.offsets) == 7 + 7 * (7+1) + 2
 
     assert _pulses_produce_identity(odd_quadratic_sequence)
 

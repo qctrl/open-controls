@@ -38,10 +38,16 @@ def _add_pre_post_rotations(
     """Adds a pre-post pi.2 rotation at the
     start and end of the sequence.
 
-    The sign of the final pi/2-pulse is inverted if the number of X or Y pi-pulses
-    in the original sequence is even (odd), as long as the number of Y or Z pi-pulses
-    is also even (odd). This is necessary to make sure that all the contributions of
-    the X gates cancel out.
+    The direction of rotation of the final pi/2-pulse is inverted if there
+    is an even number of X pi-pulses in the sequence. This is necessary to make
+    sure that the sequences produce an identity in absence of noise. In practice,
+    this inversion is equivalent to setting up an azimuthal angle of pi, as opposed
+    to the angle 0 for the initial pulse. If there is an odd number of Z pi-pulses
+    in the sequence, the direction of this rotation has to be inverted again.
+    Together, these conditions add up to inverting the final pi/2-pulse whenever
+    the sum of X and Z pi-pulses in the sequence is an even number. (Note that Y
+    pi-pulses do not interfere in this count, as they are equivalent to adding
+    both an X and a Z pi-pulse to the sequence.)
 
     Parameters
     ----------
@@ -63,27 +69,23 @@ def _add_pre_post_rotations(
         resulting after the addition of pi/2 pulses at the start and end of the sequence.
     """
 
-    # If there is an even number of Y and Z pi-pulses in the sequence, the azimuthal angle
-    # of the final pulse is 0 if the number of X and Y pi-pulses is odd, and pi if the number
-    # of X/Y pulses is even. These two values are swapped if there is an odd number of Y/Z
-    # pi-pulses in the sequence. Together, these conditions mean that the azimuthal angle of
-    # the final pi/2-pulse is pi if the numbers of X/Y pulses and Y/Z pulses have the same parity.
+    # Setting the azimuthal angle of the final pi/2-pulse as 0 by default,
+    # which is the same value as the initial pi/2-pulse
     final_azimuthal = 0.
 
-    # These lists have True if the pulse is of the specificed type, False if it is not
-    is_x_pi_pulse = np.logical_and(np.isclose(rabi_rotations, np.pi),
-                                   np.isclose(azimuthal_angles, 0.))
-    is_y_pi_pulse = np.logical_and(np.isclose(rabi_rotations, np.pi),
-                                   np.isclose(azimuthal_angles, np.pi))
-    is_z_pi_pulse = np.logical_and(np.isclose(rabi_rotations, 0.),
-                                   np.isclose(detuning_rotations, np.pi))
+    # These lists have '1' if the pulse is of the specificed type, '0' if it is not
+    is_x_pi_pulse = np.where(np.logical_and(np.isclose(rabi_rotations, np.pi),
+                                            np.isclose(azimuthal_angles, 0.)),
+                             1,
+                             0)
+    is_z_pi_pulse = np.where(np.logical_and(np.isclose(rabi_rotations, 0.),
+                                            np.isclose(detuning_rotations, np.pi)),
+                             1,
+                             0)
 
-    # These lists have '1' if the pulse is X/Y (Y/Z), and '0' if it is not
-    is_xy_pi_pulse = np.where(np.logical_or(is_x_pi_pulse, is_y_pi_pulse), 1, 0)
-    is_yz_pi_pulse = np.where(np.logical_or(is_y_pi_pulse, is_z_pi_pulse), 1, 0)
-
-    # Azimuthal angles is pi if the parity is the same
-    if (sum(is_xy_pi_pulse)%2 == sum(is_yz_pi_pulse)%2):
+    # Setting the azimuthal angle of the pi/2-pulse to pi if the sum of the number
+    # X pi-pulses and Z pi-pulses is an even number
+    if (sum(is_x_pi_pulse) + sum(is_z_pi_pulse))%2 == 0:
         final_azimuthal = np.pi
 
     offsets = np.insert(offsets,
