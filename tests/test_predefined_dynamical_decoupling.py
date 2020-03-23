@@ -853,7 +853,7 @@ def test_if_quadratic_sequence_with_even_inner_pulses_is_identity():
     Tests if the product of the pulses in a quadratic sequence with pre/post
     pi/2-pulses is an identity, when the total number of inner pulses is even.
     """
-    inner_odd_quadratic_sequence = new_predefined_dds(
+    inner_even_quadratic_sequence = new_predefined_dds(
         scheme=QUADRATIC,
         duration=10.,
         number_inner_offsets=8,
@@ -862,9 +862,9 @@ def test_if_quadratic_sequence_with_even_inner_pulses_is_identity():
 
     # n_outer + n_inner*(n_outer+1) pi-pulses + 2 pi/2-pulses
     # total number here is even
-    assert len(inner_odd_quadratic_sequence.offsets) == 7 + 8 * (7+1) + 2
+    assert len(inner_even_quadratic_sequence.offsets) == 7 + 8 * (7+1) + 2
 
-    assert _pulses_produce_identity(inner_odd_quadratic_sequence)
+    assert _pulses_produce_identity(inner_even_quadratic_sequence)
 
 def test_if_x_concatenated_sequence_is_identity():
     """
