@@ -583,7 +583,7 @@ def test_attribute_values():
             scheme=XY_CONCATENATED, duration=-2,
             concatenation_order=-1)
 
-def _pulses_produce_identity(sequence, expect_sigma_z=False):
+def _pulses_produce_identity(sequence):
     """
     Tests if the pulses of a DDS sequence produce an identity in absence of noise.
     We check this by creating the unitary of each pulse and then multiplying them
@@ -620,10 +620,6 @@ def _pulses_produce_identity(sequence, expect_sigma_z=False):
     matrix_product *= np.exp(-1.j* np.angle(matrix_product[0][0]))
 
     expected_matrix_product = np.identity(2)
-
-    # In case the expected output is sigma_z rather than identity
-    if expect_sigma_z:
-        expected_matrix_product = sigma_z
 
     return np.allclose(matrix_product, expected_matrix_product)
 
@@ -688,8 +684,7 @@ def test_if_cpmg_sequence_with_odd_pulses_is_identity():
         number_of_offsets=7,
         pre_post_rotation=True)
 
-    assert _pulses_produce_identity(odd_cpmg_sequence,
-                                    expect_sigma_z=True)
+    assert _pulses_produce_identity(odd_cpmg_sequence)
 
 def test_if_cpmg_sequence_with_even_pulses_is_identity():
     """
@@ -715,8 +710,7 @@ def test_if_uhrig_sequence_with_odd_pulses_is_identity():
         number_of_offsets=7,
         pre_post_rotation=True)
 
-    assert _pulses_produce_identity(odd_uhrig_sequence,
-                                    expect_sigma_z=True)
+    assert _pulses_produce_identity(odd_uhrig_sequence)
 
 def test_if_uhrig_sequence_with_even_pulses_is_identity():
     """
@@ -844,8 +838,7 @@ def test_if_quadratic_sequence_with_odd_inner_pulses_is_identity():
     # total number here is odd
     assert len(inner_odd_quadratic_sequence.offsets) == 8 + 7 * (8+1) + 2
 
-    assert _pulses_produce_identity(inner_odd_quadratic_sequence,
-                                    expect_sigma_z=True)
+    assert _pulses_produce_identity(inner_odd_quadratic_sequence)
 
 
 def test_if_quadratic_sequence_with_even_inner_pulses_is_identity():

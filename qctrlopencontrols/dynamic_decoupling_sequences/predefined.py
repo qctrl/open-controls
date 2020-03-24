@@ -38,20 +38,17 @@ def _add_pre_post_rotations(
     """Adds a pre-post pi.2 rotation at the
     start and end of the sequence.
 
-    The direction of rotation of the final pi/2-pulse is inverted if there
-    is an even number of X pi-pulses in the sequence. This is necessary to make
-    sure that the sequences produce an identity in absence of noise. In practice,
-    this inversion is equivalent to setting up an azimuthal angle of pi, as opposed
-    to the angle 0 for the initial pulse. If there is an odd number of Z pi-pulses
-    in the sequence, the direction of this rotation has to be inverted again.
-    Together, these conditions add up to inverting the final pi/2-pulse whenever
-    the sum of X and Z pi-pulses in the sequence is an even number. (Note that Y
-    pi-pulses do not interfere in this count, as they are equivalent to adding
-    both an X and a Z pi-pulse to the sequence.)
+    The parameters of the pi/2-pulses are chosen in order to cancel out the
+    product of the pulses in the DSS, so that its total effect in the
+    absence of noise is an identity.
 
-    Moreover, if the number of Y and Z pi-pulses is odd, we have to replace both
-    pi/2-pulses with pulses in a direction that cancels out the remaining sigma_z
-    operation. If the pulses for the initial and final
+    For a DSS that already produces an identity, this function adds X pi/2-pulses
+    in opposite directions, so that they cancel out. If the DDS produces an X
+    gate, the X pi/2-pulses will be in the same direction. If the DDS produces
+    a Y (Z) gate, the pi/2-pulses are around the Y (Z) axis.
+
+    This function assumes that the sequences only have X, Y, and Z pi-pulses.
+    Usage of other pulses will result in a DDS that does not result in an identity.
 
     Parameters
     ----------
@@ -79,8 +76,7 @@ def _add_pre_post_rotations(
     rabi_value = np.pi / 2
     initial_azimuthal = 0
     final_azimuthal = np.pi
-    initial_detuning = 0
-    final_detuning = 0
+    detuning_value = 0
 
     # These lists have 1 if the pulse is of the specificed type, 0 if it is not
     is_x_pi_pulse = np.where(np.logical_and(np.isclose(rabi_rotations, np.pi),
@@ -109,8 +105,18 @@ def _add_pre_post_rotations(
     if remainder_x and not remainder_z:
         final_azimuthal = 0
 
+    # If there is a Y gate left over, we want the pi/2-pulses to be in the Y
+    # direction, so that the remaining gate is cancelled out
+    if remainder_x and remainder_z:
+        initial_azimuthal = np.pi / 2
+        final_azimuthal = np.pi / 2
+
+    # If there is a Z gate left over, we want both pi/2-pulses to be in the Z
+    # direction, so that the remaining gate is cancelled out
     if not remainder_x and remainder_z:
+        rabi_value = 0
         final_azimuthal = 0
+        detuning_value = np.pi / 2
 
     offsets = np.insert(offsets,
                         [0, offsets.shape[0]],  # pylint: disable=unsubscriptable-object
@@ -126,7 +132,7 @@ def _add_pre_post_rotations(
     detuning_rotations = np.insert(
         detuning_rotations,
         [0, detuning_rotations.shape[0]],  # pylint: disable=unsubscriptable-object
-        [initial_detuning, final_detuning])
+        [detuning_value, detuning_value])
 
     return offsets, rabi_rotations, azimuthal_angles, detuning_rotations
 
