@@ -49,6 +49,10 @@ def _add_pre_post_rotations(
     pi-pulses do not interfere in this count, as they are equivalent to adding
     both an X and a Z pi-pulse to the sequence.)
 
+    Moreover, if the number of Y and Z pi-pulses is odd, we have to replace both
+    pi/2-pulses with pulses in a direction that cancels out the remaining sigma_z
+    operation. If the pulses for the initial and final
+
     Parameters
     ----------
     duration: float
@@ -69,13 +73,22 @@ def _add_pre_post_rotations(
         resulting after the addition of pi/2 pulses at the start and end of the sequence.
     """
 
-    # Setting the azimuthal angle of the final pi/2-pulse as 0 by default,
-    # which is the same value as the initial pi/2-pulse
-    final_azimuthal = 0.
+    # These settings correspond to the case where the pulses of the sequence
+    # already yield an identity, so that we want the the pi/2-pulses to cancel
+    # each other out
+    rabi_value = np.pi / 2
+    initial_azimuthal = 0
+    final_azimuthal = np.pi
+    initial_detuning = 0
+    final_detuning = 0
 
     # These lists have 1 if the pulse is of the specificed type, 0 if it is not
     is_x_pi_pulse = np.where(np.logical_and(np.isclose(rabi_rotations, np.pi),
                                             np.isclose(azimuthal_angles, 0.)),
+                             1,
+                             0)
+    is_y_pi_pulse = np.where(np.logical_and(np.isclose(rabi_rotations, np.pi),
+                                            np.isclose(azimuthal_angles, np.pi/2.)),
                              1,
                              0)
     is_z_pi_pulse = np.where(np.logical_and(np.isclose(rabi_rotations, 0.),
@@ -83,10 +96,21 @@ def _add_pre_post_rotations(
                              1,
                              0)
 
-    # Setting the azimuthal angle of the final pi/2-pulse to pi if the sum of
-    # the number of X pi-pulses and Z pi-pulses is even
-    if (sum(is_x_pi_pulse) + sum(is_z_pi_pulse))%2 == 0:
-        final_azimuthal = np.pi
+    # The sequence results in an X gate, rather than the identity, if the number
+    # of X and Y gates is odd
+    remainder_x = ((sum(is_x_pi_pulse) + sum(is_y_pi_pulse))%2 == 1)
+
+    # The sequence results in a Z gate, rather than the identity, if the number
+    # of Y and Z gates is odd
+    remainder_z = ((sum(is_y_pi_pulse) + sum(is_z_pi_pulse))%2 == 1)
+
+    # If there is an X gate left over, but no Z gate, we just invert the direction
+    # of the last pi/2-pulse to cancel it out
+    if remainder_x and not remainder_z:
+        final_azimuthal = 0
+
+    if not remainder_x and remainder_z:
+        final_azimuthal = 0
 
     offsets = np.insert(offsets,
                         [0, offsets.shape[0]],  # pylint: disable=unsubscriptable-object
@@ -94,15 +118,15 @@ def _add_pre_post_rotations(
     rabi_rotations = np.insert(
         rabi_rotations,
         [0, rabi_rotations.shape[0]],  # pylint: disable=unsubscriptable-object
-        [np.pi / 2, np.pi / 2])
+        [rabi_value, rabi_value])
     azimuthal_angles = np.insert(
         azimuthal_angles,
         [0, azimuthal_angles.shape[0]],  # pylint: disable=unsubscriptable-object
-        [0, final_azimuthal])
+        [initial_azimuthal, final_azimuthal])
     detuning_rotations = np.insert(
         detuning_rotations,
         [0, detuning_rotations.shape[0]],  # pylint: disable=unsubscriptable-object
-        [0, 0])
+        [initial_detuning, final_detuning])
 
     return offsets, rabi_rotations, azimuthal_angles, detuning_rotations
 
