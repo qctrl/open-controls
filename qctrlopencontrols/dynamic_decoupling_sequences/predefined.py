@@ -48,7 +48,7 @@ def _add_pre_post_rotations(
     a Y (Z) gate, the pi/2-pulses are around the Y (Z) axis.
 
     This function assumes that the sequences only have X, Y, and Z pi-pulses.
-    Usage of other pulses will result in a DDS that does not result in an identity.
+    An exception is thrown if that is not the case.
 
     Parameters
     ----------
@@ -68,49 +68,74 @@ def _add_pre_post_rotations(
     tuple
         Containing the (offsets, rabi_rotations, azimuthal_angles, detuning_rotations)
         resulting after the addition of pi/2 pulses at the start and end of the sequence.
+
+    Raises
+    -----
+    ArgumentsValueError
+        Raised when sequence does not consist solely of X, Y, and Z pi-pulses.
     """
-
-    # These settings correspond to the case where the pulses of the sequence
-    # already yield an identity, so that we want the the pi/2-pulses to cancel
-    # each other out
-    rabi_value = np.pi / 2
-    initial_azimuthal = 0
-    final_azimuthal = np.pi
-    detuning_value = 0
-
     # Count the number of X, Y, and Z pi-pulses
-    x_pi_pulses = np.count_nonzero(np.logical_and(np.isclose(rabi_rotations, np.pi),
-                                                  np.isclose(azimuthal_angles, 0.)))
-    y_pi_pulses = np.count_nonzero(np.logical_and(np.isclose(rabi_rotations, np.pi),
-                                                  np.isclose(azimuthal_angles, np.pi/2.)))
-    z_pi_pulses = np.count_nonzero(np.logical_and(np.isclose(rabi_rotations, 0.),
-                                                  np.isclose(detuning_rotations, np.pi)))
+    x_pi_pulses = np.count_nonzero(np.logical_and.reduce((np.isclose(rabi_rotations, np.pi),
+                                                          np.isclose(azimuthal_angles, 0.),
+                                                          np.isclose(detuning_rotations, 0.))))
+    y_pi_pulses = np.count_nonzero(np.logical_and.reduce((np.isclose(rabi_rotations, np.pi),
+                                                          np.isclose(azimuthal_angles, np.pi/2.),
+                                                          np.isclose(detuning_rotations, 0.))))
+    z_pi_pulses = np.count_nonzero(np.logical_and.reduce((np.isclose(rabi_rotations, 0.),
+                                                          np.isclose(azimuthal_angles, 0.),
+                                                          np.isclose(detuning_rotations, np.pi))))
 
-    # The sequence results in an X gate, rather than the identity, if the number
-    # of X and Y gates is odd
-    remainder_x = ((x_pi_pulses + y_pi_pulses)%2 == 1)
+    # Check if the sequence consists solely of X, Y, and Z pi-pulses
+    if len(offsets) != x_pi_pulses + y_pi_pulses + z_pi_pulses:
+        raise ArgumentsValueError(
+            'Sequence contains pulses that are not X, Y, or Z pi-pulses.',
+            {'rabi_rotations': rabi_rotations,
+             'azimuthal_angles': azimuthal_angles,
+             'detuning_rotations': detuning_rotations})
 
-    # The sequence results in a Z gate, rather than the identity, if the number
-    # of Y and Z gates is odd
-    remainder_z = ((y_pi_pulses + z_pi_pulses)%2 == 1)
+    # The sequence will preserve the state |0> is it has an even number
+    # of X and Y pi-pulses
+    preserves_10 = ((x_pi_pulses + y_pi_pulses)%2 == 0)
 
-    # If there is an X gate left over, but no Z gate, we just invert the direction
-    # of the last pi/2-pulse to cancel it out
-    if remainder_x and not remainder_z:
-        final_azimuthal = 0
+    # The sequence will preserve the state |0>+|1> is it has an even number
+    # of Y and Z pi-pulses
+    preserves_11 = ((y_pi_pulses + z_pi_pulses)%2 == 0)
 
-    # If there is a Y gate left over, we want the pi/2-pulses to be in the Y
-    # direction, so that the remaining gate is cancelled out
-    if remainder_x and remainder_z:
-        initial_azimuthal = np.pi / 2
-        final_azimuthal = np.pi / 2
+    # When states |0> and |0>+|1> are preserved, the sequence already produces
+    # an identity, so that we want the the pi/2-pulses to cancel each other out
+    if preserves_10 and preserves_11:
+        rabi_value = np.pi / 2
+        initial_azimuthal = 0
+        final_azimuthal = np.pi
+        detuning_value = 0
 
-    # If there is a Z gate left over, we want both pi/2-pulses to be in the Z
-    # direction, so that the remaining gate is cancelled out
-    if not remainder_x and remainder_z:
+    # When only state |0>+|1> is not preserved, the sequence results in a Z rotation.
+    # In this case, we want both pi/2-pulses to be in the Z direction,
+    # so that the remaining rotation is cancelled out
+    if preserves_10 and not preserves_11:
         rabi_value = 0
+        initial_azimuthal = 0
         final_azimuthal = 0
         detuning_value = np.pi / 2
+
+    # When only state |0> is not preserved, the sequence results in an X rotation.
+    # In this case, we want both pi/2-pulses to be in the X direction,
+    # so that the remaining rotation is cancelled out
+    if not preserves_10 and preserves_11:
+        rabi_value = np.pi / 2
+        initial_azimuthal = 0
+        final_azimuthal = 0
+        detuning_value = 0
+
+    # When neither state is preserved, the sequence results in a Y rotation.
+    # In this case, we want both pi/2-pulses to be in the Y direction,
+    # so that the remaining rotation is cancelled out
+    if not preserves_10 and not preserves_11:
+        rabi_value = np.pi / 2
+        initial_azimuthal = np.pi / 2
+        final_azimuthal = np.pi / 2
+        detuning_value = 0
+
 
     offsets = np.insert(offsets,
                         [0, offsets.shape[0]],  # pylint: disable=unsubscriptable-object
