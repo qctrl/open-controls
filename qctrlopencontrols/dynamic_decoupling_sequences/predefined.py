@@ -78,27 +78,21 @@ def _add_pre_post_rotations(
     final_azimuthal = np.pi
     detuning_value = 0
 
-    # These lists have 1 if the pulse is of the specificed type, 0 if it is not
-    is_x_pi_pulse = np.where(np.logical_and(np.isclose(rabi_rotations, np.pi),
-                                            np.isclose(azimuthal_angles, 0.)),
-                             1,
-                             0)
-    is_y_pi_pulse = np.where(np.logical_and(np.isclose(rabi_rotations, np.pi),
-                                            np.isclose(azimuthal_angles, np.pi/2.)),
-                             1,
-                             0)
-    is_z_pi_pulse = np.where(np.logical_and(np.isclose(rabi_rotations, 0.),
-                                            np.isclose(detuning_rotations, np.pi)),
-                             1,
-                             0)
+    # Count the number of X, Y, and Z pi-pulses
+    x_pi_pulses = np.count_nonzero(np.logical_and(np.isclose(rabi_rotations, np.pi),
+                                                  np.isclose(azimuthal_angles, 0.)))
+    y_pi_pulses = np.count_nonzero(np.logical_and(np.isclose(rabi_rotations, np.pi),
+                                                  np.isclose(azimuthal_angles, np.pi/2.)))
+    z_pi_pulses = np.count_nonzero(np.logical_and(np.isclose(rabi_rotations, 0.),
+                                                  np.isclose(detuning_rotations, np.pi)))
 
     # The sequence results in an X gate, rather than the identity, if the number
     # of X and Y gates is odd
-    remainder_x = ((sum(is_x_pi_pulse) + sum(is_y_pi_pulse))%2 == 1)
+    remainder_x = ((x_pi_pulses + y_pi_pulses)%2 == 1)
 
     # The sequence results in a Z gate, rather than the identity, if the number
     # of Y and Z gates is odd
-    remainder_z = ((sum(is_y_pi_pulse) + sum(is_z_pi_pulse))%2 == 1)
+    remainder_z = ((y_pi_pulses + z_pi_pulses)%2 == 1)
 
     # If there is an X gate left over, but no Z gate, we just invert the direction
     # of the last pi/2-pulse to cancel it out
