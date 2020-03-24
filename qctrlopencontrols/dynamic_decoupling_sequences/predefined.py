@@ -73,7 +73,7 @@ def _add_pre_post_rotations(
     # which is the same value as the initial pi/2-pulse
     final_azimuthal = 0.
 
-    # These lists have '1' if the pulse is of the specificed type, '0' if it is not
+    # These lists have 1 if the pulse is of the specificed type, 0 if it is not
     is_x_pi_pulse = np.where(np.logical_and(np.isclose(rabi_rotations, np.pi),
                                             np.isclose(azimuthal_angles, 0.)),
                              1,
@@ -83,8 +83,8 @@ def _add_pre_post_rotations(
                              1,
                              0)
 
-    # Setting the azimuthal angle of the pi/2-pulse to pi if the sum of the number
-    # X pi-pulses and Z pi-pulses is an even number
+    # Setting the azimuthal angle of the final pi/2-pulse to pi if the sum of
+    # the number of X pi-pulses and Z pi-pulses is even
     if (sum(is_x_pi_pulse) + sum(is_z_pi_pulse))%2 == 0:
         final_azimuthal = np.pi
 
