@@ -59,7 +59,7 @@ def test_ramsey():
         pre_post_rotation=True)
 
     _rabi_rotations = np.array([np.pi/2, np.pi/2])
-    _azimuthal_angles = np.array([0., 0.])
+    _azimuthal_angles = np.array([0., np.pi])
     _detuning_rotations = np.array([0., 0.])
 
     assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
@@ -140,7 +140,7 @@ def test_curr_purcell():
                          _spacing * 0.5 + 2 * _spacing, _spacing * 0.5 + 3 * _spacing,
                          duration])
     _rabi_rotations = np.array([np.pi/2, np.pi, np.pi, np.pi, np.pi, np.pi/2])
-    _azimuthal_angles = np.array([0, 0, 0, 0, 0, 0])
+    _azimuthal_angles = np.array([0, 0, 0, 0, 0, np.pi])
     _detuning_rotations = np.array([0, 0, 0, 0, 0, 0])
 
     assert np.allclose(_offsets, sequence.offsets)
@@ -183,7 +183,7 @@ def test_curr_purcell_meiboom_sequence():   # pylint: disable=invalid-name
     _offsets = np.array([0, _spacing * 0.5, _spacing * 0.5 + _spacing,
                          _spacing * 0.5 + 2 * _spacing, _spacing * 0.5 + 3 * _spacing, duration])
     _rabi_rotations = np.array([np.pi/2, np.pi, np.pi, np.pi, np.pi, np.pi/2])
-    _azimuthal_angles = np.array([0, np.pi / 2, np.pi / 2, np.pi / 2, np.pi / 2, 0])
+    _azimuthal_angles = np.array([0, np.pi / 2, np.pi / 2, np.pi / 2, np.pi / 2, np.pi])
     _detuning_rotations = np.array([0, 0, 0, 0, 0, 0])
 
     assert np.allclose(_offsets, sequence.offsets)
@@ -231,7 +231,7 @@ def test_uhrig_single_axis_sequence():
                          [0, duration])
 
     _rabi_rotations = np.array([np.pi/2, np.pi, np.pi, np.pi, np.pi, np.pi/2])
-    _azimuthal_angles = np.array([0., np.pi / 2, np.pi / 2, np.pi / 2, np.pi / 2, 0.])
+    _azimuthal_angles = np.array([0., np.pi / 2, np.pi / 2, np.pi / 2, np.pi / 2, np.pi])
     _detuning_rotations = np.array([0., 0, 0, 0, 0, 0.])
 
     assert np.allclose(_offsets, sequence.offsets)
@@ -278,7 +278,7 @@ def test_periodic_single_axis_sequence():      # pylint: disable=invalid-name
                          [0, duration])
 
     _rabi_rotations = np.array([np.pi/2, np.pi, np.pi, np.pi, np.pi, np.pi/2])
-    _azimuthal_angles = np.array([0, 0, 0, 0, 0, 0])
+    _azimuthal_angles = np.array([0, 0, 0, 0, 0, np.pi])
     _detuning_rotations = np.array([0, 0, 0, 0, 0, 0])
 
     assert np.allclose(_offsets, sequence.offsets)
@@ -339,6 +339,7 @@ def test_walsh_single_axis_sequence():
     _rabi_rotations = np.insert(_rabi_rotations, [0, _rabi_rotations.shape[0]],
                                 [np.pi/2, np.pi/2])
     _azimuthal_angles = np.zeros(_offsets.shape)
+    _azimuthal_angles[-1] = np.pi
     _detuning_rotations = np.zeros(_offsets.shape)
 
     assert np.allclose(_offsets, sequence.offsets)
@@ -419,6 +420,7 @@ def test_quadratic_sequence():
                                     [0, 0])
 
     _azimuthal_angles = np.zeros(_offsets.shape)
+    _azimuthal_angles[-1] = np.pi
 
     assert np.allclose(_offsets, sequence.offsets)
     assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
@@ -523,7 +525,7 @@ def test_xyconcatenated_sequence():
     _azimuthal_angles = np.insert(
         _azimuthal_angles,
         [0, _azimuthal_angles.shape[0]],    # pylint: disable=unsubscriptable-object
-        [0, 0])
+        [0, np.pi])
     _detuning_rotations = np.insert(
         _detuning_rotations,
         [0, _detuning_rotations.shape[0]],  # pylint: disable=unsubscriptable-object
@@ -580,3 +582,305 @@ def test_attribute_values():
         _ = new_predefined_dds(
             scheme=XY_CONCATENATED, duration=-2,
             concatenation_order=-1)
+
+def _pulses_produce_identity(sequence):
+    """
+    Tests if the pulses of a DDS sequence produce an identity in absence of noise.
+    We check this by creating the unitary of each pulse and then multiplying them
+    by each other to check the complete evolution.
+    """
+    sigma_x = np.array([[0., 1.], [1., 0.]])
+    sigma_y = np.array([[0., -1.j], [1.j, 0.]])
+    sigma_z = np.array([[1., 0.], [0., -1.]])
+
+    # The unitary evolution due to an instantaneous pulse can be written as
+    # U = cos(|n|) I -i sin(|n|) *(n_x sigma_x + n_y sigma_y + n_z sigma_z)/|n|
+    # where n is a vector with components
+    # n_x = rabi * cos(azimuthal)/2
+    # n_y = rabi * sin(azimuthal)/2
+    # n_z = detuning/2
+
+    matrix_product = np.identity(2)
+    for rabi, azimuth, detuning in zip(sequence.rabi_rotations,
+                                       sequence.azimuthal_angles,
+                                       sequence.detuning_rotations):
+        n_x = rabi * np.cos(azimuth)/2.
+        n_y = rabi * np.sin(azimuth)/2.
+        n_z = detuning/2.
+        mod_n = np.sqrt(n_x**2 + n_y**2 + n_z**2)
+        unitary = (
+            np.cos(mod_n) * np.identity(2)
+            -1.j * (np.sin(mod_n)*n_x/mod_n) * sigma_x
+            -1.j * (np.sin(mod_n)*n_y/mod_n) * sigma_y
+            -1.j * (np.sin(mod_n)*n_z/mod_n) * sigma_z
+        )
+        matrix_product = np.matmul(unitary, matrix_product)
+
+    # Remove global phase
+    matrix_product *= np.exp(-1.j* np.angle(matrix_product[0][0]))
+
+    expected_matrix_product = np.identity(2)
+
+    return np.allclose(matrix_product, expected_matrix_product)
+
+def test_if_ramsey_sequence_is_identity():
+    """
+    Tests if the product of the pulses in the Ramsey sequence with pre/post
+    pi/2-pulses is an identity.
+    """
+    ramsey_sequence = new_predefined_dds(
+        scheme='Ramsey',
+        duration=10.,
+        pre_post_rotation=True)
+
+    assert _pulses_produce_identity(ramsey_sequence)
+
+def test_if_spin_echo_sequence_is_identity():
+    """
+    Tests if the product of the pulses in a Spin Echo sequence with pre/post
+    pi/2-pulses is an identity.
+    """
+    spin_echo_sequence = new_predefined_dds(
+        scheme=SPIN_ECHO,
+        duration=10.,
+        pre_post_rotation=True)
+
+    assert _pulses_produce_identity(spin_echo_sequence)
+
+def test_if_carr_purcell_sequence_with_odd_pulses_is_identity():
+    """
+    Tests if the product of the pulses in a Carr-Purcell sequence with pre/post
+    pi/2-pulses is an identity, when the number of pulses is odd.
+    """
+    odd_carr_purcell_sequence = new_predefined_dds(
+        scheme=CARR_PURCELL,
+        duration=10.,
+        number_of_offsets=7,
+        pre_post_rotation=True)
+
+    assert _pulses_produce_identity(odd_carr_purcell_sequence)
+
+def test_if_carr_purcell_sequence_with_even_pulses_is_identity():
+    """
+    Tests if the product of the pulses in a Carr-Purcell sequence with pre/post
+    pi/2-pulses is an identity, when the number of pulses is even.
+    """
+    even_carr_purcell_sequence = new_predefined_dds(
+        scheme=CARR_PURCELL,
+        duration=10.,
+        number_of_offsets=8,
+        pre_post_rotation=True)
+
+    assert _pulses_produce_identity(even_carr_purcell_sequence)
+
+def test_if_cpmg_sequence_with_odd_pulses_is_identity():
+    """
+    Tests if the product of the pulses in a CPMG sequence with pre/post
+    pi/2-pulses is an identity, when the number of pulses is odd.
+    """
+    odd_cpmg_sequence = new_predefined_dds(
+        scheme=CARR_PURCELL_MEIBOOM_GILL,
+        duration=10.,
+        number_of_offsets=7,
+        pre_post_rotation=True)
+
+    assert _pulses_produce_identity(odd_cpmg_sequence)
+
+def test_if_cpmg_sequence_with_even_pulses_is_identity():
+    """
+    Tests if the product of the pulses in a CPMG sequence with pre/post
+    pi/2-pulses is an identity, when the number of pulses is even.
+    """
+    even_cpmg_sequence = new_predefined_dds(
+        scheme=CARR_PURCELL_MEIBOOM_GILL,
+        duration=10.,
+        number_of_offsets=8,
+        pre_post_rotation=True)
+
+    assert _pulses_produce_identity(even_cpmg_sequence)
+
+def test_if_uhrig_sequence_with_odd_pulses_is_identity():
+    """
+    Tests if the product of the pulses in an Uhrig sequence with pre/post
+    pi/2-pulses is an identity, when the number of pulses is odd.
+    """
+    odd_uhrig_sequence = new_predefined_dds(
+        scheme=UHRIG_SINGLE_AXIS,
+        duration=10.,
+        number_of_offsets=7,
+        pre_post_rotation=True)
+
+    assert _pulses_produce_identity(odd_uhrig_sequence)
+
+def test_if_uhrig_sequence_with_even_pulses_is_identity():
+    """
+    Tests if the product of the pulses in an Uhrig sequence with pre/post
+    pi/2-pulses is an identity, when the number of pulses is even.
+    """
+    even_uhrig_sequence = new_predefined_dds(
+        scheme=UHRIG_SINGLE_AXIS,
+        duration=10.,
+        number_of_offsets=8,
+        pre_post_rotation=True)
+
+    assert _pulses_produce_identity(even_uhrig_sequence)
+
+def test_if_periodic_sequence_with_odd_pulses_is_identity():
+    """
+    Tests if the product of the pulses in a periodic DDS with pre/post
+    pi/2-pulses is an identity, when the number of pulses is odd.
+    """
+    odd_periodic_sequence = new_predefined_dds(
+        scheme=PERIODIC_SINGLE_AXIS,
+        duration=10.,
+        number_of_offsets=7,
+        pre_post_rotation=True)
+
+    assert _pulses_produce_identity(odd_periodic_sequence)
+
+def test_if_periodic_sequence_with_even_pulses_is_identity():
+    """
+    Tests if the product of the pulses in a periodic DDS with pre/post
+    pi/2-pulses is an identity, when the number of pulses is even.
+    """
+    even_periodic_sequence = new_predefined_dds(
+        scheme=PERIODIC_SINGLE_AXIS,
+        duration=10.,
+        number_of_offsets=8,
+        pre_post_rotation=True)
+
+    assert _pulses_produce_identity(even_periodic_sequence)
+
+def test_if_walsh_sequence_with_odd_pulses_is_identity():
+    """
+    Tests if the product of the pulses in a Walsh sequence with pre/post
+    pi/2-pulses is an identity, when the number of pulses is odd.
+    """
+    odd_walsh_sequence = new_predefined_dds(
+        scheme=WALSH_SINGLE_AXIS,
+        duration=10.,
+        paley_order=7,
+        pre_post_rotation=True)
+
+    # A Walsh sequence with paley_order 7 has 5 pi-pulses + 2 pi/2-pulses,
+    # see https://arxiv.org/pdf/1109.6002.pdf
+    assert len(odd_walsh_sequence.offsets) == 5 + 2
+
+    assert _pulses_produce_identity(odd_walsh_sequence)
+
+def test_if_walsh_sequence_with_even_pulses_is_identity():
+    """
+    Tests if the product of the pulses in a quadratic sequence with pre/post
+    pi/2-pulses is an identity, when the number of pulses is even.
+    """
+    even_walsh_sequence = new_predefined_dds(
+        scheme=WALSH_SINGLE_AXIS,
+        duration=10.,
+        paley_order=6,
+        pre_post_rotation=True)
+
+    # A Walsh sequence with paley_order 7 has 4 pi-pulses + 2 pi/2-pulses,
+    # see https://arxiv.org/pdf/1109.6002.pdf
+    assert len(even_walsh_sequence.offsets) == 4 + 2
+
+    assert _pulses_produce_identity(even_walsh_sequence)
+
+def test_if_quadratic_sequence_with_odd_pulses_is_identity():
+    """
+    Tests if the product of the pulses in a quadratic sequence with pre/post
+    pi/2-pulses is an identity, when the total number of pulses is odd.
+    """
+    odd_quadratic_sequence = new_predefined_dds(
+        scheme=QUADRATIC,
+        duration=10.,
+        number_inner_offsets=7,
+        number_outer_offsets=7,
+        pre_post_rotation=True)
+
+    # n_outer + n_inner*(n_outer+1) pi-pulses + 2 pi/2-pulses
+    # total number here is odd
+    assert len(odd_quadratic_sequence.offsets) == 7 + 7 * (7+1) + 2
+
+    assert _pulses_produce_identity(odd_quadratic_sequence)
+
+
+def test_if_quadratic_sequence_with_even_pulses_is_identity():
+    """
+    Tests if the product of the pulses in a quadratic sequence with pre/post
+    pi/2-pulses is an identity, when the total number of pulses is even.
+    """
+    even_quadratic_sequence = new_predefined_dds(
+        scheme=QUADRATIC,
+        duration=10.,
+        number_inner_offsets=8,
+        number_outer_offsets=8,
+        pre_post_rotation=True)
+
+    # n_outer + n_inner*(n_outer+1) pi-pulses + 2 pi/2-pulses
+    # total number here is even
+    assert len(even_quadratic_sequence.offsets) == 8 + 8 * (8+1) + 2
+
+    assert _pulses_produce_identity(even_quadratic_sequence)
+
+def test_if_quadratic_sequence_with_odd_inner_pulses_is_identity():
+    """
+    Tests if the product of the pulses in a quadratic sequence with pre/post
+    pi/2-pulses is an identity, when the total number of inner pulses is odd.
+    """
+    inner_odd_quadratic_sequence = new_predefined_dds(
+        scheme=QUADRATIC,
+        duration=10.,
+        number_inner_offsets=7,
+        number_outer_offsets=8,
+        pre_post_rotation=True)
+
+    # n_outer + n_inner*(n_outer+1) pi-pulses + 2 pi/2-pulses
+    # total number here is odd
+    assert len(inner_odd_quadratic_sequence.offsets) == 8 + 7 * (8+1) + 2
+
+    assert _pulses_produce_identity(inner_odd_quadratic_sequence)
+
+
+def test_if_quadratic_sequence_with_even_inner_pulses_is_identity():
+    """
+    Tests if the product of the pulses in a quadratic sequence with pre/post
+    pi/2-pulses is an identity, when the total number of inner pulses is even.
+    """
+    inner_even_quadratic_sequence = new_predefined_dds(
+        scheme=QUADRATIC,
+        duration=10.,
+        number_inner_offsets=8,
+        number_outer_offsets=7,
+        pre_post_rotation=True)
+
+    # n_outer + n_inner*(n_outer+1) pi-pulses + 2 pi/2-pulses
+    # total number here is even
+    assert len(inner_even_quadratic_sequence.offsets) == 7 + 8 * (7+1) + 2
+
+    assert _pulses_produce_identity(inner_even_quadratic_sequence)
+
+def test_if_x_concatenated_sequence_is_identity():
+    """
+    Tests if the product of the pulses in an X concatenated sequence with pre/post
+    pi/2-pulses is an identity.
+    """
+    x_concat_sequence = new_predefined_dds(
+        scheme=X_CONCATENATED,
+        duration=10.,
+        concatenation_order=4,
+        pre_post_rotation=True)
+
+    assert _pulses_produce_identity(x_concat_sequence)
+
+def test_if_xy_concatenated_sequence_is_identity():
+    """
+    Tests if the product of the pulses in an XY concatenated sequence with pre/post
+    pi/2-pulses is an identity.
+    """
+    xy_concat_sequence = new_predefined_dds(
+        scheme=XY_CONCATENATED,
+        duration=10.,
+        concatenation_order=4,
+        pre_post_rotation=True)
+
+    assert _pulses_produce_identity(xy_concat_sequence)

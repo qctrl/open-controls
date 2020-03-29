@@ -38,6 +38,17 @@ def _add_pre_post_rotations(
     """Adds a pre-post pi.2 rotation at the
     start and end of the sequence.
 
+    The parameters of the pi/2-pulses are chosen in order to cancel out the
+    product of the pulses in the DSS, so that its total effect in the
+    absence of noise is an identity.
+
+    For a DSS that already produces an identity, this function adds X pi/2-pulses
+    in opposite directions, so that they cancel out. If the DDS produces an X
+    gate, the X pi/2-pulses will be in the same direction. If the DDS produces
+    a Y (Z) gate, the pi/2-pulses are around the Y (Z) axis.
+
+    This function assumes that the sequences only have X, Y, and Z pi-pulses.
+    An exception is thrown if that is not the case.
 
     Parameters
     ----------
@@ -57,7 +68,74 @@ def _add_pre_post_rotations(
     tuple
         Containing the (offsets, rabi_rotations, azimuthal_angles, detuning_rotations)
         resulting after the addition of pi/2 pulses at the start and end of the sequence.
+
+    Raises
+    -----
+    ArgumentsValueError
+        Raised when sequence does not consist solely of X, Y, and Z pi-pulses.
     """
+    # Count the number of X, Y, and Z pi-pulses
+    x_pi_pulses = np.count_nonzero(np.logical_and.reduce((np.isclose(rabi_rotations, np.pi),
+                                                          np.isclose(azimuthal_angles, 0.),
+                                                          np.isclose(detuning_rotations, 0.))))
+    y_pi_pulses = np.count_nonzero(np.logical_and.reduce((np.isclose(rabi_rotations, np.pi),
+                                                          np.isclose(azimuthal_angles, np.pi/2.),
+                                                          np.isclose(detuning_rotations, 0.))))
+    z_pi_pulses = np.count_nonzero(np.logical_and.reduce((np.isclose(rabi_rotations, 0.),
+                                                          np.isclose(azimuthal_angles, 0.),
+                                                          np.isclose(detuning_rotations, np.pi))))
+
+    # Check if the sequence consists solely of X, Y, and Z pi-pulses
+    if len(offsets) != x_pi_pulses + y_pi_pulses + z_pi_pulses:
+        raise ArgumentsValueError(
+            'Sequence contains pulses that are not X, Y, or Z pi-pulses.',
+            {'rabi_rotations': rabi_rotations,
+             'azimuthal_angles': azimuthal_angles,
+             'detuning_rotations': detuning_rotations})
+
+    # The sequence will preserve the state |0> is it has an even number
+    # of X and Y pi-pulses
+    preserves_10 = ((x_pi_pulses + y_pi_pulses)%2 == 0)
+
+    # The sequence will preserve the state |0>+|1> is it has an even number
+    # of Y and Z pi-pulses
+    preserves_11 = ((y_pi_pulses + z_pi_pulses)%2 == 0)
+
+    # When states |0> and |0>+|1> are preserved, the sequence already produces
+    # an identity, so that we want the the pi/2-pulses to cancel each other out
+    if preserves_10 and preserves_11:
+        rabi_value = np.pi / 2
+        initial_azimuthal = 0
+        final_azimuthal = np.pi
+        detuning_value = 0
+
+    # When only state |0>+|1> is not preserved, the sequence results in a Z rotation.
+    # In this case, we want both pi/2-pulses to be in the Z direction,
+    # so that the remaining rotation is cancelled out
+    if preserves_10 and not preserves_11:
+        rabi_value = 0
+        initial_azimuthal = 0
+        final_azimuthal = 0
+        detuning_value = np.pi / 2
+
+    # When only state |0> is not preserved, the sequence results in an X rotation.
+    # In this case, we want both pi/2-pulses to be in the X direction,
+    # so that the remaining rotation is cancelled out
+    if not preserves_10 and preserves_11:
+        rabi_value = np.pi / 2
+        initial_azimuthal = 0
+        final_azimuthal = 0
+        detuning_value = 0
+
+    # When neither state is preserved, the sequence results in a Y rotation.
+    # In this case, we want both pi/2-pulses to be in the Y direction,
+    # so that the remaining rotation is cancelled out
+    if not preserves_10 and not preserves_11:
+        rabi_value = np.pi / 2
+        initial_azimuthal = np.pi / 2
+        final_azimuthal = np.pi / 2
+        detuning_value = 0
+
 
     offsets = np.insert(offsets,
                         [0, offsets.shape[0]],  # pylint: disable=unsubscriptable-object
@@ -65,15 +143,15 @@ def _add_pre_post_rotations(
     rabi_rotations = np.insert(
         rabi_rotations,
         [0, rabi_rotations.shape[0]],  # pylint: disable=unsubscriptable-object
-        [np.pi / 2, np.pi / 2])
+        [rabi_value, rabi_value])
     azimuthal_angles = np.insert(
         azimuthal_angles,
         [0, azimuthal_angles.shape[0]],  # pylint: disable=unsubscriptable-object
-        [0, 0])
+        [initial_azimuthal, final_azimuthal])
     detuning_rotations = np.insert(
         detuning_rotations,
         [0, detuning_rotations.shape[0]],  # pylint: disable=unsubscriptable-object
-        [0, 0])
+        [detuning_value, detuning_value])
 
     return offsets, rabi_rotations, azimuthal_angles, detuning_rotations
 
@@ -209,7 +287,7 @@ def _new_ramsey_sequence(duration=None,
     if pre_post_rotation:
         offsets = duration * np.array([0.0, 1.])
         rabi_rotations = np.array([np.pi/2, np.pi/2])
-        azimuthal_angles = np.zeros(offsets.shape)
+        azimuthal_angles = np.array([0., np.pi])
         detuning_rotations = np.zeros(offsets.shape)
 
     return DynamicDecouplingSequence(
