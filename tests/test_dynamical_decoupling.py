@@ -284,6 +284,46 @@ def test_conversion_to_driven_controls():
         [4.75e-1, 5e-2, 4.5e-1, 5e-2, 4.5e-1, 5e-2, 4.75e-1]))
 
 
+def test_conversion_of_pi_2_pulses_to_driven_controls():
+    """
+    Tests if the method to convert a DDS to driven controls handles properly
+    pi/2-pulses in the x, y, and z directions.
+    """
+    _duration = 6.
+    _offsets = np.array([0.5, 1.5, 2.5, 3.5, 4.5, 5.5])
+    _rabi_rotations = np.array([np.pi/2, 0., np.pi/2, np.pi/2, 0., np.pi/2])
+    _azimuthal_angles = np.array([np.pi / 2, 0., 0., -np.pi/2, 0, np.pi])
+    _detuning_rotations = np.array([0., np.pi/2, 0., 0., -np.pi/2, 0])
+    _name = 'pi2_pulse_sequence'
+
+    dd_sequence = DynamicDecouplingSequence(
+        duration=_duration,
+        offsets=_offsets,
+        rabi_rotations=_rabi_rotations,
+        azimuthal_angles=_azimuthal_angles,
+        detuning_rotations=_detuning_rotations,
+        name=_name)
+
+    _maximum_rabi_rate = 20*np.pi
+    _maximum_detuning_rate = 20*np.pi
+    driven_control = convert_dds_to_driven_control(dd_sequence,
+                                                   maximum_rabi_rate=_maximum_rabi_rate,
+                                                   maximum_detuning_rate=_maximum_detuning_rate,
+                                                   name=_name)
+
+    assert np.allclose(driven_control.rabi_rates, np.array(
+        [0., _maximum_rabi_rate, 0., 0., 0., _maximum_rabi_rate,
+         0., _maximum_rabi_rate, 0., 0., 0., _maximum_rabi_rate, 0.]))
+    assert np.allclose(driven_control.azimuthal_angles, np.array(
+        [0., _azimuthal_angles[0], 0., 0., 0., _azimuthal_angles[2],
+         0., _azimuthal_angles[3], 0., 0., 0., _azimuthal_angles[5], 0.]))
+    assert np.allclose(driven_control.detunings, np.array(
+        [0., 0., 0., _maximum_detuning_rate, 0., 0.,
+         0., 0., 0., -_maximum_detuning_rate, 0., 0., 0.]))
+    assert np.allclose(driven_control.durations, np.array(
+        [4.875e-1, 2.5e-2, 9.75e-1, 2.5e-2, 9.75e-1, 2.5e-2,
+         9.75e-1, 2.5e-2, 9.75e-1, 2.5e-2, 9.75e-1, 2.5e-2, 4.875e-1]))
+
 def test_free_evolution_conversion():
 
     """Tests the conversion of free evolution

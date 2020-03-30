@@ -230,11 +230,11 @@ def convert_dds_to_driven_control(
 
             pulse_start_ends[op_idx, 1] = pulse_mid_points[op_idx] + half_pulse_duration
         else:
-            pulse_start_ends[op_idx, 0] = pulse_mid_points[op_idx] - \
-                                          0.5 * operations[3, op_idx] / maximum_detuning_rate
+            half_pulse_duration = 0.5 * np.abs(operations[3, op_idx]) / maximum_detuning_rate
 
-            pulse_start_ends[op_idx, 1] = pulse_mid_points[op_idx] + \
-                                          0.5 * operations[3, op_idx] / maximum_detuning_rate
+            pulse_start_ends[op_idx, 0] = pulse_mid_points[op_idx] - half_pulse_duration
+
+            pulse_start_ends[op_idx, 1] = pulse_mid_points[op_idx] + half_pulse_duration
 
     # check if any of the pulses have gone outside the time limit [0, sequence_duration]
     # if yes, adjust the segment timing
@@ -299,7 +299,11 @@ def convert_dds_to_driven_control(
             control_durations[pulse_segment_idx] = (pulse_start_ends[op_idx, 1] -
                                                     pulse_start_ends[op_idx, 0])
         else:
-            control_detunings[pulse_segment_idx] = maximum_detuning_rate
+            # detuning should be negative or positive depending on the direction of rotation
+            sign = np.sign(operations[3, op_idx])
+
+            control_detunings[pulse_segment_idx] = sign*maximum_detuning_rate
+
             control_durations[pulse_segment_idx] = (pulse_start_ends[op_idx, 1] -
                                                     pulse_start_ends[op_idx, 0])
 
