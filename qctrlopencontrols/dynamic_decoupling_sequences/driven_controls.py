@@ -63,10 +63,10 @@ def _check_maximum_rotation_rate(
 
     Parameters
     ----------
-    maximum_rabi_rate : float, optional
-        Maximum Rabi Rate; Defaults to 1.0
-    maximum_detuning_rate : float, optional
-        Maximum Detuning Rate; Defaults to None
+    maximum_rabi_rate : float
+        Maximum Rabi Rate;
+    maximum_detuning_rate : float
+        Maximum Detuning Rate;
 
     Raises
     ------
