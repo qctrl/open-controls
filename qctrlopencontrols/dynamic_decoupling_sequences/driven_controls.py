@@ -99,20 +99,24 @@ def convert_dds_to_driven_control(
         dynamic_decoupling_sequence=None,
         maximum_rabi_rate=2*np.pi,
         maximum_detuning_rate=2*np.pi,
+        minimum_segment_duration=0.,
         **kwargs):
     """Creates a Driven Control based on the supplied DDS and
     other relevant information
 
     Parameters
     ----------
-    dynamic_decoupling_sequence : qctrlopencontrols.DynamicDecouplingSequence
+    dynamic_decoupling_sequence : qctrlopencontrols.DynamicDecouplingSequence, optional
         The base DDS; Defaults to None
     maximum_rabi_rate : float, optional
-        Maximum Rabi Rate; Defaults to 1.0
+        Maximum Rabi Rate; Defaults to 2*pi
     maximum_detuning_rate : float, optional
-        Maximum Detuning Rate; Defaults to None
+        Maximum Detuning Rate; Defaults to 2*pi
+    minimum_segment_duration : float, optional
+        If set, further restricts the duration of every segment of the Driven Controls.
+        Defaults to 0, in which case it does not affect the duration of the pulses.
     kwargs : dict, optional
-        options to make the corresponding filter type.
+        Options to make the corresponding filter type.
         I.e. the options for primitive are described in doc for the PrimitivePulse class.
 
     Returns
@@ -132,7 +136,7 @@ def convert_dds_to_driven_control(
     -----
     Driven pulse is defined as a sequence of control segments. Each segment performs
     an operation (rotation around one or more axes). While the dynamic decoupling
-    sequence operation contains ideal instant operations, maximum rabi (detuning) rate
+    sequence operation contains ideal instant operations, the maximum Rabi (detuning) rate
     defines a minimum time required to perform a given rotation operation. Therefore, each
     operation in sequence is converted to a flat-topped control segment with a finite duration.
     Each offset is taken as the mid-point of the control segment and the width of the
@@ -141,7 +145,7 @@ def convert_dds_to_driven_control(
     If the sequence contains operations at either of the extreme ends
     :math:`\\tau_0=0` and :math:`\\tau_{n+1}=\\tau`(duration of the sequence), there
     will be segments outside the boundary (segments starting before :math:`t<0`
-    or finishing after the sequence duration :math:`t>\\tau`. In these cases, the segments
+    or finishing after the sequence duration :math:`t>\\tau`). In these cases, the segments
     on either of the extreme ends are shifted appropriately so that their start/end time
     falls entirely within the duration of the sequence.
 
@@ -221,20 +225,17 @@ def convert_dds_to_driven_control(
             continue
 
         if operations[3, op_idx] == 0: #no z_rotations
-            if not np.isclose(operations[1, op_idx], 0.):
-                half_pulse_duration = 0.5 * operations[1, op_idx] / maximum_rabi_rate
-            else:
-                half_pulse_duration = 0.5 * operations[2, op_idx] / maximum_rabi_rate
+            half_pulse_duration = 0.5 * max(operations[1, op_idx] / maximum_rabi_rate,
+                                            minimum_segment_duration)
 
             pulse_start_ends[op_idx, 0] = pulse_mid_points[op_idx] - half_pulse_duration
-
             pulse_start_ends[op_idx, 1] = pulse_mid_points[op_idx] + half_pulse_duration
         else:
-            pulse_start_ends[op_idx, 0] = pulse_mid_points[op_idx] - \
-                                          0.5 * operations[3, op_idx] / maximum_detuning_rate
+            half_pulse_duration = 0.5 * max(operations[3, op_idx] / maximum_detuning_rate,
+                                            minimum_segment_duration)
 
-            pulse_start_ends[op_idx, 1] = pulse_mid_points[op_idx] + \
-                                          0.5 * operations[3, op_idx] / maximum_detuning_rate
+            pulse_start_ends[op_idx, 0] = pulse_mid_points[op_idx] - half_pulse_duration
+            pulse_start_ends[op_idx, 1] = pulse_mid_points[op_idx] + half_pulse_duration
 
     # check if any of the pulses have gone outside the time limit [0, sequence_duration]
     # if yes, adjust the segment timing
@@ -273,6 +274,18 @@ def convert_dds_to_driven_control(
                                   extras={'deduced_pulse_start_timing': pulse_start_ends[:, 0],
                                           'deduced_pulse_end_timing': pulse_start_ends[:, 1]})
 
+    # check if the minimum_segment_duration is respected in the gaps between the pulses
+    if (np.any(pulse_start_ends[1:, 0]-pulse_start_ends[:-1, 1] < minimum_segment_duration)):
+        raise ArgumentsValueError("Distance between pulses does not respect minimum_segment_duration."
+                                  "Try increasing the  minimum_segment_duration.",
+                                  {'dynamic_decoupling_sequence': dynamic_decoupling_sequence,
+                                   'maximum_rabi_rate': maximum_rabi_rate,
+                                   'maximum_detuning_rate': maximum_detuning_rate,
+                                   'minimum_segment_duration': minimum_segment_duration},
+                                  extras={'deduced_pulse_start_timing': pulse_start_ends[:, 0],
+                                          'deduced_pulse_end_timing': pulse_start_ends[:, 1]})
+
+
     if np.allclose(pulse_start_ends, 0.0):
         # the original sequence should be a free evolution
         return DrivenControl(rabi_rates=[0.],
@@ -294,12 +307,18 @@ def convert_dds_to_driven_control(
     for op_idx in range(0, operations.shape[1]):    # pylint: disable=unsubscriptable-object
 
         if operations[3, op_idx] == 0.0:
-            control_rabi_rates[pulse_segment_idx] = maximum_rabi_rate
+            control_rabi_rates[pulse_segment_idx] = operations[1, op_idx]/(
+                                                        pulse_start_ends[op_idx, 1] -
+                                                        pulse_start_ends[op_idx, 0]
+                                                        )
             control_azimuthal_angles[pulse_segment_idx] = operations[2, op_idx]
             control_durations[pulse_segment_idx] = (pulse_start_ends[op_idx, 1] -
                                                     pulse_start_ends[op_idx, 0])
         else:
-            control_detunings[pulse_segment_idx] = operations[3, op_idx]
+            control_detunings[pulse_segment_idx] = operations[3, op_idx]/(
+                                                        pulse_start_ends[op_idx, 1] -
+                                                        pulse_start_ends[op_idx, 0]
+                                                        )
             control_durations[pulse_segment_idx] = (pulse_start_ends[op_idx, 1] -
                                                     pulse_start_ends[op_idx, 0])
 
