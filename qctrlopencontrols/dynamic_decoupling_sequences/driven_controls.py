@@ -63,10 +63,10 @@ def _check_maximum_rotation_rate(
 
     Parameters
     ----------
-    maximum_rabi_rate : float, optional
-        Maximum Rabi Rate; Defaults to 1.0
-    maximum_detuning_rate : float, optional
-        Maximum Detuning Rate; Defaults to None
+    maximum_rabi_rate : float
+        Maximum Rabi Rate;
+    maximum_detuning_rate : float
+        Maximum Detuning Rate;
 
     Raises
     ------
@@ -108,9 +108,9 @@ def convert_dds_to_driven_control(
     dynamic_decoupling_sequence : qctrlopencontrols.DynamicDecouplingSequence
         The base DDS; Defaults to None
     maximum_rabi_rate : float, optional
-        Maximum Rabi Rate; Defaults to 1.0
+        Maximum Rabi Rate; Defaults to 2*pi
     maximum_detuning_rate : float, optional
-        Maximum Detuning Rate; Defaults to None
+        Maximum Detuning Rate; Defaults to 2*pi
     kwargs : dict, optional
         options to make the corresponding filter type.
         I.e. the options for primitive are described in doc for the PrimitivePulse class.
