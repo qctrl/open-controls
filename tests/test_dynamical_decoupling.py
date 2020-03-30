@@ -279,7 +279,7 @@ def test_conversion_to_driven_controls():
         [0., _azimuthal_angles[0], 0., 0., 0.,
          _azimuthal_angles[2], 0.]))
     assert np.allclose(driven_control.detunings, np.array(
-        [0., 0., 0., np.pi, 0., 0., 0]))
+        [0., 0., 0., _maximum_detuning_rate, 0., 0., 0]))
     assert np.allclose(driven_control.durations, np.array(
         [4.75e-1, 5e-2, 4.5e-1, 5e-2, 4.5e-1, 5e-2, 4.75e-1]))
 
