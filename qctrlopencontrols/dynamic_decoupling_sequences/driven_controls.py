@@ -299,7 +299,7 @@ def convert_dds_to_driven_control(
             control_durations[pulse_segment_idx] = (pulse_start_ends[op_idx, 1] -
                                                     pulse_start_ends[op_idx, 0])
         else:
-            control_detunings[pulse_segment_idx] = operations[3, op_idx]
+            control_detunings[pulse_segment_idx] = maximum_detuning_rate
             control_durations[pulse_segment_idx] = (pulse_start_ends[op_idx, 1] -
                                                     pulse_start_ends[op_idx, 0])
 
