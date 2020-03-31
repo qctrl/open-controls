@@ -276,7 +276,7 @@ def convert_dds_to_driven_control(
     # check if the minimum_segment_duration is respected in the gaps between the pulses
     if (np.any(pulse_start_ends[1:, 0]-pulse_start_ends[:-1, 1] < minimum_segment_duration)):
         raise ArgumentsValueError("Distance between pulses does not respect minimum_segment_duration."
-                                  "Try increasing the  minimum_segment_duration.",
+                                  "Try decreasing the minimum_segment_duration.",
                                   {'dynamic_decoupling_sequence': dynamic_decoupling_sequence,
                                    'maximum_rabi_rate': maximum_rabi_rate,
                                    'maximum_detuning_rate': maximum_detuning_rate,
@@ -308,10 +308,10 @@ def convert_dds_to_driven_control(
         control_durations[pulse_segment_idx] = pulse_width
 
         if pulse_width > 0.:
-            if operations[3, op_idx] == 0.0:
+            if not np.isclose(operations[1, op_idx], 0.): # Rabi rotation
                 control_rabi_rates[pulse_segment_idx] = operations[1, op_idx]/pulse_width
                 control_azimuthal_angles[pulse_segment_idx] = operations[2, op_idx]
-            else:
+            elif not np.isclose(operations[3, op_idx], 0.): # Detuning rotation
                 control_detunings[pulse_segment_idx] = operations[3, op_idx]/pulse_width
 
         if op_idx != (operations.shape[1]-1):   # pylint: disable=unsubscriptable-object
