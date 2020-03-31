@@ -494,6 +494,9 @@ def test_conversion_of_pulses_with_arbitrary_rabi_rotations():
     assert np.allclose(driven_control.azimuthal_angles, expected_azimuthal_angles)
     assert np.allclose(driven_control.detunings, expected_detuning_rates)
     assert np.allclose(driven_control.durations, expected_durations)
+    
+    # check explicitly that minimum segment duration is respected
+    assert _all_greater_or_close(driven_control.duration, minimum_segment_duration)
 
 
 
@@ -554,6 +557,9 @@ def test_conversion_of_pulses_with_arbitrary_azimuthal_angles():
     assert np.allclose(driven_control.detunings, expected_detuning_rates)
     assert np.allclose(driven_control.durations, expected_durations)
 
+    # check explicitly that minimum segment duration is respected
+    assert _all_greater_or_close(driven_control.duration, minimum_segment_duration)
+
 
 
 def test_conversion_of_pulses_with_arbitrary_detuning_rotations():
@@ -608,12 +614,14 @@ def test_conversion_of_pulses_with_arbitrary_detuning_rotations():
     expected_durations[0] = 0.5 - 0.5*pulse_durations[0]
     expected_durations[-1] = 0.5 - 0.5*pulse_durations[-1]
 
-    print (driven_control.durations)
-    print (driven_control.detunings)
     assert np.allclose(driven_control.rabi_rates, expected_rabi_rates)
     assert np.allclose(driven_control.azimuthal_angles, expected_azimuthal_angles)
     assert np.allclose(driven_control.detunings, expected_detuning_rates)
     assert np.allclose(driven_control.durations, expected_durations)
+
+    # check explicitly that minimum segment duration is respected
+    assert _all_greater_or_close(driven_control.duration, minimum_segment_duration)
+
 
 
 def test_free_evolution_conversion():
@@ -749,6 +757,14 @@ def test_export_to_file():
     _remove_file('dds_qctrl_cylindrical.json')
     _remove_file('dds_qctrl_cartesian.json')
 
+
+def _all_greater_or_close(array, value):
+    """
+    Returns True if array is greater or close to value, element-wise.
+    """
+    return np.all(
+        np.logical_or(np.greater_equal(array, value), np.isclose(array, value))
+    )
 
 if __name__ == '__main__':
     pass
