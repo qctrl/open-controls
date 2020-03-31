@@ -109,8 +109,8 @@ def convert_dds_to_driven_control(
 
     Parameters
     ----------
-    dynamic_decoupling_sequence : qctrlopencontrols.DynamicDecouplingSequence, optional
-        The base DDS; Defaults to None
+    dynamic_decoupling_sequence : qctrlopencontrols.DynamicDecouplingSequence
+        The base DDS
     maximum_rabi_rate : float, optional
         Maximum Rabi Rate; Defaults to 2*pi
     maximum_detuning_rate : float, optional
