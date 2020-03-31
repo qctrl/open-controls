@@ -443,14 +443,11 @@ def test_conversion_of_pulses_with_arbitrary_rabi_rotations():
     Tests if the method to convert a DDS to driven controls handles properly
     Y pulses with rabi rotations that assume arbitrary values between 0 and pi.
     """
-    _number_of_pulses = 30
-    _duration = _number_of_pulses * 1.
-    _offsets = np.linspace(0.5, _duration-0.5, _number_of_pulses)
-    _rabi_rotations = np.pi/(_number_of_pulses+1)*np.linspace(1.,
-                                                              _number_of_pulses,
-                                                              _number_of_pulses)
-    _azimuthal_angles = np.repeat(np.pi/2., _number_of_pulses)
-    _detuning_rotations = np.repeat(0, _number_of_pulses)
+    _duration = 3.
+    _offsets = [0.5, 1.5, 2.5]
+    _rabi_rotations = [1., 2., 3.]
+    _azimuthal_angles = [np.pi/2, np.pi/2, np.pi/2]
+    _detuning_rotations = [0., 0., 0.]
     _name = 'arbitrary_rabi_rotation_sequence'
 
     dd_sequence = DynamicDecouplingSequence(
@@ -461,9 +458,9 @@ def test_conversion_of_pulses_with_arbitrary_rabi_rotations():
         detuning_rotations=_detuning_rotations,
         name=_name)
 
-    _maximum_rabi_rate = 20*np.pi
-    _maximum_detuning_rate = 10*np.pi
-    minimum_segment_duration = np.mean(_rabi_rotations/_maximum_rabi_rate)
+    _maximum_rabi_rate = 20
+    _maximum_detuning_rate = 10
+    minimum_segment_duration = 0.1
 
     driven_control = convert_dds_to_driven_control(dd_sequence,
                                                    maximum_rabi_rate=_maximum_rabi_rate,
@@ -471,30 +468,17 @@ def test_conversion_of_pulses_with_arbitrary_rabi_rotations():
                                                    minimum_segment_duration=minimum_segment_duration,
                                                    name=_name)
 
-    expected_rabi_rates = np.zeros(2*_number_of_pulses+1)
-
-    expected_azimuthal_angles = np.zeros(2*_number_of_pulses+1)
-    expected_azimuthal_angles[1::2] = _azimuthal_angles
-
-    expected_detuning_rates = np.zeros(2*_number_of_pulses+1)
-
-    pulse_durations = np.maximum(_rabi_rotations/_maximum_rabi_rate,
-                                 minimum_segment_duration)
-    expected_rabi_rates[1::2] = _rabi_rotations/pulse_durations
-
-    expected_durations = np.zeros(2*_number_of_pulses+1)
-    expected_durations[1::2] = pulse_durations
-    # durations of the middle gaps are: 1 - half of each of the neighboring pulses
-    expected_durations[2:-2:2] = 1. - 0.5*pulse_durations[:-1] - 0.5*pulse_durations[1:]
-    # initial and final gaps are just half of that
-    expected_durations[0] = 0.5 - 0.5*pulse_durations[0]
-    expected_durations[-1] = 0.5 - 0.5*pulse_durations[-1]
+    expected_rabi_rates = [0., 10., 0., 20., 0., 20., 0.]
+    expected_azimuthal_angles = [0., np.pi/2, 0., np.pi/2, 0., np.pi/2, 0.]
+    expected_detuning_rates = [0., 0., 0., 0., 0., 0., 0.]
+    expected_durations = [0.5 - 0.1/2, 0.1, 1. - 0.1/2 - 0.1/2, 0.1,
+                          1. - 0.1/2 - 0.15/2, 0.15, 0.5 - 0.15/2]
 
     assert np.allclose(driven_control.rabi_rates, expected_rabi_rates)
     assert np.allclose(driven_control.azimuthal_angles, expected_azimuthal_angles)
     assert np.allclose(driven_control.detunings, expected_detuning_rates)
     assert np.allclose(driven_control.durations, expected_durations)
-    
+
     # check explicitly that minimum segment duration is respected
     assert _all_greater_or_close(driven_control.duration, minimum_segment_duration)
 
@@ -505,14 +489,11 @@ def test_conversion_of_pulses_with_arbitrary_azimuthal_angles():
     Tests if the method to convert a DDS to driven controls handles properly
     pi-pulses with azimuthal angles that assume arbitrary values between 0 and pi/2.
     """
-    _number_of_pulses = 30
-    _duration = _number_of_pulses * 1.
-    _offsets = np.linspace(0.5, _duration-0.5, _number_of_pulses)
-    _rabi_rotations = np.repeat(np.pi, _number_of_pulses)
-    _azimuthal_angles = (np.pi/2)/(_number_of_pulses+1)*np.linspace(1.,
-                                                                    _number_of_pulses,
-                                                                    _number_of_pulses)
-    _detuning_rotations = np.repeat(0, _number_of_pulses)
+    _duration = 3.
+    _offsets = [0.5, 1.5, 2.5]
+    _rabi_rotations = [np.pi, np.pi, np.pi]
+    _azimuthal_angles = [0.5, 1., 1.5]
+    _detuning_rotations = [0., 0., 0.]
     _name = 'arbitrary_azimuthal_angle_sequence'
 
     dd_sequence = DynamicDecouplingSequence(
@@ -525,7 +506,7 @@ def test_conversion_of_pulses_with_arbitrary_azimuthal_angles():
 
     _maximum_rabi_rate = 20*np.pi
     _maximum_detuning_rate = 10*np.pi
-    minimum_segment_duration = np.mean(_rabi_rotations/_maximum_rabi_rate)
+    minimum_segment_duration = 0.1
 
     driven_control = convert_dds_to_driven_control(dd_sequence,
                                                    maximum_rabi_rate=_maximum_rabi_rate,
@@ -533,24 +514,11 @@ def test_conversion_of_pulses_with_arbitrary_azimuthal_angles():
                                                    minimum_segment_duration=minimum_segment_duration,
                                                    name=_name)
 
-    expected_rabi_rates = np.zeros(2*_number_of_pulses+1)
-
-    expected_azimuthal_angles = np.zeros(2*_number_of_pulses+1)
-    expected_azimuthal_angles[1::2] = _azimuthal_angles
-
-    expected_detuning_rates = np.zeros(2*_number_of_pulses+1)
-
-    pulse_durations = np.maximum(_rabi_rotations/_maximum_rabi_rate,
-                                 minimum_segment_duration)
-    expected_rabi_rates[1::2] = _rabi_rotations/pulse_durations
-
-    expected_durations = np.zeros(2*_number_of_pulses+1)
-    expected_durations[1::2] = pulse_durations
-    # durations of the middle gaps are: 1 - half of each of the neighboring pulses
-    expected_durations[2:-2:2] = 1. - 0.5*pulse_durations[:-1] - 0.5*pulse_durations[1:]
-    # initial and final gaps are just half of that
-    expected_durations[0] = 0.5 - 0.5*pulse_durations[0]
-    expected_durations[-1] = 0.5 - 0.5*pulse_durations[-1]
+    expected_rabi_rates = [0., 10.*np.pi, 0., 10.*np.pi, 0., 10.*np.pi, 0.]
+    expected_azimuthal_angles = [0., 0.5, 0., 1.0, 0., 1.5, 0.]
+    expected_detuning_rates = [0., 0., 0., 0., 0., 0., 0.]
+    expected_durations = [0.5 - 0.1/2, 0.1, 1. - 0.1/2 - 0.1/2, 0.1,
+                          1. - 0.1/2 - 0.1/2, 0.1, 0.5 - 0.1/2]
 
     assert np.allclose(driven_control.rabi_rates, expected_rabi_rates)
     assert np.allclose(driven_control.azimuthal_angles, expected_azimuthal_angles)
@@ -567,14 +535,11 @@ def test_conversion_of_pulses_with_arbitrary_detuning_rotations():
     Tests if the method to convert a DDS to driven controls handles properly
     Z pulses with detuning rotations that assume arbitrary values between 0 and pi.
     """
-    _number_of_pulses = 10
-    _duration = _number_of_pulses * 1.
-    _offsets = np.linspace(0.5, _duration-0.5, _number_of_pulses)
-    _rabi_rotations = np.repeat(0., _number_of_pulses)
-    _azimuthal_angles = np.repeat(0., _number_of_pulses)
-    _detuning_rotations = np.pi/(_number_of_pulses+1)*np.linspace(1.,
-                                                                  _number_of_pulses,
-                                                                  _number_of_pulses)
+    _duration = 3.
+    _offsets = [0.5, 1.5, 2.5]
+    _rabi_rotations = [0., 0., 0.]
+    _azimuthal_angles = [0., 0., 0.]
+    _detuning_rotations = [1., 2., 3.]
     _name = 'arbitrary_detuning_rotation_sequence'
 
     dd_sequence = DynamicDecouplingSequence(
@@ -585,9 +550,9 @@ def test_conversion_of_pulses_with_arbitrary_detuning_rotations():
         detuning_rotations=_detuning_rotations,
         name=_name)
 
-    _maximum_rabi_rate = 20*np.pi
-    _maximum_detuning_rate = 10*np.pi
-    minimum_segment_duration = np.mean(_detuning_rotations/_maximum_detuning_rate)
+    _maximum_rabi_rate = 20
+    _maximum_detuning_rate = 10
+    minimum_segment_duration = 0.2
 
     driven_control = convert_dds_to_driven_control(dd_sequence,
                                                    maximum_rabi_rate=_maximum_rabi_rate,
@@ -595,24 +560,11 @@ def test_conversion_of_pulses_with_arbitrary_detuning_rotations():
                                                    minimum_segment_duration=minimum_segment_duration,
                                                    name=_name)
 
-    expected_rabi_rates = np.zeros(2*_number_of_pulses+1)
-
-    expected_azimuthal_angles = np.zeros(2*_number_of_pulses+1)
-    expected_azimuthal_angles[1::2] = _azimuthal_angles
-
-    expected_detuning_rates = np.zeros(2*_number_of_pulses+1)
-
-    pulse_durations = np.maximum(minimum_segment_duration,
-                                 _detuning_rotations/_maximum_detuning_rate)
-    expected_detuning_rates[1::2] = _detuning_rotations/pulse_durations
-
-    expected_durations = np.zeros(2*_number_of_pulses+1)
-    expected_durations[1::2] = pulse_durations
-    # durations of the middle gaps are: 1 - half of each of the neighboring pulses
-    expected_durations[2:-2:2] = 1. - 0.5*pulse_durations[:-1] - 0.5*pulse_durations[1:]
-    # initial and final gaps are just half of that
-    expected_durations[0] = 0.5 - 0.5*pulse_durations[0]
-    expected_durations[-1] = 0.5 - 0.5*pulse_durations[-1]
+    expected_rabi_rates = [0., 0., 0., 0., 0., 0., 0.]
+    expected_azimuthal_angles = [0., 0., 0., 0., 0., 0., 0.]
+    expected_detuning_rates = [0., 5., 0., 10., 0., 10., 0.]
+    expected_durations = [0.5 - 0.2/2, 0.2, 1. - 0.2/2 - 0.2/2, 0.2,
+                          1. - 0.2/2 - 0.3/2, 0.3, 0.5 - 0.3/2]
 
     assert np.allclose(driven_control.rabi_rates, expected_rabi_rates)
     assert np.allclose(driven_control.azimuthal_angles, expected_azimuthal_angles)
