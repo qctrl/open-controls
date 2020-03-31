@@ -101,8 +101,11 @@ def convert_dds_to_driven_control(
         maximum_detuning_rate=2*np.pi,
         minimum_segment_duration=0.,
         **kwargs):
-    """Creates a Driven Control based on the supplied DDS and
-    other relevant information
+    """
+    Creates a Driven Control based on the supplied DDS and other relevant information.
+
+    Currently, pulses that simultaneously contain Rabi and detuning rotations are not
+    supported.
 
     Parameters
     ----------
@@ -220,19 +223,18 @@ def convert_dds_to_driven_control(
         operations.shape[1], 2))   # pylint: disable=unsubscriptable-object
 
     for op_idx in range(operations.shape[1]):   # pylint: disable=unsubscriptable-object
+        # Pulses that cause no rotations can have 0 duration
+        half_pulse_duration  = 0.
 
-        if operations[3, op_idx] == 0: #no z_rotations
+        if not np.isclose(operations[1, op_idx], 0.): # Rabi rotation
             half_pulse_duration = 0.5 * max(operations[1, op_idx] / maximum_rabi_rate,
                                             minimum_segment_duration)
+        elif not np.isclose(operations[3, op_idx], 0.): # Detuning rotation
+            half_pulse_duration = 0.5 * max(np.abs(operations[3, op_idx]) / maximum_detuning_rate,
+                                            minimum_segment_duration)
 
-            pulse_start_ends[op_idx, 0] = pulse_mid_points[op_idx] - half_pulse_duration
-            pulse_start_ends[op_idx, 1] = pulse_mid_points[op_idx] + half_pulse_duration
-        else:
-            half_pulse_duration = 0.5 * np.abs(operations[3, op_idx]) / maximum_detuning_rate
-
-            pulse_start_ends[op_idx, 0] = pulse_mid_points[op_idx] - half_pulse_duration
-
-            pulse_start_ends[op_idx, 1] = pulse_mid_points[op_idx] + half_pulse_duration
+        pulse_start_ends[op_idx, 0] = pulse_mid_points[op_idx] - half_pulse_duration
+        pulse_start_ends[op_idx, 1] = pulse_mid_points[op_idx] + half_pulse_duration
 
     # check if any of the pulses have gone outside the time limit [0, sequence_duration]
     # if yes, adjust the segment timing
@@ -302,23 +304,15 @@ def convert_dds_to_driven_control(
 
     pulse_segment_idx = 0
     for op_idx in range(0, operations.shape[1]):    # pylint: disable=unsubscriptable-object
+        pulse_width = pulse_start_ends[op_idx, 1] - pulse_start_ends[op_idx, 0]
+        control_durations[pulse_segment_idx] = pulse_width
 
-        if operations[3, op_idx] == 0.0:
-            control_rabi_rates[pulse_segment_idx] = operations[1, op_idx]/(
-                                                        pulse_start_ends[op_idx, 1] -
-                                                        pulse_start_ends[op_idx, 0]
-                                                        )
-            control_azimuthal_angles[pulse_segment_idx] = operations[2, op_idx]
-            control_durations[pulse_segment_idx] = (pulse_start_ends[op_idx, 1] -
-                                                    pulse_start_ends[op_idx, 0])
-        else:
-            # detuning should be negative or positive depending on the direction of rotation
-            sign = np.sign(operations[3, op_idx])
-
-            control_detunings[pulse_segment_idx] = sign*maximum_detuning_rate
-
-            control_durations[pulse_segment_idx] = (pulse_start_ends[op_idx, 1] -
-                                                    pulse_start_ends[op_idx, 0])
+        if pulse_width > 0.:
+            if operations[3, op_idx] == 0.0:
+                control_rabi_rates[pulse_segment_idx] = operations[1, op_idx]/pulse_width
+                control_azimuthal_angles[pulse_segment_idx] = operations[2, op_idx]
+            else:
+                control_detunings[pulse_segment_idx] = operations[3, op_idx]/pulse_width
 
         if op_idx != (operations.shape[1]-1):   # pylint: disable=unsubscriptable-object
             control_rabi_rates[pulse_segment_idx+1] = 0.
