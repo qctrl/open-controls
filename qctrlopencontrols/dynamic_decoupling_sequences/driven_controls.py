@@ -217,9 +217,6 @@ def convert_dds_to_driven_control(
 
     for op_idx in range(operations.shape[1]):   # pylint: disable=unsubscriptable-object
 
-        if np.isclose(np.sum(operations[:, op_idx]), 0.0):
-            continue
-
         if operations[3, op_idx] == 0: #no z_rotations
             if not np.isclose(operations[1, op_idx], 0.):
                 half_pulse_duration = 0.5 * operations[1, op_idx] / maximum_rabi_rate
