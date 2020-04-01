@@ -238,14 +238,11 @@ def convert_dds_to_driven_control(
         translation = pulse_start_ends[-1, 1] - sequence_duration
         pulse_start_ends[-1, :] = pulse_start_ends[-1, :] - translation
 
-    # four conditions to check
+    # two conditions to check
     # 1. Control segment start times should be monotonically increasing
     # 2. Control segment end times should be monotonically increasing
-    # 3. Adjacent segments should not be overlapping
     if (np.any(pulse_start_ends[0:-1, 0] - pulse_start_ends[1:, 0] > 0.) or
-            np.any(pulse_start_ends[0:-1, 1] - pulse_start_ends[1:, 1] > 0.) or
-            np.any(pulse_start_ends[1:, 0]-pulse_start_ends[0:-1, 1] < 0.)):
-
+        np.any(pulse_start_ends[0:-1, 1] - pulse_start_ends[1:, 1] > 0.)
         raise ArgumentsValueError('Pulse timing could not be properly deduced from '
                                   'the sequence operation offsets. Try increasing the '
                                   'maximum rabi rate or maximum detuning rate.',
@@ -255,8 +252,20 @@ def convert_dds_to_driven_control(
                                   extras={'deduced_pulse_start_timing': pulse_start_ends[:, 0],
                                           'deduced_pulse_end_timing': pulse_start_ends[:, 1]})
 
-    # check if the minimum_segment_duration is respected in the gaps between the pulses
+    # check that no adjacent pulses overlap
     gap_durations = pulse_start_ends[1:, 0] - pulse_start_ends[:-1, 1]
+    if not np.all(np.logical_or(np.greater(gap_durations, 0.),
+                                np.isclose(gap_durations, 0.))):
+            raise ArgumentsValueError('There is overlap between pulses in the sequecence. '
+                                      ' Try increasing the maximum rabi rate or maximum detuning rate.',
+                                      {'dynamic_decoupling_sequence': dynamic_decoupling_sequence,
+                                       'maximum_rabi_rate': maximum_rabi_rate,
+                                       'maximum_detuning_rate': maximum_detuning_rate},
+                                      extras={'deduced_pulse_start_timing': pulse_start_ends[:, 0],
+                                              'deduced_pulse_end_timing': pulse_start_ends[:, 1],
+                                              'gap_durations': gap_durations})
+
+    # check if the minimum_segment_duration is respected in the gaps between the pulses
     if not np.all(np.logical_or(np.greater(gap_durations, minimum_segment_duration),
                                 np.isclose(gap_durations, minimum_segment_duration))):
         raise ArgumentsValueError("Distance between pulses does not respect minimum_segment_duration. "
