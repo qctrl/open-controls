@@ -173,6 +173,12 @@ def convert_dds_to_driven_control(
     azimuthal_angles = dynamic_decoupling_sequence.azimuthal_angles
     detuning_rotations = dynamic_decoupling_sequence.detuning_rotations
 
+    # check if all Rabi rotations are valid (i.e. have positive values)
+    if np.any(np.less(rabi_rotations, 0.)):
+        raise ArgumentsValueError(
+            'Sequence contains negative values for Rabi rotations.',
+            {'dynamic_decoupling_sequence': str(dynamic_decoupling_sequence)})
+
     # check for valid operation
     if not _check_valid_operation(rabi_rotations=rabi_rotations,
                                   detuning_rotations=detuning_rotations):
@@ -219,7 +225,7 @@ def convert_dds_to_driven_control(
         half_pulse_duration  = 0.
 
         if not np.isclose(operations[1, op_idx], 0.): # Rabi rotation
-            half_pulse_duration = 0.5 * max(np.abs(operations[1, op_idx]) / maximum_rabi_rate,
+            half_pulse_duration = 0.5 * max(operations[1, op_idx] / maximum_rabi_rate,
                                             minimum_segment_duration)
         elif not np.isclose(operations[3, op_idx], 0.): # Detuning rotation
             half_pulse_duration = 0.5 * max(np.abs(operations[3, op_idx]) / maximum_detuning_rate,
