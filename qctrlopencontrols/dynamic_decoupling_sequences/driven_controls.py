@@ -77,17 +77,17 @@ def _check_maximum_rotation_rate(
     """
 
     # check against global parameters
-    if maximum_rabi_rate < 0. or maximum_rabi_rate > UPPER_BOUND_RABI_RATE:
+    if maximum_rabi_rate <= 0. or maximum_rabi_rate > UPPER_BOUND_RABI_RATE:
         raise ArgumentsValueError(
-            'Maximum rabi rate must be between 0. and maximum value of {0}'.format(
+            'Maximum rabi rate must be greater than 0. and less or equal to {0}'.format(
                 UPPER_BOUND_RABI_RATE),
             {'maximum_rabi_rate': maximum_rabi_rate},
             extras={'maximum_detuning_rate': maximum_detuning_rate,
                     'allowed_maximum_rabi_rate': UPPER_BOUND_RABI_RATE})
 
-    if maximum_detuning_rate < 0. or maximum_detuning_rate > UPPER_BOUND_DETUNING_RATE:
+    if maximum_detuning_rate <= 0. or maximum_detuning_rate > UPPER_BOUND_DETUNING_RATE:
         raise ArgumentsValueError(
-            'Maximum detuning rate must be between 0. and maximum value of {0}'.format(
+            'Maximum detuning rate must be greater than 0. and less or equalt o {0}'.format(
                 UPPER_BOUND_DETUNING_RATE),
             {'maximum_detuning_rate': maximum_detuning_rate, },
             extras={'maximum_rabi_rate': maximum_rabi_rate,
@@ -112,9 +112,9 @@ def convert_dds_to_driven_control(
     dynamic_decoupling_sequence : qctrlopencontrols.DynamicDecouplingSequence
         The base DDS
     maximum_rabi_rate : float, optional
-        Maximum Rabi Rate; Defaults to 2*pi
+        Maximum Rabi Rate. Defaults to 2*pi, and must be greater than 0 if set.
     maximum_detuning_rate : float, optional
-        Maximum Detuning Rate; Defaults to 2*pi
+        Maximum Detuning Rate; Defaults to 2*pi, and must be greater than 0 if set.
     minimum_segment_duration : float, optional
         If set, further restricts the duration of every segment of the Driven Controls.
         Defaults to 0, in which case it does not affect the duration of the pulses.
@@ -182,15 +182,6 @@ def convert_dds_to_driven_control(
             extras={'maximum_rabi_rate': maximum_rabi_rate,
                     'maximum_detuning_rate': maximum_detuning_rate})
 
-    # check if detuning rate is supplied if there is a detuning_rotation > 0
-    if np.any(detuning_rotations > 0.) and maximum_detuning_rate is None:
-        raise ArgumentsValueError(
-            'Sequence operation includes detuning rotations. Please supply a valid '
-            'maximum_detuning_rate.',
-            {'detuning_rotations': dynamic_decoupling_sequence.detuning_rotations,
-             'maximum_detuning_rate': maximum_detuning_rate},
-            extras={'maximum_rabi_rate': maximum_rabi_rate})
-
     if offsets.size == 0:
         offsets = np.array([0, sequence_duration])
         rabi_rotations = np.array([0, 0])
@@ -227,7 +218,7 @@ def convert_dds_to_driven_control(
         half_pulse_duration  = 0.
 
         if not np.isclose(operations[1, op_idx], 0.): # Rabi rotation
-            half_pulse_duration = 0.5 * max(operations[1, op_idx] / maximum_rabi_rate,
+            half_pulse_duration = 0.5 * max(np.abs(operations[1, op_idx]) / maximum_rabi_rate,
                                             minimum_segment_duration)
         elif not np.isclose(operations[3, op_idx], 0.): # Detuning rotation
             half_pulse_duration = 0.5 * max(np.abs(operations[3, op_idx]) / maximum_detuning_rate,
@@ -257,11 +248,9 @@ def convert_dds_to_driven_control(
     # four conditions to check
     # 1. Control segment start times should be monotonically increasing
     # 2. Control segment end times should be monotonically increasing
-    # 3. Control segment start time must be less than its end time
-    # 4. Adjacent segments should not be overlapping
+    # 3. Adjacent segments should not be overlapping
     if (np.any(pulse_start_ends[0:-1, 0] - pulse_start_ends[1:, 0] > 0.) or
             np.any(pulse_start_ends[0:-1, 1] - pulse_start_ends[1:, 1] > 0.) or
-            np.any(pulse_start_ends[:, 0] - pulse_start_ends[:, 1] > 0.) or
             np.any(pulse_start_ends[1:, 0]-pulse_start_ends[0:-1, 1] < 0.)):
 
         raise ArgumentsValueError('Pulse timing could not be properly deduced from '
@@ -284,7 +273,8 @@ def convert_dds_to_driven_control(
                                    'maximum_detuning_rate': maximum_detuning_rate,
                                    'minimum_segment_duration': minimum_segment_duration},
                                   extras={'deduced_pulse_start_timing': pulse_start_ends[:, 0],
-                                          'deduced_pulse_end_timing': pulse_start_ends[:, 1]})
+                                          'deduced_pulse_end_timing': pulse_start_ends[:, 1],
+                                          'gap_durations': gap_durations})
 
 
     if np.allclose(pulse_start_ends, 0.0):
