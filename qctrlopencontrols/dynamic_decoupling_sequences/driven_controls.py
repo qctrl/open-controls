@@ -238,7 +238,7 @@ def convert_dds_to_driven_control(
         translation = pulse_start_ends[-1, 1] - sequence_duration
         pulse_start_ends[-1, :] = pulse_start_ends[-1, :] - translation
 
-    # four conditions to check
+    # three conditions to check
     # 1. Control segment start times should be monotonically increasing
     # 2. Control segment end times should be monotonically increasing
     # 3. Adjacent segments should not be overlapping
