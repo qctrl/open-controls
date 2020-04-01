@@ -119,6 +119,7 @@ def convert_dds_to_driven_control(
     minimum_segment_duration : float, optional
         If set, further restricts the duration of every segment of the Driven Controls.
         Defaults to 0, in which case it does not affect the duration of the pulses.
+        Must be greater or equal to 0, if set.
     kwargs : dict, optional
         Options to make the corresponding filter type.
         I.e. the options for primitive are described in doc for the PrimitivePulse class.
@@ -165,6 +166,10 @@ def convert_dds_to_driven_control(
                                   {'type(dynamic_decoupling_sequence':
                                    type(dynamic_decoupling_sequence)})
 
+    if minimum_segment_duration < 0.:
+        raise ArgumentsValueError('Minimum segment duration must be greater or equal to 0.',
+                                  {'minimum_segment_duration': minimum_segment_duration})
+
     _check_maximum_rotation_rate(maximum_rabi_rate, maximum_detuning_rate)
 
     sequence_duration = dynamic_decoupling_sequence.duration
@@ -207,12 +212,10 @@ def convert_dds_to_driven_control(
         detuning_rotations = np.append(detuning_rotations, [0])
 
     # check that the offsets are correctly sorted in time
-    time_differences = np.diff(offsets)
-    if not np.all(np.logical_or(np.greater(time_differences, 0.),
-                                np.isclose(time_differences, 0.))):
+    if any(np.diff(offsets) <= 0.):
         raise ArgumentsValueError("Pulse timing could not be properly deduced from "
                                   "the sequence offsets. Make sure all offset are "
-                                  "correctly ordered in time.",
+                                  "in increasing order.",
                                   {'dynamic_decoupling_sequence': dynamic_decoupling_sequence},
                                   extras={'offsets': offsets})
 
@@ -254,24 +257,14 @@ def convert_dds_to_driven_control(
         translation = pulse_start_ends[-1, 1] - sequence_duration
         pulse_start_ends[-1, :] = pulse_start_ends[-1, :] - translation
 
-    # check that no adjacent pulses overlap
-    gap_durations = pulse_start_ends[1:, 0] - pulse_start_ends[:-1, 1]
-    if not np.all(np.logical_or(np.greater(gap_durations, 0.),
-                                np.isclose(gap_durations, 0.))):
-            raise ArgumentsValueError("There is overlap between pulses in the sequence. "
-                                      "Try increasing the maximum rabi rate or maximum detuning rate.",
-                                      {'dynamic_decoupling_sequence': dynamic_decoupling_sequence,
-                                       'maximum_rabi_rate': maximum_rabi_rate,
-                                       'maximum_detuning_rate': maximum_detuning_rate},
-                                      extras={'deduced_pulse_start_timing': pulse_start_ends[:, 0],
-                                              'deduced_pulse_end_timing': pulse_start_ends[:, 1],
-                                              'gap_durations': gap_durations})
-
     # check if the minimum_segment_duration is respected in the gaps between the pulses
+    # as minimum_segment_duration >= 0, this also excludes overlaps
+    gap_durations = pulse_start_ends[1:, 0] - pulse_start_ends[:-1, 1]
     if not np.all(np.logical_or(np.greater(gap_durations, minimum_segment_duration),
                                 np.isclose(gap_durations, minimum_segment_duration))):
         raise ArgumentsValueError("Distance between pulses does not respect minimum_segment_duration. "
-                                  "Try decreasing the minimum_segment_duration.",
+                                  "Try decreasing the minimum_segment_duration or incresing "
+                                  "the maximum_rabi_rate or maximum_detuning_rate",
                                   {'dynamic_decoupling_sequence': dynamic_decoupling_sequence,
                                    'maximum_rabi_rate': maximum_rabi_rate,
                                    'maximum_detuning_rate': maximum_detuning_rate,

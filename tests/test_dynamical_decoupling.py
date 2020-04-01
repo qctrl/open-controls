@@ -581,23 +581,13 @@ def test_conversion_of_tightly_packed_sequence():
     a sequence tightly packed with pulses, where there is no time for a gap between
     the pi/2-pulses and the adjacent pi-pulses.
     """
-    # create a sequence containing 30 pi-pulses and 2 pi/2-pulses at the extremities
+    # create a sequence containing 2 pi-pulses and 2 pi/2-pulses at the extremities
     dynamic_decoupling_sequence = DynamicDecouplingSequence(
-        duration=3.0,
-        offsets=np.array([0., 0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95,
-                          1.05, 1.15, 1.25, 1.35, 1.45, 1.55, 1.65, 1.75, 1.85, 1.95, 2.05,
-                          2.15, 2.25, 2.35, 2.45, 2.55, 2.65, 2.75, 2.85, 2.95, 3.]),
-        rabi_rotations=np.array([1.57079633, 3.14159265, 3.14159265, 3.14159265, 3.14159265,
-                                 3.14159265, 3.14159265, 3.14159265, 3.14159265, 3.14159265,
-                                 3.14159265, 3.14159265, 3.14159265, 3.14159265, 3.14159265,
-                                 3.14159265, 3.14159265, 3.14159265, 3.14159265, 3.14159265,
-                                 3.14159265, 3.14159265, 3.14159265, 3.14159265, 3.14159265,
-                                 3.14159265, 3.14159265, 3.14159265, 3.14159265, 3.14159265,
-                                 3.14159265, 1.57079633]),
-        azimuthal_angles=np.array([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
-                                   0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]),
-        detuning_rotations=np.array([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
-                                     0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]),
+        duration=0.2,
+        offsets=np.array([0., 0.05, 0.15, 0.2]),
+        rabi_rotations=np.array([1.57079633, 3.14159265, 3.14159265, 1.57079633]),
+        azimuthal_angles=np.array([0., 0., 0., 0.]),
+        detuning_rotations=np.array([0., 0., 0., 0.]),
         name=None)
 
     driven_control = convert_dds_to_driven_control(dynamic_decoupling_sequence,
@@ -606,11 +596,11 @@ def test_conversion_of_tightly_packed_sequence():
                                                    name=None)
 
     # There is no space for a gap between the pi/2-pulses and the adjacent pi-pulses,
-    # so the resulting sequence should have 32 pulses + 29 gaps = 61 segments with non-zero duration
-    assert sum(np.greater(driven_control.durations, 0.)) == 61
+    # so the resulting sequence should have 4 pulses + 1 gaps = 5 segments with non-zero duration
+    assert sum(np.greater(driven_control.durations, 0.)) == 5
 
-    # ... of which 32 are X pulses (i.e. rabi_rotation > 0)
-    assert sum(np.greater(driven_control.rabi_rates, 0.)) == 32
+    # ... of which 4 are X pulses (i.e. rabi_rotation > 0)
+    assert sum(np.greater(driven_control.rabi_rates, 0.)) == 4
 
 def test_free_evolution_conversion():
 
