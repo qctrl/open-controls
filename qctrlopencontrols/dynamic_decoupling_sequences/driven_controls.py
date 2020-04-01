@@ -200,6 +200,16 @@ def convert_dds_to_driven_control(
         azimuthal_angles = np.append(azimuthal_angles, [0])
         detuning_rotations = np.append(detuning_rotations, [0])
 
+    # check that the offsets are correctly sorted in time
+    time_differences = np.diff(offsets)
+    if not np.all(np.logical_or(np.greater(time_differences, 0.),
+                                np.isclose(time_differences, 0.))):
+        raise ArgumentsValueError("Pulse timing could not be properly deduced from "
+                                  "the sequence operation offsets. Make sure all pulse "
+                                  "offsets are correctly ordered in time.",
+                                  {'dynamic_decoupling_sequence': dynamic_decoupling_sequence},
+                                  extras={'offsets': offsets})
+
     offsets = offsets[np.newaxis, :]
     rabi_rotations = rabi_rotations[np.newaxis, :]
     azimuthal_angles = azimuthal_angles[np.newaxis, :]
@@ -238,26 +248,12 @@ def convert_dds_to_driven_control(
         translation = pulse_start_ends[-1, 1] - sequence_duration
         pulse_start_ends[-1, :] = pulse_start_ends[-1, :] - translation
 
-    # two conditions to check
-    # 1. Control segment start times should be monotonically increasing
-    # 2. Control segment end times should be monotonically increasing
-    if (np.any(pulse_start_ends[0:-1, 0] - pulse_start_ends[1:, 0] > 0.) or
-        np.any(pulse_start_ends[0:-1, 1] - pulse_start_ends[1:, 1] > 0.)
-        raise ArgumentsValueError('Pulse timing could not be properly deduced from '
-                                  'the sequence operation offsets. Try increasing the '
-                                  'maximum rabi rate or maximum detuning rate.',
-                                  {'dynamic_decoupling_sequence': dynamic_decoupling_sequence,
-                                   'maximum_rabi_rate': maximum_rabi_rate,
-                                   'maximum_detuning_rate': maximum_detuning_rate},
-                                  extras={'deduced_pulse_start_timing': pulse_start_ends[:, 0],
-                                          'deduced_pulse_end_timing': pulse_start_ends[:, 1]})
-
     # check that no adjacent pulses overlap
     gap_durations = pulse_start_ends[1:, 0] - pulse_start_ends[:-1, 1]
     if not np.all(np.logical_or(np.greater(gap_durations, 0.),
                                 np.isclose(gap_durations, 0.))):
             raise ArgumentsValueError('There is overlap between pulses in the sequecence. '
-                                      ' Try increasing the maximum rabi rate or maximum detuning rate.',
+                                      'Try increasing the maximum rabi rate or maximum detuning rate.',
                                       {'dynamic_decoupling_sequence': dynamic_decoupling_sequence,
                                        'maximum_rabi_rate': maximum_rabi_rate,
                                        'maximum_detuning_rate': maximum_detuning_rate},
