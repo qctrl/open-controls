@@ -231,20 +231,12 @@ def convert_dds_to_driven_control(
     # check if any of the pulses have gone outside the time limit [0, sequence_duration]
     # if yes, adjust the segment timing
     if pulse_start_ends[0, 0] < 0.:
-
-        if np.sum(np.abs(pulse_start_ends[0, :])) == 0:
-            pulse_start_ends[0, 0] = 0
-        else:
-            translation = 0. - (pulse_start_ends[0, 0])
-            pulse_start_ends[0, :] = pulse_start_ends[0, :] + translation
+        translation = 0. - (pulse_start_ends[0, 0])
+        pulse_start_ends[0, :] = pulse_start_ends[0, :] + translation
 
     if pulse_start_ends[-1, 1] > sequence_duration:
-
-        if np.sum(np.abs(pulse_start_ends[0, :])) == 2 * sequence_duration:
-            pulse_start_ends[-1, 1] = sequence_duration
-        else:
-            translation = pulse_start_ends[-1, 1] - sequence_duration
-            pulse_start_ends[-1, :] = pulse_start_ends[-1, :] - translation
+        translation = pulse_start_ends[-1, 1] - sequence_duration
+        pulse_start_ends[-1, :] = pulse_start_ends[-1, :] - translation
 
     # four conditions to check
     # 1. Control segment start times should be monotonically increasing
