@@ -109,7 +109,7 @@ def convert_dds_to_driven_control(
     Parameters
     ----------
     dynamic_decoupling_sequence : qctrlopencontrols.DynamicDecouplingSequence
-        The base DDS
+        The base DDS. Its offsets should be ordered in ascending order in time.
     maximum_rabi_rate : float, optional
         Maximum Rabi Rate; Defaults to 2*pi.
         Must be greater than 0 and less or equal to UPPER_BOUND_RABI_RATE, if set.
@@ -173,6 +173,12 @@ def convert_dds_to_driven_control(
     azimuthal_angles = dynamic_decoupling_sequence.azimuthal_angles
     detuning_rotations = dynamic_decoupling_sequence.detuning_rotations
 
+    # check if all Rabi rotations are valid (i.e. have positive values)
+    if np.any(np.less(rabi_rotations, 0.)):
+        raise ArgumentsValueError(
+            'Sequence contains negative values for Rabi rotations.',
+            {'dynamic_decoupling_sequence': str(dynamic_decoupling_sequence)})
+
     # check for valid operation
     if not _check_valid_operation(rabi_rotations=rabi_rotations,
                                   detuning_rotations=detuning_rotations):
@@ -205,8 +211,8 @@ def convert_dds_to_driven_control(
     if not np.all(np.logical_or(np.greater(time_differences, 0.),
                                 np.isclose(time_differences, 0.))):
         raise ArgumentsValueError("Pulse timing could not be properly deduced from "
-                                  "the sequence operation offsets. Make sure all pulse "
-                                  "offsets are correctly ordered in time.",
+                                  "the sequence offsets. Make sure all offset are "
+                                  "correctly ordered in time.",
                                   {'dynamic_decoupling_sequence': dynamic_decoupling_sequence},
                                   extras={'offsets': offsets})
 

@@ -605,8 +605,8 @@ def test_conversion_of_tightly_packed_sequence():
                                                    name=None)
 
     # There is no space for a gap between the pi/2-pulses and the adjacent pi-pulses,
-    # so the resulting sequence should have 32 pulses + 29 gaps = 61 segments
-    assert len(driven_control.durations) == 61
+    # so the resulting sequence should have 32 pulses + 29 gaps = 61 segments with non-zero duration
+    assert len(np.greater(driven_control.durations, 0.)) == 61
 
     # ... of which 32 are X pulses (i.e. rabi_rotation > 0)
     assert sum(np.greater(driven_control.rabi_rates, 0.)) == 32
