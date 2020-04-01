@@ -214,7 +214,7 @@ def convert_dds_to_driven_control(
     # check that the offsets are correctly sorted in time
     if any(np.diff(offsets) <= 0.):
         raise ArgumentsValueError("Pulse timing could not be properly deduced from "
-                                  "the sequence offsets. Make sure all offset are "
+                                  "the sequence offsets. Make sure all offsets are "
                                   "in increasing order.",
                                   {'dynamic_decoupling_sequence': dynamic_decoupling_sequence},
                                   extras={'offsets': offsets})
