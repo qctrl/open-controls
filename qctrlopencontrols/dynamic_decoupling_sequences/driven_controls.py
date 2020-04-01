@@ -274,9 +274,9 @@ def convert_dds_to_driven_control(
                                           'deduced_pulse_end_timing': pulse_start_ends[:, 1]})
 
     # check if the minimum_segment_duration is respected in the gaps between the pulses
-    if not np.any(np.logical_or(np.greater(pulse_start_ends[1:, 0]-pulse_start_ends[:-1, 1],
-                                           minimum_segment_duration),
-                                np.isclose(pulse_start_ends[1:, 0], pulse_start_ends[:-1, 1]))):
+    gap_durations = pulse_start_ends[1:, 0] - pulse_start_ends[:-1, 1]
+    if not np.all(np.logical_or(np.greater(gap_durations, minimum_segment_duration),
+                                np.isclose(gap_durations, minimum_segment_duration))):
         raise ArgumentsValueError("Distance between pulses does not respect minimum_segment_duration. "
                                   "Try decreasing the minimum_segment_duration.",
                                   {'dynamic_decoupling_sequence': dynamic_decoupling_sequence,
