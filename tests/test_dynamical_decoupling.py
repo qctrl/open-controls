@@ -578,7 +578,8 @@ def test_conversion_of_pulses_with_arbitrary_detuning_rotations():
 def test_conversion_of_tightly_packed_sequence():
     """
     Tests if the method to convert a DDS to driven controls handles properly
-    a sequence tightly packed with pulses.
+    a sequence tightly packed with pulses, where there is no time for a gap between
+    the pi/2-pulses and the adjacent pi-pulses.
     """
     # create a sequence containing 30 pi-pulses and 2 pi/2-pulses at the extremities
     dynamic_decoupling_sequence = DynamicDecouplingSequence(
@@ -606,7 +607,7 @@ def test_conversion_of_tightly_packed_sequence():
 
     # There is no space for a gap between the pi/2-pulses and the adjacent pi-pulses,
     # so the resulting sequence should have 32 pulses + 29 gaps = 61 segments with non-zero duration
-    assert len(np.greater(driven_control.durations, 0.)) == 61
+    assert sum(np.greater(driven_control.durations, 0.)) == 61
 
     # ... of which 32 are X pulses (i.e. rabi_rotation > 0)
     assert sum(np.greater(driven_control.rabi_rates, 0.)) == 32

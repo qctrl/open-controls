@@ -109,7 +109,7 @@ def convert_dds_to_driven_control(
     Parameters
     ----------
     dynamic_decoupling_sequence : qctrlopencontrols.DynamicDecouplingSequence
-        The base DDS. Its offsets should be ordered in ascending order in time.
+        The base DDS. Its offsets should be sorted in ascending order in time.
     maximum_rabi_rate : float, optional
         Maximum Rabi Rate; Defaults to 2*pi.
         Must be greater than 0 and less or equal to UPPER_BOUND_RABI_RATE, if set.
@@ -235,7 +235,7 @@ def convert_dds_to_driven_control(
         half_pulse_duration  = 0.
 
         if not np.isclose(operations[1, op_idx], 0.): # Rabi rotation
-            half_pulse_duration = 0.5 * max(np.abs(operations[1, op_idx]) / maximum_rabi_rate,
+            half_pulse_duration = 0.5 * max(operations[1, op_idx] / maximum_rabi_rate,
                                             minimum_segment_duration)
         elif not np.isclose(operations[3, op_idx], 0.): # Detuning rotation
             half_pulse_duration = 0.5 * max(np.abs(operations[3, op_idx]) / maximum_detuning_rate,
@@ -258,8 +258,8 @@ def convert_dds_to_driven_control(
     gap_durations = pulse_start_ends[1:, 0] - pulse_start_ends[:-1, 1]
     if not np.all(np.logical_or(np.greater(gap_durations, 0.),
                                 np.isclose(gap_durations, 0.))):
-            raise ArgumentsValueError('There is overlap between pulses in the sequecence. '
-                                      'Try increasing the maximum rabi rate or maximum detuning rate.',
+            raise ArgumentsValueError("There is overlap between pulses in the sequence. "
+                                      "Try increasing the maximum rabi rate or maximum detuning rate.",
                                       {'dynamic_decoupling_sequence': dynamic_decoupling_sequence,
                                        'maximum_rabi_rate': maximum_rabi_rate,
                                        'maximum_detuning_rate': maximum_detuning_rate},
