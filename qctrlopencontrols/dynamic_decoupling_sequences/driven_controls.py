@@ -263,8 +263,8 @@ def convert_dds_to_driven_control(
     if not np.all(np.logical_or(np.greater(gap_durations, minimum_segment_duration),
                                 np.isclose(gap_durations, minimum_segment_duration))):
         raise ArgumentsValueError("Distance between pulses does not respect minimum_segment_duration. "
-                                  "Try decreasing the minimum_segment_duration or incresing "
-                                  "the maximum_rabi_rate or maximum_detuning_rate",
+                                  "Try decreasing the minimum_segment_duration or increasing "
+                                  "the maximum_rabi_rate or the maximum_detuning_rate.",
                                   {'dynamic_decoupling_sequence': dynamic_decoupling_sequence,
                                    'maximum_rabi_rate': maximum_rabi_rate,
                                    'maximum_detuning_rate': maximum_detuning_rate,
