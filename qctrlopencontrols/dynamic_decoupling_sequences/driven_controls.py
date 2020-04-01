@@ -79,7 +79,7 @@ def _check_maximum_rotation_rate(
     # check against global parameters
     if maximum_rabi_rate <= 0. or maximum_rabi_rate > UPPER_BOUND_RABI_RATE:
         raise ArgumentsValueError(
-            'Maximum rabi rate must be greater than 0. and less or equal to {0}'.format(
+            'Maximum rabi rate must be greater than 0 and less or equal to {0}'.format(
                 UPPER_BOUND_RABI_RATE),
             {'maximum_rabi_rate': maximum_rabi_rate},
             extras={'maximum_detuning_rate': maximum_detuning_rate,
@@ -87,11 +87,10 @@ def _check_maximum_rotation_rate(
 
     if maximum_detuning_rate <= 0. or maximum_detuning_rate > UPPER_BOUND_DETUNING_RATE:
         raise ArgumentsValueError(
-            'Maximum detuning rate must be greater than 0. and less or equalt o {0}'.format(
+            'Maximum detuning rate must be greater than 0 and less or equal to {0}'.format(
                 UPPER_BOUND_DETUNING_RATE),
             {'maximum_detuning_rate': maximum_detuning_rate, },
             extras={'maximum_rabi_rate': maximum_rabi_rate,
-                    'allowed_maximum_rabi_rate': UPPER_BOUND_RABI_RATE,
                     'allowed_maximum_detuning_rate': UPPER_BOUND_DETUNING_RATE})
 
 
@@ -112,9 +111,11 @@ def convert_dds_to_driven_control(
     dynamic_decoupling_sequence : qctrlopencontrols.DynamicDecouplingSequence
         The base DDS
     maximum_rabi_rate : float, optional
-        Maximum Rabi Rate. Defaults to 2*pi, and must be greater than 0 if set.
+        Maximum Rabi Rate; Defaults to 2*pi.
+        Must be greater than 0 and less or equal to UPPER_BOUND_RABI_RATE, if set.
     maximum_detuning_rate : float, optional
-        Maximum Detuning Rate; Defaults to 2*pi, and must be greater than 0 if set.
+        Maximum Detuning Rate; Defaults to 2*pi.
+        Must be greater than 0 and less or equal to UPPER_BOUND_DETUNING_RATE, if set.
     minimum_segment_duration : float, optional
         If set, further restricts the duration of every segment of the Driven Controls.
         Defaults to 0, in which case it does not affect the duration of the pulses.
