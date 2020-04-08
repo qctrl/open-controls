@@ -779,7 +779,7 @@ def test_if_walsh_sequence_with_even_pulses_is_identity():
         paley_order=6,
         pre_post_rotation=True)
 
-    # A Walsh sequence with paley_order 7 has 4 pi-pulses + 2 pi/2-pulses,
+    # A Walsh sequence with paley_order 6 has 4 pi-pulses + 2 pi/2-pulses,
     # see https://arxiv.org/pdf/1109.6002.pdf
     assert len(even_walsh_sequence.offsets) == 4 + 2
 
