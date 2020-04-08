@@ -91,7 +91,7 @@ def _add_pre_post_rotations(
         )
     )
     y_pi_pulses = np.count_nonzero(
-        np.logical_and.reduce( # pylint: disable=maybe-no-member
+        np.logical_and.reduce(  # pylint: disable=maybe-no-member
             (
                 np.isclose(rabi_rotations, np.pi),
                 np.isclose(azimuthal_angles, np.pi / 2.0),
@@ -100,7 +100,7 @@ def _add_pre_post_rotations(
         )
     )
     z_pi_pulses = np.count_nonzero(
-        np.logical_and.reduce( # pylint: disable=maybe-no-member
+        np.logical_and.reduce(  # pylint: disable=maybe-no-member
             (
                 np.isclose(rabi_rotations, 0.0),
                 np.isclose(azimuthal_angles, 0.0),
