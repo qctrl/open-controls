@@ -63,6 +63,12 @@ setup(
         "toml==0.*,>=0.10.0",
     ],
     extras_require={
-        "dev": ["pylama", "pylint", "pylint-runner", "pytest", "sphinx==2.*,>=2.2.0"]
+        "dev": [
+            "black==19.*,>=19.10.0",
+            "pylint==2.*,>=2.3.0",
+            "pylint-runner==0.*,>=0.5.4",
+            "pytest==5.*,>=5.0.0",
+            "sphinx==2.*,>=2.2.0",
+        ]
     },
 )
