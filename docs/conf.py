@@ -1,5 +1,7 @@
-# Configuration file for the Sphinx documentation builder.
-#
+# pylint: disable=invalid-name
+"""
+Configuration file for the Sphinx documentation builder.
+"""
 # This file only contains a selection of the most common options. For a full
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
@@ -13,7 +15,6 @@
 import os
 import sys
 import toml
-import sphinx_rtd_theme
 
 sys.path.insert(0, os.path.abspath(".."))
 
@@ -23,7 +24,7 @@ package_info = parsed["tool"]["poetry"]
 project = package_info["description"]
 author = ", ".join(package_info["authors"])
 release = package_info["version"]
-copyright = "2019, Q-CTRL <support@q-ctrl.com>"
+copyright = "2019, Q-CTRL <support@q-ctrl.com>"  # pylint: disable=redefined-builtin
 
 # -- HTML Variables ----------------------------------------------------------
 # Variables to insert into _templates/layout.html
@@ -31,7 +32,8 @@ copyright = "2019, Q-CTRL <support@q-ctrl.com>"
 html_context = {
     "var_url": "https://docs.q-ctrl.com",
     "var_title": "Open Controls Python package | Q-CTRL",
-    "var_description": "Module, class and method reference for the Q-CTRL Open Controls Python package",
+    "var_description": "Module, class and method reference forthe Q-CTRL Open Controls\
+        Python package",
     "var_image": "https://docs.q-ctrl.com/assets/img/social.jpg",
     "var_twitter_username": "qctrlHQ",
 }
