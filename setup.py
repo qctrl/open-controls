@@ -37,5 +37,5 @@ setup(
     package_dir={"": "."},
     package_data={},
     install_requires=['numpy==1.*,>=1.16.0', 'scipy==1.*,>=1.3.0', 'sphinx-rtd-theme==0.*,>=0.4.3', 'toml==0.*,>=0.10.0'],
-    extras_require={"dev": ["pylama", "pylint", "pylint-runner", "pytest", "sphinx==2.*,>=2.2.0"]},
+    extras_require={"dev": ["nbval==0.*,>=0.9.5", "pylama", "pylint", "pylint-runner", "pytest", "qctrl-visualizer==2.*,>=2.1.0", "sphinx==2.*,>=2.2.0"]},
 )
