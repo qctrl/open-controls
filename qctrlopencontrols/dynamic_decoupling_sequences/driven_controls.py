@@ -20,9 +20,12 @@ dynamic_decoupling_sequences.driven_controls
 
 import numpy as np
 
-from ..exceptions.exceptions import ArgumentsValueError
-from ..driven_controls import UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE
+from ..driven_controls import (
+    UPPER_BOUND_DETUNING_RATE,
+    UPPER_BOUND_RABI_RATE,
+)
 from ..driven_controls.driven_control import DrivenControl
+from ..exceptions.exceptions import ArgumentsValueError
 
 
 def _check_valid_operation(rabi_rotations, detuning_rotations):
@@ -249,10 +252,8 @@ def convert_dds_to_driven_control(
 
     pulse_mid_points = operations[0, :]
 
-    pulse_start_ends = np.zeros(
-        (operations.shape[1], 2)  # pylint: disable=unsubscriptable-object
-    )
-    for op_idx in range(operations.shape[1]):  # pylint: disable=unsubscriptable-object
+    pulse_start_ends = np.zeros((operations.shape[1], 2))
+    for op_idx in range(operations.shape[1]):
         # Pulses that cause no rotations can have 0 duration
         half_pulse_duration = 0.0
 
@@ -315,23 +316,13 @@ def convert_dds_to_driven_control(
             **kwargs
         )
 
-    control_rabi_rates = np.zeros(
-        (operations.shape[1] * 2,)  # pylint: disable=unsubscriptable-object
-    )
-    control_azimuthal_angles = np.zeros(
-        (operations.shape[1] * 2,)  # pylint: disable=unsubscriptable-object
-    )
-    control_detunings = np.zeros(
-        (operations.shape[1] * 2,)  # pylint: disable=unsubscriptable-object
-    )
-    control_durations = np.zeros(
-        (operations.shape[1] * 2,)  # pylint: disable=unsubscriptable-object
-    )
+    control_rabi_rates = np.zeros((operations.shape[1] * 2,))
+    control_azimuthal_angles = np.zeros((operations.shape[1] * 2,))
+    control_detunings = np.zeros((operations.shape[1] * 2,))
+    control_durations = np.zeros((operations.shape[1] * 2,))
 
     pulse_segment_idx = 0
-    for op_idx in range(
-        0, operations.shape[1]
-    ):  # pylint: disable=unsubscriptable-object
+    for op_idx in range(0, operations.shape[1]):
         pulse_width = pulse_start_ends[op_idx, 1] - pulse_start_ends[op_idx, 0]
         control_durations[pulse_segment_idx] = pulse_width
 
@@ -346,9 +337,7 @@ def convert_dds_to_driven_control(
                     operations[3, op_idx] / pulse_width
                 )
 
-        if op_idx != (
-            operations.shape[1] - 1
-        ):  # pylint: disable=unsubscriptable-object
+        if op_idx != (operations.shape[1] - 1):
             control_rabi_rates[pulse_segment_idx + 1] = 0.0
             control_azimuthal_angles[pulse_segment_idx + 1] = 0.0
             control_detunings[pulse_segment_idx + 1] = 0.0

@@ -82,15 +82,11 @@ class DynamicDecouplingSequence:
             offsets = [0.5]
 
         self.offsets = np.array(offsets, dtype=np.float)
-        if (
-            self.offsets.shape[0] > UPPER_BOUND_OFFSETS
-        ):  # pylint: disable=unsubscriptable-object
+        if self.offsets.shape[0] > UPPER_BOUND_OFFSETS:
             raise ArgumentsValueError(
                 "Number of offsets is above the allowed number of maximum offsets. ",
                 {
-                    "number_of_offsets": self.offsets.shape[
-                        0
-                    ],  # pylint: disable=unsubscriptable-object
+                    "number_of_offsets": self.offsets.shape[0],
                     "allowed_maximum_offsets": UPPER_BOUND_OFFSETS,
                 },
             )

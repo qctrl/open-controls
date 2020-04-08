@@ -24,8 +24,6 @@ class QctrlError(Exception):
     Base class for exceptions raised by QCtrl package.
     """
 
-    pass  # pylint: disable=unnecessary-pass
-
 
 class ArgumentsValueError(QctrlError):
     """

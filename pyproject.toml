@@ -45,6 +45,8 @@ pytest = "^5.0"
 pylint = "^2.3"
 pylint_runner = "^0.5.4"
 sphinx = "^2.2.0"
+nbval = "^0.9.5"
+qctrl-visualizer = "^2.1.0"
 
 [tool.black]
 exclude = '''

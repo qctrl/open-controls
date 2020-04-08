@@ -163,24 +163,18 @@ def _add_pre_post_rotations(
         final_azimuthal = np.pi / 2
         detuning_value = 0
 
-    offsets = np.insert(
-        offsets,
-        [0, offsets.shape[0]],  # pylint: disable=unsubscriptable-object
-        [0, duration],
-    )
+    offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration],)
     rabi_rotations = np.insert(
-        rabi_rotations,
-        [0, rabi_rotations.shape[0]],  # pylint: disable=unsubscriptable-object
-        [rabi_value, rabi_value],
+        rabi_rotations, [0, rabi_rotations.shape[0]], [rabi_value, rabi_value],
     )
     azimuthal_angles = np.insert(
         azimuthal_angles,
-        [0, azimuthal_angles.shape[0]],  # pylint: disable=unsubscriptable-object
+        [0, azimuthal_angles.shape[0]],
         [initial_azimuthal, final_azimuthal],
     )
     detuning_rotations = np.insert(
         detuning_rotations,
-        [0, detuning_rotations.shape[0]],  # pylint: disable=unsubscriptable-object
+        [0, detuning_rotations.shape[0]],
         [detuning_value, detuning_value],
     )
 
@@ -455,10 +449,7 @@ def _new_carr_purcell_sequence(
 
 
 def _new_carr_purcell_meiboom_gill_sequence(
-    duration=None,  # pylint: disable=invalid-name
-    number_of_offsets=None,
-    pre_post_rotation=False,
-    **kwargs
+    duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """Carr-Purcell-Meiboom-Gill Sequences.
 
@@ -590,10 +581,7 @@ def _new_uhrig_single_axis_sequence(
 
 
 def _new_periodic_single_axis_sequence(
-    duration=None,  # pylint: disable=invalid-name
-    number_of_offsets=None,
-    pre_post_rotation=False,
-    **kwargs
+    duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """Periodic Single Axis Sequence.
 

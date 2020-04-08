@@ -97,7 +97,7 @@ pytest
 
 ## Usage
 
-See the [Jupyter notebooks](https://github.com/qctrl/notebooks/tree/master/qctrl-open-controls).
+See the [Jupyter notebooks](examples).
 
 ## Contributing
 
