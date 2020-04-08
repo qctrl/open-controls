@@ -32,8 +32,10 @@ copyright = "2019, Q-CTRL <support@q-ctrl.com>"  # pylint: disable=redefined-bui
 html_context = {
     "var_url": "https://docs.q-ctrl.com",
     "var_title": "Open Controls Python package | Q-CTRL",
-    "var_description": "Module, class and method reference forthe Q-CTRL Open Controls\
-        Python package",
+    "var_description": (
+        "Module, class and method reference for the Q-CTRL Open Controls "
+        "Python package"
+    ),
     "var_image": "https://docs.q-ctrl.com/assets/img/social.jpg",
     "var_twitter_username": "qctrlHQ",
 }
