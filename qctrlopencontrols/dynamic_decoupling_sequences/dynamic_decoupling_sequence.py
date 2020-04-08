@@ -22,14 +22,13 @@ import numpy as np
 
 from qctrlopencontrols.base.utils import create_repr_from_attributes
 from ..exceptions.exceptions import ArgumentsValueError
-from ..globals import (
-    QCTRL_EXPANDED, CSV, CYLINDRICAL)
+from ..globals import QCTRL_EXPANDED, CSV, CYLINDRICAL
 
-from ..dynamic_decoupling_sequences import (UPPER_BOUND_OFFSETS, MATPLOTLIB)
+from ..dynamic_decoupling_sequences import UPPER_BOUND_OFFSETS
 from .driven_controls import convert_dds_to_driven_control
 
 
-class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-methods
+class DynamicDecouplingSequence:
     """
     Create a dynamic decoupling sequence.
     Can be made of perfect operations, or realistic pulses.
@@ -63,37 +62,41 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
         is raised if one of the inputs is invalid.
     """
 
-    def __init__(self,
-                 duration=1.,
-                 offsets=None,
-                 rabi_rotations=None,
-                 azimuthal_angles=None,
-                 detuning_rotations=None,
-                 name=None
-                 ):
+    def __init__(
+        self,
+        duration=1.0,
+        offsets=None,
+        rabi_rotations=None,
+        azimuthal_angles=None,
+        detuning_rotations=None,
+        name=None,
+    ):
 
         self.duration = duration
-        if self.duration <= 0.:
+        if self.duration <= 0.0:
             raise ArgumentsValueError(
-                'Sequence duration must be above zero:',
-                {'duration': self.duration})
+                "Sequence duration must be above zero:", {"duration": self.duration}
+            )
 
         if offsets is None:
             offsets = [0.5]
 
         self.offsets = np.array(offsets, dtype=np.float)
-        if self.offsets.shape[0] > UPPER_BOUND_OFFSETS: # pylint: disable=unsubscriptable-object
+        if self.offsets.shape[0] > UPPER_BOUND_OFFSETS:
             raise ArgumentsValueError(
-                'Number of offsets is above the allowed number of maximum offsets. ',
-                {'number_of_offsets': self.offsets.shape[0],    # pylint: disable=unsubscriptable-object
-                 'allowed_maximum_offsets': UPPER_BOUND_OFFSETS})
+                "Number of offsets is above the allowed number of maximum offsets. ",
+                {
+                    "number_of_offsets": self.offsets.shape[0],
+                    "allowed_maximum_offsets": UPPER_BOUND_OFFSETS,
+                },
+            )
 
-        if np.any(self.offsets < 0.) or np.any(self.offsets > self.duration):
+        if np.any(self.offsets < 0.0) or np.any(self.offsets > self.duration):
             raise ArgumentsValueError(
-                'Offsets for dynamic decoupling sequence must be between 0 and sequence '
-                'duration (inclusive). ',
-                {'offsets': offsets,
-                 'duration': duration})
+                "Offsets for dynamic decoupling sequence must be between 0 and sequence "
+                "duration (inclusive). ",
+                {"offsets": offsets, "duration": duration},
+            )
 
         if rabi_rotations is None:
             rabi_rotations = np.pi * np.ones((len(self.offsets),))
@@ -110,23 +113,26 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
 
         if len(self.rabi_rotations) != self.number_of_offsets:
             raise ArgumentsValueError(
-                'rabi rotations must have the same length as offsets. ',
-                {'offsets': offsets,
-                 'rabi_rotations': rabi_rotations})
+                "rabi rotations must have the same length as offsets. ",
+                {"offsets": offsets, "rabi_rotations": rabi_rotations},
+            )
 
         if len(self.azimuthal_angles) != self.number_of_offsets:
             raise ArgumentsValueError(
-                'azimuthal angles must have the same length as offsets. ',
-                {'offsets': offsets,
-                 'azimuthal_angles': azimuthal_angles})
+                "azimuthal angles must have the same length as offsets. ",
+                {"offsets": offsets, "azimuthal_angles": azimuthal_angles},
+            )
 
         if len(self.detuning_rotations) != self.number_of_offsets:
             raise ArgumentsValueError(
-                'detuning rotations must have the same length as offsets. ',
-                {'offsets': offsets,
-                 'detuning_rotations': detuning_rotations,
-                 'len(detuning_rotations)': len(self.detuning_rotations),
-                 'number_of_offsets': self.number_of_offsets})
+                "detuning rotations must have the same length as offsets. ",
+                {
+                    "offsets": offsets,
+                    "detuning_rotations": detuning_rotations,
+                    "len(detuning_rotations)": len(self.detuning_rotations),
+                    "number_of_offsets": self.number_of_offsets,
+                },
+            )
 
         self.name = name
         if self.name is not None:
@@ -162,11 +168,14 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
         plot_offsets = self.offsets
         plot_detunings = self.detuning_rotations
 
-        plot_dictionary["Rabi"] = [{'rotation': r*np.exp(1.j*theta), 'offset': t}
-            for r, theta, t in zip(plot_r, plot_theta, plot_offsets) ]
+        plot_dictionary["Rabi"] = [
+            {"rotation": r * np.exp(1.0j * theta), "offset": t}
+            for r, theta, t in zip(plot_r, plot_theta, plot_offsets)
+        ]
 
-        plot_dictionary["Detuning"] = [{'rotation': v, 'offset': t}
-            for v, t in zip(plot_detunings, plot_offsets) ]
+        plot_dictionary["Detuning"] = [
+            {"rotation": v, "offset": t} for v, t in zip(plot_detunings, plot_offsets)
+        ]
 
         return plot_dictionary
 
@@ -181,12 +190,13 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
         """
 
         attributes = [
-            'duration',
-            'offsets',
-            'rabi_rotations',
-            'azimuthal_angles',
-            'detuning_rotations',
-            'name']
+            "duration",
+            "offsets",
+            "rabi_rotations",
+            "azimuthal_angles",
+            "detuning_rotations",
+            "name",
+        ]
 
         return create_repr_from_attributes(self, attributes)
 
@@ -197,44 +207,59 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
         dd_sequence_string = list()
 
         if self.name is not None:
-            dd_sequence_string.append('{}:'.format(self.name))
+            dd_sequence_string.append("{}:".format(self.name))
 
-        dd_sequence_string.append('Duration = {}'.format(self.duration))
+        dd_sequence_string.append("Duration = {}".format(self.duration))
 
-        pretty_offset = [str(offset/self.duration) for offset in list(self.offsets)]
-        pretty_offset = ','.join(pretty_offset)
-
-        dd_sequence_string.append('Offsets = [{}] x {}'.format(pretty_offset, self.duration))
-
-        pretty_rabi_rotations = [
-            str(rabi_rotation/np.pi) for rabi_rotation in list(self.rabi_rotations)]
-        pretty_rabi_rotations = ','.join(pretty_rabi_rotations)
-
-        dd_sequence_string.append('Rabi Rotations = [{}] x pi'.format(pretty_rabi_rotations))
-
-        pretty_azimuthal_angles = [
-            str(azimuthal_angle/np.pi) for azimuthal_angle in list(self.azimuthal_angles)]
-        pretty_azimuthal_angles = ','.join(pretty_azimuthal_angles)
-
-        dd_sequence_string.append('Azimuthal Angles = [{}] x pi'.format(pretty_azimuthal_angles))
-
-        pretty_detuning_rotations = [
-            str(detuning_rotation/np.pi) for detuning_rotation in list(self.detuning_rotations)]
-        pretty_detuning_rotations = ','.join(pretty_detuning_rotations)
+        pretty_offset = [str(offset / self.duration) for offset in list(self.offsets)]
+        pretty_offset = ",".join(pretty_offset)
 
         dd_sequence_string.append(
-            'Detuning Rotations = [{}] x pi'.format(pretty_detuning_rotations))
+            "Offsets = [{}] x {}".format(pretty_offset, self.duration)
+        )
 
-        dd_sequence_string = '\n'.join(dd_sequence_string)
+        pretty_rabi_rotations = [
+            str(rabi_rotation / np.pi) for rabi_rotation in list(self.rabi_rotations)
+        ]
+        pretty_rabi_rotations = ",".join(pretty_rabi_rotations)
+
+        dd_sequence_string.append(
+            "Rabi Rotations = [{}] x pi".format(pretty_rabi_rotations)
+        )
+
+        pretty_azimuthal_angles = [
+            str(azimuthal_angle / np.pi)
+            for azimuthal_angle in list(self.azimuthal_angles)
+        ]
+        pretty_azimuthal_angles = ",".join(pretty_azimuthal_angles)
+
+        dd_sequence_string.append(
+            "Azimuthal Angles = [{}] x pi".format(pretty_azimuthal_angles)
+        )
+
+        pretty_detuning_rotations = [
+            str(detuning_rotation / np.pi)
+            for detuning_rotation in list(self.detuning_rotations)
+        ]
+        pretty_detuning_rotations = ",".join(pretty_detuning_rotations)
+
+        dd_sequence_string.append(
+            "Detuning Rotations = [{}] x pi".format(pretty_detuning_rotations)
+        )
+
+        dd_sequence_string = "\n".join(dd_sequence_string)
 
         return dd_sequence_string
 
-    def export_to_file(self, filename=None,
-                       file_format=QCTRL_EXPANDED,
-                       file_type=CSV,
-                       coordinates=CYLINDRICAL,
-                       maximum_rabi_rate=2*np.pi,
-                       maximum_detuning_rate=2*np.pi):
+    def export_to_file(
+        self,
+        filename=None,
+        file_format=QCTRL_EXPANDED,
+        file_type=CSV,
+        coordinates=CYLINDRICAL,
+        maximum_rabi_rate=2 * np.pi,
+        maximum_detuning_rate=2 * np.pi,
+    ):
         """Prepares and saves the dynamic decoupling sequence in a file.
 
         Parameters
@@ -279,13 +304,16 @@ class DynamicDecouplingSequence(object):   #pylint: disable=too-few-public-metho
             dynamic_decoupling_sequence=self,
             maximum_rabi_rate=maximum_rabi_rate,
             maximum_detuning_rate=maximum_detuning_rate,
-            name=self.name)
+            name=self.name,
+        )
 
-        driven_control.export_to_file(filename=filename,
-                                      file_format=file_format,
-                                      file_type=file_type,
-                                      coordinates=coordinates)
+        driven_control.export_to_file(
+            filename=filename,
+            file_format=file_format,
+            file_type=file_type,
+            coordinates=coordinates,
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

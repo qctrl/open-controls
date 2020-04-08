@@ -23,18 +23,24 @@ import numpy as np
 from ..exceptions.exceptions import ArgumentsValueError
 
 from ..dynamic_decoupling_sequences import (
-    CARR_PURCELL, CARR_PURCELL_MEIBOOM_GILL, PERIODIC_SINGLE_AXIS, QUADRATIC, RAMSEY,
-    SPIN_ECHO, UHRIG_SINGLE_AXIS, WALSH_SINGLE_AXIS, X_CONCATENATED, XY_CONCATENATED)
+    CARR_PURCELL,
+    CARR_PURCELL_MEIBOOM_GILL,
+    PERIODIC_SINGLE_AXIS,
+    QUADRATIC,
+    RAMSEY,
+    SPIN_ECHO,
+    UHRIG_SINGLE_AXIS,
+    WALSH_SINGLE_AXIS,
+    X_CONCATENATED,
+    XY_CONCATENATED,
+)
 
 from .dynamic_decoupling_sequence import DynamicDecouplingSequence
 
 
 def _add_pre_post_rotations(
-        duration,
-        offsets,
-        rabi_rotations,
-        azimuthal_angles,
-        detuning_rotations):
+    duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+):
     """Adds a pre-post pi.2 rotation at the
     start and end of the sequence.
 
@@ -75,31 +81,52 @@ def _add_pre_post_rotations(
         Raised when sequence does not consist solely of X, Y, and Z pi-pulses.
     """
     # Count the number of X, Y, and Z pi-pulses
-    x_pi_pulses = np.count_nonzero(np.logical_and.reduce((np.isclose(rabi_rotations, np.pi),
-                                                          np.isclose(azimuthal_angles, 0.),
-                                                          np.isclose(detuning_rotations, 0.))))
-    y_pi_pulses = np.count_nonzero(np.logical_and.reduce((np.isclose(rabi_rotations, np.pi),
-                                                          np.isclose(azimuthal_angles, np.pi/2.),
-                                                          np.isclose(detuning_rotations, 0.))))
-    z_pi_pulses = np.count_nonzero(np.logical_and.reduce((np.isclose(rabi_rotations, 0.),
-                                                          np.isclose(azimuthal_angles, 0.),
-                                                          np.isclose(detuning_rotations, np.pi))))
+    x_pi_pulses = np.count_nonzero(
+        np.logical_and.reduce(  # pylint: disable=maybe-no-member
+            (
+                np.isclose(rabi_rotations, np.pi),
+                np.isclose(azimuthal_angles, 0.0),
+                np.isclose(detuning_rotations, 0.0),
+            )
+        )
+    )
+    y_pi_pulses = np.count_nonzero(
+        np.logical_and.reduce(  # pylint: disable=maybe-no-member
+            (
+                np.isclose(rabi_rotations, np.pi),
+                np.isclose(azimuthal_angles, np.pi / 2.0),
+                np.isclose(detuning_rotations, 0.0),
+            )
+        )
+    )
+    z_pi_pulses = np.count_nonzero(
+        np.logical_and.reduce(  # pylint: disable=maybe-no-member
+            (
+                np.isclose(rabi_rotations, 0.0),
+                np.isclose(azimuthal_angles, 0.0),
+                np.isclose(detuning_rotations, np.pi),
+            )
+        )
+    )
 
     # Check if the sequence consists solely of X, Y, and Z pi-pulses
     if len(offsets) != x_pi_pulses + y_pi_pulses + z_pi_pulses:
         raise ArgumentsValueError(
-            'Sequence contains pulses that are not X, Y, or Z pi-pulses.',
-            {'rabi_rotations': rabi_rotations,
-             'azimuthal_angles': azimuthal_angles,
-             'detuning_rotations': detuning_rotations})
+            "Sequence contains pulses that are not X, Y, or Z pi-pulses.",
+            {
+                "rabi_rotations": rabi_rotations,
+                "azimuthal_angles": azimuthal_angles,
+                "detuning_rotations": detuning_rotations,
+            },
+        )
 
     # The sequence will preserve the state |0> is it has an even number
     # of X and Y pi-pulses
-    preserves_10 = ((x_pi_pulses + y_pi_pulses)%2 == 0)
+    preserves_10 = (x_pi_pulses + y_pi_pulses) % 2 == 0
 
     # The sequence will preserve the state |0>+|1> is it has an even number
     # of Y and Z pi-pulses
-    preserves_11 = ((y_pi_pulses + z_pi_pulses)%2 == 0)
+    preserves_11 = (y_pi_pulses + z_pi_pulses) % 2 == 0
 
     # When states |0> and |0>+|1> are preserved, the sequence already produces
     # an identity, so that we want the the pi/2-pulses to cancel each other out
@@ -136,22 +163,20 @@ def _add_pre_post_rotations(
         final_azimuthal = np.pi / 2
         detuning_value = 0
 
-
-    offsets = np.insert(offsets,
-                        [0, offsets.shape[0]],  # pylint: disable=unsubscriptable-object
-                        [0, duration])
+    offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration],)
     rabi_rotations = np.insert(
-        rabi_rotations,
-        [0, rabi_rotations.shape[0]],  # pylint: disable=unsubscriptable-object
-        [rabi_value, rabi_value])
+        rabi_rotations, [0, rabi_rotations.shape[0]], [rabi_value, rabi_value],
+    )
     azimuthal_angles = np.insert(
         azimuthal_angles,
-        [0, azimuthal_angles.shape[0]],  # pylint: disable=unsubscriptable-object
-        [initial_azimuthal, final_azimuthal])
+        [0, azimuthal_angles.shape[0]],
+        [initial_azimuthal, final_azimuthal],
+    )
     detuning_rotations = np.insert(
         detuning_rotations,
-        [0, detuning_rotations.shape[0]],  # pylint: disable=unsubscriptable-object
-        [detuning_value, detuning_value])
+        [0, detuning_rotations.shape[0]],
+        [detuning_value, detuning_value],
+    )
 
     return offsets, rabi_rotations, azimuthal_angles, detuning_rotations
 
@@ -212,16 +237,24 @@ def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
     # Raise an error if the input sequence is not known
     else:
         raise ArgumentsValueError(
-            'Unknown predefined sequence scheme. Allowed schemes are: '
-            + ', '.join([RAMSEY, SPIN_ECHO, CARR_PURCELL,
-                         CARR_PURCELL_MEIBOOM_GILL,
-                         UHRIG_SINGLE_AXIS,
-                         PERIODIC_SINGLE_AXIS,
-                         WALSH_SINGLE_AXIS,
-                         QUADRATIC,
-                         X_CONCATENATED,
-                         XY_CONCATENATED]) + '.',
-            {'sequence_name': scheme})
+            "Unknown predefined sequence scheme. Allowed schemes are: "
+            + ", ".join(
+                [
+                    RAMSEY,
+                    SPIN_ECHO,
+                    CARR_PURCELL,
+                    CARR_PURCELL_MEIBOOM_GILL,
+                    UHRIG_SINGLE_AXIS,
+                    PERIODIC_SINGLE_AXIS,
+                    WALSH_SINGLE_AXIS,
+                    QUADRATIC,
+                    X_CONCATENATED,
+                    XY_CONCATENATED,
+                ]
+            )
+            + ".",
+            {"sequence_name": scheme},
+        )
 
     return sequence
 
@@ -244,16 +277,15 @@ def _check_duration(duration):
         If the duration is negative
     """
     if duration is None:
-        duration = 1.
-    if duration <= 0.:
-        raise ArgumentsValueError('Sequence duration must be above zero:',
-                                  {'duration': duration})
+        duration = 1.0
+    if duration <= 0.0:
+        raise ArgumentsValueError(
+            "Sequence duration must be above zero:", {"duration": duration}
+        )
     return duration
 
 
-def _new_ramsey_sequence(duration=None,
-                         pre_post_rotation=False,
-                         **kwargs):
+def _new_ramsey_sequence(duration=None, pre_post_rotation=False, **kwargs):
     """Ramsey sequence
 
     Parameters
@@ -285,22 +317,22 @@ def _new_ramsey_sequence(duration=None,
     detuning_rotations = []
 
     if pre_post_rotation:
-        offsets = duration * np.array([0.0, 1.])
-        rabi_rotations = np.array([np.pi/2, np.pi/2])
-        azimuthal_angles = np.array([0., np.pi])
+        offsets = duration * np.array([0.0, 1.0])
+        rabi_rotations = np.array([np.pi / 2, np.pi / 2])
+        azimuthal_angles = np.array([0.0, np.pi])
         detuning_rotations = np.zeros(offsets.shape)
 
     return DynamicDecouplingSequence(
-        duration=duration, offsets=offsets,
+        duration=duration,
+        offsets=offsets,
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs)
+        **kwargs
+    )
 
 
-def _new_spin_echo_sequence(duration=None,
-                            pre_post_rotation=False,
-                            **kwargs):
+def _new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
     """Spin Echo Sequence.
 
     Parameters
@@ -332,22 +364,28 @@ def _new_spin_echo_sequence(duration=None,
     detuning_rotations = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        offsets, rabi_rotations, azimuthal_angles, detuning_rotations = \
-            _add_pre_post_rotations(
-                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations)
+        (
+            offsets,
+            rabi_rotations,
+            azimuthal_angles,
+            detuning_rotations,
+        ) = _add_pre_post_rotations(
+            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        )
 
     return DynamicDecouplingSequence(
-        duration=duration, offsets=offsets,
+        duration=duration,
+        offsets=offsets,
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs)
+        **kwargs
+    )
 
 
-def _new_carr_purcell_sequence(duration=None,
-                               number_of_offsets=None,
-                               pre_post_rotation=False,
-                               **kwargs):
+def _new_carr_purcell_sequence(
+    duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
+):
     """Carr-Purcell Sequence.
 
     Parameters
@@ -376,10 +414,11 @@ def _new_carr_purcell_sequence(duration=None,
     duration = _check_duration(duration)
     number_of_offsets = number_of_offsets or 1
     number_of_offsets = int(number_of_offsets)
-    if number_of_offsets <= 0.:
+    if number_of_offsets <= 0.0:
         raise ArgumentsValueError(
-            'Number of offsets must be above zero:',
-            {'number_of_offsets': number_of_offsets})
+            "Number of offsets must be above zero:",
+            {"number_of_offsets": number_of_offsets},
+        )
 
     offsets = _carr_purcell_meiboom_gill_offsets(duration, number_of_offsets)
 
@@ -390,20 +429,28 @@ def _new_carr_purcell_sequence(duration=None,
     detuning_rotations = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        offsets, rabi_rotations, azimuthal_angles, detuning_rotations = \
-            _add_pre_post_rotations(
-                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations)
+        (
+            offsets,
+            rabi_rotations,
+            azimuthal_angles,
+            detuning_rotations,
+        ) = _add_pre_post_rotations(
+            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        )
 
     return DynamicDecouplingSequence(
-        duration=duration, offsets=offsets,
-        rabi_rotations=rabi_rotations, azimuthal_angles=azimuthal_angles,
-        detuning_rotations=detuning_rotations, **kwargs)
+        duration=duration,
+        offsets=offsets,
+        rabi_rotations=rabi_rotations,
+        azimuthal_angles=azimuthal_angles,
+        detuning_rotations=detuning_rotations,
+        **kwargs
+    )
 
 
-def _new_carr_purcell_meiboom_gill_sequence(duration=None,  # pylint: disable=invalid-name
-                                            number_of_offsets=None,
-                                            pre_post_rotation=False,
-                                            **kwargs):
+def _new_carr_purcell_meiboom_gill_sequence(
+    duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
+):
     """Carr-Purcell-Meiboom-Gill Sequences.
 
     Parameters
@@ -432,10 +479,11 @@ def _new_carr_purcell_meiboom_gill_sequence(duration=None,  # pylint: disable=in
     duration = _check_duration(duration)
     number_of_offsets = number_of_offsets or 1
     number_of_offsets = int(number_of_offsets)
-    if number_of_offsets <= 0.:
+    if number_of_offsets <= 0.0:
         raise ArgumentsValueError(
-            'Number of offsets must be above zero:',
-            {'number_of_offsets': number_of_offsets})
+            "Number of offsets must be above zero:",
+            {"number_of_offsets": number_of_offsets},
+        )
 
     offsets = _carr_purcell_meiboom_gill_offsets(duration, number_of_offsets)
     rabi_rotations = np.zeros(offsets.shape)
@@ -447,21 +495,28 @@ def _new_carr_purcell_meiboom_gill_sequence(duration=None,  # pylint: disable=in
     detuning_rotations = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        offsets, rabi_rotations, azimuthal_angles, detuning_rotations = \
-            _add_pre_post_rotations(
-                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations)
+        (
+            offsets,
+            rabi_rotations,
+            azimuthal_angles,
+            detuning_rotations,
+        ) = _add_pre_post_rotations(
+            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        )
 
     return DynamicDecouplingSequence(
-        duration=duration, offsets=offsets,
+        duration=duration,
+        offsets=offsets,
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs)
+        **kwargs
+    )
 
 
-def _new_uhrig_single_axis_sequence(duration=None, number_of_offsets=None,
-                                    pre_post_rotation=False,
-                                    **kwargs):
+def _new_uhrig_single_axis_sequence(
+    duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
+):
     """Uhrig Single Axis Sequence.
 
     Parameters
@@ -490,9 +545,11 @@ def _new_uhrig_single_axis_sequence(duration=None, number_of_offsets=None,
     duration = _check_duration(duration)
     number_of_offsets = number_of_offsets or 1
     number_of_offsets = int(number_of_offsets)
-    if number_of_offsets <= 0.:
-        raise ArgumentsValueError('Number of offsets must be above zero:',
-                                  {'number_of_offsets': number_of_offsets})
+    if number_of_offsets <= 0.0:
+        raise ArgumentsValueError(
+            "Number of offsets must be above zero:",
+            {"number_of_offsets": number_of_offsets},
+        )
 
     offsets = _uhrig_single_axis_offsets(duration, number_of_offsets)
     rabi_rotations = np.zeros(offsets.shape)
@@ -504,22 +561,28 @@ def _new_uhrig_single_axis_sequence(duration=None, number_of_offsets=None,
     detuning_rotations = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        offsets, rabi_rotations, azimuthal_angles, detuning_rotations = \
-            _add_pre_post_rotations(
-                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations)
+        (
+            offsets,
+            rabi_rotations,
+            azimuthal_angles,
+            detuning_rotations,
+        ) = _add_pre_post_rotations(
+            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        )
 
     return DynamicDecouplingSequence(
-        duration=duration, offsets=offsets,
+        duration=duration,
+        offsets=offsets,
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs)
+        **kwargs
+    )
 
 
-def _new_periodic_single_axis_sequence(duration=None,  # pylint: disable=invalid-name
-                                       number_of_offsets=None,
-                                       pre_post_rotation=False,
-                                       **kwargs):
+def _new_periodic_single_axis_sequence(
+    duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
+):
     """Periodic Single Axis Sequence.
 
     Parameters
@@ -548,12 +611,14 @@ def _new_periodic_single_axis_sequence(duration=None,  # pylint: disable=invalid
     duration = _check_duration(duration)
     number_of_offsets = number_of_offsets or 1
     number_of_offsets = int(number_of_offsets)
-    if number_of_offsets <= 0.:
-        raise ArgumentsValueError('Number of offsets must be above zero:',
-                                  {'number_of_offsets': number_of_offsets})
+    if number_of_offsets <= 0.0:
+        raise ArgumentsValueError(
+            "Number of offsets must be above zero:",
+            {"number_of_offsets": number_of_offsets},
+        )
 
-    spacing = 1./(number_of_offsets+1)
-    deltas = [k*spacing for k in range(1, number_of_offsets+1)]
+    spacing = 1.0 / (number_of_offsets + 1)
+    deltas = [k * spacing for k in range(1, number_of_offsets + 1)]
     deltas = np.array(deltas)
     offsets = duration * deltas
     rabi_rotations = np.zeros(offsets.shape)
@@ -562,22 +627,28 @@ def _new_periodic_single_axis_sequence(duration=None,  # pylint: disable=invalid
     detuning_rotations = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        offsets, rabi_rotations, azimuthal_angles, detuning_rotations = \
-            _add_pre_post_rotations(
-                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations)
+        (
+            offsets,
+            rabi_rotations,
+            azimuthal_angles,
+            detuning_rotations,
+        ) = _add_pre_post_rotations(
+            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        )
 
     return DynamicDecouplingSequence(
-        duration=duration, offsets=offsets,
+        duration=duration,
+        offsets=offsets,
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs)
+        **kwargs
+    )
 
 
-def _new_walsh_single_axis_sequence(duration=None,
-                                    paley_order=None,
-                                    pre_post_rotation=False,
-                                    **kwargs):
+def _new_walsh_single_axis_sequence(
+    duration=None, paley_order=None, pre_post_rotation=False, **kwargs
+):
     """Walsh Single Axis Sequence.
 
     Parameters
@@ -608,26 +679,28 @@ def _new_walsh_single_axis_sequence(duration=None,
     paley_order = int(paley_order)
     if paley_order < 1 or paley_order > 2000:
         raise ArgumentsValueError(
-            'Paley order must be between 1 and 2000.',
-            {'paley_order': paley_order})
+            "Paley order must be between 1 and 2000.", {"paley_order": paley_order}
+        )
 
     hamming_weight = int(np.floor(np.log2(paley_order))) + 1
 
     samples = 2 ** hamming_weight
 
-    relative_offset = np.arange(1. / (2 * samples), 1., 1. / samples)
+    relative_offset = np.arange(1.0 / (2 * samples), 1.0, 1.0 / samples)
 
     binary_string = np.binary_repr(paley_order)
     binary_order = [int(binary_string[i]) for i in range(hamming_weight)]
     walsh_array = np.ones([samples])
     for i in range(hamming_weight):
-        walsh_array *= np.sign(np.sin(2 ** (i + 1) * np.pi
-                                      * relative_offset)) ** binary_order[hamming_weight - 1 - i]
+        walsh_array *= (
+            np.sign(np.sin(2 ** (i + 1) * np.pi * relative_offset))
+            ** binary_order[hamming_weight - 1 - i]
+        )
 
     walsh_relative_offsets = []
     for i in range(samples - 1):
         if walsh_array[i] != walsh_array[i + 1]:
-            walsh_relative_offsets.append((i + 1) * (1. / samples))
+            walsh_relative_offsets.append((i + 1) * (1.0 / samples))
     walsh_relative_offsets = np.array(walsh_relative_offsets, dtype=np.float)
     offsets = duration * walsh_relative_offsets
     rabi_rotations = np.zeros(offsets.shape)
@@ -636,23 +709,32 @@ def _new_walsh_single_axis_sequence(duration=None,
     detuning_rotations = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        offsets, rabi_rotations, azimuthal_angles, detuning_rotations = \
-            _add_pre_post_rotations(
-                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations)
+        (
+            offsets,
+            rabi_rotations,
+            azimuthal_angles,
+            detuning_rotations,
+        ) = _add_pre_post_rotations(
+            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        )
 
     return DynamicDecouplingSequence(
-        duration=duration, offsets=offsets,
+        duration=duration,
+        offsets=offsets,
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs)
+        **kwargs
+    )
 
 
-def _new_quadratic_sequence(duration=None,
-                            number_inner_offsets=None,
-                            number_outer_offsets=None,
-                            pre_post_rotation=False,
-                            **kwargs):
+def _new_quadratic_sequence(
+    duration=None,
+    number_inner_offsets=None,
+    number_outer_offsets=None,
+    pre_post_rotation=False,
+    **kwargs
+):
     """Quadratic Decoupling Sequence
 
     Parameters
@@ -687,19 +769,21 @@ def _new_quadratic_sequence(duration=None,
 
     number_inner_offsets = number_inner_offsets or 1
     number_inner_offsets = int(number_inner_offsets)
-    if number_inner_offsets <= 0.:
-        raise ArgumentsValueError('Number of offsets of inner pulses must be above zero:',
-                                  {'number_inner_offsets': number_inner_offsets},
-                                  extras={'duration': duration,
-                                          'number_outer_offsets': number_outer_offsets})
+    if number_inner_offsets <= 0.0:
+        raise ArgumentsValueError(
+            "Number of offsets of inner pulses must be above zero:",
+            {"number_inner_offsets": number_inner_offsets},
+            extras={"duration": duration, "number_outer_offsets": number_outer_offsets},
+        )
 
     number_outer_offsets = number_outer_offsets or 1
     number_outer_offsets = int(number_outer_offsets)
-    if number_outer_offsets <= 0.:
-        raise ArgumentsValueError('Number of offsets of outer pulses must be above zero:',
-                                  {'number_inner_offsets': number_outer_offsets},
-                                  extras={'duration': duration,
-                                          'number_inner_offsets': number_inner_offsets})
+    if number_outer_offsets <= 0.0:
+        raise ArgumentsValueError(
+            "Number of offsets of outer pulses must be above zero:",
+            {"number_inner_offsets": number_outer_offsets},
+            extras={"duration": duration, "number_inner_offsets": number_inner_offsets},
+        )
 
     outer_offsets = _uhrig_single_axis_offsets(duration, number_outer_offsets)
     outer_offsets = np.insert(outer_offsets, [0, outer_offsets.shape[0]], [0, duration])
@@ -709,8 +793,9 @@ def _new_quadratic_sequence(duration=None,
 
     offsets = np.zeros((inner_durations.shape[0], number_inner_offsets + 1))
     for inner_duration_idx in range(inner_durations.shape[0]):
-        inn_off = _uhrig_single_axis_offsets(inner_durations[inner_duration_idx],
-                                             number_inner_offsets)
+        inn_off = _uhrig_single_axis_offsets(
+            inner_durations[inner_duration_idx], number_inner_offsets
+        )
         inn_off = inn_off + starts[inner_duration_idx]
         offsets[inner_duration_idx, 0:number_inner_offsets] = inn_off
     offsets[0:number_outer_offsets, -1] = outer_offsets[1:-1]
@@ -719,7 +804,7 @@ def _new_quadratic_sequence(duration=None,
     detuning_rotations = np.zeros(offsets.shape)
 
     rabi_rotations[0:number_outer_offsets, -1] = np.pi
-    detuning_rotations[0:(number_outer_offsets + 1), 0:number_inner_offsets] = np.pi
+    detuning_rotations[0 : (number_outer_offsets + 1), 0:number_inner_offsets] = np.pi
 
     offsets = np.reshape(offsets, (-1,))
     rabi_rotations = np.reshape(rabi_rotations, (-1,))
@@ -732,22 +817,28 @@ def _new_quadratic_sequence(duration=None,
     azimuthal_angles = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        offsets, rabi_rotations, azimuthal_angles, detuning_rotations = \
-            _add_pre_post_rotations(
-                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations)
+        (
+            offsets,
+            rabi_rotations,
+            azimuthal_angles,
+            detuning_rotations,
+        ) = _add_pre_post_rotations(
+            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        )
 
     return DynamicDecouplingSequence(
-        duration=duration, offsets=offsets,
+        duration=duration,
+        offsets=offsets,
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs)
+        **kwargs
+    )
 
 
-def _new_x_concatenated_sequence(duration=1.0,
-                                 concatenation_order=None,
-                                 pre_post_rotation=False,
-                                 **kwargs):
+def _new_x_concatenated_sequence(
+    duration=1.0, concatenation_order=None, pre_post_rotation=False, **kwargs
+):
     """X-Concatenated Dynamic Decoupling Sequence
     Concatenation of base sequence C(\tau/2)XC(\tau/2)X
 
@@ -780,11 +871,12 @@ def _new_x_concatenated_sequence(duration=1.0,
 
     concatenation_order = concatenation_order or 1
     concatenation_order = int(concatenation_order)
-    if concatenation_order <= 0.:
+    if concatenation_order <= 0.0:
         raise ArgumentsValueError(
-            'Concatenation oder must be above zero:',
-            {'concatenation_order': concatenation_order},
-            extras={'duration': duration})
+            "Concatenation oder must be above zero:",
+            {"concatenation_order": concatenation_order},
+            extras={"duration": duration},
+        )
 
     unit_spacing = duration / (2 ** concatenation_order)
     cumulations = _concatenation_x(concatenation_order)
@@ -806,22 +898,28 @@ def _new_x_concatenated_sequence(duration=1.0,
     detuning_rotations = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        offsets, rabi_rotations, azimuthal_angles, detuning_rotations = \
-            _add_pre_post_rotations(
-                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations)
+        (
+            offsets,
+            rabi_rotations,
+            azimuthal_angles,
+            detuning_rotations,
+        ) = _add_pre_post_rotations(
+            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        )
 
     return DynamicDecouplingSequence(
-        duration=duration, offsets=offsets,
+        duration=duration,
+        offsets=offsets,
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs)
+        **kwargs
+    )
 
 
-def _new_xy_concatenated_sequence(duration=1.0,
-                                  concatenation_order=None,
-                                  pre_post_rotation=False,
-                                  **kwargs):
+def _new_xy_concatenated_sequence(
+    duration=1.0, concatenation_order=None, pre_post_rotation=False, **kwargs
+):
     """XY-Concatenated Dynamic Decoupling Sequence
     Concatenation of base sequence C(\tau/4)XC(\tau/4)YC(\tau/4)XC(\tau/4)Y
 
@@ -854,13 +952,14 @@ def _new_xy_concatenated_sequence(duration=1.0,
 
     concatenation_order = concatenation_order or 1
     concatenation_order = int(concatenation_order)
-    if concatenation_order <= 0.:
+    if concatenation_order <= 0.0:
         raise ArgumentsValueError(
-            'Concatenation order must be above zero:',
-            {'concatenation_order': concatenation_order},
-            extras={'duration': duration})
+            "Concatenation order must be above zero:",
+            {"concatenation_order": concatenation_order},
+            extras={"duration": duration},
+        )
 
-    unit_spacing = duration / (2 ** (concatenation_order*2))
+    unit_spacing = duration / (2 ** (concatenation_order * 2))
     cumulations = _concatenation_xy(concatenation_order)
 
     rabi_operations = cumulations[cumulations != -2]
@@ -881,7 +980,9 @@ def _new_xy_concatenated_sequence(duration=1.0,
     azimuthal_positions = np.cumsum(azimuthal_positions)
 
     values, counts = np.unique(azimuthal_positions, return_counts=True)
-    azimuthal_offsets = [values[i] for i in range(counts.shape[0]) if counts[i] % 2 == 0]
+    azimuthal_offsets = [
+        values[i] for i in range(counts.shape[0]) if counts[i] % 2 == 0
+    ]
 
     detuning_operations = cumulations[cumulations != -2]
     detuning_operations = detuning_operations[detuning_operations != -1]
@@ -896,7 +997,9 @@ def _new_xy_concatenated_sequence(duration=1.0,
     # right now we have got all the offset positions separately; now have
     # put then all together
 
-    offsets = np.zeros((len(rabi_offsets) + len(azimuthal_offsets) + len(detuning_offsets),))
+    offsets = np.zeros(
+        (len(rabi_offsets) + len(azimuthal_offsets) + len(detuning_offsets),)
+    )
 
     rabi_rotations = np.zeros(offsets.shape)
     azimuthal_angles = np.zeros(offsets.shape)
@@ -906,8 +1009,7 @@ def _new_xy_concatenated_sequence(duration=1.0,
     azimuthal_idx = 0
 
     carr_idx = 0
-    while (rabi_idx < len(rabi_offsets) and
-           azimuthal_idx < len(azimuthal_offsets)):
+    while rabi_idx < len(rabi_offsets) and azimuthal_idx < len(azimuthal_offsets):
 
         if rabi_offsets[rabi_idx] < azimuthal_offsets[azimuthal_idx]:
             rabi_rotations[carr_idx] = np.pi
@@ -940,9 +1042,9 @@ def _new_xy_concatenated_sequence(duration=1.0,
         z_idx = 0
         for carr_idx, offset in enumerate(offsets):
             if offset > detuning_offsets[z_idx]:
-                offsets[carr_idx + 1:] = offsets[carr_idx:-1]
-                rabi_rotations[carr_idx + 1:] = rabi_rotations[carr_idx:-1]
-                azimuthal_angles[carr_idx + 1:] = azimuthal_angles[carr_idx:-1]
+                offsets[carr_idx + 1 :] = offsets[carr_idx:-1]
+                rabi_rotations[carr_idx + 1 :] = rabi_rotations[carr_idx:-1]
+                azimuthal_angles[carr_idx + 1 :] = azimuthal_angles[carr_idx:-1]
                 detuning_rotations[carr_idx] = np.pi
                 rabi_rotations[carr_idx] = 0
                 azimuthal_angles[carr_idx] = 0
@@ -952,16 +1054,23 @@ def _new_xy_concatenated_sequence(duration=1.0,
                 break
 
     if pre_post_rotation:
-        offsets, rabi_rotations, azimuthal_angles, detuning_rotations = \
-            _add_pre_post_rotations(
-                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations)
+        (
+            offsets,
+            rabi_rotations,
+            azimuthal_angles,
+            detuning_rotations,
+        ) = _add_pre_post_rotations(
+            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        )
 
     return DynamicDecouplingSequence(
-        duration=duration, offsets=offsets,
+        duration=duration,
+        offsets=offsets,
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs)
+        **kwargs
+    )
 
 
 def _carr_purcell_meiboom_gill_offsets(duration=1.0, number_of_offsets=1):
@@ -980,7 +1089,7 @@ def _carr_purcell_meiboom_gill_offsets(duration=1.0, number_of_offsets=1):
         The offset values
     """
 
-    spacing = 1./number_of_offsets
+    spacing = 1.0 / number_of_offsets
     start = spacing * 0.5
 
     # prepare the offsets for delta comb
@@ -1008,8 +1117,10 @@ def _uhrig_single_axis_offsets(duration=1.0, number_of_offsets=1):
     """
 
     # prepare the offsets for delta comb
-    constant = 1./(2*number_of_offsets+2)
-    deltas = [(np.sin(np.pi * k * constant)) ** 2 for k in range(1, number_of_offsets+1)]
+    constant = 1.0 / (2 * number_of_offsets + 2)
+    deltas = [
+        (np.sin(np.pi * k * constant)) ** 2 for k in range(1, number_of_offsets + 1)
+    ]
     deltas = np.array(deltas)
     offsets = duration * deltas
 
@@ -1035,8 +1146,14 @@ def _concatenation_x(concatenation_sequence=1):
         return np.array([1, 0, 1, 0])
 
     cumulated_operations = np.concatenate(
-        (_concatenation_x(concatenation_sequence - 1), np.array([0]),
-         _concatenation_x(concatenation_sequence - 1), np.array([0])), axis=0)
+        (
+            _concatenation_x(concatenation_sequence - 1),
+            np.array([0]),
+            _concatenation_x(concatenation_sequence - 1),
+            np.array([0]),
+        ),
+        axis=0,
+    )
     return cumulated_operations
 
 
@@ -1057,19 +1174,26 @@ def _concatenation_xy(concatenation_sequence=1):
 
     if concatenation_sequence == 1:
         return np.array([1, -1, 1, -2, 1, -1, 1, -2])
-    cumulations = np.concatenate((_concatenation_xy(concatenation_sequence - 1),
-                                  np.array([-1])), axis=0)
+    cumulations = np.concatenate(
+        (_concatenation_xy(concatenation_sequence - 1), np.array([-1])), axis=0
+    )
     cumulations = cumulations[0:-1]
     cumulations[-1] = -3
-    cumulations = np.concatenate((cumulations, _concatenation_xy(concatenation_sequence - 1),
-                                  np.array([-2])), axis=0)
+    cumulations = np.concatenate(
+        (cumulations, _concatenation_xy(concatenation_sequence - 1), np.array([-2])),
+        axis=0,
+    )
     cumulations = cumulations[0:-2]
-    cumulations = np.concatenate((cumulations, _concatenation_xy(concatenation_sequence - 1),
-                                  np.array([-1])), axis=0)
+    cumulations = np.concatenate(
+        (cumulations, _concatenation_xy(concatenation_sequence - 1), np.array([-1])),
+        axis=0,
+    )
     cumulations = cumulations[0:-1]
     cumulations[-1] = -3
-    cumulations = np.concatenate((cumulations, _concatenation_xy(concatenation_sequence - 1),
-                                  np.array([-2])), axis=0)
+    cumulations = np.concatenate(
+        (cumulations, _concatenation_xy(concatenation_sequence - 1), np.array([-2])),
+        axis=0,
+    )
     if cumulations[-1] == -2 and cumulations[-2] == -2:
         cumulations = cumulations[0:-2]
     return cumulations

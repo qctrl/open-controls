@@ -23,15 +23,18 @@ import numpy as np
 from ..exceptions.exceptions import ArgumentsValueError
 from ..base.utils import create_repr_from_attributes
 
-from ..globals import (
-    QCTRL_EXPANDED, CSV, JSON, CARTESIAN, CYLINDRICAL)
+from ..globals import QCTRL_EXPANDED, CSV, JSON, CARTESIAN, CYLINDRICAL
 
 from ..driven_controls import (
-    UPPER_BOUND_SEGMENTS, UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE,
-    UPPER_BOUND_DURATION, LOWER_BOUND_DURATION)
+    UPPER_BOUND_SEGMENTS,
+    UPPER_BOUND_RABI_RATE,
+    UPPER_BOUND_DETUNING_RATE,
+    UPPER_BOUND_DURATION,
+    LOWER_BOUND_DURATION,
+)
 
 
-class DrivenControl(object):   #pylint: disable=too-few-public-methods
+class DrivenControl:
     """
     Creates a driven control. A driven is a set of segments made up of amplitude vectors
     and corresponding durations.
@@ -59,35 +62,42 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
         Raised when an argument is invalid.
     """
 
-    def __init__(self,
-                 rabi_rates=None,
-                 azimuthal_angles=None,
-                 detunings=None,
-                 durations=None,
-                 name=None):
+    def __init__(
+        self,
+        rabi_rates=None,
+        azimuthal_angles=None,
+        detunings=None,
+        durations=None,
+        name=None,
+    ):
 
         self.name = name
         if self.name is not None:
             self.name = str(self.name)
 
-        check_none_values = [(rabi_rates is None), (azimuthal_angles is None),
-                             (detunings is None), (durations is None)]
+        check_none_values = [
+            (rabi_rates is None),
+            (azimuthal_angles is None),
+            (detunings is None),
+            (durations is None),
+        ]
         all_are_none = all(value is True for value in check_none_values)
         if all_are_none:
             rabi_rates = np.array([np.pi])
-            azimuthal_angles = np.array([0.])
-            detunings = np.array([0.])
-            durations = np.array([1.])
+            azimuthal_angles = np.array([0.0])
+            detunings = np.array([0.0])
+            durations = np.array([1.0])
         else:
             # some may be None while others are not
             input_array_lengths = []
             if not check_none_values[0]:
                 rabi_rates = np.array(rabi_rates, dtype=np.float).reshape((-1,))
-                input_array_lengths.append(
-                    rabi_rates.shape[0])    #pylint: disable=unsubscriptable-object
+                input_array_lengths.append(rabi_rates.shape[0])
 
             if not check_none_values[1]:
-                azimuthal_angles = np.array(azimuthal_angles, dtype=np.float).reshape((-1,))
+                azimuthal_angles = np.array(azimuthal_angles, dtype=np.float).reshape(
+                    (-1,)
+                )
                 input_array_lengths.append(len(azimuthal_angles))
 
             if not check_none_values[2]:
@@ -100,12 +110,16 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
 
             # check all valid array lengths are equal
             if max(input_array_lengths) != min(input_array_lengths):
-                raise ArgumentsValueError('Rabi rates, Azimuthal angles, Detunings and Durations '
-                                          'must be of same length',
-                                          {'rabi_rates': rabi_rates,
-                                           'azimuthal_angles': azimuthal_angles,
-                                           'detunings': detunings,
-                                           'durations': durations})
+                raise ArgumentsValueError(
+                    "Rabi rates, Azimuthal angles, Detunings and Durations "
+                    "must be of same length",
+                    {
+                        "rabi_rates": rabi_rates,
+                        "azimuthal_angles": azimuthal_angles,
+                        "detunings": detunings,
+                        "durations": durations,
+                    },
+                )
 
             valid_input_length = max(input_array_lengths)
             if check_none_values[0]:
@@ -123,47 +137,57 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
         self.durations = durations
 
         # check if all the rabi_rates are greater than zero
-        if np.any(rabi_rates < 0.):
-            raise ArgumentsValueError('All rabi rates must be greater than zero.',
-                                      {'rabi_rates': rabi_rates},
-                                      extras={
-                                          'azimuthal_angles': azimuthal_angles,
-                                          'detunings': detunings,
-                                          'durations': durations})
+        if np.any(rabi_rates < 0.0):
+            raise ArgumentsValueError(
+                "All rabi rates must be greater than zero.",
+                {"rabi_rates": rabi_rates},
+                extras={
+                    "azimuthal_angles": azimuthal_angles,
+                    "detunings": detunings,
+                    "durations": durations,
+                },
+            )
 
         # check if all the durations are greater than zero
         if np.any(durations <= 0):
-            raise ArgumentsValueError('Duration of driven control segments must all be greater'
-                                      + ' than zero.',
-                                      {'durations': self.durations})
+            raise ArgumentsValueError(
+                "Duration of driven control segments must all be greater"
+                + " than zero.",
+                {"durations": self.durations},
+            )
 
         if self.number_of_segments > UPPER_BOUND_SEGMENTS:
             raise ArgumentsValueError(
-                'The number of segments must be smaller than the upper bound:'
+                "The number of segments must be smaller than the upper bound:"
                 + str(UPPER_BOUND_SEGMENTS),
-                {'number_of_segments': self.number_of_segments})
+                {"number_of_segments": self.number_of_segments},
+            )
 
         if self.maximum_rabi_rate > UPPER_BOUND_RABI_RATE:
             raise ArgumentsValueError(
-                'Maximum rabi rate of segments must be smaller than the upper bound: '
+                "Maximum rabi rate of segments must be smaller than the upper bound: "
                 + str(UPPER_BOUND_RABI_RATE),
-                {'maximum_rabi_rate': self.maximum_rabi_rate})
+                {"maximum_rabi_rate": self.maximum_rabi_rate},
+            )
 
         if self.maximum_detuning > UPPER_BOUND_DETUNING_RATE:
             raise ArgumentsValueError(
-                'Maximum detuning of segments must be smaller than the upper bound: '
+                "Maximum detuning of segments must be smaller than the upper bound: "
                 + str(UPPER_BOUND_DETUNING_RATE),
-                {'maximum_detuning': self.maximum_detuning})
+                {"maximum_detuning": self.maximum_detuning},
+            )
         if self.maximum_duration > UPPER_BOUND_DURATION:
             raise ArgumentsValueError(
-                'Maximum duration of segments must be smaller than the upper bound: '
+                "Maximum duration of segments must be smaller than the upper bound: "
                 + str(UPPER_BOUND_DURATION),
-                {'maximum_duration': self.maximum_duration})
+                {"maximum_duration": self.maximum_duration},
+            )
         if self.minimum_duration < LOWER_BOUND_DURATION:
             raise ArgumentsValueError(
-                'Minimum duration of segments must be larger than the lower bound: '
+                "Minimum duration of segments must be larger than the lower bound: "
                 + str(LOWER_BOUND_DURATION),
-                {'minimum_duration': self.minimum_duration})
+                {"minimum_duration": self.minimum_duration},
+            )
 
     @property
     def number_of_segments(self):
@@ -234,9 +258,9 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
             Angles as 1-D array of floats
         """
 
-        amplitudes = np.sqrt(self.amplitude_x ** 2 +
-                             self.amplitude_y ** 2 +
-                             self.detunings ** 2)
+        amplitudes = np.sqrt(
+            self.amplitude_x ** 2 + self.amplitude_y ** 2 + self.detunings ** 2
+        )
         angles = amplitudes * self.durations
 
         return angles
@@ -251,19 +275,27 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
         numpy.ndarray
             Directions as 1-D array of floats
         """
-        amplitudes = np.sqrt(self.amplitude_x ** 2 +
-                             self.amplitude_y ** 2 +
-                             self.detunings ** 2)
-        normalized_amplitude_x = self.amplitude_x/amplitudes
-        normalized_amplitude_y = self.amplitude_y/amplitudes
-        normalized_detunings = self.detunings/amplitudes
+        amplitudes = np.sqrt(
+            self.amplitude_x ** 2 + self.amplitude_y ** 2 + self.detunings ** 2
+        )
+        normalized_amplitude_x = self.amplitude_x / amplitudes
+        normalized_amplitude_y = self.amplitude_y / amplitudes
+        normalized_detunings = self.detunings / amplitudes
 
-        normalized_amplitudes = np.hstack((normalized_amplitude_x[:, np.newaxis],
-                                           normalized_amplitude_y[:, np.newaxis],
-                                           normalized_detunings[:, np.newaxis]))
+        normalized_amplitudes = np.hstack(
+            (
+                normalized_amplitude_x[:, np.newaxis],
+                normalized_amplitude_y[:, np.newaxis],
+                normalized_detunings[:, np.newaxis],
+            )
+        )
 
-        directions = np.array([normalized_amplitudes if amplitudes[i] != 0. else
-                               np.zeros([3, ]) for i in range(self.number_of_segments)])
+        directions = np.array(
+            [
+                normalized_amplitudes if amplitudes[i] != 0.0 else np.zeros([3,])
+                for i in range(self.number_of_segments)
+            ]
+        )
 
         return directions
 
@@ -278,7 +310,7 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
             Segment times as 1-D array of floats
         """
 
-        return np.insert(np.cumsum(self.durations), 0, 0.)
+        return np.insert(np.cumsum(self.durations), 0, 0.0)
 
     @property
     def maximum_duration(self):
@@ -339,56 +371,68 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
             if file_type == CSV:
 
                 control_info = list()
-                control_info.append('amplitude_x,amplitude_y,detuning,duration,maximum_rabi_rate')
+                control_info.append(
+                    "amplitude_x,amplitude_y,detuning,duration,maximum_rabi_rate"
+                )
                 for segment_idx in range(self.number_of_segments):
-                    control_info.append('{},{},{},{},{}'.format(
-                        amplitude_x[segment_idx],
-                        amplitude_y[segment_idx],
-                        self.detunings[segment_idx],
-                        self.durations[segment_idx],
-                        self.maximum_rabi_rate
-                    ))
+                    control_info.append(
+                        "{},{},{},{},{}".format(
+                            amplitude_x[segment_idx],
+                            amplitude_y[segment_idx],
+                            self.detunings[segment_idx],
+                            self.durations[segment_idx],
+                            self.maximum_rabi_rate,
+                        )
+                    )
             else:
                 control_info = dict()
                 if self.name is not None:
-                    control_info['name'] = self.name
-                control_info['maximum_rabi_rate'] = self.maximum_rabi_rate
-                control_info['amplitude_x'] = list(amplitude_x)
-                control_info['amplitude_y'] = list(amplitude_y)
-                control_info['detuning'] = list(self.detunings)
-                control_info['duration'] = list(self.durations)
+                    control_info["name"] = self.name
+                control_info["maximum_rabi_rate"] = self.maximum_rabi_rate
+                control_info["amplitude_x"] = list(amplitude_x)
+                control_info["amplitude_y"] = list(amplitude_y)
+                control_info["detuning"] = list(self.detunings)
+                control_info["duration"] = list(self.durations)
 
         else:
 
             if file_type == CSV:
                 control_info = list()
-                control_info.append('rabi_rate,azimuthal_angle,detuning,duration,maximum_rabi_rate')
+                control_info.append(
+                    "rabi_rate,azimuthal_angle,detuning,duration,maximum_rabi_rate"
+                )
                 for segment_idx in range(self.number_of_segments):
-                    control_info.append('{},{},{},{},{}'.format(
-                        self.rabi_rates[segment_idx]/self.maximum_rabi_rate,
-                        np.arctan2(amplitude_y[segment_idx],
-                                   amplitude_x[segment_idx]),
-                        self.detunings[segment_idx],
-                        self.durations[segment_idx],
-                        self.maximum_rabi_rate
-                    ))
+                    control_info.append(
+                        "{},{},{},{},{}".format(
+                            self.rabi_rates[segment_idx] / self.maximum_rabi_rate,
+                            np.arctan2(
+                                amplitude_y[segment_idx], amplitude_x[segment_idx]
+                            ),
+                            self.detunings[segment_idx],
+                            self.durations[segment_idx],
+                            self.maximum_rabi_rate,
+                        )
+                    )
 
             else:
                 control_info = dict()
                 if self.name is not None:
-                    control_info['name'] = self.name
-                control_info['maximum_rabi_rate'] = self.maximum_rabi_rate
-                control_info['rabi_rates'] = list(self.rabi_rates / self.maximum_rabi_rate)
-                control_info['azimuthal_angles'] = list(np.arctan2(
-                    amplitude_y, amplitude_x))
-                control_info['detuning'] = list(self.detunings)
-                control_info['duration'] = list(self.durations)
+                    control_info["name"] = self.name
+                control_info["maximum_rabi_rate"] = self.maximum_rabi_rate
+                control_info["rabi_rates"] = list(
+                    self.rabi_rates / self.maximum_rabi_rate
+                )
+                control_info["azimuthal_angles"] = list(
+                    np.arctan2(amplitude_y, amplitude_x)
+                )
+                control_info["detuning"] = list(self.detunings)
+                control_info["duration"] = list(self.durations)
 
         return control_info
 
-    def _export_to_qctrl_expanded_format(self, filename=None,
-                                         file_type=CSV,
-                                         coordinates=CYLINDRICAL):
+    def _export_to_qctrl_expanded_format(
+        self, filename=None, file_type=CSV, coordinates=CYLINDRICAL
+    ):
         """Private method to save control in qctrl_expanded_format
 
         Parameters
@@ -403,21 +447,25 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
             'Cylindrical', 'Cartesian'; defaults to 'Cylindrical'
         """
 
-        control_info = self._qctrl_expanded_export_content(file_type=file_type,
-                                                           coordinates=coordinates)
+        control_info = self._qctrl_expanded_export_content(
+            file_type=file_type, coordinates=coordinates
+        )
         if file_type == CSV:
-            with open(filename, 'wt') as handle:
+            with open(filename, "wt") as handle:
 
-                control_info = '\n'.join(control_info)
+                control_info = "\n".join(control_info)
                 handle.write(control_info)
         else:
-            with open(filename, 'wt') as handle:
+            with open(filename, "wt") as handle:
                 json.dump(control_info, handle, sort_keys=True, indent=4)
 
-    def export_to_file(self, filename=None,
-                       file_format=QCTRL_EXPANDED,
-                       file_type=CSV,
-                       coordinates=CYLINDRICAL):
+    def export_to_file(
+        self,
+        filename=None,
+        file_format=QCTRL_EXPANDED,
+        file_type=CSV,
+        coordinates=CYLINDRICAL,
+    ):
         """Prepares and saves the driven control in a file.
 
         Parameters
@@ -449,28 +497,35 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
         """
 
         if filename is None:
-            raise ArgumentsValueError('Invalid filename provided.',
-                                      {'filename': filename})
+            raise ArgumentsValueError(
+                "Invalid filename provided.", {"filename": filename}
+            )
 
         if file_format not in [QCTRL_EXPANDED]:
-            raise ArgumentsValueError('Requested file format is not supported. Please use '
-                                      'one of {}'.format([QCTRL_EXPANDED]),
-                                      {'file_format': file_format})
+            raise ArgumentsValueError(
+                "Requested file format is not supported. Please use "
+                "one of {}".format([QCTRL_EXPANDED]),
+                {"file_format": file_format},
+            )
 
         if file_type not in [CSV, JSON]:
-            raise ArgumentsValueError('Requested file type is not supported. Please use '
-                                      'one of {}'.format([CSV, JSON]),
-                                      {'file_type': file_type})
+            raise ArgumentsValueError(
+                "Requested file type is not supported. Please use "
+                "one of {}".format([CSV, JSON]),
+                {"file_type": file_type},
+            )
 
         if coordinates not in [CYLINDRICAL, CARTESIAN]:
-            raise ArgumentsValueError('Requested coordinate type is not supported. Please use '
-                                      'one of {}'.format([CARTESIAN, CYLINDRICAL]),
-                                      {'coordinates': coordinates})
+            raise ArgumentsValueError(
+                "Requested coordinate type is not supported. Please use "
+                "one of {}".format([CARTESIAN, CYLINDRICAL]),
+                {"coordinates": coordinates},
+            )
 
         if file_format == QCTRL_EXPANDED:
-            self._export_to_qctrl_expanded_format(filename=filename,
-                                                  file_type=file_type,
-                                                  coordinates=coordinates)
+            self._export_to_qctrl_expanded_format(
+                filename=filename, file_type=file_type, coordinates=coordinates
+            )
 
     def export(self, coordinates=CYLINDRICAL, dimensionless_rabi_rate=True):
         """ Returns a dictionary formatted for plotting using the qctrl-visualizer package.
@@ -499,8 +554,9 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
 
         if coordinates not in [CARTESIAN, CYLINDRICAL]:
             raise ArgumentsValueError(
-                'Unsupported coordinates provided: ',
-                arguments={'coordinates': coordinates})
+                "Unsupported coordinates provided: ",
+                arguments={"coordinates": coordinates},
+            )
 
         if dimensionless_rabi_rate:
             normalizer = self.maximum_rabi_rate
@@ -509,25 +565,30 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
 
         plot_dictionary = {}
 
-        plot_x = self.amplitude_x/normalizer
-        plot_y = self.amplitude_y/normalizer
-        plot_r = self.rabi_rates/normalizer
+        plot_x = self.amplitude_x / normalizer
+        plot_y = self.amplitude_y / normalizer
+        plot_r = self.rabi_rates / normalizer
         plot_theta = self.azimuthal_angles
         plot_durations = self.durations
         plot_detunings = self.detunings
 
-        if coordinates==CARTESIAN:
-            plot_dictionary["X amplitude"] = [{'value': v, 'duration': t}
-                for v, t in zip(plot_x, plot_durations) ]
-            plot_dictionary["Y amplitude"] = [{'value': v, 'duration': t}
-                for v, t in zip(plot_y, plot_durations) ]
+        if coordinates == CARTESIAN:
+            plot_dictionary["X amplitude"] = [
+                {"value": v, "duration": t} for v, t in zip(plot_x, plot_durations)
+            ]
+            plot_dictionary["Y amplitude"] = [
+                {"value": v, "duration": t} for v, t in zip(plot_y, plot_durations)
+            ]
 
-        if coordinates==CYLINDRICAL:
-            plot_dictionary["Rabi rate"] = [{'value': r*np.exp(1.j*theta), 'duration': t}
-                for r, theta, t in zip(plot_r, plot_theta, plot_durations) ]
+        if coordinates == CYLINDRICAL:
+            plot_dictionary["Rabi rate"] = [
+                {"value": r * np.exp(1.0j * theta), "duration": t}
+                for r, theta, t in zip(plot_r, plot_theta, plot_durations)
+            ]
 
-        plot_dictionary["Detuning"] = [{'value': v, 'duration': t}
-            for v, t in zip(plot_detunings, plot_durations) ]
+        plot_dictionary["Detuning"] = [
+            {"value": v, "duration": t} for v, t in zip(plot_detunings, plot_durations)
+        ]
 
         return plot_dictionary
 
@@ -537,34 +598,43 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
         driven_control_string = list()
 
         if self.name is not None:
-            driven_control_string.append('{}:'.format(self.name))
+            driven_control_string.append("{}:".format(self.name))
 
-        pretty_rabi_rates = [str(rabi_rate/self.maximum_rabi_rate)
-                             if self.maximum_rabi_rate != 0 else '0'
-                             for rabi_rate in list(self.rabi_rates)]
-        pretty_rabi_rates = ','.join(pretty_rabi_rates)
-        pretty_azimuthal_angles = [str(azimuthal_angle/np.pi)
-                                   for azimuthal_angle in self.azimuthal_angles]
-        pretty_azimuthal_angles = ','.join(pretty_azimuthal_angles)
-        pretty_detuning = [str(detuning/self.maximum_detuning)
-                           if self.maximum_detuning != 0 else '0'
-                           for detuning in list(self.detunings)]
-        pretty_detuning = ','.join(pretty_detuning)
+        pretty_rabi_rates = [
+            str(rabi_rate / self.maximum_rabi_rate)
+            if self.maximum_rabi_rate != 0
+            else "0"
+            for rabi_rate in list(self.rabi_rates)
+        ]
+        pretty_rabi_rates = ",".join(pretty_rabi_rates)
+        pretty_azimuthal_angles = [
+            str(azimuthal_angle / np.pi) for azimuthal_angle in self.azimuthal_angles
+        ]
+        pretty_azimuthal_angles = ",".join(pretty_azimuthal_angles)
+        pretty_detuning = [
+            str(detuning / self.maximum_detuning) if self.maximum_detuning != 0 else "0"
+            for detuning in list(self.detunings)
+        ]
+        pretty_detuning = ",".join(pretty_detuning)
 
-        pretty_durations = [str(duration/self.duration) for duration in self.durations]
-        pretty_durations = ','.join(pretty_durations)
+        pretty_durations = [
+            str(duration / self.duration) for duration in self.durations
+        ]
+        pretty_durations = ",".join(pretty_durations)
 
         driven_control_string.append(
-            'Rabi Rates = [{}] x {}'.format(pretty_rabi_rates,
-                                            self.maximum_rabi_rate))
+            "Rabi Rates = [{}] x {}".format(pretty_rabi_rates, self.maximum_rabi_rate)
+        )
         driven_control_string.append(
-            'Azimuthal Angles = [{}] x pi'.format(pretty_azimuthal_angles))
+            "Azimuthal Angles = [{}] x pi".format(pretty_azimuthal_angles)
+        )
         driven_control_string.append(
-            'Detunings = [{}] x {}'.format(pretty_detuning,
-                                           self.maximum_detuning))
-        driven_control_string.append('Durations = [{}] x {}'.format(pretty_durations,
-                                                                    self.duration))
-        driven_control_string = '\n'.join(driven_control_string)
+            "Detunings = [{}] x {}".format(pretty_detuning, self.maximum_detuning)
+        )
+        driven_control_string.append(
+            "Durations = [{}] x {}".format(pretty_durations, self.duration)
+        )
+        driven_control_string = "\n".join(driven_control_string)
 
         return driven_control_string
 
@@ -579,14 +649,15 @@ class DrivenControl(object):   #pylint: disable=too-few-public-methods
         """
 
         attributes = [
-            'rabi_rates',
-            'azimuthal_angles',
-            'detunings',
-            'durations',
-            'name']
+            "rabi_rates",
+            "azimuthal_angles",
+            "detunings",
+            "durations",
+            "name",
+        ]
 
         return create_repr_from_attributes(self, attributes)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

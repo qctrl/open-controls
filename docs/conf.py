@@ -1,5 +1,7 @@
-# Configuration file for the Sphinx documentation builder.
-#
+# pylint: disable=invalid-name
+"""
+Configuration file for the Sphinx documentation builder.
+"""
 # This file only contains a selection of the most common options. For a full
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
@@ -13,17 +15,16 @@
 import os
 import sys
 import toml
-import sphinx_rtd_theme
 
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 parsed = toml.load("../pyproject.toml")
-package_info = parsed['tool']['poetry']
-project = package_info['description']
-author = ", ".join(package_info['authors'])
-release = package_info['version']
-copyright = '2019, Q-CTRL <support@q-ctrl.com>'
+package_info = parsed["tool"]["poetry"]
+project = package_info["description"]
+author = ", ".join(package_info["authors"])
+release = package_info["version"]
+copyright = "2019, Q-CTRL <support@q-ctrl.com>"  # pylint: disable=redefined-builtin
 
 # -- HTML Variables ----------------------------------------------------------
 # Variables to insert into _templates/layout.html
@@ -31,7 +32,10 @@ copyright = '2019, Q-CTRL <support@q-ctrl.com>'
 html_context = {
     "var_url": "https://docs.q-ctrl.com",
     "var_title": "Open Controls Python package | Q-CTRL",
-    "var_description": "Module, class and method reference for the Q-CTRL Open Controls Python package",
+    "var_description": (
+        "Module, class and method reference for the Q-CTRL Open Controls "
+        "Python package"
+    ),
     "var_image": "https://docs.q-ctrl.com/assets/img/social.jpg",
     "var_twitter_username": "qctrlHQ",
 }
@@ -42,17 +46,17 @@ html_context = {
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.coverage',
-    'sphinx.ext.mathjax',
-    'sphinx.ext.napoleon',
-    'sphinx_rtd_theme'
+    "sphinx.ext.autodoc",
+    "sphinx.ext.coverage",
+    "sphinx.ext.mathjax",
+    "sphinx.ext.napoleon",
+    "sphinx_rtd_theme",
 ]
 
-master_doc = 'index'
+master_doc = "index"
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -65,18 +69,18 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 
-html_title = html_context['var_title']
+html_title = html_context["var_title"]
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 html_css_files = [
-    'https://dev.docs.q-ctrl.com/assets/css/readthedocs.css',
+    "https://dev.docs.q-ctrl.com/assets/css/readthedocs.css",
 ]
 html_js_files = [
-    'https://dev.docs.q-ctrl.com/assets/js/readthedocs.js',
+    "https://dev.docs.q-ctrl.com/assets/js/readthedocs.js",
 ]
-html_logo = '_static/logo.svg'
+html_logo = "_static/logo.svg"

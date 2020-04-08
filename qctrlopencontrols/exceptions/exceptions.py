@@ -23,7 +23,6 @@ class QctrlError(Exception):
     """
     Base class for exceptions raised by QCtrl package.
     """
-    pass  # pylint: disable=unnecessary-pass
 
 
 class ArgumentsValueError(QctrlError):
@@ -52,8 +51,8 @@ class ArgumentsValueError(QctrlError):
         self.extras = extras
         self.message = self.description
         for key in self.arguments:
-            self.message += '\n' + str(key) + '=' + repr(self.arguments[key])
+            self.message += "\n" + str(key) + "=" + repr(self.arguments[key])
         if extras is not None:
             for key in self.extras:
-                self.message += '\n' + str(key) + '=' + repr(self.extras[key])
+                self.message += "\n" + str(key) + "=" + repr(self.extras[key])
         super(ArgumentsValueError, self).__init__(self.message)
