@@ -30,10 +30,10 @@ jobs:
         source <(curl -sL http://ci.q-ctrl.com)
         ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
         ./ci docker run qctrl/python-build:3.7 /scripts/install-python-dependencies.sh
-  - name: Run Black
+    - name: Run Black
       run: |
         ./ci docker run qctrl/python-build:3.7 poetry run black -- --check .
-  - name: Run Pylint
+    - name: Run Pylint
       run: |
         ./ci docker run qctrl/python-build:3.7 poetry run pylint_runner  
     - name: Run Markdownlint
