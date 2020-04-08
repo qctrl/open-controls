@@ -41,39 +41,39 @@ UPPER_BOUND_SEGMENTS = 10000
 
 ##### Types of driven controls ######
 
-PRIMITIVE = 'primitive'
+PRIMITIVE = "primitive"
 """Primitive control
 """
 
-BB1 = 'BB1'
+BB1 = "BB1"
 """First-order Wimperis control, also known as BB1
 """
 
-SK1 = 'SK1'
+SK1 = "SK1"
 """First-order Solovay-Kitaev control
 """
 
-WAMF1 = 'WAMF1'
+WAMF1 = "WAMF1"
 """First-order Walsh sequence control
 """
 
-CORPSE = 'CORPSE'
+CORPSE = "CORPSE"
 """Dynamically corrected control - Compensating for Off-Resonance with a Pulse Sequence (COPRSE)
 """
 
-CORPSE_IN_BB1 = 'CORPSE in BB1'
+CORPSE_IN_BB1 = "CORPSE in BB1"
 """Concatenated dynamically corrected control - BB1 inside COPRSE
 """
 
-CORPSE_IN_SK1 = 'CORPSE in SK1'
+CORPSE_IN_SK1 = "CORPSE in SK1"
 """Concatenated dynamically corrected control - First order Solovay-Kitaev inside COPRSE
 """
 
-SCROFULOUS = 'SCROFULOUS'
+SCROFULOUS = "SCROFULOUS"
 """Dynamically corrected control -
    Short Composite Rotation For Undoing Length Over and Under Shoot (SCROFULOUS)
 """
 
-CORPSE_IN_SCROFULOUS = 'CORPSE in SCROFULOUS'
+CORPSE_IN_SCROFULOUS = "CORPSE in SCROFULOUS"
 """Concatenated dynamically corrected control - CORPSE inside SCROFULOUS
 """

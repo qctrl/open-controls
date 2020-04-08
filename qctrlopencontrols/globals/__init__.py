@@ -18,34 +18,34 @@ globals module
 ==============
 """
 
-QCTRL_EXPANDED = 'Q-CTRL expanded'
+QCTRL_EXPANDED = "Q-CTRL expanded"
 """Defines the export file format to be in Q-CTRL
 Expanded format
 """
 
-CSV = 'CSV'
+CSV = "CSV"
 """Defines the CSV file type for control export
 """
 
-JSON = 'JSON'
+JSON = "JSON"
 """Defines the JSON file type for control export
 """
 
-#coordinate system labels
-CARTESIAN = 'cartesian'
+# coordinate system labels
+CARTESIAN = "cartesian"
 """Defines Cartesian coordinate system
 """
 
-CYLINDRICAL = 'cylindrical'
+CYLINDRICAL = "cylindrical"
 """Defines Cylindrical coordinate system
 """
 
-FIX_DURATION_UNITARY = 'fixed duration unitary'
+FIX_DURATION_UNITARY = "fixed duration unitary"
 """Algorithm to convert a DDS to Quantum circuit
 where the unitaries are considered as gates with finite duration
 """
 
-INSTANT_UNITARY = 'instant unitary'
+INSTANT_UNITARY = "instant unitary"
 """Algorithm to convert a DDS to Quantum circuit where the
 unitaties are considered as instantaneous operation.
 """

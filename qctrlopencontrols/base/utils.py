@@ -48,30 +48,34 @@ def create_repr_from_attributes(class_instance=None, attributes=None):
     """
 
     if class_instance is None:
-        raise ArgumentsValueError('Class instance must be a valid object.',
-                                  {'class_instance': class_instance})
+        raise ArgumentsValueError(
+            "Class instance must be a valid object.", {"class_instance": class_instance}
+        )
 
-    class_name = '{0.__class__.__name__}'.format(class_instance)
+    class_name = "{0.__class__.__name__}".format(class_instance)
 
     if attributes is None:
-        raise ArgumentsValueError('Attributes must be a list of string',
-                                  {'attributes': attributes})
+        raise ArgumentsValueError(
+            "Attributes must be a list of string", {"attributes": attributes}
+        )
 
     if not attributes:
         return "No attributes provided for object of class {0}".format(class_name)
 
     for attribute in attributes:
         if not isinstance(attribute, str):
-            raise ArgumentsValueError('Each attribute name must be a string. Found '
-                                      '{0} type.'.format(type(attribute)),
-                                      {'attribute': attribute,
-                                       'type(attribute)': type(attribute)})
+            raise ArgumentsValueError(
+                "Each attribute name must be a string. Found "
+                "{0} type.".format(type(attribute)),
+                {"attribute": attribute, "type(attribute)": type(attribute)},
+            )
 
-    repr_string = '{0}('.format(class_name)
-    attributes_string = ','.join('{0}={1}'.format(attribute,
-                                                  repr(getattr(class_instance, attribute)))
-                                 for attribute in attributes)
+    repr_string = "{0}(".format(class_name)
+    attributes_string = ",".join(
+        "{0}={1}".format(attribute, repr(getattr(class_instance, attribute)))
+        for attribute in attributes
+    )
     repr_string += attributes_string
-    repr_string += ')'
+    repr_string += ")"
 
     return repr_string

@@ -21,8 +21,7 @@ dynamic_decoupling_sequences.driven_controls
 import numpy as np
 
 from ..exceptions.exceptions import ArgumentsValueError
-from ..driven_controls import (
-    UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE)
+from ..driven_controls import UPPER_BOUND_RABI_RATE, UPPER_BOUND_DETUNING_RATE
 from ..driven_controls.driven_control import DrivenControl
 
 
@@ -45,8 +44,8 @@ def _check_valid_operation(rabi_rotations, detuning_rotations):
         at the same offset
     """
 
-    rabi_rotation_index = set(np.where(rabi_rotations > 0.)[0])
-    detuning_rotation_index = set(np.where(detuning_rotations > 0.)[0])
+    rabi_rotation_index = set(np.where(rabi_rotations > 0.0)[0])
+    detuning_rotation_index = set(np.where(detuning_rotations > 0.0)[0])
 
     check_common_index = rabi_rotation_index.intersection(detuning_rotation_index)
 
@@ -56,8 +55,7 @@ def _check_valid_operation(rabi_rotations, detuning_rotations):
     return True
 
 
-def _check_maximum_rotation_rate(
-        maximum_rabi_rate, maximum_detuning_rate):
+def _check_maximum_rotation_rate(maximum_rabi_rate, maximum_detuning_rate):
     """Checks if the maximum rabi and detuning rate are
     within valid limits
 
@@ -77,29 +75,41 @@ def _check_maximum_rotation_rate(
     """
 
     # check against global parameters
-    if maximum_rabi_rate <= 0. or maximum_rabi_rate > UPPER_BOUND_RABI_RATE:
+    if maximum_rabi_rate <= 0.0 or maximum_rabi_rate > UPPER_BOUND_RABI_RATE:
         raise ArgumentsValueError(
-            'Maximum rabi rate must be greater than 0 and less or equal to {0}'.format(
-                UPPER_BOUND_RABI_RATE),
-            {'maximum_rabi_rate': maximum_rabi_rate},
-            extras={'maximum_detuning_rate': maximum_detuning_rate,
-                    'allowed_maximum_rabi_rate': UPPER_BOUND_RABI_RATE})
+            "Maximum rabi rate must be greater than 0 and less or equal to {0}".format(
+                UPPER_BOUND_RABI_RATE
+            ),
+            {"maximum_rabi_rate": maximum_rabi_rate},
+            extras={
+                "maximum_detuning_rate": maximum_detuning_rate,
+                "allowed_maximum_rabi_rate": UPPER_BOUND_RABI_RATE,
+            },
+        )
 
-    if maximum_detuning_rate <= 0. or maximum_detuning_rate > UPPER_BOUND_DETUNING_RATE:
+    if (
+        maximum_detuning_rate <= 0.0
+        or maximum_detuning_rate > UPPER_BOUND_DETUNING_RATE
+    ):
         raise ArgumentsValueError(
-            'Maximum detuning rate must be greater than 0 and less or equal to {0}'.format(
-                UPPER_BOUND_DETUNING_RATE),
-            {'maximum_detuning_rate': maximum_detuning_rate, },
-            extras={'maximum_rabi_rate': maximum_rabi_rate,
-                    'allowed_maximum_detuning_rate': UPPER_BOUND_DETUNING_RATE})
+            "Maximum detuning rate must be greater than 0 and less or equal to {0}".format(
+                UPPER_BOUND_DETUNING_RATE
+            ),
+            {"maximum_detuning_rate": maximum_detuning_rate,},
+            extras={
+                "maximum_rabi_rate": maximum_rabi_rate,
+                "allowed_maximum_detuning_rate": UPPER_BOUND_DETUNING_RATE,
+            },
+        )
 
 
 def convert_dds_to_driven_control(
-        dynamic_decoupling_sequence=None,
-        maximum_rabi_rate=2*np.pi,
-        maximum_detuning_rate=2*np.pi,
-        minimum_segment_duration=0.,
-        **kwargs):
+    dynamic_decoupling_sequence=None,
+    maximum_rabi_rate=2 * np.pi,
+    maximum_detuning_rate=2 * np.pi,
+    minimum_segment_duration=0.0,
+    **kwargs
+):
     """
     Creates a Driven Control based on the supplied DDS and other relevant information.
 
@@ -161,14 +171,16 @@ def convert_dds_to_driven_control(
     """
 
     if dynamic_decoupling_sequence is None:
-        raise ArgumentsValueError('Dynamic decoupling sequence must be of '
-                                  'DynamicDecoupling type.',
-                                  {'type(dynamic_decoupling_sequence':
-                                   type(dynamic_decoupling_sequence)})
+        raise ArgumentsValueError(
+            "Dynamic decoupling sequence must be of " "DynamicDecoupling type.",
+            {"type(dynamic_decoupling_sequence": type(dynamic_decoupling_sequence)},
+        )
 
-    if minimum_segment_duration < 0.:
-        raise ArgumentsValueError('Minimum segment duration must be greater or equal to 0.',
-                                  {'minimum_segment_duration': minimum_segment_duration})
+    if minimum_segment_duration < 0.0:
+        raise ArgumentsValueError(
+            "Minimum segment duration must be greater or equal to 0.",
+            {"minimum_segment_duration": minimum_segment_duration},
+        )
 
     _check_maximum_rotation_rate(maximum_rabi_rate, maximum_detuning_rate)
 
@@ -179,20 +191,25 @@ def convert_dds_to_driven_control(
     detuning_rotations = dynamic_decoupling_sequence.detuning_rotations
 
     # check if all Rabi rotations are valid (i.e. have positive values)
-    if np.any(np.less(rabi_rotations, 0.)):
+    if np.any(np.less(rabi_rotations, 0.0)):
         raise ArgumentsValueError(
-            'Sequence contains negative values for Rabi rotations.',
-            {'dynamic_decoupling_sequence': str(dynamic_decoupling_sequence)})
+            "Sequence contains negative values for Rabi rotations.",
+            {"dynamic_decoupling_sequence": str(dynamic_decoupling_sequence)},
+        )
 
     # check for valid operation
-    if not _check_valid_operation(rabi_rotations=rabi_rotations,
-                                  detuning_rotations=detuning_rotations):
+    if not _check_valid_operation(
+        rabi_rotations=rabi_rotations, detuning_rotations=detuning_rotations
+    ):
         raise ArgumentsValueError(
-            'Sequence operation includes rabi rotation and '
-            'detuning rotation at the same instance.',
-            {'dynamic_decoupling_sequence': str(dynamic_decoupling_sequence)},
-            extras={'maximum_rabi_rate': maximum_rabi_rate,
-                    'maximum_detuning_rate': maximum_detuning_rate})
+            "Sequence operation includes rabi rotation and "
+            "detuning rotation at the same instance.",
+            {"dynamic_decoupling_sequence": str(dynamic_decoupling_sequence)},
+            extras={
+                "maximum_rabi_rate": maximum_rabi_rate,
+                "maximum_detuning_rate": maximum_detuning_rate,
+            },
+        )
 
     if offsets.size == 0:
         offsets = np.array([0, sequence_duration])
@@ -212,45 +229,50 @@ def convert_dds_to_driven_control(
         detuning_rotations = np.append(detuning_rotations, [0])
 
     # check that the offsets are correctly sorted in time
-    if any(np.diff(offsets) <= 0.):
-        raise ArgumentsValueError("Pulse timing could not be properly deduced from "
-                                  "the sequence offsets. Make sure all offsets are "
-                                  "in increasing order.",
-                                  {'dynamic_decoupling_sequence': dynamic_decoupling_sequence},
-                                  extras={'offsets': offsets})
+    if any(np.diff(offsets) <= 0.0):
+        raise ArgumentsValueError(
+            "Pulse timing could not be properly deduced from "
+            "the sequence offsets. Make sure all offsets are "
+            "in increasing order.",
+            {"dynamic_decoupling_sequence": dynamic_decoupling_sequence},
+            extras={"offsets": offsets},
+        )
 
     offsets = offsets[np.newaxis, :]
     rabi_rotations = rabi_rotations[np.newaxis, :]
     azimuthal_angles = azimuthal_angles[np.newaxis, :]
     detuning_rotations = detuning_rotations[np.newaxis, :]
 
-    operations = np.concatenate((offsets, rabi_rotations,
-                                 azimuthal_angles, detuning_rotations),
-                                axis=0)
+    operations = np.concatenate(
+        (offsets, rabi_rotations, azimuthal_angles, detuning_rotations), axis=0
+    )
 
     pulse_mid_points = operations[0, :]
 
-    pulse_start_ends = np.zeros((
-        operations.shape[1], 2))   # pylint: disable=unsubscriptable-object
-
-    for op_idx in range(operations.shape[1]):   # pylint: disable=unsubscriptable-object
+    pulse_start_ends = np.zeros(
+        (operations.shape[1], 2)  # pylint: disable=unsubscriptable-object
+    )
+    for op_idx in range(operations.shape[1]):  # pylint: disable=unsubscriptable-object
         # Pulses that cause no rotations can have 0 duration
-        half_pulse_duration  = 0.
+        half_pulse_duration = 0.0
 
-        if not np.isclose(operations[1, op_idx], 0.): # Rabi rotation
-            half_pulse_duration = 0.5 * max(operations[1, op_idx] / maximum_rabi_rate,
-                                            minimum_segment_duration)
-        elif not np.isclose(operations[3, op_idx], 0.): # Detuning rotation
-            half_pulse_duration = 0.5 * max(np.abs(operations[3, op_idx]) / maximum_detuning_rate,
-                                            minimum_segment_duration)
+        if not np.isclose(operations[1, op_idx], 0.0):  # Rabi rotation
+            half_pulse_duration = 0.5 * max(
+                operations[1, op_idx] / maximum_rabi_rate, minimum_segment_duration
+            )
+        elif not np.isclose(operations[3, op_idx], 0.0):  # Detuning rotation
+            half_pulse_duration = 0.5 * max(
+                np.abs(operations[3, op_idx]) / maximum_detuning_rate,
+                minimum_segment_duration,
+            )
 
         pulse_start_ends[op_idx, 0] = pulse_mid_points[op_idx] - half_pulse_duration
         pulse_start_ends[op_idx, 1] = pulse_mid_points[op_idx] + half_pulse_duration
 
     # check if any of the pulses have gone outside the time limit [0, sequence_duration]
     # if yes, adjust the segment timing
-    if pulse_start_ends[0, 0] < 0.:
-        translation = 0. - (pulse_start_ends[0, 0])
+    if pulse_start_ends[0, 0] < 0.0:
+        translation = 0.0 - (pulse_start_ends[0, 0])
         pulse_start_ends[0, :] = pulse_start_ends[0, :] + translation
 
     if pulse_start_ends[-1, 1] > sequence_duration:
@@ -260,70 +282,96 @@ def convert_dds_to_driven_control(
     # check if the minimum_segment_duration is respected in the gaps between the pulses
     # as minimum_segment_duration >= 0, this also excludes overlaps
     gap_durations = pulse_start_ends[1:, 0] - pulse_start_ends[:-1, 1]
-    if not np.all(np.logical_or(np.greater(gap_durations, minimum_segment_duration),
-                                np.isclose(gap_durations, minimum_segment_duration))):
-        raise ArgumentsValueError("Distance between pulses does not respect minimum_segment_duration. "
-                                  "Try decreasing the minimum_segment_duration or increasing "
-                                  "the maximum_rabi_rate or the maximum_detuning_rate.",
-                                  {'dynamic_decoupling_sequence': dynamic_decoupling_sequence,
-                                   'maximum_rabi_rate': maximum_rabi_rate,
-                                   'maximum_detuning_rate': maximum_detuning_rate,
-                                   'minimum_segment_duration': minimum_segment_duration},
-                                  extras={'deduced_pulse_start_timing': pulse_start_ends[:, 0],
-                                          'deduced_pulse_end_timing': pulse_start_ends[:, 1],
-                                          'gap_durations': gap_durations})
-
+    if not np.all(
+        np.logical_or(
+            np.greater(gap_durations, minimum_segment_duration),
+            np.isclose(gap_durations, minimum_segment_duration),
+        )
+    ):
+        raise ArgumentsValueError(
+            "Distance between pulses does not respect minimum_segment_duration. "
+            "Try decreasing the minimum_segment_duration or increasing "
+            "the maximum_rabi_rate or the maximum_detuning_rate.",
+            {
+                "dynamic_decoupling_sequence": dynamic_decoupling_sequence,
+                "maximum_rabi_rate": maximum_rabi_rate,
+                "maximum_detuning_rate": maximum_detuning_rate,
+                "minimum_segment_duration": minimum_segment_duration,
+            },
+            extras={
+                "deduced_pulse_start_timing": pulse_start_ends[:, 0],
+                "deduced_pulse_end_timing": pulse_start_ends[:, 1],
+                "gap_durations": gap_durations,
+            },
+        )
 
     if np.allclose(pulse_start_ends, 0.0):
         # the original sequence should be a free evolution
-        return DrivenControl(rabi_rates=[0.],
-                             azimuthal_angles=[0.],
-                             detunings=[0.],
-                             durations=[sequence_duration],
-                             **kwargs)
+        return DrivenControl(
+            rabi_rates=[0.0],
+            azimuthal_angles=[0.0],
+            detunings=[0.0],
+            durations=[sequence_duration],
+            **kwargs
+        )
 
-    control_rabi_rates = np.zeros((
-        operations.shape[1]*2,))    # pylint: disable=unsubscriptable-object
-    control_azimuthal_angles = np.zeros((
-        operations.shape[1] * 2,))  # pylint: disable=unsubscriptable-object
-    control_detunings = np.zeros((
-        operations.shape[1] * 2,))  # pylint: disable=unsubscriptable-object
-    control_durations = np.zeros((
-        operations.shape[1] * 2,))  # pylint: disable=unsubscriptable-object
+    control_rabi_rates = np.zeros(
+        (operations.shape[1] * 2,)  # pylint: disable=unsubscriptable-object
+    )
+    control_azimuthal_angles = np.zeros(
+        (operations.shape[1] * 2,)  # pylint: disable=unsubscriptable-object
+    )
+    control_detunings = np.zeros(
+        (operations.shape[1] * 2,)  # pylint: disable=unsubscriptable-object
+    )
+    control_durations = np.zeros(
+        (operations.shape[1] * 2,)  # pylint: disable=unsubscriptable-object
+    )
 
     pulse_segment_idx = 0
-    for op_idx in range(0, operations.shape[1]):    # pylint: disable=unsubscriptable-object
+    for op_idx in range(
+        0, operations.shape[1]
+    ):  # pylint: disable=unsubscriptable-object
         pulse_width = pulse_start_ends[op_idx, 1] - pulse_start_ends[op_idx, 0]
         control_durations[pulse_segment_idx] = pulse_width
 
-        if pulse_width > 0.:
-            if not np.isclose(operations[1, op_idx], 0.): # Rabi rotation
-                control_rabi_rates[pulse_segment_idx] = operations[1, op_idx]/pulse_width
+        if pulse_width > 0.0:
+            if not np.isclose(operations[1, op_idx], 0.0):  # Rabi rotation
+                control_rabi_rates[pulse_segment_idx] = (
+                    operations[1, op_idx] / pulse_width
+                )
                 control_azimuthal_angles[pulse_segment_idx] = operations[2, op_idx]
-            elif not np.isclose(operations[3, op_idx], 0.): # Detuning rotation
-                control_detunings[pulse_segment_idx] = operations[3, op_idx]/pulse_width
+            elif not np.isclose(operations[3, op_idx], 0.0):  # Detuning rotation
+                control_detunings[pulse_segment_idx] = (
+                    operations[3, op_idx] / pulse_width
+                )
 
-        if op_idx != (operations.shape[1]-1):   # pylint: disable=unsubscriptable-object
-            control_rabi_rates[pulse_segment_idx+1] = 0.
-            control_azimuthal_angles[pulse_segment_idx+1] = 0.
-            control_detunings[pulse_segment_idx+1] = 0.
-            control_durations[pulse_segment_idx+1] = (pulse_start_ends[op_idx+1, 0] -
-                                                      pulse_start_ends[op_idx, 1])
+        if op_idx != (
+            operations.shape[1] - 1
+        ):  # pylint: disable=unsubscriptable-object
+            control_rabi_rates[pulse_segment_idx + 1] = 0.0
+            control_azimuthal_angles[pulse_segment_idx + 1] = 0.0
+            control_detunings[pulse_segment_idx + 1] = 0.0
+            control_durations[pulse_segment_idx + 1] = (
+                pulse_start_ends[op_idx + 1, 0] - pulse_start_ends[op_idx, 1]
+            )
 
         pulse_segment_idx += 2
 
     # almost there; let us check if there is any segments with durations = 0
-    control_rabi_rates = control_rabi_rates[control_durations > 0.]
-    control_azimuthal_angles = control_azimuthal_angles[control_durations > 0.]
-    control_detunings = control_detunings[control_durations > 0.]
-    control_durations = control_durations[control_durations > 0.]
+    control_rabi_rates = control_rabi_rates[control_durations > 0.0]
+    control_azimuthal_angles = control_azimuthal_angles[control_durations > 0.0]
+    control_detunings = control_detunings[control_durations > 0.0]
+    control_durations = control_durations[control_durations > 0.0]
 
-    return DrivenControl(rabi_rates=control_rabi_rates,
-                         azimuthal_angles=control_azimuthal_angles,
-                         detunings=control_detunings,
-                         durations=control_durations,
-                         **kwargs)
+    return DrivenControl(
+        rabi_rates=control_rabi_rates,
+        azimuthal_angles=control_azimuthal_angles,
+        detunings=control_detunings,
+        durations=control_durations,
+        **kwargs
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass
