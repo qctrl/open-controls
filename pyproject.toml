@@ -45,6 +45,8 @@ pylama = "*"
 pylint = "*"
 pylint_runner = "*"
 sphinx = "^2.2.0"
+nbval = "^0.9.5"
+qctrl-visualizer = "^2.1.0"
 
 [tool.dephell.main]
 from = {format = "poetry", path = "pyproject.toml"}
