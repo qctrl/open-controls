@@ -26,3 +26,20 @@
   }}();
 </script>
 {% endblock %}
+{%- block content %}
+{% if theme_style_external_links|tobool %}
+<div class="rst-content style-external-links">
+{% else %}
+<div class="rst-content">
+{% endif %}
+  {% include "breadcrumbs.html" %}
+  <div role="main" class="document DocSearch-content" itemscope="itemscope" itemtype="http://schema.org/Article">
+  {%- block document %}
+   <div itemprop="articleBody">
+    {% block body %}{% endblock %}
+   </div>
+  </div>
+  {%- endblock %}
+  {% include "footer.html" %}
+</div>
+{%- endblock %}
