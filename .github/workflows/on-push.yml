@@ -36,9 +36,6 @@ jobs:
     - name: Run Pylint
       run: |
         ./ci docker run qctrl/python-build:3.7 poetry run pylint_runner  
-    - name: Run Markdownlint
-      run: |
-        ./ci docker run qctrl/python-build:3.7 mdl -- -ig . || true
 
   pytest:
     runs-on: ubuntu-latest
