@@ -37,5 +37,5 @@ setup(
     package_dir={"": "."},
     package_data={},
     install_requires=['numpy==1.*,>=1.16.0', 'scipy==1.*,>=1.3.0', 'sphinx-rtd-theme==0.*,>=0.4.3', 'toml==0.*,>=0.10.0'],
-    extras_require={"dev": ["black==19.*,>=19.10.0", "nbval==0.*,>=0.9.5", "pylint==2.*,>=2.3.0", "pylint-runner==0.*,>=0.5.4", "pytest==5.*,>=5.0.0", "qctrl-visualizer==2.*,>=2.1.0", "sphinx==2.*,>=2.2.0"]},
+    extras_require={"dev": ["black==19.*,>=19.10.0.b0", "nbval==0.*,>=0.9.5", "pylint==2.*,>=2.3.0", "pylint-runner==0.*,>=0.5.4", "pytest==5.*,>=5.0.0", "qctrl-visualizer==2.*,>=2.1.0", "sphinx==2.*,>=2.2.0"]},
 )
