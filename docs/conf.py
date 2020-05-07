@@ -33,12 +33,12 @@ html_context = {
     "var_url": "https://docs.q-ctrl.com",
     "var_title": "Open Controls Python package | Q-CTRL",
     "var_description": (
-        "Module, class and method reference for the",
-        "Q-CTRL Open Controls Python package",
+        "Module, class and method reference for the "
+        "Q-CTRL Open Controls Python package"
     ),
     "var_image": (
-        "https://images.ctfassets.net/l5sdcktfe9p6/6XwDBOS4cWBv2Lo",
-        "SimZwKj/1fb29e7c1e2941114d5eda81797e84ac/q-ctrl.jpg",
+        "https://images.ctfassets.net/l5sdcktfe9p6/6XwDBOS4cWBv2Lo "
+        "SimZwKj/1fb29e7c1e2941114d5eda81797e84ac/q-ctrl.jpg"
     ),
     "var_twitter_username": "qctrlHQ",
 }
