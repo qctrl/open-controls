@@ -10,6 +10,6 @@ WORKDIR /docs
 
 RUN poetry run make html
 
-FROM nginx:1.17-alpine
+FROM nginx:1.18-alpine
 
 COPY --from=builder /docs/_build/html /usr/share/nginx/html
