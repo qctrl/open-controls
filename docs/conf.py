@@ -24,7 +24,7 @@ package_info = parsed["tool"]["poetry"]
 project = package_info["description"]
 author = ", ".join(package_info["authors"])
 release = package_info["version"]
-copyright = "2019, Q-CTRL <support@q-ctrl.com>"  # pylint: disable=redefined-builtin
+copyright = "2020 Q-CTRL Pty Ltd & Q-CTRL Inc. All rights reserved."  # pylint: disable=redefined-builtin
 
 # -- HTML Variables ----------------------------------------------------------
 # Variables to insert into _templates/layout.html
@@ -33,10 +33,13 @@ html_context = {
     "var_url": "https://docs.q-ctrl.com",
     "var_title": "Open Controls Python package | Q-CTRL",
     "var_description": (
-        "Module, class and method reference for the Q-CTRL Open Controls "
-        "Python package"
+        "Module, class and method reference for the "
+        "Q-CTRL Open Controls Python package"
     ),
-    "var_image": "https://docs.q-ctrl.com/assets/img/social.jpg",
+    "var_image": (
+        "https://images.ctfassets.net/l5sdcktfe9p6/6XwDBOS4cWBv2Lo"
+        "SimZwKj/1fb29e7c1e2941114d5eda81797e84ac/q-ctrl.jpg"
+    ),
     "var_twitter_username": "qctrlHQ",
 }
 
@@ -78,9 +81,9 @@ html_title = html_context["var_title"]
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 html_css_files = [
-    "https://dev.docs.q-ctrl.com/assets/css/readthedocs.css",
+    "https://docs.q-ctrl.com/assets/css/readthedocs.css",
 ]
 html_js_files = [
-    "https://dev.docs.q-ctrl.com/assets/js/readthedocs.js",
+    "https://docs.q-ctrl.com/assets/js/readthedocs.js",
 ]
 html_logo = "_static/logo.svg"
