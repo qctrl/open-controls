@@ -37,7 +37,7 @@ html_context = {
         "Q-CTRL Open Controls Python package"
     ),
     "var_image": (
-        "https://images.ctfassets.net/l5sdcktfe9p6/6XwDBOS4cWBv2Lo "
+        "https://images.ctfassets.net/l5sdcktfe9p6/6XwDBOS4cWBv2Lo"
         "SimZwKj/1fb29e7c1e2941114d5eda81797e84ac/q-ctrl.jpg"
     ),
     "var_twitter_username": "qctrlHQ",
