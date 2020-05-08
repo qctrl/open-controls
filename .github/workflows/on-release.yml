@@ -41,7 +41,6 @@ jobs:
             -f ./docs/Dockerfile \
             -u $(cat .hub_user) \
             -p $(cat .hub_pass) \
-            -t latest \
             --suffix -docs
       - name: Update Sphinx deployment in Kubernetes (Production)
         run: |
