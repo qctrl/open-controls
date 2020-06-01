@@ -18,7 +18,7 @@ driven_controls.predefined
 ==========================
 
 More information and publication references to all driven controls defined here
-can be found at https://docs.q-ctrl.com/control-library
+can be found at https://docs.q-ctrl.com/wiki/control-library
 """
 
 import numpy as np
