@@ -279,11 +279,18 @@ class DrivenControl:
             self.amplitude_x ** 2 + self.amplitude_y ** 2 + self.detunings ** 2
         )
 
-        amplitudes = np.where(np.isclose(amplitudes, 0.0), 1.0, amplitudes)
+        # Reduces tolerance of the comparison to zero in case the units chosen
+        # make the amplitudes very small, but never allows it be higher than the
+        # default atol value of 1e-8
+        tolerance = min(1e-20 * np.max(amplitudes), 1e-8)
 
-        normalized_amplitude_x = self.amplitude_x / amplitudes
-        normalized_amplitude_y = self.amplitude_y / amplitudes
-        normalized_detunings = self.detunings / amplitudes
+        safe_amplitudes = np.where(
+            np.isclose(amplitudes, 0, atol=tolerance), 1.0, amplitudes
+        )
+
+        normalized_amplitude_x = self.amplitude_x / safe_amplitudes
+        normalized_amplitude_y = self.amplitude_y / safe_amplitudes
+        normalized_detunings = self.detunings / safe_amplitudes
 
         directions = np.hstack(
             (

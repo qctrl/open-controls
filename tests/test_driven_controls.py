@@ -163,6 +163,28 @@ def test_control_directions():
     assert np.allclose(driven_control.directions, expected_directions)
 
 
+def test_control_directions_with_small_amplitudes():
+    """Tests if the directions method works with very small amplitudes."""
+    rabi_rates = [1e-100, 0.0, 1e-100, 0.0]
+    azimuthal_angles = [0, 0, np.pi / 2, 0]
+    detunings = [0, 0, 0, 1e-100]
+    durations = [1, 1, 1, 1]
+
+    name = "driven_control"
+
+    expected_directions = [[1, 0, 0], [0, 0, 0], [0, 1, 0], [0, 0, 1]]
+
+    driven_control = DrivenControl(
+        rabi_rates=rabi_rates,
+        azimuthal_angles=azimuthal_angles,
+        detunings=detunings,
+        durations=durations,
+        name=name,
+    )
+
+    assert np.allclose(driven_control.directions, expected_directions)
+
+
 def test_control_export():
 
     """Tests exporting the control to a file
