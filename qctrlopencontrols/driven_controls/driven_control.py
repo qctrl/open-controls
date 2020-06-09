@@ -280,7 +280,7 @@ class DrivenControl:
         )
 
         # Reduces tolerance of the comparison to zero in case the units chosen
-        # make the amplitudes very small, but never allows it be higher than the
+        # make the amplitudes very small, but never allows it to be higher than the
         # default atol value of 1e-8
         tolerance = min(1e-20 * np.max(amplitudes), 1e-8)
 
