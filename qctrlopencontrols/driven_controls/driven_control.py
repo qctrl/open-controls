@@ -278,23 +278,19 @@ class DrivenControl:
         amplitudes = np.sqrt(
             self.amplitude_x ** 2 + self.amplitude_y ** 2 + self.detunings ** 2
         )
+
+        amplitudes = np.where(np.isclose(amplitudes, 0.0), 1.0, amplitudes)
+
         normalized_amplitude_x = self.amplitude_x / amplitudes
         normalized_amplitude_y = self.amplitude_y / amplitudes
         normalized_detunings = self.detunings / amplitudes
 
-        normalized_amplitudes = np.hstack(
+        directions = np.hstack(
             (
                 normalized_amplitude_x[:, np.newaxis],
                 normalized_amplitude_y[:, np.newaxis],
                 normalized_detunings[:, np.newaxis],
             )
-        )
-
-        directions = np.array(
-            [
-                normalized_amplitudes if amplitudes[i] != 0.0 else np.zeros([3,])
-                for i in range(self.number_of_segments)
-            ]
         )
 
         return directions
