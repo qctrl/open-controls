@@ -272,7 +272,7 @@ class DynamicDecouplingSequence:
             'Q-CTRL expanded'; Currently it does not support any other format.
             For detail of the `Q-CTRL Expanded Format` consult
             `Q-CTRL Control Data Format
-            <https://docs.q-ctrl.com/output-data-formats#q-ctrl-hardware>` _.
+            <https://docs.q-ctrl.com/wiki/output-data-formats#q-ctrl-hardware>` _.
         file_type : str, optional
             One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
@@ -286,7 +286,7 @@ class DynamicDecouplingSequence:
         References
         ----------
         `Q-CTRL Control Data Format
-        <https://docs.q-ctrl.com/output-data-formats#q-ctrl-hardware>` _.
+        <https://docs.q-ctrl.com/wiki/output-data-formats#q-ctrl-hardware>` _.
 
         Raises
         ------

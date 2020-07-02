@@ -278,23 +278,26 @@ class DrivenControl:
         amplitudes = np.sqrt(
             self.amplitude_x ** 2 + self.amplitude_y ** 2 + self.detunings ** 2
         )
-        normalized_amplitude_x = self.amplitude_x / amplitudes
-        normalized_amplitude_y = self.amplitude_y / amplitudes
-        normalized_detunings = self.detunings / amplitudes
 
-        normalized_amplitudes = np.hstack(
+        # Reduces tolerance of the comparison to zero in case the units chosen
+        # make the amplitudes very small, but never allows it to be higher than the
+        # default atol value of 1e-8
+        tolerance = min(1e-20 * np.max(amplitudes), 1e-8)
+
+        safe_amplitudes = np.where(
+            np.isclose(amplitudes, 0, atol=tolerance), 1.0, amplitudes
+        )
+
+        normalized_amplitude_x = self.amplitude_x / safe_amplitudes
+        normalized_amplitude_y = self.amplitude_y / safe_amplitudes
+        normalized_detunings = self.detunings / safe_amplitudes
+
+        directions = np.hstack(
             (
                 normalized_amplitude_x[:, np.newaxis],
                 normalized_amplitude_y[:, np.newaxis],
                 normalized_detunings[:, np.newaxis],
             )
-        )
-
-        directions = np.array(
-            [
-                normalized_amplitudes if amplitudes[i] != 0.0 else np.zeros([3,])
-                for i in range(self.number_of_segments)
-            ]
         )
 
         return directions
@@ -478,7 +481,7 @@ class DrivenControl:
             'Q-CTRL expanded'; Currently it does not support any other format.
             For detail of the `Q-CTRL Expanded Format` consult
             `Q-CTRL Control Data Format
-            <https://docs.q-ctrl.com/output-data-formats#q-ctrl-hardware>` _.
+            <https://docs.q-ctrl.com/wiki/output-data-formats#q-ctrl-hardware>` _.
         file_type : str, optional
             One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
@@ -488,7 +491,7 @@ class DrivenControl:
         References
         ----------
         `Q-CTRL Control Data Format
-        <https://docs.q-ctrl.com/output-data-formats#q-ctrl-hardware>` _.
+        <https://docs.q-ctrl.com/wiki/output-data-formats#q-ctrl-hardware>` _.
 
         Raises
         ------
