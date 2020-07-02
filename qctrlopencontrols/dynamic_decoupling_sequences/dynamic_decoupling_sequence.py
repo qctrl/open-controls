@@ -20,11 +20,10 @@ dynamic_decoupling_sequences.dynamic_decoupling_sequence
 
 import numpy as np
 
-from qctrlopencontrols.base.utils import create_repr_from_attributes
-from ..exceptions.exceptions import ArgumentsValueError
-from ..globals import QCTRL_EXPANDED, CSV, CYLINDRICAL
-
 from ..dynamic_decoupling_sequences import UPPER_BOUND_OFFSETS
+from ..exceptions import ArgumentsValueError
+from ..globals import CSV, CYLINDRICAL, QCTRL_EXPANDED
+from ..utils import create_repr_from_attributes
 from .driven_controls import convert_dds_to_driven_control
 
 

@@ -20,8 +20,6 @@ dynamic_decoupling_sequences.predefined
 
 import numpy as np
 
-from ..exceptions.exceptions import ArgumentsValueError
-
 from ..dynamic_decoupling_sequences import (
     CARR_PURCELL,
     CARR_PURCELL_MEIBOOM_GILL,
@@ -34,7 +32,7 @@ from ..dynamic_decoupling_sequences import (
     X_CONCATENATED,
     XY_CONCATENATED,
 )
-
+from ..exceptions import ArgumentsValueError
 from .dynamic_decoupling_sequence import DynamicDecouplingSequence
 
 

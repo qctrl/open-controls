@@ -23,7 +23,6 @@ can be found at https://docs.q-ctrl.com/wiki/control-library
 
 import numpy as np
 
-from ..exceptions.exceptions import ArgumentsValueError
 from ..driven_controls import (
     BB1,
     CORPSE,
@@ -35,7 +34,7 @@ from ..driven_controls import (
     SK1,
     WAMF1,
 )
-
+from ..exceptions import ArgumentsValueError
 from .driven_control import DrivenControl
 
 

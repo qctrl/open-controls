@@ -21,14 +21,13 @@ import os
 import numpy as np
 import pytest
 
-from qctrlopencontrols.exceptions.exceptions import ArgumentsValueError
 from qctrlopencontrols import DrivenControl
-
 from qctrlopencontrols.driven_controls import (
-    UPPER_BOUND_SEGMENTS,
-    UPPER_BOUND_RABI_RATE,
     UPPER_BOUND_DETUNING_RATE,
+    UPPER_BOUND_RABI_RATE,
+    UPPER_BOUND_SEGMENTS,
 )
+from qctrlopencontrols.exceptions import ArgumentsValueError
 
 
 def _remove_file(filename):

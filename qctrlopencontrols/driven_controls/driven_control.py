@@ -18,20 +18,19 @@ driven_controls.driven_controls
 ===============================
 """
 import json
+
 import numpy as np
 
-from ..exceptions.exceptions import ArgumentsValueError
-from ..base.utils import create_repr_from_attributes
-
-from ..globals import QCTRL_EXPANDED, CSV, JSON, CARTESIAN, CYLINDRICAL
-
 from ..driven_controls import (
-    UPPER_BOUND_SEGMENTS,
-    UPPER_BOUND_RABI_RATE,
+    LOWER_BOUND_DURATION,
     UPPER_BOUND_DETUNING_RATE,
     UPPER_BOUND_DURATION,
-    LOWER_BOUND_DURATION,
+    UPPER_BOUND_RABI_RATE,
+    UPPER_BOUND_SEGMENTS,
 )
+from ..exceptions import ArgumentsValueError
+from ..globals import CARTESIAN, CSV, CYLINDRICAL, JSON, QCTRL_EXPANDED
+from ..utils import create_repr_from_attributes
 
 
 class DrivenControl:
