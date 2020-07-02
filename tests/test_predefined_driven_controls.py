@@ -21,10 +21,17 @@ import numpy as np
 import pytest
 
 from qctrlopencontrols import new_predefined_driven_control
-from qctrlopencontrols.driven_controls import (BB1, CORPSE, CORPSE_IN_BB1,
-                                               CORPSE_IN_SCROFULOUS,
-                                               CORPSE_IN_SK1, PRIMITIVE,
-                                               SCROFULOUS, SK1, WAMF1)
+from qctrlopencontrols.driven_controls import (
+    BB1,
+    CORPSE,
+    CORPSE_IN_BB1,
+    CORPSE_IN_SCROFULOUS,
+    CORPSE_IN_SK1,
+    PRIMITIVE,
+    SCROFULOUS,
+    SK1,
+    WAMF1,
+)
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
 

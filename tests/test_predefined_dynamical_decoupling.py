@@ -24,9 +24,16 @@ import pytest
 
 from qctrlopencontrols import new_predefined_dds
 from qctrlopencontrols.dynamic_decoupling_sequences import (
-    CARR_PURCELL, CARR_PURCELL_MEIBOOM_GILL, PERIODIC_SINGLE_AXIS, QUADRATIC,
-    SPIN_ECHO, UHRIG_SINGLE_AXIS, WALSH_SINGLE_AXIS, X_CONCATENATED,
-    XY_CONCATENATED)
+    CARR_PURCELL,
+    CARR_PURCELL_MEIBOOM_GILL,
+    PERIODIC_SINGLE_AXIS,
+    QUADRATIC,
+    SPIN_ECHO,
+    UHRIG_SINGLE_AXIS,
+    WALSH_SINGLE_AXIS,
+    X_CONCATENATED,
+    XY_CONCATENATED,
+)
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
 
