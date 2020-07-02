@@ -18,10 +18,13 @@ Tests for Dynamical Decoupling Sequences
 ========================================
 """
 import os
-import pytest
+
 import numpy as np
-from qctrlopencontrols.exceptions.exceptions import ArgumentsValueError
-from qctrlopencontrols import DynamicDecouplingSequence, convert_dds_to_driven_control
+import pytest
+
+from qctrlopencontrols import (DynamicDecouplingSequence,
+                               convert_dds_to_driven_control)
+from qctrlopencontrols.exceptions import ArgumentsValueError
 
 
 def _remove_file(filename):

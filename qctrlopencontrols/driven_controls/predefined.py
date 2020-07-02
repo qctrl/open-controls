@@ -23,19 +23,10 @@ can be found at https://docs.q-ctrl.com/wiki/control-library
 
 import numpy as np
 
-from ..exceptions.exceptions import ArgumentsValueError
-from ..driven_controls import (
-    BB1,
-    CORPSE,
-    CORPSE_IN_BB1,
-    CORPSE_IN_SCROFULOUS,
-    CORPSE_IN_SK1,
-    PRIMITIVE,
-    SCROFULOUS,
-    SK1,
-    WAMF1,
-)
-
+from ..driven_controls import (BB1, CORPSE, CORPSE_IN_BB1,
+                               CORPSE_IN_SCROFULOUS, CORPSE_IN_SK1, PRIMITIVE,
+                               SCROFULOUS, SK1, WAMF1)
+from ..exceptions import ArgumentsValueError
 from .driven_control import DrivenControl
 
 

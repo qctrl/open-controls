@@ -20,12 +20,9 @@ dynamic_decoupling_sequences.driven_controls
 
 import numpy as np
 
-from ..driven_controls import (
-    UPPER_BOUND_DETUNING_RATE,
-    UPPER_BOUND_RABI_RATE,
-)
+from ..driven_controls import UPPER_BOUND_DETUNING_RATE, UPPER_BOUND_RABI_RATE
 from ..driven_controls.driven_control import DrivenControl
-from ..exceptions.exceptions import ArgumentsValueError
+from ..exceptions import ArgumentsValueError
 
 
 def _check_valid_operation(rabi_rotations, detuning_rotations):

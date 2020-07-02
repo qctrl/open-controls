@@ -22,20 +22,12 @@ Tests for Predefined DDS
 import numpy as np
 import pytest
 
-
-from qctrlopencontrols.exceptions.exceptions import ArgumentsValueError
 from qctrlopencontrols import new_predefined_dds
 from qctrlopencontrols.dynamic_decoupling_sequences import (
-    SPIN_ECHO,
-    CARR_PURCELL,
-    CARR_PURCELL_MEIBOOM_GILL,
-    WALSH_SINGLE_AXIS,
-    PERIODIC_SINGLE_AXIS,
-    UHRIG_SINGLE_AXIS,
-    QUADRATIC,
-    X_CONCATENATED,
-    XY_CONCATENATED,
-)
+    CARR_PURCELL, CARR_PURCELL_MEIBOOM_GILL, PERIODIC_SINGLE_AXIS, QUADRATIC,
+    SPIN_ECHO, UHRIG_SINGLE_AXIS, WALSH_SINGLE_AXIS, X_CONCATENATED,
+    XY_CONCATENATED)
+from qctrlopencontrols.exceptions import ArgumentsValueError
 
 
 def test_ramsey():
