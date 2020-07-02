@@ -659,7 +659,3 @@ class DrivenControl:
         ]
 
         return create_repr_from_attributes(self, attributes)
-
-
-if __name__ == "__main__":
-    pass

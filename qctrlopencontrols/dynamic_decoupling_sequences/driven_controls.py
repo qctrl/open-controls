@@ -357,7 +357,3 @@ def convert_dds_to_driven_control(
         durations=control_durations,
         **kwargs
     )
-
-
-if __name__ == "__main__":
-    pass
