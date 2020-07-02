@@ -312,7 +312,3 @@ class DynamicDecouplingSequence:
             file_type=file_type,
             coordinates=coordinates,
         )
-
-
-if __name__ == "__main__":
-    pass

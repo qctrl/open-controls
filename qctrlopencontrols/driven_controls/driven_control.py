@@ -21,13 +21,9 @@ import json
 
 import numpy as np
 
-from ..driven_controls import (
-    LOWER_BOUND_DURATION,
-    UPPER_BOUND_DETUNING_RATE,
-    UPPER_BOUND_DURATION,
-    UPPER_BOUND_RABI_RATE,
-    UPPER_BOUND_SEGMENTS,
-)
+from ..driven_controls import (LOWER_BOUND_DURATION, UPPER_BOUND_DETUNING_RATE,
+                               UPPER_BOUND_DURATION, UPPER_BOUND_RABI_RATE,
+                               UPPER_BOUND_SEGMENTS)
 from ..exceptions import ArgumentsValueError
 from ..globals import CARTESIAN, CSV, CYLINDRICAL, JSON, QCTRL_EXPANDED
 from ..utils import create_repr_from_attributes
@@ -659,7 +655,3 @@ class DrivenControl:
         ]
 
         return create_repr_from_attributes(self, attributes)
-
-
-if __name__ == "__main__":
-    pass
