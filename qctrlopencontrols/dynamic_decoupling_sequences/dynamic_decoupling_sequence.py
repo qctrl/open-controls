@@ -22,8 +22,7 @@ import numpy as np
 
 from ..dynamic_decoupling_sequences import UPPER_BOUND_OFFSETS
 from ..exceptions import ArgumentsValueError
-from ..globals import CSV, CYLINDRICAL, QCTRL_EXPANDED
-from ..utils import create_repr_from_attributes
+from ..utils import Coordinate, FileFormat, FileType, create_repr_from_attributes
 from .driven_controls import convert_dds_to_driven_control
 
 
@@ -253,9 +252,9 @@ class DynamicDecouplingSequence:
     def export_to_file(
         self,
         filename=None,
-        file_format=QCTRL_EXPANDED,
-        file_type=CSV,
-        coordinates=CYLINDRICAL,
+        file_format=FileFormat.QCTRL.value,
+        file_type=FileType.CSV.value,
+        coordinates=Coordinate.CYLINDRICAL.value,
         maximum_rabi_rate=2 * np.pi,
         maximum_detuning_rate=2 * np.pi,
     ):
@@ -276,7 +275,7 @@ class DynamicDecouplingSequence:
             One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
             Indicates the co-ordinate system requested. Must be one of
-            'Cylindrical', 'Cartesian'; defaults to 'Cylindrical'
+            'cylindrical', 'cartesian'; defaults to 'cylindrical'
         maximum_rabi_rate : float, optional
             Maximum Rabi Rate; Defaults to :math:`2\\pi`
         maximum_detuning_rate : float, optional

@@ -18,6 +18,8 @@ base.utils
 ==========
 """
 
+from enum import Enum
+
 from .exceptions import ArgumentsValueError
 
 
@@ -79,3 +81,32 @@ def create_repr_from_attributes(class_instance=None, attributes=None):
     repr_string += ")"
 
     return repr_string
+
+
+class FileFormat(Enum):
+    """
+    Define exported file format.
+
+    Currently only support Q-CTRL expanded format.
+    See details in https://docs.q-ctrl.com/wiki/output-data-formats#q-ctrl-hardware
+    """
+
+    QCTRL = "Q-CTRL expanded"
+
+
+class FileType(Enum):
+    """
+    Define exported file type.
+    """
+
+    JSON = "JSON"
+    CSV = "CSV"
+
+
+class Coordinate(Enum):
+    """
+    Define coordinate system for data representation.
+    """
+
+    CARTESIAN = "cartesian"
+    CYLINDRICAL = "cylindrical"

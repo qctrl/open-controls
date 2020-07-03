@@ -29,8 +29,7 @@ from ..driven_controls import (
     UPPER_BOUND_SEGMENTS,
 )
 from ..exceptions import ArgumentsValueError
-from ..globals import CARTESIAN, CSV, CYLINDRICAL, JSON, QCTRL_EXPANDED
-from ..utils import create_repr_from_attributes
+from ..utils import Coordinate, FileFormat, FileType, create_repr_from_attributes
 
 
 class DrivenControl:
@@ -356,7 +355,7 @@ class DrivenControl:
         Parameters
         ----------
         file_type : str, optional
-            One of 'csv' or 'json'; defaults to 'csv'.
+            One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
             Indicates the co-ordinate system requested. Must be one of
             'cylindrical', 'cartesian' or 'polar'; defaults to 'cylindrical'
@@ -364,14 +363,13 @@ class DrivenControl:
         Returns
         -------
         list or dict
-            Based on file_type; list if 'csv', dict if 'json'
+            Based on file_type; list if 'CSV', dict if 'JSON'
         """
         control_info = None
         amplitude_x = self.amplitude_x
         amplitude_y = self.amplitude_y
-        if coordinates == CARTESIAN:
-            if file_type == CSV:
-
+        if coordinates == Coordinate.CYLINDRICAL.value:
+            if file_type == FileType.CSV.value:
                 control_info = list()
                 control_info.append(
                     "amplitude_x,amplitude_y,detuning,duration,maximum_rabi_rate"
@@ -398,7 +396,7 @@ class DrivenControl:
 
         else:
 
-            if file_type == CSV:
+            if file_type == FileType.CSV.value:
                 control_info = list()
                 control_info.append(
                     "rabi_rate,azimuthal_angle,detuning,duration,maximum_rabi_rate"
@@ -433,7 +431,10 @@ class DrivenControl:
         return control_info
 
     def _export_to_qctrl_expanded_format(
-        self, filename=None, file_type=CSV, coordinates=CYLINDRICAL
+        self,
+        filename=None,
+        file_type=FileType.CSV.value,
+        coordinates=Coordinate.CYLINDRICAL.value,
     ):
         """Private method to save control in qctrl_expanded_format
 
@@ -446,13 +447,13 @@ class DrivenControl:
             One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
             Indicates the co-ordinate system requested. Must be one of
-            'Cylindrical', 'Cartesian'; defaults to 'Cylindrical'
+            'cylindrical', 'cartesian'; defaults to 'cylindrical'
         """
 
         control_info = self._qctrl_expanded_export_content(
             file_type=file_type, coordinates=coordinates
         )
-        if file_type == CSV:
+        if file_type == FileType.CSV.value:
             with open(filename, "wt") as handle:
 
                 control_info = "\n".join(control_info)
@@ -464,9 +465,9 @@ class DrivenControl:
     def export_to_file(
         self,
         filename=None,
-        file_format=QCTRL_EXPANDED,
-        file_type=CSV,
-        coordinates=CYLINDRICAL,
+        file_format=FileFormat.QCTRL.value,
+        file_type=FileType.CSV.value,
+        coordinates=Coordinate.CYLINDRICAL.value,
     ):
         """Prepares and saves the driven control in a file.
 
@@ -485,7 +486,7 @@ class DrivenControl:
             One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
             Indicates the co-ordinate system requested. Must be one of
-            'Cylindrical', 'Cartesian'; defaults to 'Cylindrical'
+            'cylindrical', 'cartesian'; defaults to 'cylindrical'
 
         References
         ----------
@@ -497,39 +498,45 @@ class DrivenControl:
         ArgumentsValueError
             Raised if some of the parameters are invalid.
         """
+        _file_types = [v.value for v in FileType]
+        _file_formats = [v.value for v in FileFormat]
+        _coordinate_systems = [v.value for v in Coordinate]
 
         if filename is None:
             raise ArgumentsValueError(
                 "Invalid filename provided.", {"filename": filename}
             )
 
-        if file_format not in [QCTRL_EXPANDED]:
+        if file_format not in _file_formats:
             raise ArgumentsValueError(
                 "Requested file format is not supported. Please use "
-                "one of {}".format([QCTRL_EXPANDED]),
+                "one of {}".format(_file_formats),
                 {"file_format": file_format},
             )
 
-        if file_type not in [CSV, JSON]:
+        if file_type not in _file_types:
             raise ArgumentsValueError(
                 "Requested file type is not supported. Please use "
-                "one of {}".format([CSV, JSON]),
+                "one of {}".format(_file_types),
                 {"file_type": file_type},
             )
 
-        if coordinates not in [CYLINDRICAL, CARTESIAN]:
+        if coordinates not in _coordinate_systems:
             raise ArgumentsValueError(
                 "Requested coordinate type is not supported. Please use "
-                "one of {}".format([CARTESIAN, CYLINDRICAL]),
+                "one of {}".format(_coordinate_systems),
                 {"coordinates": coordinates},
             )
 
-        if file_format == QCTRL_EXPANDED:
+        if file_format == FileFormat.QCTRL.value:
             self._export_to_qctrl_expanded_format(
                 filename=filename, file_type=file_type, coordinates=coordinates
             )
 
-    def export(self, coordinates=CYLINDRICAL, dimensionless_rabi_rate=True):
+    def export(
+        self, coordinates=Coordinate.CYLINDRICAL.value, dimensionless_rabi_rate=True
+    ):
+
         """ Returns a dictionary formatted for plotting using the qctrl-visualizer package.
 
         Parameters
@@ -554,7 +561,7 @@ class DrivenControl:
             Raised when an argument is invalid.
         """
 
-        if coordinates not in [CARTESIAN, CYLINDRICAL]:
+        if coordinates not in [v.value for v in Coordinate]:
             raise ArgumentsValueError(
                 "Unsupported coordinates provided: ",
                 arguments={"coordinates": coordinates},
@@ -574,7 +581,7 @@ class DrivenControl:
         plot_durations = self.durations
         plot_detunings = self.detunings
 
-        if coordinates == CARTESIAN:
+        if coordinates == Coordinate.CARTESIAN.value:
             plot_dictionary["X amplitude"] = [
                 {"value": v, "duration": t} for v, t in zip(plot_x, plot_durations)
             ]
@@ -582,7 +589,7 @@ class DrivenControl:
                 {"value": v, "duration": t} for v, t in zip(plot_y, plot_durations)
             ]
 
-        if coordinates == CYLINDRICAL:
+        if coordinates == Coordinate.CYLINDRICAL.value:
             plot_dictionary["Rabi rate"] = [
                 {"value": r * np.exp(1.0j * theta), "duration": t}
                 for r, theta, t in zip(plot_r, plot_theta, plot_durations)
