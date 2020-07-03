@@ -33,7 +33,7 @@ setup(
     license='Apache-2.0',
     keywords='quantum computing open source engineering',
     classifiers=['Development Status :: 5 - Production/Stable', 'Environment :: Console', 'Intended Audience :: Developers', 'Intended Audience :: Education', 'Intended Audience :: Science/Research', 'License :: OSI Approved :: Apache Software License', 'Natural Language :: English', 'Operating System :: OS Independent', 'Programming Language :: Python :: 3.6', 'Topic :: Scientific/Engineering :: Physics', 'Topic :: Scientific/Engineering :: Visualization', 'Topic :: Software Development :: Embedded Systems', 'Topic :: System :: Distributed Computing'],
-    packages=['qctrlopencontrols', 'qctrlopencontrols.driven_controls', 'qctrlopencontrols.dynamic_decoupling_sequences', 'qctrlopencontrols.globals'],
+    packages=['qctrlopencontrols', 'qctrlopencontrols.driven_controls', 'qctrlopencontrols.dynamic_decoupling_sequences'],
     package_dir={"": "."},
     package_data={},
     install_requires=['numpy==1.*,>=1.16.0', 'scipy==1.*,>=1.3.0', 'toml==0.*,>=0.10.0'],
