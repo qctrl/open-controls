@@ -103,7 +103,7 @@ class FileType(Enum):
     CSV = "CSV"
 
 
-class Coordinates(Enum):
+class Coordinate(Enum):
     """
     Define coordinate system for data representation.
     """

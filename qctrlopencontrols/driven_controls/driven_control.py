@@ -29,7 +29,7 @@ from ..driven_controls import (
     UPPER_BOUND_SEGMENTS,
 )
 from ..exceptions import ArgumentsValueError
-from ..utils import Coordinates, FileFormat, FileType, create_repr_from_attributes
+from ..utils import Coordinate, FileFormat, FileType, create_repr_from_attributes
 
 
 class DrivenControl:
@@ -368,7 +368,7 @@ class DrivenControl:
         control_info = None
         amplitude_x = self.amplitude_x
         amplitude_y = self.amplitude_y
-        if coordinates == Coordinates.CYLINDRICAL.value:
+        if coordinates == Coordinate.CYLINDRICAL.value:
             if file_type == FileType.CSV.value:
                 control_info = list()
                 control_info.append(
@@ -434,7 +434,7 @@ class DrivenControl:
         self,
         filename=None,
         file_type=FileType.CSV.value,
-        coordinates=Coordinates.CYLINDRICAL.value,
+        coordinates=Coordinate.CYLINDRICAL.value,
     ):
         """Private method to save control in qctrl_expanded_format
 
@@ -467,7 +467,7 @@ class DrivenControl:
         filename=None,
         file_format=FileFormat.QCTRL.value,
         file_type=FileType.CSV.value,
-        coordinates=Coordinates.CYLINDRICAL.value,
+        coordinates=Coordinate.CYLINDRICAL.value,
     ):
         """Prepares and saves the driven control in a file.
 
@@ -500,7 +500,7 @@ class DrivenControl:
         """
         _file_types = [v.value for v in FileType]
         _file_formats = [v.value for v in FileFormat]
-        _coordinate_systems = [v.value for v in Coordinates]
+        _coordinate_systems = [v.value for v in Coordinate]
 
         if filename is None:
             raise ArgumentsValueError(
@@ -534,7 +534,7 @@ class DrivenControl:
             )
 
     def export(
-        self, coordinates=Coordinates.CYLINDRICAL.value, dimensionless_rabi_rate=True
+        self, coordinates=Coordinate.CYLINDRICAL.value, dimensionless_rabi_rate=True
     ):
 
         """ Returns a dictionary formatted for plotting using the qctrl-visualizer package.
@@ -561,7 +561,7 @@ class DrivenControl:
             Raised when an argument is invalid.
         """
 
-        if coordinates not in [v.value for v in Coordinates]:
+        if coordinates not in [v.value for v in Coordinate]:
             raise ArgumentsValueError(
                 "Unsupported coordinates provided: ",
                 arguments={"coordinates": coordinates},
@@ -581,7 +581,7 @@ class DrivenControl:
         plot_durations = self.durations
         plot_detunings = self.detunings
 
-        if coordinates == Coordinates.CARTESIAN.value:
+        if coordinates == Coordinate.CARTESIAN.value:
             plot_dictionary["X amplitude"] = [
                 {"value": v, "duration": t} for v, t in zip(plot_x, plot_durations)
             ]
@@ -589,7 +589,7 @@ class DrivenControl:
                 {"value": v, "duration": t} for v, t in zip(plot_y, plot_durations)
             ]
 
-        if coordinates == Coordinates.CYLINDRICAL.value:
+        if coordinates == Coordinate.CYLINDRICAL.value:
             plot_dictionary["Rabi rate"] = [
                 {"value": r * np.exp(1.0j * theta), "duration": t}
                 for r, theta, t in zip(plot_r, plot_theta, plot_durations)

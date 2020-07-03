@@ -22,7 +22,7 @@ import numpy as np
 
 from ..dynamic_decoupling_sequences import UPPER_BOUND_OFFSETS
 from ..exceptions import ArgumentsValueError
-from ..utils import Coordinates, FileFormat, FileType, create_repr_from_attributes
+from ..utils import Coordinate, FileFormat, FileType, create_repr_from_attributes
 from .driven_controls import convert_dds_to_driven_control
 
 
@@ -254,7 +254,7 @@ class DynamicDecouplingSequence:
         filename=None,
         file_format=FileFormat.QCTRL.value,
         file_type=FileType.CSV.value,
-        coordinates=Coordinates.CYLINDRICAL.value,
+        coordinates=Coordinate.CYLINDRICAL.value,
         maximum_rabi_rate=2 * np.pi,
         maximum_detuning_rate=2 * np.pi,
     ):
