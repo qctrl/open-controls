@@ -275,7 +275,7 @@ class DynamicDecouplingSequence:
             One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
             Indicates the co-ordinate system requested. Must be one of
-            'Cylindrical', 'Cartesian'; defaults to 'Cylindrical'
+            'cylindrical', 'cartesian'; defaults to 'cylindrical'
         maximum_rabi_rate : float, optional
             Maximum Rabi Rate; Defaults to :math:`2\\pi`
         maximum_detuning_rate : float, optional

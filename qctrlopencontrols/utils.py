@@ -87,7 +87,7 @@ class FileFormat(Enum):
     """
     Define exported file format.
 
-    Currently only support Q-Ctrl expanded format.
+    Currently only support Q-CTRL expanded format.
     See details in https://docs.q-ctrl.com/wiki/output-data-formats#q-ctrl-hardware
     """
 
@@ -109,5 +109,4 @@ class Coordinates(Enum):
     """
 
     CARTESIAN = "cartesian"
-
     CYLINDRICAL = "cylindrical"

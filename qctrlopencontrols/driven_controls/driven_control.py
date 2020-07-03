@@ -355,7 +355,7 @@ class DrivenControl:
         Parameters
         ----------
         file_type : str, optional
-            One of 'csv' or 'json'; defaults to 'csv'.
+            One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
             Indicates the co-ordinate system requested. Must be one of
             'cylindrical', 'cartesian' or 'polar'; defaults to 'cylindrical'
@@ -363,7 +363,7 @@ class DrivenControl:
         Returns
         -------
         list or dict
-            Based on file_type; list if 'csv', dict if 'json'
+            Based on file_type; list if 'CSV', dict if 'JSON'
         """
         control_info = None
         amplitude_x = self.amplitude_x
@@ -447,7 +447,7 @@ class DrivenControl:
             One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
             Indicates the co-ordinate system requested. Must be one of
-            'Cylindrical', 'Cartesian'; defaults to 'Cylindrical'
+            'cylindrical', 'cartesian'; defaults to 'cylindrical'
         """
 
         control_info = self._qctrl_expanded_export_content(
@@ -486,7 +486,7 @@ class DrivenControl:
             One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
             Indicates the co-ordinate system requested. Must be one of
-            'Cylindrical', 'Cartesian'; defaults to 'Cylindrical'
+            'cylindrical', 'cartesian'; defaults to 'cylindrical'
 
         References
         ----------
