@@ -99,8 +99,8 @@ class FileType(Enum):
     Define exported file type.
     """
 
-    JASON = "jason"
-    CSV = "csv"
+    JSON = "JSON"
+    CSV = "CSV"
 
 
 class Coordinates(Enum):
