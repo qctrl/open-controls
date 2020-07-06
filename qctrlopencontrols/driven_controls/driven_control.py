@@ -29,7 +29,12 @@ from ..driven_controls import (
     UPPER_BOUND_SEGMENTS,
 )
 from ..exceptions import ArgumentsValueError
-from ..utils import Coordinate, FileFormat, FileType, create_repr_from_attributes
+from ..utils import (
+    Coordinate,
+    FileFormat,
+    FileType,
+    create_repr_from_attributes,
+)
 
 
 class DrivenControl:

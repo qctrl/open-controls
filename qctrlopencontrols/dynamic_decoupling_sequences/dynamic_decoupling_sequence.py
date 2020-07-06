@@ -22,7 +22,12 @@ import numpy as np
 
 from ..dynamic_decoupling_sequences import UPPER_BOUND_OFFSETS
 from ..exceptions import ArgumentsValueError
-from ..utils import Coordinate, FileFormat, FileType, create_repr_from_attributes
+from ..utils import (
+    Coordinate,
+    FileFormat,
+    FileType,
+    create_repr_from_attributes,
+)
 from .driven_controls import convert_dds_to_driven_control
 
 

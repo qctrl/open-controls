@@ -22,7 +22,10 @@ import os
 import numpy as np
 import pytest
 
-from qctrlopencontrols import DynamicDecouplingSequence, convert_dds_to_driven_control
+from qctrlopencontrols import (
+    DynamicDecouplingSequence,
+    convert_dds_to_driven_control,
+)
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
 
