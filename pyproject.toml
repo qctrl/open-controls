@@ -65,6 +65,7 @@ include_trailing_comma = "True"
 use_parentheses = "True"
 force_grid_wrap = "2"
 line_length = "88"
+known_first_party = "qctrlopencontrols"
 
 [tool.dephell.main]
 from = {format="poetry", path="pyproject.toml"}
