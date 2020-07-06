@@ -20,12 +20,11 @@ __version__ = "4.5.0"
 
 from .driven_controls.driven_control import DrivenControl
 from .driven_controls.predefined import new_predefined_driven_control
-
+from .dynamic_decoupling_sequences.driven_controls import convert_dds_to_driven_control
 from .dynamic_decoupling_sequences.dynamic_decoupling_sequence import (
     DynamicDecouplingSequence,
 )
 from .dynamic_decoupling_sequences.predefined import new_predefined_dds
-from .dynamic_decoupling_sequences.driven_controls import convert_dds_to_driven_control
 
 __all__ = [
     "convert_dds_to_driven_control",
