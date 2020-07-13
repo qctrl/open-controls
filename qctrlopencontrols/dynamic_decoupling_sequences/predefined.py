@@ -127,9 +127,10 @@ def _add_pre_post_rotations(
     # of Y and Z pi-pulses
     preserves_11 = (y_pi_pulses + z_pi_pulses) % 2 == 0
 
-    # use pi/2 and -pi/2 (pi/2) X pulses as pre and post rotations for CP sequences with
-    # odd(even) number of pulses
-    # always use pi/2 and -pi/2 X pulses as pre and post rotations for CPMG sequences
+    # the direction of final rotation depends on the property of DDS.
+    # if the net effect of the sequences is an identity gate or Y rotation, the post rotation
+    # is chosen to be -pi/2 X pulse, otherwise use pi/2 X pulse, to ensure the final gate is an
+    # identity or Z rotation.
     if (preserves_10 and preserves_11) or (not preserves_10 and not preserves_11):
         final_azimuthal = np.pi
 

@@ -674,15 +674,11 @@ def test_attribute_values():
         )
 
 
-def _pulses_produce_identity(sequence, extra_rotation=None):
+def _pulses_produce_identity(sequence):
     """
-    Tests if the pulses of a DDS sequence produce an identity in absence of noise.
+    Tests if the pulses of a DDS sequence produce an identity or Z rotation in absence of noise.
     We check this by creating the unitary of each pulse and then multiplying them
     by each other to check the complete evolution.
-
-    Note that the net effect of DDS sequence is either an identity gate or a Z pi rotation.
-    For example, CPMG sequence with odd number of Y pulses produces a Z rotation.
-    ``extra_rotation`` is used to compensate this net effect.
     """
 
     # The unitary evolution due to an instantaneous pulse can be written as
@@ -711,12 +707,11 @@ def _pulses_produce_identity(sequence, extra_rotation=None):
     # Remove global phase
     matrix_product *= np.exp(-1.0j * np.angle(matrix_product[0][0]))
 
-    if extra_rotation is not None:
-        matrix_product = np.matmul(matrix_product, extra_rotation)
-
     expected_matrix_product = np.identity(2)
 
-    return np.allclose(matrix_product, expected_matrix_product)
+    return np.allclose(matrix_product, expected_matrix_product) or np.allclose(
+        SIGMA_Z.dot(matrix_product), expected_matrix_product
+    )
 
 
 def test_if_ramsey_sequence_is_identity():
@@ -779,7 +774,7 @@ def test_if_cpmg_sequence_with_odd_pulses_is_identity():
         pre_post_rotation=True,
     )
 
-    assert _pulses_produce_identity(odd_cpmg_sequence, extra_rotation=SIGMA_Z)
+    assert _pulses_produce_identity(odd_cpmg_sequence)
 
 
 def test_if_cpmg_sequence_with_even_pulses_is_identity():
@@ -809,7 +804,7 @@ def test_if_uhrig_sequence_with_odd_pulses_is_identity():
         pre_post_rotation=True,
     )
 
-    assert _pulses_produce_identity(odd_uhrig_sequence, extra_rotation=SIGMA_Z)
+    assert _pulses_produce_identity(odd_uhrig_sequence)
 
 
 def test_if_uhrig_sequence_with_even_pulses_is_identity():
@@ -947,9 +942,7 @@ def test_if_quadratic_sequence_with_odd_inner_pulses_is_identity():
     # total number here is odd
     assert len(inner_odd_quadratic_sequence.offsets) == 8 + 7 * (8 + 1) + 2
 
-    assert _pulses_produce_identity(
-        inner_odd_quadratic_sequence, extra_rotation=SIGMA_Z
-    )
+    assert _pulses_produce_identity(inner_odd_quadratic_sequence)
 
 
 def test_if_quadratic_sequence_with_even_inner_pulses_is_identity():
