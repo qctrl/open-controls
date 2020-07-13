@@ -712,7 +712,7 @@ def _pulses_produce_identity(sequence, extra_rotation=None):
     matrix_product *= np.exp(-1.0j * np.angle(matrix_product[0][0]))
 
     if extra_rotation is not None:
-        matrix_product = matrix_product.dot(extra_rotation)
+        matrix_product = np.matmul(matrix_product, extra_rotation)
 
     expected_matrix_product = np.identity(2)
 
