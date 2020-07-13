@@ -680,7 +680,7 @@ def _pulses_produce_identity(sequence, extra_rotation=None):
     We check this by creating the unitary of each pulse and then multiplying them
     by each other to check the complete evolution.
 
-    However, note that DDS sequence does not necessarily have to produce an identity gate.
+    Note that the net effect of DDS sequence is either an identity gate or a Z pi rotation.
     For example, CPMG sequence with odd number of Y pulses produces a Z rotation.
     ``extra_rotation`` is used to compensate this net effect.
     """
@@ -948,7 +948,7 @@ def test_if_quadratic_sequence_with_odd_inner_pulses_is_identity():
     assert len(inner_odd_quadratic_sequence.offsets) == 8 + 7 * (8 + 1) + 2
 
     assert _pulses_produce_identity(
-        inner_odd_quadratic_sequence, extra_rotation=np.matmul(SIGMA_X, -SIGMA_Z)
+        inner_odd_quadratic_sequence, extra_rotation=SIGMA_Z
     )
 
 

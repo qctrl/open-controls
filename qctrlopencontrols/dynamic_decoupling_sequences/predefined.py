@@ -42,9 +42,9 @@ def _add_pre_post_rotations(
     """Adds a pre and post X rotation at the start and end of the sequence.
 
     Note that with these two pre and post X rotations, the net effect of the DDS does not
-    necessarily have to be an identity. For example, given a CPMG sequence of odd number Y pi
-    rotations in the middle with the pre (pi/2) and post(-pi/2) X rotations, the net effect will
-    be a Z gate.
+    necessarily have to be an identity, but it will always be either an identity or Z pi rotation.
+    For example, given a CPMG sequence of odd number Y pi rotations in the middle with the pre
+    (pi/2) and post(-pi/2) X rotations, the net effect will be a Z gate.
 
     This function assumes that the sequences only have X, Y, and Z pi-pulses.
     An exception is thrown if that is not the case.
@@ -130,7 +130,7 @@ def _add_pre_post_rotations(
     # use pi/2 and -pi/2 (pi/2) X pulses as pre and post rotations for CP sequences with
     # odd(even) number of pulses
     # always use pi/2 and -pi/2 X pulses as pre and post rotations for CPMG sequences
-    if preserves_10 or (not preserves_11):
+    if (preserves_10 and preserves_11) or (not preserves_10 and not preserves_11):
         final_azimuthal = np.pi
 
     offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration],)
