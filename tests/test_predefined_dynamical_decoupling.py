@@ -948,7 +948,7 @@ def test_if_quadratic_sequence_with_odd_inner_pulses_is_identity():
     assert len(inner_odd_quadratic_sequence.offsets) == 8 + 7 * (8 + 1) + 2
 
     assert _pulses_produce_identity(
-        inner_odd_quadratic_sequence, extra_rotation=SIGMA_X.dot(-SIGMA_Z)
+        inner_odd_quadratic_sequence, extra_rotation=np.matmul(SIGMA_X, -SIGMA_Z)
     )
 
 
