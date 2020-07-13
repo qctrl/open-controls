@@ -39,17 +39,12 @@ from .dynamic_decoupling_sequence import DynamicDecouplingSequence
 def _add_pre_post_rotations(
     duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
 ):
-    """Adds a pre-post pi.2 rotation at the
-    start and end of the sequence.
+    """Adds a pre and post X rotation at the start and end of the sequence.
 
-    The parameters of the pi/2-pulses are chosen in order to cancel out the
-    product of the pulses in the DSS, so that its total effect in the
-    absence of noise is an identity.
-
-    For a DSS that already produces an identity, this function adds X pi/2-pulses
-    in opposite directions, so that they cancel out. If the DDS produces an X
-    gate, the X pi/2-pulses will be in the same direction. If the DDS produces
-    a Y (Z) gate, the pi/2-pulses are around the Y (Z) axis.
+    Note that with these two pre and post X rotations, the net effect of the DDS does not
+    necessarily have to be an identity, but it will always be either an identity or Z pi rotation.
+    For example, given a CPMG sequence of odd number Y pi rotations in the middle with the pre
+    (pi/2) and post(-pi/2) X rotations, the net effect will be a Z gate.
 
     This function assumes that the sequences only have X, Y, and Z pi-pulses.
     An exception is thrown if that is not the case.
@@ -118,6 +113,12 @@ def _add_pre_post_rotations(
             },
         )
 
+    # parameters for pre-post pulses
+    rabi_value = np.pi / 2
+    detuning_value = 0
+    initial_azimuthal = 0  # for pre-pulse
+    final_azimuthal = 0  # for post-pulse
+
     # The sequence will preserve the state |0> is it has an even number
     # of X and Y pi-pulses
     preserves_10 = (x_pi_pulses + y_pi_pulses) % 2 == 0
@@ -126,40 +127,12 @@ def _add_pre_post_rotations(
     # of Y and Z pi-pulses
     preserves_11 = (y_pi_pulses + z_pi_pulses) % 2 == 0
 
-    # When states |0> and |0>+|1> are preserved, the sequence already produces
-    # an identity, so that we want the the pi/2-pulses to cancel each other out
-    if preserves_10 and preserves_11:
-        rabi_value = np.pi / 2
-        initial_azimuthal = 0
+    # the direction of the post rotation depends on the property of DDS.
+    # if the net effect of the sequences is an identity gate or Y rotation, the post rotation
+    # is chosen to be -pi/2 X pulse, otherwise use pi/2 X pulse, to ensure the net effect is an
+    # identity or Z rotation.
+    if (preserves_10 and preserves_11) or (not preserves_10 and not preserves_11):
         final_azimuthal = np.pi
-        detuning_value = 0
-
-    # When only state |0>+|1> is not preserved, the sequence results in a Z rotation.
-    # In this case, we want both pi/2-pulses to be in the Z direction,
-    # so that the remaining rotation is cancelled out
-    if preserves_10 and not preserves_11:
-        rabi_value = 0
-        initial_azimuthal = 0
-        final_azimuthal = 0
-        detuning_value = np.pi / 2
-
-    # When only state |0> is not preserved, the sequence results in an X rotation.
-    # In this case, we want both pi/2-pulses to be in the X direction,
-    # so that the remaining rotation is cancelled out
-    if not preserves_10 and preserves_11:
-        rabi_value = np.pi / 2
-        initial_azimuthal = 0
-        final_azimuthal = 0
-        detuning_value = 0
-
-    # When neither state is preserved, the sequence results in a Y rotation.
-    # In this case, we want both pi/2-pulses to be in the Y direction,
-    # so that the remaining rotation is cancelled out
-    if not preserves_10 and not preserves_11:
-        rabi_value = np.pi / 2
-        initial_azimuthal = np.pi / 2
-        final_azimuthal = np.pi / 2
-        detuning_value = 0
 
     offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration],)
     rabi_rotations = np.insert(

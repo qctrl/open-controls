@@ -36,6 +36,10 @@ from qctrlopencontrols.dynamic_decoupling_sequences import (
 )
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
+SIGMA_X = np.array([[0.0, 1.0], [1.0, 0.0]])
+SIGMA_Y = np.array([[0.0, -1.0j], [1.0j, 0.0]])
+SIGMA_Z = np.array([[1.0, 0.0], [0.0, -1.0]])
+
 
 def test_ramsey():
 
@@ -672,16 +676,13 @@ def test_attribute_values():
 
 def _pulses_produce_identity(sequence):
     """
-    Tests if the pulses of a DDS sequence produce an identity in absence of noise.
+    Tests if the pulses of a DDS sequence produce an identity or Z rotation in absence of noise.
     We check this by creating the unitary of each pulse and then multiplying them
     by each other to check the complete evolution.
     """
-    sigma_x = np.array([[0.0, 1.0], [1.0, 0.0]])
-    sigma_y = np.array([[0.0, -1.0j], [1.0j, 0.0]])
-    sigma_z = np.array([[1.0, 0.0], [0.0, -1.0]])
 
     # The unitary evolution due to an instantaneous pulse can be written as
-    # U = cos(|n|) I -i sin(|n|) *(n_x sigma_x + n_y sigma_y + n_z sigma_z)/|n|
+    # U = cos(|n|) I -i sin(|n|) *(n_x SIGMA_x + n_y SIGMA_y + n_z SIGMA_z)/|n|
     # where n is a vector with components
     # n_x = rabi * cos(azimuthal)/2
     # n_y = rabi * sin(azimuthal)/2
@@ -697,9 +698,9 @@ def _pulses_produce_identity(sequence):
         mod_n = np.sqrt(n_x ** 2 + n_y ** 2 + n_z ** 2)
         unitary = (
             np.cos(mod_n) * np.identity(2)
-            - 1.0j * (np.sin(mod_n) * n_x / mod_n) * sigma_x
-            - 1.0j * (np.sin(mod_n) * n_y / mod_n) * sigma_y
-            - 1.0j * (np.sin(mod_n) * n_z / mod_n) * sigma_z
+            - 1.0j * (np.sin(mod_n) * n_x / mod_n) * SIGMA_X
+            - 1.0j * (np.sin(mod_n) * n_y / mod_n) * SIGMA_Y
+            - 1.0j * (np.sin(mod_n) * n_z / mod_n) * SIGMA_Z
         )
         matrix_product = np.matmul(unitary, matrix_product)
 
@@ -708,7 +709,9 @@ def _pulses_produce_identity(sequence):
 
     expected_matrix_product = np.identity(2)
 
-    return np.allclose(matrix_product, expected_matrix_product)
+    return np.allclose(matrix_product, expected_matrix_product) or np.allclose(
+        SIGMA_Z.dot(matrix_product), expected_matrix_product
+    )
 
 
 def test_if_ramsey_sequence_is_identity():
@@ -762,7 +765,7 @@ def test_if_carr_purcell_sequence_with_even_pulses_is_identity():
 def test_if_cpmg_sequence_with_odd_pulses_is_identity():
     """
     Tests if the product of the pulses in a CPMG sequence with pre/post
-    pi/2-pulses is an identity, when the number of pulses is odd.
+    pi/2-pulses and an extra Z rotation is an identity, when the number of pulses is odd.
     """
     odd_cpmg_sequence = new_predefined_dds(
         scheme=CARR_PURCELL_MEIBOOM_GILL,
@@ -792,7 +795,7 @@ def test_if_cpmg_sequence_with_even_pulses_is_identity():
 def test_if_uhrig_sequence_with_odd_pulses_is_identity():
     """
     Tests if the product of the pulses in an Uhrig sequence with pre/post
-    pi/2-pulses is an identity, when the number of pulses is odd.
+    pi/2-pulses and an extra Z rotation is an identity, when the number of pulses is odd.
     """
     odd_uhrig_sequence = new_predefined_dds(
         scheme=UHRIG_SINGLE_AXIS,
@@ -924,7 +927,8 @@ def test_if_quadratic_sequence_with_even_pulses_is_identity():
 def test_if_quadratic_sequence_with_odd_inner_pulses_is_identity():
     """
     Tests if the product of the pulses in a quadratic sequence with pre/post
-    pi/2-pulses is an identity, when the total number of inner pulses is odd.
+    pi/2-pulses and an extra rotation is an identity, when the total number
+    of inner pulses is odd.
     """
     inner_odd_quadratic_sequence = new_predefined_dds(
         scheme=QUADRATIC,
