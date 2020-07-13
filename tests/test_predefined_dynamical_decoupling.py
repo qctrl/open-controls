@@ -680,7 +680,7 @@ def _pulses_produce_identity(sequence, extra_rotation=None):
     We check this by creating the unitary of each pulse and then multiplying them
     by each other to check the complete evolution.
 
-    However, Note that DDS sequence does not necessarily has to produce an identity gate.
+    However, note that DDS sequence does not necessarily has to produce an identity gate.
     For example, the net effect of CPMG sequences with odd number of pulses is a Z rotation.
     ``extra_rotation`` is used to compensate this net effect.
     """
@@ -770,7 +770,7 @@ def test_if_carr_purcell_sequence_with_even_pulses_is_identity():
 def test_if_cpmg_sequence_with_odd_pulses_is_identity():
     """
     Tests if the product of the pulses in a CPMG sequence with pre/post
-    pi/2-pulses with an extra Z rotation is an identity, when the number of pulses is odd.
+    pi/2-pulses and an extra Z rotation is an identity, when the number of pulses is odd.
     """
     odd_cpmg_sequence = new_predefined_dds(
         scheme=CARR_PURCELL_MEIBOOM_GILL,
@@ -932,7 +932,8 @@ def test_if_quadratic_sequence_with_even_pulses_is_identity():
 def test_if_quadratic_sequence_with_odd_inner_pulses_is_identity():
     """
     Tests if the product of the pulses in a quadratic sequence with pre/post
-    pi/2-pulses with an extra rotation is an identity, when the total number of inner pulses is odd.
+    pi/2-pulses and an extra rotation is an identity, when the total number
+    of inner pulses is odd.
     """
     inner_odd_quadratic_sequence = new_predefined_dds(
         scheme=QUADRATIC,

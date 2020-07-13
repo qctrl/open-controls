@@ -39,12 +39,12 @@ from .dynamic_decoupling_sequence import DynamicDecouplingSequence
 def _add_pre_post_rotations(
     duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
 ):
-    """Adds a pre(pi/2 X pulse) and post(-pi/2 X pulse) rotation at the start and end of the
-    sequence.
+    """Adds a pre and post X rotation at the start and end of the sequence.
 
     Note that with these two pre and post X rotations, the net effect of the DDS does not
-    necessarily have to be an identity. For example, given a CPMG sequences with Y pi rotations
-    in the middle and two pre-post X pi/2 rotations, the net effect will be a Z gate.
+    necessarily have to be an identity. For example, given a CPMG sequences of odd number Y pi
+    rotations in the middle with the pre (pi/2) and post(-pi/2) X rotations, the net effect will
+    be a Z gate.
 
     This function assumes that the sequences only have X, Y, and Z pi-pulses.
     An exception is thrown if that is not the case.
