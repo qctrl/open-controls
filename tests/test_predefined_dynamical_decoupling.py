@@ -680,8 +680,8 @@ def _pulses_produce_identity(sequence, extra_rotation=None):
     We check this by creating the unitary of each pulse and then multiplying them
     by each other to check the complete evolution.
 
-    However, note that DDS sequence does not necessarily has to produce an identity gate.
-    For example, the net effect of CPMG sequences with odd number of pulses is a Z rotation.
+    However, note that DDS sequence does not necessarily have to produce an identity gate.
+    For example, CPMG sequence with odd number of Y pulses produces a Z rotation.
     ``extra_rotation`` is used to compensate this net effect.
     """
 

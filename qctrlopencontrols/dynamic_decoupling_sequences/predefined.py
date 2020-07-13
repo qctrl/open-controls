@@ -42,7 +42,7 @@ def _add_pre_post_rotations(
     """Adds a pre and post X rotation at the start and end of the sequence.
 
     Note that with these two pre and post X rotations, the net effect of the DDS does not
-    necessarily have to be an identity. For example, given a CPMG sequences of odd number Y pi
+    necessarily have to be an identity. For example, given a CPMG sequence of odd number Y pi
     rotations in the middle with the pre (pi/2) and post(-pi/2) X rotations, the net effect will
     be a Z gate.
 
