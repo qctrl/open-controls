@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Defines constants for driven_controls module.
+Defines constants for driven controls module.
 """
 
 # Maximum allowed rabi rate
