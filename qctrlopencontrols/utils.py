@@ -82,6 +82,28 @@ def create_repr_from_attributes(class_instance=None, attributes=None):
     return repr_string
 
 
+def check_arguments(condition, description, arguments, extras=None):
+    """
+    Raises an ArgumentsValueError with the specified parameters if the given condition is false,
+    otherwise does nothing.
+
+    Parameters
+    -----------
+    conditions: Any
+    description: str
+    arguments: dict
+    extra: dict, optional
+
+    Raises
+    ------
+    ArgumentsValueError
+        If condition is false.
+    """
+    if condition:
+        return
+    raise ArgumentsValueError(description, arguments, extras=extras)
+
+
 class FileFormat(Enum):
     """
     Defines exported file format.
