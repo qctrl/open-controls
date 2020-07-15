@@ -13,9 +13,7 @@
 # limitations under the License.
 
 """
-========================================================
-dynamic_decoupling_sequences.dynamic_decoupling_sequence
-========================================================
+Dynamical decoupling module.
 """
 
 import numpy as np
@@ -143,7 +141,8 @@ class DynamicDecouplingSequence:
 
     @property
     def number_of_offsets(self):
-        """Returns the number of offsets
+        """
+        Returns the number of offsets.
 
         Returns
         ------
@@ -154,7 +153,8 @@ class DynamicDecouplingSequence:
         return len(self.offsets)
 
     def export(self):
-        """ Returns a dictionary formatted for plotting using the qctrl-visualizer package.
+        """
+        Returns a dictionary formatted for plotting using the qctrl-visualizer package.
 
         Returns
         -------
@@ -183,7 +183,8 @@ class DynamicDecouplingSequence:
         return plot_dictionary
 
     def __repr__(self):
-        """Returns a string representation for the object. The returned string looks like a valid
+        """
+        Returns a string representation for the object. The returned string looks like a valid
         Python expression that could be used to recreate the object, including default arguments.
 
         Returns
@@ -204,7 +205,8 @@ class DynamicDecouplingSequence:
         return create_repr_from_attributes(self, attributes)
 
     def __str__(self):
-        """Prepares a friendly string format for a Dynamic Decoupling Sequence
+        """
+        Prepares a friendly string format for a Dynamic Decoupling Sequence.
         """
 
         dd_sequence_string = list()
@@ -263,7 +265,8 @@ class DynamicDecouplingSequence:
         maximum_rabi_rate=2 * np.pi,
         maximum_detuning_rate=2 * np.pi,
     ):
-        """Prepares and saves the dynamic decoupling sequence in a file.
+        """
+        Prepares and saves the dynamic decoupling sequence in a file.
 
         Parameters
         ----------

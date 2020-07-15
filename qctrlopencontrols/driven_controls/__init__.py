@@ -13,67 +13,48 @@
 # limitations under the License.
 
 """
-======================
-driven_controls module
-======================
+Defines constants for driven controls module.
 """
-##### Maximum and Minimum bounds ######
 
+# Maximum allowed rabi rate
 UPPER_BOUND_RABI_RATE = 1e10
-"""Maximum allowed rabi rate
-"""
 
+# Maximum allowed detuning rate
 UPPER_BOUND_DETUNING_RATE = UPPER_BOUND_RABI_RATE
-"""Maximum allowed detuning rate
-"""
 
+# Maximum allowed duration of a control
 UPPER_BOUND_DURATION = 1e6
-"""Maximum allowed duration of a control
-"""
 
+# Minimum allowed duration of a control
 LOWER_BOUND_DURATION = 1e-12
-"""Minimum allowed duration of a control
-"""
 
+# Maximum number of segments allowed in a control
 UPPER_BOUND_SEGMENTS = 10000
-"""Maximum number of segments allowed in a control
-"""
 
-##### Types of driven controls ######
-
+# Primitive control
 PRIMITIVE = "primitive"
-"""Primitive control
-"""
 
+# First-order Wimperis control, also known as BB1
 BB1 = "BB1"
-"""First-order Wimperis control, also known as BB1
-"""
 
+# First-order Solovay-Kitaev control
 SK1 = "SK1"
-"""First-order Solovay-Kitaev control
-"""
 
+# First-order Walsh sequence control
 WAMF1 = "WAMF1"
-"""First-order Walsh sequence control
-"""
 
+# Dynamically corrected control - Compensating for Off-Resonance with a Pulse Sequence (COPRSE)
 CORPSE = "CORPSE"
-"""Dynamically corrected control - Compensating for Off-Resonance with a Pulse Sequence (COPRSE)
-"""
 
+# Concatenated dynamically corrected control - BB1 inside COPRSE
 CORPSE_IN_BB1 = "CORPSE in BB1"
-"""Concatenated dynamically corrected control - BB1 inside COPRSE
-"""
 
+# Concatenated dynamically corrected control - First order Solovay-Kitaev inside COPRSE
 CORPSE_IN_SK1 = "CORPSE in SK1"
-"""Concatenated dynamically corrected control - First order Solovay-Kitaev inside COPRSE
-"""
 
+# Dynamically corrected control
+# Short Composite Rotation For Undoing Length Over and Under Shoot (SCROFULOUS)
 SCROFULOUS = "SCROFULOUS"
-"""Dynamically corrected control -
-   Short Composite Rotation For Undoing Length Over and Under Shoot (SCROFULOUS)
-"""
 
+# Concatenated dynamically corrected control - CORPSE inside SCROFULOUS
 CORPSE_IN_SCROFULOUS = "CORPSE in SCROFULOUS"
-"""Concatenated dynamically corrected control - CORPSE inside SCROFULOUS
-"""

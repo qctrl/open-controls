@@ -13,9 +13,7 @@
 # limitations under the License.
 
 """
-========================================
-dynamic_decoupling_sequences.predefined
-========================================
+Module for defining commonly used dynamical decoupling sequences.
 """
 
 import numpy as np
@@ -39,7 +37,8 @@ from .dynamic_decoupling_sequence import DynamicDecouplingSequence
 def _add_pre_post_rotations(
     duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
 ):
-    """Adds a pre and post X rotation at the start and end of the sequence.
+    """
+    Adds a pre and post X rotation at the start and end of the sequence.
 
     Note that with these two pre and post X rotations, the net effect of the DDS does not
     necessarily have to be an identity, but it will always be either an identity or Z pi rotation.
@@ -153,8 +152,9 @@ def _add_pre_post_rotations(
 
 
 def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
-    """Create a new instance of one of the predefined
-    dynamic decoupling sequences
+    """
+    Create a new instance of one of the predefined
+    dynamic decoupling sequences.
 
     Parameters
     ----------
@@ -231,7 +231,9 @@ def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
 
 
 def _check_duration(duration):
-    """Validates sequence duration
+    """
+    Validates sequence duration.
+
     Parameters
     ----------
     duration : float, optional
@@ -245,7 +247,7 @@ def _check_duration(duration):
     Raises
     ------
     ArgumentsValueError
-        If the duration is negative
+        If the duration is negative.
     """
     if duration is None:
         duration = 1.0
@@ -257,7 +259,8 @@ def _check_duration(duration):
 
 
 def _new_ramsey_sequence(duration=None, pre_post_rotation=False, **kwargs):
-    """Ramsey sequence
+    """
+    Creates Ramsey sequence.
 
     Parameters
     ----------
@@ -304,7 +307,8 @@ def _new_ramsey_sequence(duration=None, pre_post_rotation=False, **kwargs):
 
 
 def _new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
-    """Spin Echo Sequence.
+    """
+    Creates Spin Echo Sequence.
 
     Parameters
     ---------
@@ -357,7 +361,8 @@ def _new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
 def _new_carr_purcell_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
-    """Carr-Purcell Sequence.
+    """
+    Creates Carr-Purcell Sequence.
 
     Parameters
     ---------
@@ -422,7 +427,8 @@ def _new_carr_purcell_sequence(
 def _new_carr_purcell_meiboom_gill_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
-    """Carr-Purcell-Meiboom-Gill Sequences.
+    """
+    Creates Carr-Purcell-Meiboom-Gill Sequences.
 
     Parameters
     ---------
@@ -488,7 +494,8 @@ def _new_carr_purcell_meiboom_gill_sequence(
 def _new_uhrig_single_axis_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
-    """Uhrig Single Axis Sequence.
+    """
+    Creates Uhrig Single Axis Sequence.
 
     Parameters
     ---------
@@ -554,7 +561,8 @@ def _new_uhrig_single_axis_sequence(
 def _new_periodic_single_axis_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
-    """Periodic Single Axis Sequence.
+    """
+    Creates Periodic Single Axis Sequence.
 
     Parameters
     ---------
@@ -620,7 +628,8 @@ def _new_periodic_single_axis_sequence(
 def _new_walsh_single_axis_sequence(
     duration=None, paley_order=None, pre_post_rotation=False, **kwargs
 ):
-    """Walsh Single Axis Sequence.
+    """
+    Creates Walsh Single Axis Sequence.
 
     Parameters
     ---------
@@ -706,7 +715,8 @@ def _new_quadratic_sequence(
     pre_post_rotation=False,
     **kwargs
 ):
-    """Quadratic Decoupling Sequence
+    """
+    Creates Quadratic Decoupling Sequence.
 
     Parameters
     ----------
@@ -810,7 +820,8 @@ def _new_quadratic_sequence(
 def _new_x_concatenated_sequence(
     duration=1.0, concatenation_order=None, pre_post_rotation=False, **kwargs
 ):
-    """X-Concatenated Dynamic Decoupling Sequence
+    """
+    Creates X-Concatenated Dynamic Decoupling Sequence.
     Concatenation of base sequence C(\tau/2)XC(\tau/2)X
 
     Parameters
@@ -891,7 +902,8 @@ def _new_x_concatenated_sequence(
 def _new_xy_concatenated_sequence(
     duration=1.0, concatenation_order=None, pre_post_rotation=False, **kwargs
 ):
-    """XY-Concatenated Dynamic Decoupling Sequence
+    """
+    Creates XY-Concatenated Dynamic Decoupling Sequence.
     Concatenation of base sequence C(\tau/4)XC(\tau/4)YC(\tau/4)XC(\tau/4)Y
 
     Parameters
@@ -912,7 +924,7 @@ def _new_xy_concatenated_sequence(
     Returns
     -------
     qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
-        XY concatenated sequence
+        XY concatenated sequence.
 
     Raises
     ------
@@ -1045,7 +1057,8 @@ def _new_xy_concatenated_sequence(
 
 
 def _carr_purcell_meiboom_gill_offsets(duration=1.0, number_of_offsets=1):
-    """Offset values for Carr-Purcell_Meiboom-Gill sequence.
+    """
+    Calculates offset values for Carr-Purcell_Meiboom-Gill sequence.
 
     Parameters
     ----------
@@ -1072,7 +1085,8 @@ def _carr_purcell_meiboom_gill_offsets(duration=1.0, number_of_offsets=1):
 
 
 def _uhrig_single_axis_offsets(duration=1.0, number_of_offsets=1):
-    """Offset values for Uhrig Single Axis Sequence.
+    """
+    Calculates oOffset values for Uhrig Single Axis Sequence.
 
     Parameters
     ----------
@@ -1099,7 +1113,8 @@ def _uhrig_single_axis_offsets(duration=1.0, number_of_offsets=1):
 
 
 def _concatenation_x(concatenation_sequence=1):
-    """Private function to prepare the sequence of operations for x-concatenated
+    """
+    Prepares the sequence of operations for x-concatenated
     dynamical decoupling sequence
 
     Parameters
@@ -1129,7 +1144,8 @@ def _concatenation_x(concatenation_sequence=1):
 
 
 def _concatenation_xy(concatenation_sequence=1):
-    """Private function to prepare the sequence of operations for x-concatenated
+    """
+    Prepares the sequence of operations for x-concatenated
     dynamical decoupling sequence
 
     Parameters
