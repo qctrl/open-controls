@@ -13,9 +13,7 @@
 # limitations under the License.
 
 """
-=============================================
-dynamic_decoupling_sequences.driven_controls
-=============================================
+Module for converting dynamical decoupling sequences to driven controls.
 """
 
 import numpy as np
@@ -31,7 +29,7 @@ from ..exceptions import ArgumentsValueError
 def _check_valid_operation(rabi_rotations, detuning_rotations):
     """
     Private method to check if there is a rabi_rotation and detuning rotation at the same
-    offset
+    offset.
 
     Parameters
     ----------
@@ -59,8 +57,8 @@ def _check_valid_operation(rabi_rotations, detuning_rotations):
 
 
 def _check_maximum_rotation_rate(maximum_rabi_rate, maximum_detuning_rate):
-    """Checks if the maximum rabi and detuning rate are
-    within valid limits
+    """
+    Checks if the maximum rabi and detuning rate are within valid limits.
 
     Parameters
     ----------
@@ -74,7 +72,7 @@ def _check_maximum_rotation_rate(maximum_rabi_rate, maximum_detuning_rate):
     ArgumentsValueError
         Raised when an argument is invalid or a valid driven control cannot be
         created from the sequence parameters, maximum rabi rate and maximum detuning
-        rate provided
+        rate provided.
     """
 
     # check against global parameters
@@ -141,14 +139,14 @@ def convert_dds_to_driven_control(
     -------
     DrivenControls
         The Driven Control that contains the segments
-        corresponding to the Dynamic Decoupling Sequence operation
+        corresponding to the Dynamic Decoupling Sequence operation.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid or a valid driven control cannot be
         created from the sequence parameters, maximum rabi rate and maximum detuning
-        rate provided
+        rate provided.
 
     Notes
     -----

@@ -13,9 +13,7 @@
 # limitations under the License.
 
 """
-==========================
-driven_controls.predefined
-==========================
+Module for defining commonly used driven controls.
 
 More information and publication references to all driven controls defined here
 can be found at https://docs.q-ctrl.com/wiki/control-library

@@ -13,9 +13,7 @@
 # limitations under the License.
 
 """
-===============================
-driven_controls.driven_controls
-===============================
+Driven control module.
 """
 import json
 

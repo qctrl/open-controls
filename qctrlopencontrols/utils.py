@@ -13,9 +13,7 @@
 # limitations under the License.
 
 """
-==========
-base.utils
-==========
+Miscellaneous functions and dataclasses.
 """
 
 from enum import Enum
@@ -25,7 +23,8 @@ from .exceptions import ArgumentsValueError
 
 def create_repr_from_attributes(class_instance=None, attributes=None):
 
-    """Returns a string representation of an object
+    """
+    Returns a string representation of an object.
 
     Parameters
     ----------
@@ -85,7 +84,7 @@ def create_repr_from_attributes(class_instance=None, attributes=None):
 
 class FileFormat(Enum):
     """
-    Define exported file format.
+    Defines exported file format.
 
     Currently only support Q-CTRL expanded format.
     See details in https://docs.q-ctrl.com/wiki/output-data-formats#q-ctrl-hardware
@@ -96,7 +95,7 @@ class FileFormat(Enum):
 
 class FileType(Enum):
     """
-    Define exported file type.
+    Defines exported file type.
     """
 
     JSON = "JSON"
@@ -105,7 +104,7 @@ class FileType(Enum):
 
 class Coordinate(Enum):
     """
-    Define coordinate system for data representation.
+    Defines coordinate system for data representation.
     """
 
     CARTESIAN = "cartesian"

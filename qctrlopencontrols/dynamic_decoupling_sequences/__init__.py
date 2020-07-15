@@ -13,58 +13,42 @@
 # limitations under the License.
 
 """
-============================
-dynamic_decoupling_sequences
-============================
+Defines constants for dynamical decoupling module.
 """
 
+# Maximum number of offsets allowed in a Dynamical Decoupling sequence.
 UPPER_BOUND_OFFSETS = 10000
-"""Maximum number of offsets allowed in a Dynamical
-Decoupling sequence.
-"""
 
+# Matplotlib format of data for plotting
 MATPLOTLIB = "matplotlib"
-"""Matplotlib format of data for plotting
-"""
 
-###### Types of Dynamic Decoupling Sequences #######
 
+# Ramsey sequence
 RAMSEY = "Ramsey"
-"""Ramsey sequence
-"""
 
+# Spin echo (SE) dynamical decoupling sequence
 SPIN_ECHO = "spin echo"
-"""Spin echo (SE) dynamical decoupling sequence
-"""
 
+# Carr-Purcell (CP) dynamical decoupling sequence
 CARR_PURCELL = "Carr-Purcell"
-"""Carr-Purcell (CP) dynamical decoupling sequence
-"""
 
+# Carr-Purcell-Meiboom-Gill (CPMG) dynamical decoupling sequence
 CARR_PURCELL_MEIBOOM_GILL = "Carr-Purcell-Meiboom-Gill"
-"""Carr-Purcell-Meiboom-Gill (CPMG) dynamical decoupling sequence
-"""
 
+# Uhrig (single-axis) dynamical decoupling sequence
 UHRIG_SINGLE_AXIS = "Uhrig single-axis"
-"""Uhrig (single-axis) dynamical decoupling sequence
-"""
 
+# Periodical dynamical decoupling sequence
 PERIODIC_SINGLE_AXIS = "periodic single-axis"
-"""Periodical dynamical decoupling sequence
-"""
 
+# Walsh dynamical decoupling sequence
 WALSH_SINGLE_AXIS = "Walsh single-axis"
-"""Walsh dynamical decoupling sequence
-"""
 
+# Quadratic dynamical decoupling sequence
 QUADRATIC = "quadratic"
-"""Quadratic dynamical decoupling sequence
-"""
 
+# X-Concatenated dynamical decoupling sequence
 X_CONCATENATED = "X concatenated"
-"""X-Concatenated dynamical decoupling sequence
-"""
 
+# XY-Concatenated dynamical decoupling sequence
 XY_CONCATENATED = "XY concatenated"
-"""XY-Concatenated dynamical decoupling sequence
-"""

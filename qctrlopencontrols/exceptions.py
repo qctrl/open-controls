@@ -13,15 +13,13 @@
 # limitations under the License.
 
 """
-=====================
-exceptions.exceptions
-=====================
+Exceptions raised by the qctrlopencontrol package.
 """
 
 
 class QctrlError(Exception):
     """
-    Base class for exceptions raised by QCtrl package.
+    Base class for exceptions raised by qctrlopencontrol package.
     """
 
 
