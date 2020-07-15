@@ -88,7 +88,7 @@ def check_arguments(condition, description, arguments, extras=None):
     otherwise does nothing.
 
     Parameters
-    -----------
+    ----------
     conditions: Any
     description: str
     arguments: dict
