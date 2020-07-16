@@ -82,6 +82,40 @@ def create_repr_from_attributes(class_instance=None, attributes=None):
     return repr_string
 
 
+def check_arguments(condition, description, arguments, extras=None):
+    """
+    Raises an ArgumentsValueError with the specified parameters if the given condition is false,
+    otherwise does nothing.
+
+    For example, a use case may look like::
+
+        def log(x):
+            check_arguments(x > 0,
+                            "x must be positive.",
+                            {"x": x})
+            return numpy.log(x)
+
+    Parameters
+    ----------
+    condition: Any
+        The condition to be checked. Evaluated result of the condition must be bool.
+    description: str
+        Error information to explain why condition fails.
+    arguments: dict
+        arguments that fail the condition. Keys should be the names of the arguments and arguments
+        are the values.
+    extras: dict, optional
+        Any extra information to explain why condition fails. Defaults to None.
+    Raises
+    ------
+    ArgumentsValueError
+        If condition is false.
+    """
+    if condition:
+        return
+    raise ArgumentsValueError(description, arguments, extras=extras)
+
+
 class FileFormat(Enum):
     """
     Defines exported file format.
