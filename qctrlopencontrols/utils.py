@@ -87,7 +87,7 @@ def check_arguments(condition, description, arguments, extras=None):
     Raises an ArgumentsValueError with the specified parameters if the given condition is false,
     otherwise does nothing.
 
-    For example,  a use case may look like::
+    For example, a use case may look like::
 
         def log(x):
             check_arguments(x > 0,
@@ -102,10 +102,10 @@ def check_arguments(condition, description, arguments, extras=None):
     description: str
         Error information to explain why condition fails.
     arguments: dict
-        arguments that fail the condition. Key should be the name of the arguments and arguments are
-        the values.
+        arguments that fail the condition. Keys should be the names of the arguments and arguments
+        are the values.
     extras: dict, optional
-        Any extra information to explain why condition fails.
+        Any extra information to explain why condition fails. Defaults to None.
     Raises
     ------
     ArgumentsValueError
