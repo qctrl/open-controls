@@ -16,6 +16,11 @@
 Module for defining commonly used dynamical decoupling sequences.
 """
 
+from typing import (
+    Optional,
+    Tuple,
+)
+
 import numpy as np
 
 from ..dynamic_decoupling_sequences import (
@@ -35,8 +40,12 @@ from .dynamic_decoupling_sequence import DynamicDecouplingSequence
 
 
 def _add_pre_post_rotations(
-    duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
-):
+    duration: float,
+    offsets: np.ndarray,
+    rabi_rotations: np.ndarray,
+    azimuthal_angles: np.ndarray,
+    detuning_rotations: np.ndarray,
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
     Adds a pre and post X rotation at the start and end of the sequence.
 
@@ -230,14 +239,14 @@ def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
     return sequence
 
 
-def _check_duration(duration):
+def _check_duration(duration: Optional[float] = None) -> float:
     """
     Validates sequence duration.
 
     Parameters
     ----------
     duration : float, optional
-        Total duration of the sequence. Defaults to None
+        Total duration of the sequence. Defaults to None.
 
     Returns
     -------
@@ -1056,16 +1065,18 @@ def _new_xy_concatenated_sequence(
     )
 
 
-def _carr_purcell_meiboom_gill_offsets(duration=1.0, number_of_offsets=1):
+def _carr_purcell_meiboom_gill_offsets(
+    duration: float = 1.0, number_of_offsets: int = 1
+) -> np.ndarray:
     """
     Calculates offset values for Carr-Purcell_Meiboom-Gill sequence.
 
     Parameters
     ----------
     duration : float, optional
-        Duration of the total sequence; defaults to 1.0
+        Duration of the total sequence. Defaults to 1.0
     number_of_offsets : int, optional
-        The number of offsets; defaults to 1
+        The number of offsets. Defaults to 1.
 
     Returns
     ------
@@ -1084,16 +1095,18 @@ def _carr_purcell_meiboom_gill_offsets(duration=1.0, number_of_offsets=1):
     return offsets
 
 
-def _uhrig_single_axis_offsets(duration=1.0, number_of_offsets=1):
+def _uhrig_single_axis_offsets(
+    duration: float = 1.0, number_of_offsets: int = 1
+) -> np.ndarray:
     """
     Calculates oOffset values for Uhrig Single Axis Sequence.
 
     Parameters
     ----------
     duration : float, optional
-        Duration of the total sequence; defaults to 1.0
+        Duration of the total sequence. Defaults to 1.0.
     number_of_offsets : int, optional
-        The number of offsets; defaults to 1
+        The number of offsets. Defaults to 1.
 
     Returns
     ------
@@ -1103,16 +1116,15 @@ def _uhrig_single_axis_offsets(duration=1.0, number_of_offsets=1):
 
     # prepare the offsets for delta comb
     constant = 1.0 / (2 * number_of_offsets + 2)
-    deltas = [
-        (np.sin(np.pi * k * constant)) ** 2 for k in range(1, number_of_offsets + 1)
-    ]
-    deltas = np.array(deltas)
+    deltas = np.array(
+        [(np.sin(np.pi * k * constant)) ** 2 for k in range(1, number_of_offsets + 1)]
+    )
     offsets = duration * deltas
 
     return offsets
 
 
-def _concatenation_x(concatenation_sequence=1):
+def _concatenation_x(concatenation_sequence: int = 1) -> np.ndarray:
     """
     Prepares the sequence of operations for x-concatenated
     dynamical decoupling sequence
@@ -1120,12 +1132,12 @@ def _concatenation_x(concatenation_sequence=1):
     Parameters
     ----------
     concatenation_sequence : int, optional
-        Duration of the total sequence; defaults to 1
+        Duration of the total sequence. Defaults to 1.
 
     Returns
     ------
     numpy.ndarray
-        The offset values
+        The offset values.
     """
 
     if concatenation_sequence == 1:
@@ -1143,7 +1155,7 @@ def _concatenation_x(concatenation_sequence=1):
     return cumulated_operations
 
 
-def _concatenation_xy(concatenation_sequence=1):
+def _concatenation_xy(concatenation_sequence: int = 1) -> np.ndarray:
     """
     Prepares the sequence of operations for x-concatenated
     dynamical decoupling sequence
@@ -1151,12 +1163,12 @@ def _concatenation_xy(concatenation_sequence=1):
     Parameters
     ----------
     concatenation_sequence : int, optional
-        Duration of the total sequence; defaults to 1
+        Duration of the total sequence. Defaults to 1.
 
     Returns
     ------
     numpy.ndarray
-        The offset values
+        The offset values.
     """
 
     if concatenation_sequence == 1:
