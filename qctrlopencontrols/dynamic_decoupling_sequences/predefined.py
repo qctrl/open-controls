@@ -1074,7 +1074,7 @@ def _carr_purcell_meiboom_gill_offsets(
     Parameters
     ----------
     duration : float, optional
-        Duration of the total sequence. Defaults to 1.0
+        Duration of the total sequence. Defaults to 1.0.
     number_of_offsets : int, optional
         The number of offsets. Defaults to 1.
 
