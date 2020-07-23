@@ -16,6 +16,11 @@
 Dynamical decoupling module.
 """
 
+from typing import (
+    Dict,
+    Optional,
+)
+
 import numpy as np
 
 from ..dynamic_decoupling_sequences import UPPER_BOUND_OFFSETS
@@ -38,24 +43,24 @@ class DynamicDecouplingSequence:
     ----------
     duration : float
         Defaults to 1. The total time in seconds for the sequence.
-    offsets : list
+    offsets : np.ndarray
         Defaults to None.
         The times offsets in s for the center of pulses.
         If None, defaults to one operation at halfway [0.5].
-    rabi_rotations : list
-        Default to None.
+    rabi_rotations : np.ndarray
+        Defaults to None.
         The rabi rotations at each time offset.
         If None, defaults to np.pi at each time offset.
-    azimuthal_angles : list
-        Default to None.
+    azimuthal_angles : np.ndarray
+        Defaults to None.
         The azimuthal angles at each time offset.
         If None, defaults to 0 at each time offset.
-    detuning_rotations : list
-        Default to None.
+    detuning_rotations : np.ndarray
+        Defaults to None.
         The detuning rotations at each time offset.
         If None, defaults to 0 at each time offset.
     name : str
-        Name of the sequence; Defaults to None
+        Name of the sequence. Defaults to None.
 
     Raises
     ------
@@ -65,12 +70,12 @@ class DynamicDecouplingSequence:
 
     def __init__(
         self,
-        duration=1.0,
-        offsets=None,
-        rabi_rotations=None,
-        azimuthal_angles=None,
-        detuning_rotations=None,
-        name=None,
+        duration: float = 1.0,
+        offsets: Optional[np.ndarray] = None,
+        rabi_rotations: Optional[np.ndarray] = None,
+        azimuthal_angles: Optional[np.ndarray] = None,
+        detuning_rotations: Optional[np.ndarray] = None,
+        name: Optional[str] = None,
     ):
 
         self.duration = duration
@@ -140,7 +145,7 @@ class DynamicDecouplingSequence:
             self.name = str(self.name)
 
     @property
-    def number_of_offsets(self):
+    def number_of_offsets(self) -> int:
         """
         Returns the number of offsets.
 
@@ -152,7 +157,7 @@ class DynamicDecouplingSequence:
 
         return len(self.offsets)
 
-    def export(self):
+    def export(self) -> Dict:
         """
         Returns a dictionary formatted for plotting using the qctrl-visualizer package.
 
@@ -258,13 +263,13 @@ class DynamicDecouplingSequence:
 
     def export_to_file(
         self,
-        filename=None,
-        file_format=FileFormat.QCTRL.value,
-        file_type=FileType.CSV.value,
-        coordinates=Coordinate.CYLINDRICAL.value,
-        maximum_rabi_rate=2 * np.pi,
-        maximum_detuning_rate=2 * np.pi,
-    ):
+        filename: Optional[str] = None,
+        file_format: str = FileFormat.QCTRL.value,
+        file_type: str = FileType.CSV.value,
+        coordinates: str = Coordinate.CYLINDRICAL.value,
+        maximum_rabi_rate: float = 2 * np.pi,
+        maximum_detuning_rate: float = 2 * np.pi,
+    ) -> None:
         """
         Prepares and saves the dynamic decoupling sequence in a file.
 
