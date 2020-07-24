@@ -331,12 +331,12 @@ class DynamicDecouplingSequence:
 
 
 def convert_dds_to_driven_control(
-    dynamic_decoupling_sequence=None,
-    maximum_rabi_rate=2 * np.pi,
-    maximum_detuning_rate=2 * np.pi,
-    minimum_segment_duration=0.0,
+    dynamic_decoupling_sequence: DynamicDecouplingSequence = None,
+    maximum_rabi_rate: float = 2 * np.pi,
+    maximum_detuning_rate: float = 2 * np.pi,
+    minimum_segment_duration: float = 0.0,
     **kwargs
-):
+) -> DrivenControl:
     """
     Creates a Driven Control based on the supplied DDS and other relevant information.
 
@@ -586,7 +586,9 @@ def convert_dds_to_driven_control(
     )
 
 
-def _check_valid_operation(rabi_rotations, detuning_rotations):
+def _check_valid_operation(
+    rabi_rotations: np.ndarray, detuning_rotations: np.ndarray
+) -> bool:
     """
     Private method to check if there is a rabi_rotation and detuning rotation at the same
     offset.
