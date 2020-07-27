@@ -2,9 +2,7 @@
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
+# You may obtain a copy of the License at # #     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -249,13 +247,17 @@ def _new_primitive_control(
     (maximum_rabi_rate, azimuthal_angle, rabi_rotation) = _predefined_common_attributes(
         maximum_rabi_rate, azimuthal_angle, rabi_rotation
     )
+    if rabi_rotation is None:
+        durations = None
+    else:
+        durations = ([rabi_rotation / maximum_rabi_rate],)
 
     return DrivenControl(
         rabi_rates=[maximum_rabi_rate],
         azimuthal_angles=[azimuthal_angle],
         detunings=[0],
-        durations=[rabi_rotation / maximum_rabi_rate],
-        **kwargs
+        durations=durations,
+        **kwargs,
     )
 
 
@@ -288,10 +290,9 @@ def _new_wimperis_1_control(
     (maximum_rabi_rate, azimuthal_angle, rabi_rotation) = _predefined_common_attributes(
         maximum_rabi_rate, azimuthal_angle, rabi_rotation
     )
-
-    phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
-
-    rabi_rotations = [rabi_rotation, np.pi, 2 * np.pi, np.pi]
+    if rabi_rotation is not None:
+        phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
+        rabi_rotations = [rabi_rotation, np.pi, 2 * np.pi, np.pi]
 
     rabi_rates = [maximum_rabi_rate] * 4
     azimuthal_angles = [
@@ -310,7 +311,7 @@ def _new_wimperis_1_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -344,9 +345,9 @@ def _new_solovay_kitaev_1_control(
         maximum_rabi_rate, azimuthal_angle, rabi_rotation
     )
 
-    phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
-
-    rabi_rotations = [rabi_rotation, 2 * np.pi, 2 * np.pi]
+    if rabi_rotation is not None:
+        phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
+        rabi_rotations = [rabi_rotation, 2 * np.pi, 2 * np.pi]
 
     rabi_rates = [maximum_rabi_rate] * 3
     azimuthal_angles = [
@@ -364,7 +365,7 @@ def _new_solovay_kitaev_1_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -408,29 +409,30 @@ def _short_composite_rotation_for_undoing_length_over_under_shoot_control(
     def degrees_to_radians(angle_in_degrees):
         return angle_in_degrees / 180 * np.pi
 
-    if np.isclose(rabi_rotation, np.pi):
-        theta_1 = degrees_to_radians(180.0)
-        phi_1 = np.arccos(
-            -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
-        )
-        phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
-    elif np.isclose(rabi_rotation, 0.5 * np.pi):
-        theta_1 = degrees_to_radians(115.2)
-        phi_1 = np.arccos(
-            -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
-        )
-        phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
-    elif np.isclose(rabi_rotation, 0.25 * np.pi):
-        theta_1 = degrees_to_radians(96.7)
-        phi_1 = np.arccos(
-            -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
-        )
-        phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
-    else:
-        raise ArgumentsValueError(
-            "rabi_rotation angle must be either pi, pi/2 or pi/4",
-            {"rabi_rotation": rabi_rotation},
-        )
+    if rabi_rotation is not None:
+        if np.isclose(rabi_rotation, np.pi):
+            theta_1 = degrees_to_radians(180.0)
+            phi_1 = np.arccos(
+                -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
+            )
+            phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
+        elif np.isclose(rabi_rotation, 0.5 * np.pi):
+            theta_1 = degrees_to_radians(115.2)
+            phi_1 = np.arccos(
+                -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
+            )
+            phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
+        elif np.isclose(rabi_rotation, 0.25 * np.pi):
+            theta_1 = degrees_to_radians(96.7)
+            phi_1 = np.arccos(
+                -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
+            )
+            phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
+        else:
+            raise ArgumentsValueError(
+                "rabi_rotation angle must be either pi, pi/2 or pi/4",
+                {"rabi_rotation": rabi_rotation},
+            )
 
     theta_3 = theta_1
     phi_3 = phi_1
@@ -454,7 +456,7 @@ def _short_composite_rotation_for_undoing_length_over_under_shoot_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -490,13 +492,13 @@ def _new_compensating_for_off_resonance_with_a_pulse_sequence_control(
         rabi_rotation,
     ) = _predefined_common_attributes(maximum_rabi_rate, azimuthal_angle, rabi_rotation)
 
-    k = np.arcsin(np.sin(rabi_rotation / 2.0) / 2.0)
-
-    rabi_rotations = [
-        rabi_rotation / 2.0 + 2 * np.pi - k,
-        2 * np.pi - 2 * k,
-        rabi_rotation / 2.0 - k,
-    ]
+    if rabi_rotation is not None:
+        k = np.arcsin(np.sin(rabi_rotation / 2.0) / 2.0)
+        rabi_rotations = [
+            rabi_rotation / 2.0 + 2 * np.pi - k,
+            2 * np.pi - 2 * k,
+            rabi_rotation / 2.0 - k,
+        ]
 
     rabi_rates = [maximum_rabi_rate] * 3
     azimuthal_angles = [azimuthal_angle, azimuthal_angle + np.pi, azimuthal_angle]
@@ -510,7 +512,7 @@ def _new_compensating_for_off_resonance_with_a_pulse_sequence_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -545,17 +547,18 @@ def _new_compensating_for_off_resonance_with_a_sequence_with_wimperis_control(
         maximum_rabi_rate, azimuthal_angle, rabi_rotation
     )
 
-    phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
-    k = np.arcsin(np.sin(rabi_rotation / 2.0) / 2.0)
+    if rabi_rotation is not None:
+        phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
+        k = np.arcsin(np.sin(rabi_rotation / 2.0) / 2.0)
 
-    rabi_rotations = [
-        2 * np.pi + rabi_rotation / 2.0 - k,
-        2 * np.pi - 2 * k,
-        rabi_rotation / 2.0 - k,
-        np.pi,
-        2 * np.pi,
-        np.pi,
-    ]
+        rabi_rotations = [
+            2 * np.pi + rabi_rotation / 2.0 - k,
+            2 * np.pi - 2 * k,
+            rabi_rotation / 2.0 - k,
+            np.pi,
+            2 * np.pi,
+            np.pi,
+        ]
 
     rabi_rates = [maximum_rabi_rate] * 6
     azimuthal_angles = [
@@ -576,7 +579,7 @@ def _new_compensating_for_off_resonance_with_a_sequence_with_wimperis_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -610,17 +613,17 @@ def _new_compensating_for_off_resonance_with_a_sequence_with_sk_control(
     (maximum_rabi_rate, azimuthal_angle, rabi_rotation) = _predefined_common_attributes(
         maximum_rabi_rate, azimuthal_angle, rabi_rotation
     )
+    if rabi_rotation is not None:
+        phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
+        k = np.arcsin(np.sin(rabi_rotation / 2.0) / 2.0)
 
-    phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
-    k = np.arcsin(np.sin(rabi_rotation / 2.0) / 2.0)
-
-    rabi_rotations = [
-        2 * np.pi + rabi_rotation / 2.0 - k,
-        2 * np.pi - 2 * k,
-        rabi_rotation / 2.0 - k,
-        2 * np.pi,
-        2 * np.pi,
-    ]
+        rabi_rotations = [
+            2 * np.pi + rabi_rotation / 2.0 - k,
+            2 * np.pi - 2 * k,
+            rabi_rotation / 2.0 - k,
+            2 * np.pi,
+            2 * np.pi,
+        ]
 
     rabi_rates = [maximum_rabi_rate] * 5
     azimuthal_angles = [
@@ -640,7 +643,7 @@ def _new_compensating_for_off_resonance_with_a_sequence_with_sk_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -686,33 +689,34 @@ def _new_corpse_in_scrofulous_control(
     def degrees_to_radians(angle_in_degrees):
         return angle_in_degrees / 180 * np.pi
 
-    if np.isclose(rabi_rotation, np.pi):
-        theta_1 = theta_3 = degrees_to_radians(180.0)
-        phi_1 = phi_3 = np.arccos(
-            -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
-        )
-        phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
-    elif np.isclose(rabi_rotation, 0.5 * np.pi):
-        theta_1 = theta_3 = degrees_to_radians(115.2)
-        phi_1 = phi_3 = np.arccos(
-            -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
-        )
-        phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
-    elif np.isclose(rabi_rotation, 0.25 * np.pi):
-        theta_1 = theta_3 = degrees_to_radians(96.7)
-        phi_1 = phi_3 = np.arccos(
-            -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
-        )
-        phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
-    else:
-        raise ArgumentsValueError(
-            "rabi_rotation angle must be either pi, pi/2 or pi/4",
-            {"rabi_rotation": rabi_rotation},
-        )
+    if rabi_rotation is not None:
+        if np.isclose(rabi_rotation, np.pi):
+            theta_1 = theta_3 = degrees_to_radians(180.0)
+            phi_1 = phi_3 = np.arccos(
+                -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
+            )
+            phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
+        elif np.isclose(rabi_rotation, 0.5 * np.pi):
+            theta_1 = theta_3 = degrees_to_radians(115.2)
+            phi_1 = phi_3 = np.arccos(
+                -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
+            )
+            phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
+        elif np.isclose(rabi_rotation, 0.25 * np.pi):
+            theta_1 = theta_3 = degrees_to_radians(96.7)
+            phi_1 = phi_3 = np.arccos(
+                -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
+            )
+            phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
+        else:
+            raise ArgumentsValueError(
+                "rabi_rotation angle must be either pi, pi/2 or pi/4",
+                {"rabi_rotation": rabi_rotation},
+            )
 
     theta_2 = np.pi
 
-    total_angles = []
+    _total_angles = []
     # Loop over all SCROFULOUS Rabi rotations (theta) and azimuthal angles (phi)
     # And make CORPSEs with those.
     for theta, phi in zip([theta_1, theta_2, theta_3], [phi_1, phi_2, phi_3]):
@@ -724,10 +728,9 @@ def _new_corpse_in_scrofulous_control(
                 [theta / 2.0 - k, phi + azimuthal_angle],
             ]
         )
-        total_angles.append(angles)
+        _total_angles.append(angles)
 
-    total_angles = np.vstack(total_angles)
-
+    total_angles = np.vstack(_total_angles)
     rabi_rotations = total_angles[:, 0]
 
     rabi_rates = [maximum_rabi_rate] * 9
@@ -742,7 +745,7 @@ def _new_corpse_in_scrofulous_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -811,5 +814,5 @@ def _new_walsh_amplitude_modulated_filter_1_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
