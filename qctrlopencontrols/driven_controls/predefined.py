@@ -2,7 +2,9 @@
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at # #     http://www.apache.org/licenses/LICENSE-2.0
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -192,7 +194,7 @@ def _derive_segments(
 ) -> List[List[float]]:
     """
     Derive the driven control segments from a set of rabi_rotations defined in terms of the
-        spherical polar angles
+    spherical polar angles.
 
     Parameters
     ----------
@@ -322,7 +324,7 @@ def _new_solovay_kitaev_1_control(
     **kwargs
 ) -> DrivenControl:
     """
-    First-order Solovay-Kitaev control, also known as SK1
+    First-order Solovay-Kitaev control, also known as SK1.
 
     Parameters
     ----------
