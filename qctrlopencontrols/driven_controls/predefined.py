@@ -19,6 +19,11 @@ More information and publication references to all driven controls defined here
 can be found at https://docs.q-ctrl.com/wiki/control-library
 """
 
+from typing import (
+    List,
+    Tuple,
+)
+
 import numpy as np
 
 from ..driven_controls import (
@@ -36,7 +41,7 @@ from ..exceptions import ArgumentsValueError
 from .driven_control import DrivenControl
 
 
-def new_predefined_driven_control(scheme=PRIMITIVE, **kwargs):
+def new_predefined_driven_control(scheme: str = PRIMITIVE, **kwargs):
     """
     Create a new driven control
 
@@ -104,26 +109,28 @@ def new_predefined_driven_control(scheme=PRIMITIVE, **kwargs):
     return driven_control
 
 
-def _predefined_common_attributes(maximum_rabi_rate, rabi_rotation, azimuthal_angle):
+def _predefined_common_attributes(
+    azimuthal_angle: float, rabi_rotation: float, maximum_rabi_rate: float = 2 * np.pi,
+) -> Tuple[float, float, float]:
     """
     Adds some checks etc for all the predefined pulses
 
     Parameters
     ----------
+    azimuthal_angle : float
+        The azimuthal position of the pulse.
     rabi_rotation : float
         The total polar angle to be performed by the pulse.
         Defined in polar coordinates.
-    maximum_rabi_rate : float
+    maximum_rabi_rate : float, optional
         Defaults to 2.*np.pi
         The maximum rabi frequency for the pulse.
-    azimuthal_angle : float
-        The azimuthal position of the pulse.
 
     Returns
     -------
     tuple
         Tuple of floats made of:
-            (rabi_rate, rabi_rotation, azimuthal)
+            (azimuthal, rabi_rotation, maximum_rabi_rate)
 
     Raises
     ------
@@ -146,10 +153,10 @@ def _predefined_common_attributes(maximum_rabi_rate, rabi_rotation, azimuthal_an
 
     azimuthal_angle = float(azimuthal_angle)
 
-    return (maximum_rabi_rate, rabi_rotation, azimuthal_angle)
+    return (azimuthal_angle, rabi_rotation, maximum_rabi_rate)
 
 
-def _get_transformed_rabi_rotation_wimperis(rabi_rotation):
+def _get_transformed_rabi_rotation_wimperis(rabi_rotation: float) -> float:
     """
     Calculates the Rabi rotation angle as required by Wimperis 1 (BB1)
     and Solovay-Kitaev driven controls.
@@ -157,12 +164,12 @@ def _get_transformed_rabi_rotation_wimperis(rabi_rotation):
     Parameters
     ----------
     rabi_rotation : float
-        Rotation angle of the operation
+        Rotation angle of the operation.
 
     Returns
     -------
     float
-        The transformed angle as per definition for the Wimperis 1 (BB1) control
+        The transformed angle as per definition for the Wimperis 1 (BB1) control.
 
     Raises
     ------
@@ -178,10 +185,12 @@ def _get_transformed_rabi_rotation_wimperis(rabi_rotation):
     return np.arccos(-rabi_rotation / (4 * np.pi))
 
 
-def _derive_segments(angles, amplitude=2.0 * np.pi):
+def _derive_segments(
+    angles: np.ndarray, amplitude: float = 2.0 * np.pi
+) -> List[List[float]]:
     """
     Derive the driven control segments from a set of rabi_rotations defined in terms of the
-        spherical polar angles
+    spherical polar angles.
 
     Parameters
     ----------
@@ -208,20 +217,23 @@ def _derive_segments(angles, amplitude=2.0 * np.pi):
 
 
 def _new_primitive_control(
-    rabi_rotation=None, azimuthal_angle=0.0, maximum_rabi_rate=2.0 * np.pi, **kwargs
-):
+    rabi_rotation: float,
+    azimuthal_angle: float = 0.0,
+    maximum_rabi_rate: float = 2.0 * np.pi,
+    **kwargs
+) -> DrivenControl:
     """
     Primitive driven control.
 
     Parameters
     ----------
-    rabi_rotation : float, optional
+    rabi_rotation : float
         The total rabi rotation to be performed by the driven control.
     maximum_rabi_rate : float, optional
         Defaults to 2.*np.pi
         The maximum rabi frequency for the driven control.
     azimuthal_angle : float, optional
-        The azimuthal position of the driven control.
+        The azimuthal position of the driven control. Defaults to 0.
     kwargs : dict
         Other keywords required to make a qctrlopencontrols.DrivenControls.
 
@@ -230,8 +242,9 @@ def _new_primitive_control(
     qctrlopencontrols.DrivenControl
         The driven control.
     """
-    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
-        maximum_rabi_rate, rabi_rotation, azimuthal_angle
+
+    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
+        azimuthal_angle, rabi_rotation, maximum_rabi_rate
     )
 
     return DrivenControl(
@@ -239,13 +252,16 @@ def _new_primitive_control(
         azimuthal_angles=[azimuthal_angle],
         detunings=[0],
         durations=[rabi_rotation / maximum_rabi_rate],
-        **kwargs
+        **kwargs,
     )
 
 
 def _new_wimperis_1_control(
-    rabi_rotation=None, azimuthal_angle=0.0, maximum_rabi_rate=2.0 * np.pi, **kwargs
-):
+    rabi_rotation: float,
+    azimuthal_angle: float = 0.0,
+    maximum_rabi_rate: float = 2.0 * np.pi,
+    **kwargs
+) -> DrivenControl:
     """
     Wimperis or BB1 control.
 
@@ -257,6 +273,7 @@ def _new_wimperis_1_control(
         Defaults to 2.*np.pi
         The maximum rabi frequency for the control.
     azimuthal_angle : float, optional
+        Defaults to 0.
         The azimuthal position of the control.
     kwargs : dict
         Other keywords required to make a qctrlopencontrols.DrivenControls.
@@ -266,12 +283,11 @@ def _new_wimperis_1_control(
     qctrlopencontrols.DrivenControl
         The driven control.
     """
-    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
-        maximum_rabi_rate, rabi_rotation, azimuthal_angle
+    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
+        azimuthal_angle, rabi_rotation, maximum_rabi_rate
     )
 
     phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
-
     rabi_rotations = [rabi_rotation, np.pi, 2 * np.pi, np.pi]
 
     rabi_rates = [maximum_rabi_rate] * 4
@@ -291,15 +307,18 @@ def _new_wimperis_1_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
 
 
 def _new_solovay_kitaev_1_control(
-    rabi_rotation=None, azimuthal_angle=0.0, maximum_rabi_rate=2.0 * np.pi, **kwargs
-):
+    rabi_rotation: float,
+    azimuthal_angle: float = 0.0,
+    maximum_rabi_rate: float = 2.0 * np.pi,
+    **kwargs
+) -> DrivenControl:
     """
-    First-order Solovay-Kitaev control, also known as SK1
+    First-order Solovay-Kitaev control, also known as SK1.
 
     Parameters
     ----------
@@ -309,6 +328,7 @@ def _new_solovay_kitaev_1_control(
         Defaults to 2.*np.pi
         The maximum rabi frequency for the control.
     azimuthal_angle : float, optional
+        Defaults to 0.
         The azimuthal position of the control.
     kwargs : dict
         Other keywords required to make a qctrlopencontrols.DrivenControls.
@@ -318,12 +338,11 @@ def _new_solovay_kitaev_1_control(
     qctrlopencontrols.DrivenControl
         The driven control.
     """
-    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
-        maximum_rabi_rate, rabi_rotation, azimuthal_angle
+    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
+        azimuthal_angle, rabi_rotation, maximum_rabi_rate
     )
 
     phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
-
     rabi_rotations = [rabi_rotation, 2 * np.pi, 2 * np.pi]
 
     rabi_rates = [maximum_rabi_rate] * 3
@@ -342,24 +361,28 @@ def _new_solovay_kitaev_1_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
 
 
 def _short_composite_rotation_for_undoing_length_over_under_shoot_control(
-    rabi_rotation=None, azimuthal_angle=0.0, maximum_rabi_rate=2.0 * np.pi, **kwargs
-):
+    rabi_rotation: float,
+    azimuthal_angle: float = 0.0,
+    maximum_rabi_rate: float = 2.0 * np.pi,
+    **kwargs
+) -> DrivenControl:
     """
-    SCROFULOUS control to compensate for pulse length errors
+    SCROFULOUS control to compensate for pulse length errors.
 
     Parameters
     ----------
-    rabi_rotation : float, optional
+    rabi_rotation : float
         The total rabi rotation to be performed by the control.
     maximum_rabi_rate : float, optional
         Defaults to 2.*np.pi
         The maximum rabi frequency for the control.
     azimuthal_angle : float, optional
+        Defaults to 0.
         The azimuthal position of the control.
     kwargs : dict
         Other keywords required to make a qctrlopencontrols.DrivenControls.
@@ -374,8 +397,8 @@ def _short_composite_rotation_for_undoing_length_over_under_shoot_control(
     ArgumentsValueError
         Raised when an argument is invalid.
     """
-    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
-        maximum_rabi_rate, rabi_rotation, azimuthal_angle
+    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
+        azimuthal_angle, rabi_rotation, maximum_rabi_rate
     )
 
     # Create a lookup table for rabi rotation and phase angles, taken from the official paper.
@@ -429,24 +452,28 @@ def _short_composite_rotation_for_undoing_length_over_under_shoot_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
 
 
 def _new_compensating_for_off_resonance_with_a_pulse_sequence_control(
-    rabi_rotation=None, azimuthal_angle=0.0, maximum_rabi_rate=2.0 * np.pi, **kwargs
-):
+    rabi_rotation: float,
+    azimuthal_angle: float = 0.0,
+    maximum_rabi_rate: float = 2.0 * np.pi,
+    **kwargs
+) -> DrivenControl:
     """
     Compensating for off resonance with a pulse sequence, often abbreviated as CORPSE.
 
     Parameters
     ----------
-    rabi_rotation : float, optional
+    rabi_rotation : float
         The total rabi rotation to be performed by the control.
     maximum_rabi_rate : float, optional
-        Defaults to 2.*np.pi
+        Defaults to 2*np.pi.
         The maximum rabi frequency for the control.
     azimuthal_angle : float, optional
+        Defaults to 0.
         The azimuthal position of the control.
     kwargs : dict
         Other keywords required to make a qctrlopencontrols.DrivenControls.
@@ -456,12 +483,11 @@ def _new_compensating_for_off_resonance_with_a_pulse_sequence_control(
     qctrlopencontrols.DrivenControl
         The driven control.
     """
-    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
-        maximum_rabi_rate, rabi_rotation, azimuthal_angle
+    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
+        azimuthal_angle, rabi_rotation, maximum_rabi_rate
     )
 
     k = np.arcsin(np.sin(rabi_rotation / 2.0) / 2.0)
-
     rabi_rotations = [
         rabi_rotation / 2.0 + 2 * np.pi - k,
         2 * np.pi - 2 * k,
@@ -480,25 +506,29 @@ def _new_compensating_for_off_resonance_with_a_pulse_sequence_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
 
 
 def _new_compensating_for_off_resonance_with_a_sequence_with_wimperis_control(
-    rabi_rotation=None, azimuthal_angle=0.0, maximum_rabi_rate=2.0 * np.pi, **kwargs
-):
+    rabi_rotation: float,
+    azimuthal_angle: float = 0.0,
+    maximum_rabi_rate: float = 2.0 * np.pi,
+    **kwargs
+) -> DrivenControl:
     """
     Compensating for off resonance with a pulse sequence with an embedded
     Wimperis (or BB1) control, also known as CinBB.
 
     Parameters
     ----------
-    rabi_rotation : float, optional
+    rabi_rotation : float
         The total rabi rotation to be performed by the control.
     maximum_rabi_rate : float, optional
         Defaults to 2.*np.pi
         The maximum rabi frequency for the control.
     azimuthal_angle : float, optional
+        Defaults to 0.
         The azimuthal position of the control.
     kwargs : dict
         Other keywords required to make a qctrlopencontrols.DrivenControls.
@@ -508,8 +538,9 @@ def _new_compensating_for_off_resonance_with_a_sequence_with_wimperis_control(
     qctrlopencontrols.DrivenControl
         The driven control.
     """
-    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
-        maximum_rabi_rate, rabi_rotation, azimuthal_angle
+
+    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
+        azimuthal_angle, rabi_rotation, maximum_rabi_rate
     )
 
     phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
@@ -543,25 +574,29 @@ def _new_compensating_for_off_resonance_with_a_sequence_with_wimperis_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
 
 
 def _new_compensating_for_off_resonance_with_a_sequence_with_sk_control(
-    rabi_rotation=None, azimuthal_angle=0.0, maximum_rabi_rate=2.0 * np.pi, **kwargs
-):
+    rabi_rotation: float,
+    azimuthal_angle: float = 0.0,
+    maximum_rabi_rate: float = 2.0 * np.pi,
+    **kwargs
+) -> DrivenControl:
     """
     Compensating for off resonance with a pulse sequence with an
      embedded Solovay Kitaev (or SK1) control, also knowns as CinSK.
 
     Parameters
     ----------
-    rabi_rotation : float, optional
+    rabi_rotation : float
         The total rabi rotation to be performed by the control.
     maximum_rabi_rate : float, optional
         Defaults to 2.*np.pi
         The maximum rabi frequency for the control.
     azimuthal_angle : float, optional
+        Defaults to 0.
         The azimuthal position of the control.
     kwargs : dict
         Other keywords required to make a qctrlopencontrols.DrivenControls.
@@ -571,10 +606,9 @@ def _new_compensating_for_off_resonance_with_a_sequence_with_sk_control(
     qctrlopencontrols.DrivenControl
         The driven control.
     """
-    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
-        maximum_rabi_rate, rabi_rotation, azimuthal_angle
+    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
+        azimuthal_angle, rabi_rotation, maximum_rabi_rate
     )
-
     phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
     k = np.arcsin(np.sin(rabi_rotation / 2.0) / 2.0)
 
@@ -604,13 +638,16 @@ def _new_compensating_for_off_resonance_with_a_sequence_with_sk_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
 
 
 def _new_corpse_in_scrofulous_control(
-    rabi_rotation=None, azimuthal_angle=0.0, maximum_rabi_rate=2.0 * np.pi, **kwargs
-):
+    rabi_rotation: float,
+    azimuthal_angle: float = 0.0,
+    maximum_rabi_rate: float = 2.0 * np.pi,
+    **kwargs
+) -> DrivenControl:
     """
     CORPSE (Compensating for Off Resonance with a Pulse SEquence) embedded within a
     SCROFULOUS (Short Composite ROtation For Undoing Length Over and Under Shoot) control,
@@ -618,12 +655,13 @@ def _new_corpse_in_scrofulous_control(
 
     Parameters
     ----------
-    rabi_rotation : float, optional
+    rabi_rotation : float
         The total rabi rotation to be performed by the control.
     maximum_rabi_rate : float, optional
         Defaults to 2.*np.pi
         The maximum rabi frequency for the control.
     azimuthal_angle : float, optional
+        Defaults to 0.
         The azimuthal position of the control.
     kwargs : dict
         Other keywords required to make a qctrlopencontrols.DrivenControls.
@@ -638,8 +676,8 @@ def _new_corpse_in_scrofulous_control(
     ArgumentsValueError
         Raised when an argument is invalid.
     """
-    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
-        maximum_rabi_rate, rabi_rotation, azimuthal_angle
+    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
+        azimuthal_angle, rabi_rotation, maximum_rabi_rate
     )
 
     # Create a lookup table for rabi rotation and phase angles, taken from
@@ -673,7 +711,7 @@ def _new_corpse_in_scrofulous_control(
 
     theta_2 = np.pi
 
-    total_angles = []
+    _total_angles = []
     # Loop over all SCROFULOUS Rabi rotations (theta) and azimuthal angles (phi)
     # And make CORPSEs with those.
     for theta, phi in zip([theta_1, theta_2, theta_3], [phi_1, phi_2, phi_3]):
@@ -685,10 +723,9 @@ def _new_corpse_in_scrofulous_control(
                 [theta / 2.0 - k, phi + azimuthal_angle],
             ]
         )
-        total_angles.append(angles)
+        _total_angles.append(angles)
 
-    total_angles = np.vstack(total_angles)
-
+    total_angles = np.vstack(_total_angles)
     rabi_rotations = total_angles[:, 0]
 
     rabi_rates = [maximum_rabi_rate] * 9
@@ -703,24 +740,28 @@ def _new_corpse_in_scrofulous_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
 
 
 def _new_walsh_amplitude_modulated_filter_1_control(
-    rabi_rotation=None, azimuthal_angle=0.0, maximum_rabi_rate=2.0 * np.pi, **kwargs
-):
+    rabi_rotation: float,
+    azimuthal_angle: float = 0.0,
+    maximum_rabi_rate: float = 2.0 * np.pi,
+    **kwargs
+) -> DrivenControl:
     """
     First order Walsh control with amplitude modulation.
 
     Parameters
     ----------
-    rabi_rotation : float, optional
+    rabi_rotation : float
         The total rabi rotation to be performed by the control.
     maximum_rabi_rate : float, optional
         Defaults to 2.*np.pi
         The maximum rabi frequency for the control.
     azimuthal_angle : float, optional
+        Defaults to 0.
         The azimuthal position of the control.
     kwargs : dict
         Other keywords required to make a qctrlopencontrols.DrivenControls.
@@ -735,8 +776,8 @@ def _new_walsh_amplitude_modulated_filter_1_control(
     ArgumentsValueError
         Raised when an argument is invalid.
     """
-    (maximum_rabi_rate, rabi_rotation, azimuthal_angle) = _predefined_common_attributes(
-        maximum_rabi_rate, rabi_rotation, azimuthal_angle
+    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
+        azimuthal_angle, rabi_rotation, maximum_rabi_rate
     )
 
     if np.isclose(rabi_rotation, np.pi):
@@ -769,5 +810,5 @@ def _new_walsh_amplitude_modulated_filter_1_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs
+        **kwargs,
     )
