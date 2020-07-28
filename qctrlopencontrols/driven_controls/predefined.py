@@ -121,7 +121,7 @@ def _predefined_common_attributes(
         The azimuthal position of the pulse.
     rabi_rotation : float
         The total polar angle to be performed by the pulse.
-        Defined in polar coordinates. Defaults to None.
+        Defined in polar coordinates.
     maximum_rabi_rate : float, optional
         Defaults to 2.*np.pi
         The maximum rabi frequency for the pulse.
