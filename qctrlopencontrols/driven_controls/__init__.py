@@ -43,13 +43,13 @@ SK1 = "SK1"
 # First-order Walsh sequence control
 WAMF1 = "WAMF1"
 
-# Dynamically corrected control - Compensating for Off-Resonance with a Pulse Sequence (COPRSE)
+# Dynamically corrected control - Compensating for Off-Resonance with a Pulse Sequence (CORPSE)
 CORPSE = "CORPSE"
 
-# Concatenated dynamically corrected control - BB1 inside COPRSE
+# Concatenated dynamically corrected control - BB1 inside CORPSE
 CORPSE_IN_BB1 = "CORPSE in BB1"
 
-# Concatenated dynamically corrected control - First order Solovay-Kitaev inside COPRSE
+# Concatenated dynamically corrected control - First order Solovay-Kitaev inside CORPSE
 CORPSE_IN_SK1 = "CORPSE in SK1"
 
 # Dynamically corrected control
