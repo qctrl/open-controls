@@ -13,10 +13,9 @@
 # limitations under the License.
 
 """
-====================================
-Tests for Predefined Driven Controls
-====================================
+Tests for Predefined Driven Controls.
 """
+
 import numpy as np
 import pytest
 
@@ -36,8 +35,9 @@ from qctrlopencontrols.exceptions import ArgumentsValueError
 
 
 def test_new_predefined_driven_control():
-    """Test the new_predefined_driven_control function in
-       qctrlopencontrols.driven_controls.predefined
+    """
+    Tests the new_predefined_driven_control function in
+    qctrlopencontrols.driven_controls.predefined.
     """
     # Test that an error is raised if supplied with an unknown scheme
     with pytest.raises(ArgumentsValueError):
@@ -45,7 +45,8 @@ def test_new_predefined_driven_control():
 
 
 def test_predefined_common_attributes():
-    """Test that expected exceptions are raised correctly for invalid parameters
+    """
+    Tests that expected exceptions are raised correctly for invalid parameters.
     """
     # Test negative maximum Rabi rate
     with pytest.raises(ArgumentsValueError):
@@ -60,7 +61,8 @@ def test_predefined_common_attributes():
 
 
 def test_primitive_control_segments():
-    """Test the segments of the predefined primitive driven control
+    """
+    Tests the segments of the predefined primitive driven control.
     """
     _rabi_rate = 1
     _rabi_rotation = 1.5
@@ -99,7 +101,8 @@ def test_primitive_control_segments():
 
 
 def test_wimperis_1_control():
-    """Test the segments of the Wimperis 1 (BB1) driven control
+    """
+    Tests the segments of the Wimperis 1 (BB1) driven control.
     """
     _rabi_rotation = np.pi
     _azimuthal_angle = np.pi / 2
@@ -142,7 +145,8 @@ def test_wimperis_1_control():
 
 
 def test_solovay_kitaev_1_control():
-    """Test the segments of the Solovay-Kitaev 1 (SK1) driven control
+    """
+    Tests the segments of the Solovay-Kitaev 1 (SK1) driven control.
     """
     _rabi_rotation = np.pi
     _azimuthal_angle = np.pi / 2
@@ -179,9 +183,11 @@ def test_solovay_kitaev_1_control():
 
 
 def test_scofulous_control():
-    """Test the segments of the SCROFULOUS driven control.
-       Note: here we test against numerical pulse segments since the angles are
-       defined numerically as well.
+    """
+    Tests the segments of the SCROFULOUS driven control.
+
+    Note: here we test against numerical pulse segments since the angles are
+    defined numerically as well.
     """
     # Test that exceptions are raised upon wrong inputs for rabi_rotation
     # (SCROFULOUS is only defined for pi/4, pi/2 and pi pulses)
@@ -269,9 +275,11 @@ def test_scofulous_control():
 
 
 def test_corpse_in_scrofulous_control():
-    """Test the segments of the CORPSE in SCROFULOUS driven control.
-       Note: here we test against numerical pulse segments since the SCROFULOUS angles are
-       defined numerically as well.
+    """
+    Test the segments of the CORPSE in SCROFULOUS driven control.
+
+    Note: here we test against numerical pulse segments since the SCROFULOUS angles are
+    defined numerically as well.
     """
     # Test pi and pi/2 rotations
     cs_pi = new_predefined_driven_control(
@@ -335,7 +343,8 @@ def test_corpse_in_scrofulous_control():
 
 
 def test_corpse_control():
-    """Test the segments of the CORPSE driven control
+    """
+    Tests the segments of the CORPSE driven control.
     """
     _rabi_rotation = np.pi
     _azimuthal_angle = np.pi / 4
@@ -390,7 +399,8 @@ def test_corpse_control():
 
 
 def test_cinbb_control():
-    """Test the segments of the CinBB (BB1 made up of CORPSEs) driven control
+    """
+    Tests the segments of the CinBB (BB1 made up of CORPSEs) driven control.
     """
     cinbb = new_predefined_driven_control(
         scheme=CORPSE_IN_BB1,
@@ -442,7 +452,8 @@ def test_cinbb_control():
 
 
 def test_cinsk1_control():
-    """Test the segments of the CinSK1 (SK1 made up of CORPSEs) driven control
+    """
+    Tests the segments of the CinSK1 (SK1 made up of CORPSEs) driven control.
     """
     cinsk = new_predefined_driven_control(
         scheme=CORPSE_IN_SK1,
@@ -492,7 +503,8 @@ def test_cinsk1_control():
 
 
 def test_walsh_control():
-    """Test the segments of the first order Walsh driven control
+    """
+    Tests the segments of the first order Walsh driven control.
     """
     # Test that exceptions are raised upon wrong inputs for rabi_rotation
     # (WALSH control is only defined for pi/4, pi/2 and pi pulses)

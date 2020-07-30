@@ -13,10 +13,10 @@
 # limitations under the License.
 
 """
-========================================
-Tests for Dynamical Decoupling Sequences
-========================================
+Tests for Dynamical Decoupling Sequences.
 """
+
+
 import os
 
 import numpy as np
@@ -30,7 +30,8 @@ from qctrlopencontrols.exceptions import ArgumentsValueError
 
 
 def _remove_file(filename):
-    """Removes the file after test done
+    """
+    Removes the file after test done.
     """
 
     if os.path.exists(filename):
@@ -40,7 +41,8 @@ def _remove_file(filename):
 
 
 def test_dynamical_decoupling_sequence():
-    """Tests for the Dynamic Decoupling Sequence class
+    """
+    Tests the Dynamic Decoupling Sequence class.
     """
 
     _duration = 2.0
@@ -128,7 +130,7 @@ def test_dynamical_decoupling_sequence():
 
 def test_sequence_plot():
     """
-    Tests the plot data of sequences
+    Tests the plot data of sequences.
     """
 
     # An arbitrary sequence - may not conform to any of the predefined ones
@@ -192,7 +194,8 @@ def test_sequence_plot():
 
 def test_pretty_string_format():
 
-    """Tests __str__ of the dynamic decoupling sequence
+    """
+    Tests ``__str__`` of the dynamic decoupling sequence.
     """
 
     _duration = 1.0
@@ -285,7 +288,8 @@ def test_pretty_string_format():
 
 def test_conversion_to_driven_controls():
 
-    """Tests the method to convert a DDS to Driven Control
+    """
+    Tests the method to convert a DDS to Driven Control.
     """
     _duration = 2.0
     _offsets = 2 * np.array([0.25, 0.5, 0.75])
@@ -769,7 +773,8 @@ def test_conversion_of_tightly_packed_sequence():
 
 def test_free_evolution_conversion():
 
-    """Tests the conversion of free evolution
+    """
+    Tests the conversion of free evolution.
     """
     _duration = 10.0
     _name = "test_sequence"
@@ -842,7 +847,8 @@ def test_free_evolution_conversion():
 
 def test_export_to_file():
 
-    """Tests exporting to file
+    """
+    Tests exporting to file.
     """
     _duration = 2.0
     _offsets = 2 * np.array([0.0, 0.25, 0.5, 0.75, 1.0])
@@ -914,7 +920,3 @@ def _all_greater_or_close(array, value):
     return np.all(
         np.logical_or(np.greater_equal(array, value), np.isclose(array, value))
     )
-
-
-if __name__ == "__main__":
-    pass
