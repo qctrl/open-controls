@@ -195,7 +195,7 @@ def test_sequence_plot():
 def test_pretty_string_format():
 
     """
-    Tests ``__str__`` of the dynamic decoupling sequence.
+    Tests `__str__` of the dynamic decoupling sequence.
     """
 
     _duration = 1.0
