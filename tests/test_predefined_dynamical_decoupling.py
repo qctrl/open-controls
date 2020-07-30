@@ -13,9 +13,7 @@
 # limitations under the License.
 
 """
-========================
-Tests for Predefined DDS
-========================
+Tests for Predefined DDS.
 """
 
 
@@ -43,7 +41,8 @@ SIGMA_Z = np.array([[1.0, 0.0], [0.0, -1.0]])
 
 def test_ramsey():
 
-    """Tests Ramsey sequence
+    """
+    Tests Ramsey sequence.
     """
 
     duration = 10.0
@@ -76,7 +75,7 @@ def test_ramsey():
 def test_spin_echo():
 
     """
-    Test for Spin Echo Sequence
+    Test for Spin Echo Sequence.
     """
 
     duration = 10.0
@@ -110,7 +109,7 @@ def test_spin_echo():
 
 def test_curr_purcell():
     """
-    Test for Carr-Purcell (CP) sequence
+    Test for Carr-Purcell (CP) sequence.
     """
 
     duration = 10.0
@@ -167,7 +166,7 @@ def test_curr_purcell():
 
 def test_curr_purcell_meiboom_sequence():
     """
-    Test for Carr-Purcell-Meiboom-Sequence (CPMG) sequence
+    Tests for Carr-Purcell-Meiboom-Sequence (CPMG) sequence.
     """
 
     duration = 10.0
@@ -226,7 +225,7 @@ def test_curr_purcell_meiboom_sequence():
 
 def test_uhrig_single_axis_sequence():
     """
-    Test for Uhrig Single Axis Sequence
+    Tests for Uhrig Single Axis Sequence.
     """
 
     duration = 10.0
@@ -276,7 +275,7 @@ def test_uhrig_single_axis_sequence():
 
 def test_periodic_single_axis_sequence():
     """
-    Test for Periodic Single Axis Sequence
+    Tests for Periodic Single Axis Sequence.
     """
 
     duration = 10.0
@@ -325,7 +324,7 @@ def test_periodic_single_axis_sequence():
 
 def test_walsh_single_axis_sequence():
     """
-    Test for Periodic Single Axis Sequence
+    Tests for Periodic Single Axis Sequence.
     """
 
     duration = 10.0
@@ -387,7 +386,7 @@ def test_walsh_single_axis_sequence():
 
 def test_quadratic_sequence():
     """
-    Test for Quadratic Sequence
+    Tests for Quadratic Sequence.
     """
 
     duration = 10.0
@@ -475,7 +474,7 @@ def test_quadratic_sequence():
 
 def test_xconcatenated_sequence():
     """
-    Test X-CDD Sequence
+    Tests X-CDD Sequence.
     """
 
     duration = 10.0
@@ -522,7 +521,7 @@ def test_xconcatenated_sequence():
 
 def test_xyconcatenated_sequence():
     """
-    Test XY4-CDD Sequence
+    Tests XY4-CDD Sequence.
     """
 
     duration = 10.0
@@ -620,7 +619,7 @@ def test_xyconcatenated_sequence():
 
 def test_attribute_values():
     """
-    Test for the correctness of the attribute values
+    Tests the correctness of the attribute values.
     """
 
     # Check that errors are raised correctly

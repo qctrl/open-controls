@@ -13,8 +13,9 @@
 # limitations under the License.
 
 """
-Test for driven controls
+Tests for driven controls.
 """
+
 
 import os
 
@@ -31,7 +32,8 @@ from qctrlopencontrols.exceptions import ArgumentsValueError
 
 
 def _remove_file(filename):
-    """Removes the file after test done
+    """
+    Removes the file after test done.
     """
 
     if os.path.exists(filename):
@@ -42,7 +44,8 @@ def _remove_file(filename):
 
 def test_driven_controls():
 
-    """Tests the construction of driven controls
+    """
+    Tests the construction of driven controls.
     """
     _rabi_rates = [np.pi, np.pi, 0]
     _azimuthal_angles = [np.pi / 2, 0, -np.pi]
@@ -141,7 +144,9 @@ def test_driven_controls():
 
 
 def test_control_directions():
-    """Tests if the directions method works properly."""
+    """
+    Tests if the directions method works properly.
+    """
     rabi_rates = [1, 0, 1, 0]
     azimuthal_angles = [0, 0, np.pi / 2, 0]
     detunings = [0, 0, 0, 1]
@@ -163,7 +168,9 @@ def test_control_directions():
 
 
 def test_control_directions_with_small_amplitudes():
-    """Tests if the directions method works with very small amplitudes."""
+    """
+    Tests if the directions method works with very small amplitudes.
+    """
     rabi_rates = [1e-100, 0.0, 1e-100, 0.0]
     azimuthal_angles = [0, 0, np.pi / 2, 0]
     detunings = [0, 0, 0, 1e-100]
@@ -186,7 +193,8 @@ def test_control_directions_with_small_amplitudes():
 
 def test_control_export():
 
-    """Tests exporting the control to a file
+    """
+    Tests exporting the control to a file.
     """
     _rabi_rates = [5 * np.pi, 4 * np.pi, 3 * np.pi]
     _azimuthal_angles = [np.pi / 4, np.pi / 3, 0]
@@ -285,7 +293,8 @@ def test_plot_data():
 
 def test_pretty_print():
 
-    """Tests pretty output of driven control
+    """
+    Tests pretty output of driven control.
     """
 
     _maximum_rabi_rate = 2 * np.pi
