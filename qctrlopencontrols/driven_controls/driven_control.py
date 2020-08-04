@@ -16,6 +16,7 @@
 Driven control module.
 """
 import json
+from typing import Optional
 
 import numpy as np
 
@@ -31,6 +32,7 @@ from ..utils import (
     Coordinate,
     FileFormat,
     FileType,
+    check_arguments,
     create_repr_from_attributes,
 )
 
@@ -65,72 +67,52 @@ class DrivenControl:
 
     def __init__(
         self,
-        rabi_rates=None,
-        azimuthal_angles=None,
-        detunings=None,
-        durations=None,
-        name=None,
+        rabi_rates: Optional[np.ndarray] = None,
+        azimuthal_angles: Optional[np.ndarray] = None,
+        detunings: Optional[np.ndarray] = None,
+        durations: Optional[np.ndarray] = None,
+        name: Optional[str] = None,
     ):
 
         self.name = name
-        if self.name is not None:
-            self.name = str(self.name)
 
-        check_none_values = [
-            (rabi_rates is None),
-            (azimuthal_angles is None),
-            (detunings is None),
-            (durations is None),
-        ]
-        all_are_none = all(value is True for value in check_none_values)
-        if all_are_none:
+        if all(
+            v is not None for v in [rabi_rates, azimuthal_angles, detunings, durations]
+        ):
             rabi_rates = np.array([np.pi])
             azimuthal_angles = np.array([0.0])
             detunings = np.array([0.0])
             durations = np.array([1.0])
-        else:
-            # some may be None while others are not
-            input_array_lengths = []
-            if not check_none_values[0]:
-                rabi_rates = np.array(rabi_rates, dtype=np.float).reshape((-1,))
-                input_array_lengths.append(rabi_rates.shape[0])
 
-            if not check_none_values[1]:
-                azimuthal_angles = np.array(azimuthal_angles, dtype=np.float).reshape(
-                    (-1,)
-                )
-                input_array_lengths.append(len(azimuthal_angles))
+        # check all non-non inputs have the same length
+        input_lengths = {
+            len(v)
+            for v in [rabi_rates, azimuthal_angles, detunings, durations]
+            if v is not None
+        }
 
-            if not check_none_values[2]:
-                detunings = np.array(detunings, dtype=np.float).reshape((-1,))
-                input_array_lengths.append(len(detunings))
+        check_arguments(
+            len(input_lengths) == 1,
+            "Rabi rates, Azimuthal angles, Detunings and Durations "
+            "must be of same length",
+            {
+                "rabi_rates": rabi_rates,
+                "azimuthal_angles": azimuthal_angles,
+                "detunings": detunings,
+                "durations": durations,
+            },
+        )
 
-            if not check_none_values[3]:
-                durations = np.array(durations, dtype=np.float).reshape((-1,))
-                input_array_lengths.append(len(durations))
+        input_length = input_lengths.pop()
 
-            # check all valid array lengths are equal
-            if max(input_array_lengths) != min(input_array_lengths):
-                raise ArgumentsValueError(
-                    "Rabi rates, Azimuthal angles, Detunings and Durations "
-                    "must be of same length",
-                    {
-                        "rabi_rates": rabi_rates,
-                        "azimuthal_angles": azimuthal_angles,
-                        "detunings": detunings,
-                        "durations": durations,
-                    },
-                )
-
-            valid_input_length = max(input_array_lengths)
-            if check_none_values[0]:
-                rabi_rates = np.zeros((valid_input_length,))
-            if check_none_values[1]:
-                azimuthal_angles = np.zeros((valid_input_length,))
-            if check_none_values[2]:
-                detunings = np.zeros((valid_input_length,))
-            if check_none_values[3]:
-                durations = np.ones((valid_input_length,))
+        if rabi_rates is None:
+            rabi_rates = np.zeros(input_length)
+        if azimuthal_angles is None:
+            azimuthal_angles = np.zeros(input_length)
+        if detunings is None:
+            detunings = np.zeros(input_length)
+        if durations is None:
+            durations = np.ones(input_length)
 
         self.rabi_rates = rabi_rates
         self.azimuthal_angles = azimuthal_angles
