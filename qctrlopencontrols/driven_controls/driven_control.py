@@ -113,10 +113,10 @@ class DrivenControl:
         if durations is None:
             durations = np.ones(input_length)
 
-        self.rabi_rates = np.array(rabi_rates)
-        self.azimuthal_angles = np.array(azimuthal_angles)
-        self.detunings = np.array(detunings)
-        self.durations = np.array(durations)
+        self.rabi_rates = np.array(rabi_rates, dtype=np.float)
+        self.azimuthal_angles = np.array(azimuthal_angles, dtype=np.float)
+        self.detunings = np.array(detunings, dtype=np.float)
+        self.durations = np.array(durations, dtype=np.float)
 
         # check if all the rabi_rates are greater than zero
         if np.any(self.rabi_rates < 0.0):
