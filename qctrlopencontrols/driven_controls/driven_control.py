@@ -138,7 +138,8 @@ class DrivenControl:
             "The number of segments must be smaller than the upper bound {}".format(
                 UPPER_BOUND_SEGMENTS
             ),
-            {"number_of_segments": len(rabi_rates)},
+            {"rabi_rates": rabi_rates},
+            extras={"number_of_segments": len(rabi_rates)},
         )
 
         # check if maximum rabi rate exceeds the upper bound
@@ -147,7 +148,8 @@ class DrivenControl:
             "Maximum rabi rate of segments must be smaller than the upper bound {}".format(
                 UPPER_BOUND_RABI_RATE
             ),
-            {"maximum_rabi_rate": np.max(rabi_rates)},
+            {"rabi_rates": rabi_rates},
+            extras={"maximum_rabi_rate": np.max(rabi_rates)},
         )
 
         # check if the maximum detuning exceeds the upper bound
@@ -156,7 +158,8 @@ class DrivenControl:
             "Maximum detuning of segments must be smaller than the upper bound {}".format(
                 UPPER_BOUND_DETUNING_RATE
             ),
-            {"maximum_detuning": np.max(detunings)},
+            {"detunings": detunings},
+            extras={"maximum_detuning": np.max(detunings)},
         )
 
         # check if maximum duration exceeds the upper bound
@@ -165,7 +168,8 @@ class DrivenControl:
             "Maximum duration of segments must be smaller than the upper bound {}".format(
                 UPPER_BOUND_DURATION
             ),
-            {"maximum_duration": np.max(durations)},
+            {"durations": durations},
+            extras={"maximum_duration": np.max(durations)},
         )
 
         # check if minimum duration is smaller than the lower bound
@@ -174,7 +178,8 @@ class DrivenControl:
             "Minimum duration of segments must be larger than the lower bound {}".format(
                 LOWER_BOUND_DURATION
             ),
-            {"minimum_duration": np.min(durations)},
+            {"durations": durations},
+            extras={"minimum_duration": np.min(durations)},
         )
 
         self.rabi_rates = rabi_rates
