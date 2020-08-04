@@ -46,16 +46,16 @@ class DrivenControl:
     ----------
     rabi_rates : numpy.ndarray, optional
         1-D array of size nx1 where n is number of segments;
-        Each entry is the rabi rate for the segment. Defaults to None
+        Each entry is the rabi rate for the segment. Defaults to None.
     azimuthal_angles : numpy.ndarray, optional
         1-D array of size nx1 where n is the number of segments;
-        Each entry is the azimuthal angle for the segment; Defaults to None
+        Each entry is the azimuthal angle for the segment; Defaults to None.
     detunings : numpy.ndarray, optional
         1-D array of size nx1 where n is the number of segments;
-        Each entry is the detuning angle for the segment; Defaults to None
+        Each entry is the detuning angle for the segment; Defaults to None.
     durations : numpy.ndarray, optional
         1-D array of size nx1 where n is the number of segments;
-        Each entry is the duration of the segment (in seconds); Defaults to None
+        Each entry is the duration of the segment (in seconds); Defaults to None.
     name : string, optional
         An optional string to name the driven control. Defaults to None.
 
@@ -85,7 +85,7 @@ class DrivenControl:
 
         # check if all non-None inputs have the same length
         input_lengths = {
-            len(v)
+            np.array(v).size
             for v in [rabi_rates, azimuthal_angles, detunings, durations]
             if v is not None
         }
@@ -113,10 +113,10 @@ class DrivenControl:
         if durations is None:
             durations = np.ones(input_length)
 
-        self.rabi_rates = np.array(rabi_rates, dtype=np.float)
-        self.azimuthal_angles = np.array(azimuthal_angles, dtype=np.float)
-        self.detunings = np.array(detunings, dtype=np.float)
-        self.durations = np.array(durations, dtype=np.float)
+        self.rabi_rates = np.array(rabi_rates, dtype=np.float).flatten()
+        self.azimuthal_angles = np.array(azimuthal_angles, dtype=np.float).flatten()
+        self.detunings = np.array(detunings, dtype=np.float).flatten()
+        self.durations = np.array(durations, dtype=np.float).flatten()
 
         # check if all the rabi_rates are greater than zero
         if np.any(self.rabi_rates < 0.0):
