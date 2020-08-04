@@ -44,16 +44,16 @@ class DrivenControl:
 
     Parameters
     ----------
-    rabi_rates : numpy.ndarray, optional
+    rabi_rates : np.ndarray, optional
         1-D array of size nx1 where n is number of segments;
         Each entry is the rabi rate for the segment. Defaults to None.
-    azimuthal_angles : numpy.ndarray, optional
+    azimuthal_angles : np.ndarray, optional
         1-D array of size nx1 where n is the number of segments;
         Each entry is the azimuthal angle for the segment; Defaults to None.
-    detunings : numpy.ndarray, optional
+    detunings : np.ndarray, optional
         1-D array of size nx1 where n is the number of segments;
         Each entry is the detuning angle for the segment; Defaults to None.
-    durations : numpy.ndarray, optional
+    durations : np.ndarray, optional
         1-D array of size nx1 where n is the number of segments;
         Each entry is the duration of the segment (in seconds); Defaults to None.
     name : string, optional
@@ -113,131 +113,148 @@ class DrivenControl:
         if durations is None:
             durations = np.ones(input_length)
 
-        self.rabi_rates = np.array(rabi_rates, dtype=np.float).flatten()
-        self.azimuthal_angles = np.array(azimuthal_angles, dtype=np.float).flatten()
-        self.detunings = np.array(detunings, dtype=np.float).flatten()
-        self.durations = np.array(durations, dtype=np.float).flatten()
+        rabi_rates = np.array(rabi_rates, dtype=np.float).flatten()
+        azimuthal_angles = np.array(azimuthal_angles, dtype=np.float).flatten()
+        detunings = np.array(detunings, dtype=np.float).flatten()
+        durations = np.array(durations, dtype=np.float).flatten()
 
         # check if all the rabi_rates are greater than zero
-        if np.any(self.rabi_rates < 0.0):
-            raise ArgumentsValueError(
-                "All rabi rates must be greater than zero.",
-                {"rabi_rates": rabi_rates},
-                extras={
-                    "azimuthal_angles": azimuthal_angles,
-                    "detunings": detunings,
-                    "durations": durations,
-                },
-            )
+        check_arguments(
+            all(rabi_rates >= 0.0),
+            "All rabi rates must be greater than zero.",
+            {"rabi_rates": rabi_rates},
+        )
 
         # check if all the durations are greater than zero
-        if np.any(self.durations <= 0):
-            raise ArgumentsValueError(
-                "Duration of driven control segments must all be greater"
-                + " than zero.",
-                {"durations": self.durations},
-            )
+        check_arguments(
+            all(durations > 0),
+            "Duration of driven control segments must all be greater than zero.",
+            {"durations": durations},
+        )
 
-        if self.number_of_segments > UPPER_BOUND_SEGMENTS:
-            raise ArgumentsValueError(
-                "The number of segments must be smaller than the upper bound:"
-                + str(UPPER_BOUND_SEGMENTS),
-                {"number_of_segments": self.number_of_segments},
-            )
+        # check if segments number exceeds the upper bound
+        check_arguments(
+            len(rabi_rates) <= UPPER_BOUND_SEGMENTS,
+            "The number of segments must be smaller than the upper bound {}".format(
+                UPPER_BOUND_SEGMENTS
+            ),
+            {"number_of_segments": len(rabi_rates)},
+        )
 
-        if self.maximum_rabi_rate > UPPER_BOUND_RABI_RATE:
-            raise ArgumentsValueError(
-                "Maximum rabi rate of segments must be smaller than the upper bound: "
-                + str(UPPER_BOUND_RABI_RATE),
-                {"maximum_rabi_rate": self.maximum_rabi_rate},
-            )
+        # check if maximum rabi rate exceeds the upper bound
+        check_arguments(
+            np.max(rabi_rates) <= UPPER_BOUND_RABI_RATE,
+            "Maximum rabi rate of segments must be smaller than the upper bound {}".format(
+                UPPER_BOUND_RABI_RATE
+            ),
+            {"maximum_rabi_rate": np.max(rabi_rates)},
+        )
 
-        if self.maximum_detuning > UPPER_BOUND_DETUNING_RATE:
-            raise ArgumentsValueError(
-                "Maximum detuning of segments must be smaller than the upper bound: "
-                + str(UPPER_BOUND_DETUNING_RATE),
-                {"maximum_detuning": self.maximum_detuning},
-            )
-        if self.maximum_duration > UPPER_BOUND_DURATION:
-            raise ArgumentsValueError(
-                "Maximum duration of segments must be smaller than the upper bound: "
-                + str(UPPER_BOUND_DURATION),
-                {"maximum_duration": self.maximum_duration},
-            )
-        if self.minimum_duration < LOWER_BOUND_DURATION:
-            raise ArgumentsValueError(
-                "Minimum duration of segments must be larger than the lower bound: "
-                + str(LOWER_BOUND_DURATION),
-                {"minimum_duration": self.minimum_duration},
-            )
+        # check if the maximum detuning exceeds the upper bound
+        check_arguments(
+            np.max(detunings) <= UPPER_BOUND_DETUNING_RATE,
+            "Maximum detuning of segments must be smaller than the upper bound {}".format(
+                UPPER_BOUND_DETUNING_RATE
+            ),
+            {"maximum_detuning": np.max(detunings)},
+        )
+
+        # check if maximum duration exceeds the upper bound
+        check_arguments(
+            np.max(durations) <= UPPER_BOUND_DURATION,
+            "Maximum duration of segments must be smaller than the upper bound {}".format(
+                UPPER_BOUND_DURATION
+            ),
+            {"maximum_duration": np.max(durations)},
+        )
+
+        # check if minimum duration is smaller than the lower bound
+        check_arguments(
+            np.min(durations) >= LOWER_BOUND_DURATION,
+            "Minimum duration of segments must be larger than the lower bound {}".format(
+                LOWER_BOUND_DURATION
+            ),
+            {"minimum_duration": np.min(durations)},
+        )
+
+        self.rabi_rates = rabi_rates
+        self.azimuthal_angles = azimuthal_angles
+        self.detunings = detunings
+        self.durations = durations
 
     @property
-    def number_of_segments(self):
-        """Returns the number of segments
+    def number_of_segments(self) -> int:
+        """
+        Returns the number of segments.
 
         Returns
         -------
         int
-            The number of segments in the driven control
+            The number of segments in the driven control.
         """
 
         return self.rabi_rates.shape[0]
 
     @property
-    def maximum_rabi_rate(self):
-        """Returns the maximum rabi rate of the control
+    def maximum_rabi_rate(self) -> float:
+        """
+        Returns the maximum rabi rate of the control.
 
         Returns
         -------
         float
-            The maximum rabi rate of the control
+            The maximum rabi rate of the control.
         """
 
         return np.amax(self.rabi_rates)
 
     @property
-    def maximum_detuning(self):
-        """Returns the maximum detuning of the control
+    def maximum_detuning(self) -> float:
+        """
+        Returns the maximum detuning of the control.
 
         Returns
         -------
         float
-            The maximum detuning of the control
+            The maximum detuning of the control.
         """
         return np.amax(self.detunings)
 
     @property
-    def amplitude_x(self):
-        """Return the X-Amplitude
+    def amplitude_x(self) -> np.ndarray:
+        """
+        Return the X-Amplitude.
 
         Returns
         -------
-        numpy.ndarray
-            X-Amplitude of each segment
+        np.ndarray
+            X-Amplitude of each segment.
         """
 
         return self.rabi_rates * np.cos(self.azimuthal_angles)
 
     @property
-    def amplitude_y(self):
-        """Return the Y-Amplitude
+    def amplitude_y(self) -> np.ndarray:
+        """
+        Return the Y-Amplitude.
 
         Returns
         -------
-        numpy.ndarray
-            Y-Amplitude of each segment
+        np.ndarray
+            Y-Amplitude of each segment.
         """
 
         return self.rabi_rates * np.sin(self.azimuthal_angles)
 
     @property
-    def angles(self):
-        """Returns the angles
+    def angles(self) -> np.ndarray:
+        """
+        Returns the angles.
 
         Returns
         -------
-        numpy.darray
-            Angles as 1-D array of floats
+        np.ndarray
+            Angles as 1-D array of floats.
         """
 
         amplitudes = np.sqrt(
@@ -248,14 +265,15 @@ class DrivenControl:
         return angles
 
     @property
-    def directions(self):
+    def directions(self) -> np.ndarray:
 
-        """Returns the directions
+        """
+        Returns the directions.
 
         Returns
         -------
-        numpy.ndarray
-            Directions as 1-D array of floats
+        np.ndarray
+            Directions as 1-D array of floats.
         """
         amplitudes = np.sqrt(
             self.amplitude_x ** 2 + self.amplitude_y ** 2 + self.detunings ** 2
@@ -285,50 +303,54 @@ class DrivenControl:
         return directions
 
     @property
-    def times(self):
-        """Returns the time of each segment within the duration
-        of the control
+    def times(self) -> np.ndarray:
+        """
+        Returns the time of each segment within the duration
+        of the control.
 
         Returns
         ------
-        numpy.ndarray
-            Segment times as 1-D array of floats
+        np.ndarray
+            Segment times as 1-D array of floats.
         """
 
         return np.insert(np.cumsum(self.durations), 0, 0.0)
 
     @property
-    def maximum_duration(self):
-        """Returns the maximum duration of all the control segments
+    def maximum_duration(self) -> float:
+        """
+        Returns the maximum duration of all the control segments.
 
         Returns
         -------
         float
-            The maximum duration of all the control segments
+            The maximum duration of all the control segments.
         """
 
         return np.amax(self.durations)
 
     @property
-    def minimum_duration(self):
-        """Returns the minimum duration of all the control segments
+    def minimum_duration(self) -> float:
+        """
+        Returns the minimum duration of all the control segments.
 
         Returns
         -------
         float
-            The minimum duration of all the controls segments
+            The minimum duration of all the controls segments.
         """
 
         return np.amin(self.durations)
 
     @property
-    def duration(self):
-        """Returns the total duration of the control
+    def duration(self) -> float:
+        """
+        Returns the total duration of the control.
 
         Returns
         -------
         float
-            Total duration of the control
+            Total duration of the control.
         """
 
         return np.sum(self.durations)
@@ -632,8 +654,11 @@ class DrivenControl:
         return driven_control_string
 
     def __repr__(self):
-        """Returns a string representation for the object. The returned string looks like a valid
-        Python expression that could be used to recreate the object, including default arguments.
+        """
+        Returns a string representation for the object.
+
+        The returned string looks like a valid Python expression that could be used to recreate
+        the object, including default arguments.
 
         Returns
         -------
