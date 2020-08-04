@@ -76,15 +76,14 @@ class DrivenControl:
 
         self.name = name
 
-        if all(
-            v is not None for v in [rabi_rates, azimuthal_angles, detunings, durations]
-        ):
+        # set default values if all inputs are ``None``
+        if all(v is None for v in [rabi_rates, azimuthal_angles, detunings, durations]):
             rabi_rates = np.array([np.pi])
             azimuthal_angles = np.array([0.0])
             detunings = np.array([0.0])
             durations = np.array([1.0])
 
-        # check all non-non inputs have the same length
+        # check if all non-None inputs have the same length
         input_lengths = {
             len(v)
             for v in [rabi_rates, azimuthal_angles, detunings, durations]
@@ -114,13 +113,13 @@ class DrivenControl:
         if durations is None:
             durations = np.ones(input_length)
 
-        self.rabi_rates = rabi_rates
-        self.azimuthal_angles = azimuthal_angles
-        self.detunings = detunings
-        self.durations = durations
+        self.rabi_rates = np.array(rabi_rates)
+        self.azimuthal_angles = np.array(azimuthal_angles)
+        self.detunings = np.array(detunings)
+        self.durations = np.array(durations)
 
         # check if all the rabi_rates are greater than zero
-        if np.any(rabi_rates < 0.0):
+        if np.any(self.rabi_rates < 0.0):
             raise ArgumentsValueError(
                 "All rabi rates must be greater than zero.",
                 {"rabi_rates": rabi_rates},
@@ -132,7 +131,7 @@ class DrivenControl:
             )
 
         # check if all the durations are greater than zero
-        if np.any(durations <= 0):
+        if np.any(self.durations <= 0):
             raise ArgumentsValueError(
                 "Duration of driven control segments must all be greater"
                 + " than zero.",

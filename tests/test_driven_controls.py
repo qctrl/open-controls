@@ -335,7 +335,7 @@ def test_pretty_print():
     _maximum_detuning = 1.0
     _rabi_rates = [0.0, 0.0, 0.0]
     _azimuthal_angles = [0, np.pi / 2, -np.pi / 2]
-    _detunings = [0, 1, 0]
+    _detunings = [0, 1.0, 0]
     _durations = [1.0, 1.0, 1.0]
 
     driven_control = DrivenControl(
@@ -376,7 +376,7 @@ def test_pretty_print():
     _maximum_detuning = 0.0
     _rabi_rates = [np.pi, 2 * np.pi, np.pi]
     _azimuthal_angles = [0, np.pi / 2, -np.pi / 2]
-    _detunings = [0, 0.0, 0]
+    _detunings = [0.0, 0.0, 0.0]
     _durations = [1.0, 1.0, 1.0]
 
     driven_control = DrivenControl(
