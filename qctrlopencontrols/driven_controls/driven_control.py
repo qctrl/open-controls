@@ -20,7 +20,7 @@ from typing import Optional
 
 import numpy as np
 
-from ..driven_controls import (
+from ..constants import (
     LOWER_BOUND_DURATION,
     UPPER_BOUND_DETUNING_RATE,
     UPPER_BOUND_DURATION,

@@ -21,11 +21,14 @@ import numpy as np
 import pytest
 
 from qctrlopencontrols import new_predefined_dds
-from qctrlopencontrols.dynamic_decoupling_sequences import (
+from qctrlopencontrols.constants import (
     CARR_PURCELL,
     CARR_PURCELL_MEIBOOM_GILL,
     PERIODIC_SINGLE_AXIS,
     QUADRATIC,
+    SIGMA_X,
+    SIGMA_Y,
+    SIGMA_Z,
     SPIN_ECHO,
     UHRIG_SINGLE_AXIS,
     WALSH_SINGLE_AXIS,
@@ -33,10 +36,6 @@ from qctrlopencontrols.dynamic_decoupling_sequences import (
     XY_CONCATENATED,
 )
 from qctrlopencontrols.exceptions import ArgumentsValueError
-
-SIGMA_X = np.array([[0.0, 1.0], [1.0, 0.0]])
-SIGMA_Y = np.array([[0.0, -1.0j], [1.0j, 0.0]])
-SIGMA_Z = np.array([[1.0, 0.0], [0.0, -1.0]])
 
 
 def test_ramsey():

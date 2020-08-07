@@ -20,7 +20,7 @@ import numpy as np
 import pytest
 
 from qctrlopencontrols import new_predefined_driven_control
-from qctrlopencontrols.driven_controls import (
+from qctrlopencontrols.constants import (
     BB1,
     CORPSE,
     CORPSE_IN_BB1,

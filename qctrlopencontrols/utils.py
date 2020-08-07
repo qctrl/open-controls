@@ -15,7 +15,6 @@
 """
 Miscellaneous functions and dataclasses.
 """
-
 from enum import Enum
 
 from .exceptions import ArgumentsValueError

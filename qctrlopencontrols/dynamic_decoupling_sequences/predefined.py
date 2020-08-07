@@ -23,7 +23,7 @@ from typing import (
 
 import numpy as np
 
-from ..dynamic_decoupling_sequences import (
+from ..constants import (
     CARR_PURCELL,
     CARR_PURCELL_MEIBOOM_GILL,
     PERIODIC_SINGLE_AXIS,
