@@ -25,10 +25,10 @@ import numpy as np
 
 from ..constants import (
     UPPER_BOUND_DETUNING_RATE,
+    UPPER_BOUND_OFFSETS,
     UPPER_BOUND_RABI_RATE,
 )
 from ..driven_controls.driven_control import DrivenControl
-from ..dynamic_decoupling_sequences import UPPER_BOUND_OFFSETS
 from ..exceptions import ArgumentsValueError
 from ..utils import (
     Coordinate,
