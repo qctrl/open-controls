@@ -26,7 +26,7 @@ from typing import (
 
 import numpy as np
 
-from ..driven_controls import (
+from ..constants import (
     BB1,
     CORPSE,
     CORPSE_IN_BB1,

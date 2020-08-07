@@ -23,7 +23,7 @@ from typing import (
 
 import numpy as np
 
-from ..driven_controls import (
+from ..constants import (
     UPPER_BOUND_DETUNING_RATE,
     UPPER_BOUND_RABI_RATE,
 )
