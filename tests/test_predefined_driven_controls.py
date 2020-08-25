@@ -680,7 +680,7 @@ def test_modulated_gaussian_control_give_identity_gate():
     effect should be an identity gate.
     """
 
-    maximum_rabi_rate = 10 * 2 * np.pi
+    maximum_rabi_rate = 50 * 2 * np.pi
     minimum_segment_duration = 0.02
     maximum_duration = 0.2
 
