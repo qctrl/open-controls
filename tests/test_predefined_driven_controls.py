@@ -28,9 +28,11 @@ from qctrlopencontrols.constants import (
     CORPSE_IN_SK1,
     PRIMITIVE,
     SCROFULOUS,
+    SIGMA_X,
     SK1,
     WAMF1,
 )
+from qctrlopencontrols.driven_controls.predefined import new_modulated_gaussian_control
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
 
@@ -592,3 +594,117 @@ def test_walsh_control():
     )
 
     assert np.allclose(pi_on_4_segments, _pi_on_4_segments)
+
+
+def test_modulated_gaussian_control():
+    """
+    Tests modulated Gaussian control at different modulate frequencies.
+    """
+    maximum_rabi_rate = 20 * 2 * np.pi
+    minimum_segment_duration = 0.01
+    maximum_duration = 0.2
+
+    # set modulation frequency to 0
+    pulses_zero = new_modulated_gaussian_control(
+        maximum_rabi_rate=maximum_rabi_rate,
+        minimum_segment_duration=minimum_segment_duration,
+        duration=maximum_duration,
+        modulation_frequency=0,
+    )
+    pulse_zero_segments = [
+        {"duration": d, "value": np.real(v)}
+        for d, v in zip(
+            pulses_zero.durations,
+            pulses_zero.rabi_rates * np.exp(1j * pulses_zero.azimuthal_angles),
+        )
+    ]
+
+    # set modulation frequency to 50/3
+    pulses_non_zero = new_modulated_gaussian_control(
+        maximum_rabi_rate=maximum_rabi_rate,
+        minimum_segment_duration=minimum_segment_duration,
+        duration=maximum_duration,
+        modulation_frequency=50 / 3,
+    )
+    pulse_non_zero_segments = [
+        {"duration": d, "value": np.real(v)}
+        for d, v in zip(
+            pulses_non_zero.durations,
+            pulses_non_zero.rabi_rates * np.exp(1j * pulses_non_zero.azimuthal_angles),
+        )
+    ]
+
+    # pulses should have 20 segments; 0.2/0.01 = 20
+    assert len(pulse_zero_segments) == 20
+    assert len(pulse_non_zero_segments) == 20
+
+    # determine the segment mid-points
+    segment_mid_points = 0.2 / 20 * (0.5 + np.arange(20))
+    base_gaussian_mean = maximum_duration * 0.5
+    base_gaussian_width = maximum_duration * 0.1
+    base_gaussian = np.exp(
+        -0.5 * ((segment_mid_points - base_gaussian_mean) / base_gaussian_width) ** 2.0
+    ) / (np.sqrt(2 * np.pi) * base_gaussian_width)
+
+    # for modulation at frequency = 0
+    segment_values = np.array([p["value"] for p in pulse_zero_segments])
+    segment_durations = np.array([p["duration"] for p in pulse_zero_segments])
+    # The base Gaussian creates a rotation of 1rad and has maximum value
+    # 1/(sqrt(2pi)*0.2*0.1)=~19.9. Therefore, with a maximum Rabi rate of 20*2pi, we can achieve
+    # only a single 2pi rotation, which corresponds to scaling up the Gaussian by 2pi.
+    expected_gaussian = 2 * np.pi * base_gaussian
+
+    assert np.allclose(segment_values, expected_gaussian)
+    assert np.allclose(segment_durations, 0.2 / 20)
+
+    # for modulation at frequency = 50/3
+    segment_values = np.array([segment["value"] for segment in pulse_non_zero_segments])
+    segment_durations = np.array(
+        [segment["duration"] for segment in pulse_non_zero_segments]
+    )
+    expected_base_segments = base_gaussian * np.sin(
+        2 * np.pi * (50 / 3) * (segment_mid_points - 0.2 / 2)
+    )
+    expected_base_segments /= np.max(expected_base_segments)
+    expected_base_segments *= maximum_rabi_rate
+
+    assert np.allclose(segment_values, expected_base_segments)
+    assert np.allclose(segment_durations, 0.2 / 20)
+
+
+def test_modulated_gaussian_control_give_identity_gate():
+    """
+    Tests that the modulated Gaussian sequences produce identity gates when simulated.
+
+    Apply the modulated sequences to drive a noiseless qubit rotating along X, the net
+    effect should be an identity gate.
+    """
+
+    maximum_rabi_rate = 10 * 2 * np.pi
+    minimum_segment_duration = 0.02
+    maximum_duration = 0.2
+
+    pulses = [
+        new_modulated_gaussian_control(
+            maximum_rabi_rate=maximum_rabi_rate,
+            minimum_segment_duration=minimum_segment_duration,
+            duration=maximum_duration,
+            modulation_frequency=f,
+        )
+        for f in [0, 20]
+    ]
+
+    unitaries = [
+        np.linalg.multi_dot(
+            [
+                np.cos(d * v) * np.eye(2) + 1j * np.sin(d * v) * SIGMA_X
+                for d, v in zip(
+                    p.durations, p.rabi_rates * np.exp(1j * p.azimuthal_angles),
+                )
+            ]
+        )
+        for p in pulses
+    ]
+
+    for _u in unitaries:
+        assert np.allclose(_u, np.eye(2))
