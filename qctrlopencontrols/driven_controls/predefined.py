@@ -822,7 +822,8 @@ def new_modulated_gaussian_control(
     modulation_frequency: float,
 ) -> DrivenControl:
     """
-    Generate a Gaussian driven control sequence modulated by a since signal.
+    Generate a Gaussian driven control sequence modulated by a sinusoidal signal at a specific
+    frequency.
 
     The net effect of this control sequence is an identity gate.
 
@@ -869,6 +870,17 @@ def new_modulated_gaussian_control(
 
     # default mean of the gaussian shaped pulse as a fraction of its duration
     _pulse_mean = 0.5
+
+    min_required_upper_bound = np.sqrt(2 * np.pi) / (_pulse_width * duration)
+    check_arguments(
+        maximum_rabi_rate >= min_required_upper_bound,
+        "Maximum Rabi rate must be large enough to permit a 2Pi rotation.",
+        {"maximum_rabi_rate": maximum_rabi_rate},
+        extras={
+            "minimum required value for upper_bound "
+            "(sqrt(2pi)/(0.1*maximum_duration))": min_required_upper_bound
+        },
+    )
 
     segment_start_times = np.arange(0, duration, minimum_segment_duration)
     segment_num = len(segment_start_times)
