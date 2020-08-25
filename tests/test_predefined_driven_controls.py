@@ -674,9 +674,9 @@ def test_modulated_gaussian_control():
 
 def test_modulated_gaussian_control_give_identity_gate():
     """
-    Tests that the modulated Gaussian sequences produce identity gates when simulated.
+    Tests that the modulated Gaussian sequences produce identity gates.
 
-    Apply the modulated sequences to drive a noiseless qubit rotating along X, the net
+    Apply the modulated sequences to drive a noiseless qubit rotating along X. The net
     effect should be an identity gate.
     """
 
