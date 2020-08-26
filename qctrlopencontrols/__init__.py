@@ -19,7 +19,10 @@ Top-level package for Q-CTRL Open Controls.
 __version__ = "4.6.0"
 
 from .driven_controls.driven_control import DrivenControl
-from .driven_controls.predefined import new_predefined_driven_control
+from .driven_controls.predefined import (
+    new_modulated_gaussian_control,
+    new_predefined_driven_control,
+)
 from .dynamic_decoupling_sequences.dynamic_decoupling_sequence import (
     DynamicDecouplingSequence,
     convert_dds_to_driven_control,
@@ -29,6 +32,7 @@ from .dynamic_decoupling_sequences.predefined import new_predefined_dds
 __all__ = [
     "convert_dds_to_driven_control",
     "new_predefined_dds",
+    "new_modulated_gaussian_control",
     "new_predefined_driven_control",
     "DrivenControl",
     "DynamicDecouplingSequence",
