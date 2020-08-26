@@ -883,15 +883,15 @@ def new_modulated_gaussian_control(
     )
 
     # work out exact segment duration
-    segment_num = int(np.ceil(duration / minimum_segment_duration))
-    segment_duration = duration / segment_num
-    segment_start_times = np.arange(segment_num) * segment_duration
+    segment_count = int(np.ceil(duration / minimum_segment_duration))
+    segment_duration = duration / segment_count
+    segment_start_times = np.arange(segment_count) * segment_duration
     segment_midpoints = segment_start_times + segment_duration / 2
 
     # prepare a base gaussian shaped pulse
     gaussian_mean = _pulse_mean * duration
     gaussian_width = _pulse_width * duration
-    base_gaussian_segments = (1.0 / gaussian_width / np.sqrt(2 * np.pi)) * np.exp(
+    base_gaussian_segments = np.exp(
         -0.5 * ((segment_midpoints - gaussian_mean) / gaussian_width) ** 2
     )
 
@@ -936,5 +936,5 @@ def new_modulated_gaussian_control(
     return DrivenControl(
         rabi_rates=np.abs(modulated_gaussian_segments),
         azimuthal_angles=azimuthal_angles,
-        durations=np.array([segment_duration] * segment_num),
+        durations=np.array([segment_duration] * segment_count),
     )
