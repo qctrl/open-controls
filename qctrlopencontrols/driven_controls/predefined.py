@@ -38,6 +38,7 @@ from ..constants import (
     WAMF1,
 )
 from ..exceptions import ArgumentsValueError
+from ..utils import check_arguments
 from .driven_control import DrivenControl
 
 
@@ -811,4 +812,129 @@ def _new_walsh_amplitude_modulated_filter_1_control(
         detunings=detunings,
         durations=durations,
         **kwargs,
+    )
+
+
+def new_modulated_gaussian_control(
+    maximum_rabi_rate: float,
+    minimum_segment_duration: float,
+    duration: float,
+    modulation_frequency: float,
+) -> DrivenControl:
+    """
+    Generate a Gaussian driven control sequence modulated by a sinusoidal signal at a specific
+    frequency.
+
+    The net effect of this control sequence is an identity gate.
+
+    Parameters
+    ----------
+    maximum_rabi_rate: float
+        Maximum Rabi rate of the system.
+
+    minimum_segment_duration : float
+        Minimum length of each segment in the control sequence.
+
+    duration : float
+        Total duration of the control sequence.
+
+    modulation_frequency: float
+        Frequency of the modulation sinusoidal signal.
+
+    Returns
+    -------
+    DrivenControl
+        A control sequence as an instance of DrivenControl.
+    """
+
+    check_arguments(
+        maximum_rabi_rate > 0.0,
+        "Maximum Rabi rate must be greater than zero.",
+        {"maximum_rabi_rate": maximum_rabi_rate},
+    )
+
+    check_arguments(
+        minimum_segment_duration > 0.0,
+        "Minimum segment duration must be greater than zero.",
+        {"minimum_segment_duration": minimum_segment_duration},
+    )
+
+    check_arguments(
+        duration > minimum_segment_duration,
+        "Total duration must be greater than minimum segment duration.",
+        {"duration": duration, "minimum_segment_duration": minimum_segment_duration,},
+    )
+
+    # default spread of the gaussian shaped pulse as a fraction of its duration
+    _pulse_width = 0.1
+
+    # default mean of the gaussian shaped pulse as a fraction of its duration
+    _pulse_mean = 0.5
+
+    min_required_upper_bound = np.sqrt(2 * np.pi) / (_pulse_width * duration)
+    check_arguments(
+        maximum_rabi_rate >= min_required_upper_bound,
+        "Maximum Rabi rate must be large enough to permit a 2Pi rotation.",
+        {"maximum_rabi_rate": maximum_rabi_rate},
+        extras={
+            "minimum required value for upper_bound "
+            "(sqrt(2pi)/(0.1*maximum_duration))": min_required_upper_bound
+        },
+    )
+
+    # work out exact segment duration
+    segment_count = int(np.ceil(duration / minimum_segment_duration))
+    segment_duration = duration / segment_count
+    segment_start_times = np.arange(segment_count) * segment_duration
+    segment_midpoints = segment_start_times + segment_duration / 2
+
+    # prepare a base gaussian shaped pulse
+    gaussian_mean = _pulse_mean * duration
+    gaussian_width = _pulse_width * duration
+    base_gaussian_segments = np.exp(
+        -0.5 * ((segment_midpoints - gaussian_mean) / gaussian_width) ** 2
+    )
+
+    if modulation_frequency != 0:
+        # prepare the modulation signals. We use sinusoids that are zero at the center of the pulse,
+        # which ensures the pulses are antisymmetric about the center of the pulse and thus effect
+        # a net zero rotation.
+        modulation_signals = np.sin(
+            2.0 * np.pi * modulation_frequency * (segment_midpoints - duration / 2)
+        )
+        # modulate the base gaussian
+        modulated_gaussian_segments = base_gaussian_segments * modulation_signals
+
+        # maximum segment value
+        pulse_segments_maximum = np.max(modulated_gaussian_segments)
+        # normalize to maximum Rabi rate
+        modulated_gaussian_segments = (
+            maximum_rabi_rate * modulated_gaussian_segments / pulse_segments_maximum
+        )
+    else:
+        # for the zero-frequency pulse, we need to produce the largest possible full rotation (i.e.
+        # multiple of 2pi) while respecting the maximum Rabi rate. Note that if the maximum Rabi
+        # rate does not permit even a single rotation (which could happen to a small degree due to
+        # discretization issues) then we allow values to exceed the maximum Rabi rate.
+        normalized_gaussian_segments = base_gaussian_segments / np.max(
+            base_gaussian_segments
+        )
+        maximum_rotation_angle = (
+            segment_duration * np.sum(normalized_gaussian_segments) * maximum_rabi_rate
+        )
+        maximum_full_rotation_angle = max(
+            maximum_rotation_angle - maximum_rotation_angle % (2 * np.pi), 2 * np.pi
+        )
+        modulated_gaussian_segments = (
+            normalized_gaussian_segments
+            * maximum_rabi_rate
+            * (maximum_full_rotation_angle / maximum_rotation_angle)
+        )
+
+    azimuthal_angles = [0 if v >= 0 else np.pi for v in modulated_gaussian_segments]
+
+    return DrivenControl(
+        rabi_rates=np.abs(modulated_gaussian_segments),
+        azimuthal_angles=azimuthal_angles,
+        durations=np.array([segment_duration] * segment_count),
     )
