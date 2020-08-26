@@ -920,9 +920,7 @@ def new_modulated_gaussian_control(
             base_gaussian_segments
         )
         maximum_rotation_angle = (
-            minimum_segment_duration
-            * np.sum(normalized_gaussian_segments)
-            * maximum_rabi_rate
+            segment_duration * np.sum(normalized_gaussian_segments) * maximum_rabi_rate
         )
         maximum_full_rotation_angle = max(
             maximum_rotation_angle - maximum_rotation_angle % (2 * np.pi), 2 * np.pi
