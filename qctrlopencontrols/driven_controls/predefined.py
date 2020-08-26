@@ -882,16 +882,11 @@ def new_modulated_gaussian_control(
         },
     )
 
-    segment_start_times = np.arange(0, duration, minimum_segment_duration)
-    segment_num = len(segment_start_times)
-    segment_midpoints = minimum_segment_duration / 2 + segment_start_times
-
-    # prepare the modulation signals. We use sinusoids that are zero at the center of the pulse,
-    # which ensures the pulses are antisymmetric about the center of the pulse and thus effect a net
-    # zero rotation.
-    modulation_signals = np.sin(
-        2.0 * np.pi * modulation_frequency * (segment_midpoints - duration / 2)
-    )
+    # work out exact segment duration
+    segment_num = int(np.ceil(duration / minimum_segment_duration))
+    segment_duration = duration / segment_num
+    segment_start_times = np.arange(segment_num) * segment_duration
+    segment_midpoints = segment_start_times + segment_duration / 2
 
     # prepare a base gaussian shaped pulse
     gaussian_mean = _pulse_mean * duration
@@ -901,6 +896,12 @@ def new_modulated_gaussian_control(
     )
 
     if modulation_frequency != 0:
+        # prepare the modulation signals. We use sinusoids that are zero at the center of the pulse,
+        # which ensures the pulses are antisymmetric about the center of the pulse and thus effect
+        # a net zero rotation.
+        modulation_signals = np.sin(
+            2.0 * np.pi * modulation_frequency * (segment_midpoints - duration / 2)
+        )
         # modulate the base gaussian
         modulated_gaussian_segments = base_gaussian_segments * modulation_signals
 
@@ -937,5 +938,5 @@ def new_modulated_gaussian_control(
     return DrivenControl(
         rabi_rates=np.abs(modulated_gaussian_segments),
         azimuthal_angles=azimuthal_angles,
-        durations=np.array([minimum_segment_duration] * segment_num),
+        durations=np.array([segment_duration] * segment_num),
     )
