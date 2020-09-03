@@ -33,9 +33,15 @@ jobs:
     - name: Run Black
       run: |
         ./ci docker run qctrl/python-build:3.7 poetry run black -- --check .
+    - name: Run isort
+      run: |
+        ./ci docker run qctrl/python-build:3.7 poetry run isort -- --check -vb
     - name: Run Pylint
       run: |
         ./ci docker run qctrl/python-build:3.7 poetry run pylint_runner
+    - name: Run Mypy
+      run: |
+        ./ci docker run qctrl/python-build:3.7 poetry run mypy
 
   pytest:
     runs-on: ubuntu-latest
