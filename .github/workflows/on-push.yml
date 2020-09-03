@@ -89,9 +89,9 @@ jobs:
     - name: Update Sphinx deployment in Kubernetes (Development)
       if: github.ref == 'refs/heads/master'
       run: |
-        ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci vault gcpKey -t $(cat .token) --proj q-ctrl-documentation -r docs -o ./gcloud-service-key.json
-        gcloud auth activate-service-account --key-file=./gcloud-service-key.json
-        gcloud config set project q-ctrl-documentation
-        gcloud container clusters get-credentials docs-development --zone us-central1-c
-        kubectl -n docs-dev rollout restart deployment/python-open-controls-docs
+        ./ci vault awsKey -t $(cat .token) -r deploy-eks-dev -o ./.aws-credentials
+        ./ci docker run qctrl/google-alpine sh -- -c '
+          . ./.aws-credentials;
+          aws eks update-kubeconfig --alias hidden --name platform-dev --region us-east-1;
+          kubectl -n qctrl-platform set image deployment/python-open-controls-docs python-open-controls-docs=qctrl/python-open-controls-docs:$COMMIT;
+        '
