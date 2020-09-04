@@ -49,7 +49,7 @@ def new_predefined_driven_control(scheme: str = PRIMITIVE, **kwargs):
     Parameters
     ----------
     scheme : string, optional
-        The name of the driven control type, supported options are:
+        The name of the driven control type. The available options are:
 
         - 'primitive'
         - 'BB1'
@@ -62,7 +62,6 @@ def new_predefined_driven_control(scheme: str = PRIMITIVE, **kwargs):
         - 'CORPSE in SCROFULOUS'
 
         Defaults to 'primitive'.
-
     kwargs : dict, optional
         Additional keyword argument to create the control.
 
