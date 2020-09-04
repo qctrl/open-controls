@@ -14,9 +14,6 @@
 
 """
 Module for defining commonly used driven controls.
-
-More information and publication references to all driven controls defined here
-can be found at https://docs.q-ctrl.com/wiki/control-library
 """
 
 from typing import (
@@ -67,7 +64,7 @@ def new_predefined_driven_control(scheme: str = PRIMITIVE, **kwargs):
 
     Returns
     -------
-    qctrlopencontrols.DrivenControls
+    DrivenControl
         A driven control corresponding to `scheme`.
 
     Raises
@@ -217,25 +214,34 @@ def _new_primitive_control(
     maximum_rabi_rate: float = 2.0 * np.pi,
     **kwargs
 ) -> DrivenControl:
-    """
-    Primitive driven control.
+    r"""
+    Creates a primitive (square) driven control.
 
     Parameters
     ----------
     rabi_rotation : float
-        The total rabi rotation to be performed by the driven control.
+        The total Rabi rotation :math:`\theta` to be performed by the driven control.
     maximum_rabi_rate : float, optional
-        Defaults to 2.*np.pi
-        The maximum rabi frequency for the driven control.
+        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
-        The azimuthal position of the driven control. Defaults to 0.
+        The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     kwargs : dict
-        Other keywords required to make a qctrlopencontrols.DrivenControls.
+        Other keywords required to make a :py:obj:`DrivenControl`.
 
     Returns
     -------
-    qctrlopencontrols.DrivenControl
-        The driven control.
+    DrivenControl
+        The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
+
+    Notes
+    -----
+    A primitive driven control consists of a single control segment:
+
+    .. csv-table::
+       :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
+
+       :math:`\theta/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
     """
 
     (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
@@ -257,26 +263,50 @@ def _new_bb1_control(
     maximum_rabi_rate: float = 2.0 * np.pi,
     **kwargs
 ) -> DrivenControl:
-    """
-    Wimperis or BB1 control.
+    r"""
+    Creates a BB1 (Wimperis) driven control.
+
+    BB1 driven controls are robust to low-frequency noise sources that perturb the amplitude of
+    the control field.
 
     Parameters
     ----------
-    rabi_rotation : float, optional
-        The total rabi rotation to be performed by the control.
+    rabi_rotation : float
+        The total Rabi rotation :math:`\theta` to be performed by the driven control.
     maximum_rabi_rate : float, optional
-        Defaults to 2.*np.pi
-        The maximum rabi frequency for the control.
+        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
-        Defaults to 0.
-        The azimuthal position of the control.
+        The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     kwargs : dict
-        Other keywords required to make a qctrlopencontrols.DrivenControls.
+        Other keywords required to make a :py:obj:`DrivenControl`.
 
     Returns
     -------
-    qctrlopencontrols.DrivenControl
-        The driven control.
+    DrivenControl
+        The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
+
+    Notes
+    -----
+    A BB1 driven control [#]_ consists of four control segments:
+
+    .. csv-table::
+       :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
+
+       :math:`\theta/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
+       :math:`\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_*`, :math:`0`
+       :math:`2\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+3\phi_*`,:math:`0`
+       :math:`\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_*`, :math:`0`
+
+    where
+
+    .. math::
+        \phi_* = \cos^{-1} \left( -\frac{\theta}{4\pi} \right).
+
+    References
+    ----------
+    .. [#] `S. Wimperis, Journal of Magnetic Resonance, Series A 109, 2 (1994).
+        <https://doi.org/10.1006/jmra.1994.1159>`_
     """
     (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
         azimuthal_angle, rabi_rotation, maximum_rabi_rate
@@ -312,26 +342,51 @@ def _new_sk1_control(
     maximum_rabi_rate: float = 2.0 * np.pi,
     **kwargs
 ) -> DrivenControl:
-    """
-    First-order Solovay-Kitaev control, also known as SK1.
+    r"""
+    Creates a first order Solovay-Kitaev (SK1) driven control.
+
+    SK1 driven controls are robust to low-frequency noise sources that perturb the amplitude of
+    the control field.
 
     Parameters
     ----------
-    rabi_rotation : float, optional
-        The total rabi rotation to be performed by the control.
+    rabi_rotation : float
+        The total Rabi rotation :math:`\theta` to be performed by the driven control.
     maximum_rabi_rate : float, optional
-        Defaults to 2.*np.pi
-        The maximum rabi frequency for the control.
+        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
-        Defaults to 0.
-        The azimuthal position of the control.
+        The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     kwargs : dict
-        Other keywords required to make a qctrlopencontrols.DrivenControls.
+        Other keywords required to make a :py:obj:`DrivenControl`.
 
     Returns
     -------
-    qctrlopencontrols.DrivenControl
-        The driven control.
+    DrivenControl
+        The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
+
+    Notes
+    -----
+    An SK1 driven control [#]_ [#]_ consists of three control segments:
+
+    .. csv-table::
+       :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
+
+       :math:`\theta/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
+       :math:`2\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi-\phi_*`, :math:`0`
+       :math:`2\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_*`, :math:`0`
+
+    where
+
+    .. math::
+        \phi_* = \cos^{-1} \left( -\frac{\theta}{4\pi} \right).
+
+    References
+    ----------
+    .. [#] `K. R. Brown, A. W. Harrow, and I. L. Chuang, Physical Review A 70, 052318 (2004).
+        <https://doi.org/10.1103/PhysRevA.70.052318>`_
+    .. [#] `K. R. Brown, A. W. Harrow, and I. L. Chuang, Physical Review A 72, 039905 (2005).
+        <https://doi.org/10.1103/PhysRevA.72.039905>`_
     """
     (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
         azimuthal_angle, rabi_rotation, maximum_rabi_rate
@@ -366,31 +421,59 @@ def _new_scrofulous_control(
     maximum_rabi_rate: float = 2.0 * np.pi,
     **kwargs
 ) -> DrivenControl:
-    """
-    SCROFULOUS control to compensate for pulse length errors.
+    r"""
+    Creates a Short Composite ROtation For Undoing Length Over and Under Shoot (SCROFULOUS) driven
+    control.
+
+    SCROFULOUS driven controls are robust to low-frequency noise sources that perturb the amplitude
+    of the control field.
 
     Parameters
     ----------
     rabi_rotation : float
-        The total rabi rotation to be performed by the control.
+        The total Rabi rotation :math:`\theta` to be performed by the driven control. Must be either
+        :math:`\pi/4`, :math:`\pi/2`, or :math:`\pi`.
     maximum_rabi_rate : float, optional
-        Defaults to 2.*np.pi
-        The maximum rabi frequency for the control.
+        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
-        Defaults to 0.
-        The azimuthal position of the control.
+        The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     kwargs : dict
-        Other keywords required to make a qctrlopencontrols.DrivenControls.
+        Other keywords required to make a :py:obj:`DrivenControl`.
 
     Returns
     -------
-    qctrlopencontrols.DrivenControl
-        The driven control.
+    DrivenControl
+        The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
 
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
+    Notes
+    -----
+    A SCROFULOUS driven control [#]_ consists of three control segments:
+
+    .. csv-table::
+       :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
+
+       :math:`\theta_1/\Omega_{\rm max}`, :math:`\Omega_\rm{max}`, :math:`\phi+\phi_1`, :math:`0`
+       :math:`\theta_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_2`, :math:`0`
+       :math:`\theta_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_3`, :math:`0`
+
+    where
+
+    .. math::
+        \theta_1 &= \theta_3 = \mathrm{sinc}^{-1} \left[\frac{2\cos (\theta/2)}{\pi}\right]
+
+        \theta_2 &= \pi
+
+        \phi_1 &= \phi_3 = \cos^{-1}\left[ \frac{-\pi\cos(\theta_1)}{2\theta_1\sin(\theta/2)}\right]
+
+        \phi_2 &= \phi_1 - \cos^{-1} (-\pi/2\theta_1),
+
+    and :math:`\mathrm{sinc}(x)=\sin(x)/x` is the unnormalized sinc function.
+
+    References
+    ----------
+    .. [#] `H. K. Cummins, G. Llewellyn, and J. A. Jones, Physical Review A 67, 042308 (2003).
+        <https://doi.org/10.1103/PhysRevA.67.042308>`_
     """
     (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
         azimuthal_angle, rabi_rotation, maximum_rabi_rate
@@ -457,26 +540,54 @@ def _new_corpse_control(
     maximum_rabi_rate: float = 2.0 * np.pi,
     **kwargs
 ) -> DrivenControl:
-    """
-    Compensating for off resonance with a pulse sequence, often abbreviated as CORPSE.
+    r"""
+    Creates a Compensating for Off-Resonance with a Pulse SEquence (CORPSE) driven control.
+
+    CORPSE driven controls are robust to low-frequency dephasing noise.
 
     Parameters
     ----------
     rabi_rotation : float
-        The total rabi rotation to be performed by the control.
+        The total Rabi rotation :math:`\theta` to be performed by the driven control.
     maximum_rabi_rate : float, optional
-        Defaults to 2*np.pi.
-        The maximum rabi frequency for the control.
+        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
-        Defaults to 0.
-        The azimuthal position of the control.
+        The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     kwargs : dict
-        Other keywords required to make a qctrlopencontrols.DrivenControls.
+        Other keywords required to make a :py:obj:`DrivenControl`.
 
     Returns
     -------
-    qctrlopencontrols.DrivenControl
-        The driven control.
+    DrivenControl
+        The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
+
+    Notes
+    -----
+    A CORPSE driven control [#]_ [#]_ consists of three control segments:
+
+    .. csv-table::
+       :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
+
+       :math:`\theta_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
+       :math:`\theta_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\pi`, :math:`0`
+       :math:`\theta_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
+
+    where
+
+    .. math::
+        \theta_1 &= 2\pi + \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
+
+        \theta_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
+
+        \theta_3 &= \frac{\theta}{2} - \left[ \frac{\sin(\theta/2)}{2}\right].
+
+    References
+    ----------
+    .. [#] `H. K. Cummins and J. A. Jones, New Journal of Physics 2 (2000).
+        <https://doi.org/10.1088/1367-2630/2/1/006>`_
+    .. [#] `H. K. Cummins, G. Llewellyn, and J. A. Jones, Physical Review A 67, 042308 (2003).
+        <https://doi.org/10.1103/PhysRevA.67.042308>`_
     """
     (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
         azimuthal_angle, rabi_rotation, maximum_rabi_rate
@@ -511,27 +622,65 @@ def _new_corpse_in_bb1_control(
     maximum_rabi_rate: float = 2.0 * np.pi,
     **kwargs
 ) -> DrivenControl:
-    """
-    Compensating for off resonance with a pulse sequence with an embedded
-    Wimperis (or BB1) control, also known as CinBB.
+    r"""
+    Creates a CORPSE concatenated within BB1 (CORPSE in BB1) driven control.
+
+    CORPSE in BB1 driven controls are robust to both low-frequency noise sources that perturb the
+    amplitude of the control field and low-frequency dephasing noise.
 
     Parameters
     ----------
     rabi_rotation : float
-        The total rabi rotation to be performed by the control.
+        The total Rabi rotation :math:`\theta` to be performed by the driven control.
     maximum_rabi_rate : float, optional
-        Defaults to 2.*np.pi
-        The maximum rabi frequency for the control.
+        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
-        Defaults to 0.
-        The azimuthal position of the control.
+        The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     kwargs : dict
-        Other keywords required to make a qctrlopencontrols.DrivenControls.
+        Other keywords required to make a :py:obj:`DrivenControl`.
 
     Returns
     -------
-    qctrlopencontrols.DrivenControl
-        The driven control.
+    DrivenControl
+        The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
+
+    See Also
+    --------
+    _new_corpse_control, _new_bb1_control
+
+    Notes
+    -----
+    A CORPSE in BB1 driven control [#]_ [#]_ consists of a BB1 control with the first segment
+    replaced by a CORPSE control, which yields six segments:
+
+    .. csv-table::
+       :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
+
+       :math:`\theta_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
+       :math:`\theta_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\pi`, :math:`0`
+       :math:`\theta_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
+       :math:`\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_*`, :math:`0`
+       :math:`2\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+3\phi_*`, :math:`0`
+       :math:`\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_*`, :math:`0`
+
+    where
+
+    .. math::
+        \theta_1 &= 2\pi + \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
+
+        \theta_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
+
+        \theta_3 &= \frac{\theta}{2} - \left[ \frac{\sin(\theta/2)}{2}\right]
+
+        \phi_* &= \cos^{-1} \left( -\frac{\theta}{4\pi} \right).
+
+    References
+    ----------
+    .. [#] `M. Bando, T. Ichikawa, Y Kondo, and M. Nakahara, Journal of the Physical Society of
+        Japan 82, 1 (2012). <https://doi.org/10.7566/JPSJ.82.014004>`_
+    .. [#] `C. Kabytayev, T. J. Green, K. Khodjasteh, M. J. Biercuk, L. Viola, and K. R. Brown,
+        Physical Review A 90, 012316 (2014). <https://doi.org/10.1103/PhysRevA.90.012316>`_
     """
 
     (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
@@ -579,27 +728,64 @@ def _new_corpse_in_sk1_control(
     maximum_rabi_rate: float = 2.0 * np.pi,
     **kwargs
 ) -> DrivenControl:
-    """
-    Compensating for off resonance with a pulse sequence with an
-     embedded Solovay Kitaev (or SK1) control, also knowns as CinSK.
+    r"""
+    Creates a CORPSE concatenated within SK1 (CORPSE in SK1) driven control.
+
+    CORPSE in SK1 driven controls are robust to both low-frequency noise sources that perturb the
+    amplitude of the control field and low-frequency dephasing noise.
 
     Parameters
     ----------
     rabi_rotation : float
-        The total rabi rotation to be performed by the control.
+        The total Rabi rotation :math:`\theta` to be performed by the driven control.
     maximum_rabi_rate : float, optional
-        Defaults to 2.*np.pi
-        The maximum rabi frequency for the control.
+        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
-        Defaults to 0.
-        The azimuthal position of the control.
+        The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     kwargs : dict
-        Other keywords required to make a qctrlopencontrols.DrivenControls.
+        Other keywords required to make a :py:obj:`DrivenControl`.
 
     Returns
     -------
-    qctrlopencontrols.DrivenControl
-        The driven control.
+    DrivenControl
+        The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
+
+    See Also
+    --------
+    _new_corpse_control, _new_sk1_control
+
+    Notes
+    -----
+    A CORPSE in SK1 driven control [#]_ [#]_ consists of an SK1 control with the first segment
+    replaced by a CORPSE control, which yields five segments:
+
+    .. csv-table::
+       :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
+
+       :math:`\theta_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
+       :math:`\theta_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\pi`, :math:`0`
+       :math:`\theta_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
+       :math:`2\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi-\phi_*`, :math:`0`
+       :math:`2\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_*`, :math:`0`
+
+    where
+
+    .. math::
+        \theta_1 &= 2\pi + \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
+
+        \theta_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
+
+        \theta_3 &= \frac{\theta}{2} - \left[ \frac{\sin(\theta/2)}{2}\right]
+
+        \phi_* &= \cos^{-1} \left( -\frac{\theta}{4\pi} \right).
+
+    References
+    ----------
+    .. [#] `M. Bando, T. Ichikawa, Y Kondo, and M. Nakahara, Journal of the Physical Society of
+        Japan 82, 1 (2012). <https://doi.org/10.7566/JPSJ.82.014004>`_
+    .. [#] `C. Kabytayev, T. J. Green, K. Khodjasteh, M. J. Biercuk, L. Viola, and K. R. Brown,
+        Physical Review A 90, 012316 (2014). <https://doi.org/10.1103/PhysRevA.90.012316>`_
     """
     (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
         azimuthal_angle, rabi_rotation, maximum_rabi_rate
@@ -643,40 +829,87 @@ def _new_corpse_in_scrofulous_control(
     maximum_rabi_rate: float = 2.0 * np.pi,
     **kwargs
 ) -> DrivenControl:
-    """
-    CORPSE (Compensating for Off Resonance with a Pulse SEquence) embedded within a
-    SCROFULOUS (Short Composite ROtation For Undoing Length Over and Under Shoot) control,
-    also knowns as CinS.
+    r"""
+    Creates a CORPSE concatenated within SCROFULOUS (CORPSE in SCROFULOUS) driven control.
+
+    CORPSE in SCROFULOUS driven controls are robust to both low-frequency noise sources that perturb
+    the amplitude of the control field and low-frequency dephasing noise.
 
     Parameters
     ----------
     rabi_rotation : float
-        The total rabi rotation to be performed by the control.
+        The total Rabi rotation :math:`\theta` to be performed by the driven control. Must be either
+        :math:`\pi/4`, :math:`\pi/2`, or :math:`\pi`.
     maximum_rabi_rate : float, optional
-        Defaults to 2.*np.pi
-        The maximum rabi frequency for the control.
+        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
-        Defaults to 0.
-        The azimuthal position of the control.
+        The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     kwargs : dict
-        Other keywords required to make a qctrlopencontrols.DrivenControls.
+        Other keywords required to make a :py:obj:`DrivenControl`.
 
     Returns
     -------
-    qctrlopencontrols.DrivenControl
-        The driven control.
+    DrivenControl
+        The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
 
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
+    See Also
+    --------
+    _new_corpse_control, _new_scrofulous_control
+
+    Notes
+    -----
+    A CORPSE in SCROFULOUS driven control [#]_ consists of a SCROFULOUS control with each segment
+    replaced by a CORPSE control, which yields nine segments:
+
+    .. csv-table::
+       :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
+
+       :math:`\Gamma^{\theta_1}_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_1`, :math:`0`
+       :math:`\Gamma^{\theta_1}_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_1+\pi`, :math:`0`
+       :math:`\Gamma^{\theta_1}_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_1`, :math:`0`
+       :math:`\Gamma^{\theta_2}_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_2`, :math:`0`
+       :math:`\Gamma^{\theta_2}_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_2+\pi`, :math:`0`
+       :math:`\Gamma^{\theta_2}_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_2`, :math:`0`
+       :math:`\Gamma^{\theta_3}_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_3`, :math:`0`
+       :math:`\Gamma^{\theta_3}_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_3+\pi`, :math:`0`
+       :math:`\Gamma^{\theta_3}_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_3`, :math:`0`
+
+    where
+
+    .. math::
+        \theta_1 &= \theta_3 = \mathrm{sinc}^{-1} \left[\frac{2\cos (\theta/2)}{\pi}\right]
+
+        \theta_2 &= \pi
+
+        \phi_1 &= \phi_3 = \cos^{-1}\left[ \frac{-\pi\cos(\theta_1)}{2\theta_1\sin(\theta/2)}\right]
+
+        \phi_2 &= \phi_1 - \cos^{-1} (-\pi/2\theta_1)
+
+    (with :math:`\mathrm{sinc}(x)=\sin(x)/x` the unnormalized sinc function) are the SCROFULOUS
+    angles, and
+
+    .. math::
+        \Gamma^{\theta'}_1 &= 2\pi + \frac{\theta'}{2} - \sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right]
+
+        \Gamma^{\theta'}_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right]
+
+        \Gamma^{\theta'}_3 &= \frac{\theta'}{2} - \left[ \frac{\sin(\theta'/2)}{2}\right]
+
+    are the CORPSE angles corresponding to each SCROFULOUS angle
+    :math:`\theta'\in\{\theta_1,\theta_2,\theta_3\}`.
+
+    References
+    ----------
+    .. [#] `T. Ichikawa, M. Bando, Y. Kondo, and M. Nakahara, Physical Review A 84, 062311 (2011).
+        <https://doi.org/10.1103/PhysRevA.84.062311>`_
     """
     (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
         azimuthal_angle, rabi_rotation, maximum_rabi_rate
     )
 
     # Create a lookup table for rabi rotation and phase angles, taken from
-    # the Cummings paper. Note: values in the paper are in degrees.
+    # the Cummins paper. Note: values in the paper are in degrees.
     def degrees_to_radians(angle_in_degrees):
         return angle_in_degrees / 180 * np.pi
 
@@ -745,31 +978,52 @@ def _new_wamf1_control(
     maximum_rabi_rate: float = 2.0 * np.pi,
     **kwargs
 ) -> DrivenControl:
-    """
-    First order Walsh control with amplitude modulation.
+    r"""
+    Creates a first-order Walsh amplitude-modulated filter (WAMF1) driven control.
+
+    WAMF1 driven controls are robust to low-frequency dephasing noise.
 
     Parameters
     ----------
     rabi_rotation : float
-        The total rabi rotation to be performed by the control.
+        The total Rabi rotation :math:`\theta` to be performed by the driven control. Must be either
+        :math:`\pi/4`, :math:`\pi/2`, or :math:`\pi`.
     maximum_rabi_rate : float, optional
-        Defaults to 2.*np.pi
-        The maximum rabi frequency for the control.
+        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
-        Defaults to 0.
-        The azimuthal position of the control.
+        The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     kwargs : dict
-        Other keywords required to make a qctrlopencontrols.DrivenControls.
+        Other keywords required to make a :py:obj:`DrivenControl`.
 
     Returns
     -------
-    qctrlopencontrols.DrivenControls
-        The driven control.
+    DrivenControl
+        The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
 
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
+    Notes
+    -----
+    A WAMF1 [#]_ driven control consists of four control segments:
+
+    .. csv-table::
+       :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
+
+       :math:`\theta_+/4\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
+       :math:`\theta_+/4\Omega_{\rm max}`, :math:`\Omega_{\rm max}\theta_-/\theta_+`, :math:`\phi`, :math:`0`
+       :math:`\theta_+/4\Omega_{\rm max}`, :math:`\Omega_{\rm max}\theta_-/\theta_+`, :math:`\phi`, :math:`0`
+       :math:`\theta_+/4\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
+
+    where :math:`\theta_\pm = \theta+2\pi k_\theta\pm \delta_\theta`, and the integer
+    :math:`k_\theta` and offset :math:`\delta_\theta` are optimized numerically in order to maximize
+    the suppression of dephasing noise. Note that the optimal values depend only on the rotation
+    angle :math:`\theta`.
+
+    This implementation supports :math:`\theta\in\{\pi/4,\pi/2,\pi\}`.
+
+    References
+    ----------
+    .. [#] `H. Ball and M. J. Biercuk, EPJ Quantum Technology 2, 11 (2015).
+        <https://doi.org/10.1140/epjqt/s40507-015-0022-4>`_
     """
     (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
         azimuthal_angle, rabi_rotation, maximum_rabi_rate
