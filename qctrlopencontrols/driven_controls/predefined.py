@@ -49,8 +49,8 @@ def new_predefined_driven_control(scheme: str = PRIMITIVE, **kwargs):
     Parameters
     ----------
     scheme : string, optional
-        Defaults to 'primitive'. The name of the driven control type,
-        supported options are:
+        The name of the driven control type, supported options are:
+
         - 'primitive'
         - 'BB1'
         - 'SK1'
@@ -60,13 +60,16 @@ def new_predefined_driven_control(scheme: str = PRIMITIVE, **kwargs):
         - 'WAMF1'
         - 'SCROFULOUS'
         - 'CORPSE in SCROFULOUS'
+
+        Defaults to 'primitive'.
+
     kwargs : dict, optional
-        options to make the corresponding control type.
+        Additional keyword argument to create the control.
 
     Returns
     -------
     qctrlopencontrols.DrivenControls
-        Returns a driven control corresponding to the driven_control_type.
+        A driven control corresponding to `scheme`.
 
     Raises
     ------
