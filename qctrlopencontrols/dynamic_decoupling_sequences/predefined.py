@@ -162,31 +162,32 @@ def _add_pre_post_rotations(
 
 def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
     """
-    Create a new instance of one of the predefined
-    dynamic decoupling sequences.
+    Creates a new instance of one of the predefined dynamic decoupling sequences.
 
     Parameters
     ----------
     scheme : string
-        The name of the sequence; Defaults to 'Spin echo'
-        Available options are,
+        The name of the sequence. The available options are:
+
         - 'Ramsey'
-        - 'Spin echo',
-        - 'Carr-Purcell',
-        - 'Carr-Purcell-Meiboom-Gill',
+        - 'spin echo'
+        - 'Carr-Purcell'
+        - 'Carr-Purcell-Meiboom-Gill'
         - 'Uhrig single-axis'
         - 'Periodic single-axis'
         - 'Walsh single-axis'
-        - 'Quadratic'
+        - 'quadratic'
         - 'X concatenated'
         - 'XY concatenated'
+
+        Defaults to 'spin echo'.
     kwargs : dict, optional
-        Additional keyword argument to create the sequence
+        Additional keyword argument to create the sequence.
 
     Returns
     ------
     qctrlopencontrols.dynamic_decoupling_sequences.DynamicDecouplingSequence
-        Returns a sequence corresponding to the name
+        A dynamical decuopling sequence corresponding to `scheme`.
 
     Raises
     -----
