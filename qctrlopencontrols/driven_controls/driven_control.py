@@ -411,8 +411,8 @@ class DrivenControl:
                 for segment_idx in range(self.number_of_segments):
                     control_info.append(
                         "{},{},{},{},{}".format(
-                            amplitude_x[segment_idx],
-                            amplitude_y[segment_idx],
+                            amplitude_x[segment_idx] / self.maximum_rabi_rate,
+                            amplitude_y[segment_idx] / self.maximum_rabi_rate,
                             self.detunings[segment_idx],
                             self.durations[segment_idx],
                             self.maximum_rabi_rate,
@@ -423,8 +423,8 @@ class DrivenControl:
                 if self.name is not None:
                     control_info["name"] = self.name
                 control_info["maximum_rabi_rate"] = self.maximum_rabi_rate
-                control_info["amplitude_x"] = list(amplitude_x)
-                control_info["amplitude_y"] = list(amplitude_y)
+                control_info["amplitude_x"] = list(amplitude_x / self.maximum_rabi_rate)
+                control_info["amplitude_y"] = list(amplitude_y / self.maximum_rabi_rate)
                 control_info["detuning"] = list(self.detunings)
                 control_info["duration"] = list(self.durations)
 
@@ -439,9 +439,7 @@ class DrivenControl:
                     control_info.append(
                         "{},{},{},{},{}".format(
                             self.rabi_rates[segment_idx] / self.maximum_rabi_rate,
-                            np.arctan2(
-                                amplitude_y[segment_idx], amplitude_x[segment_idx]
-                            ),
+                            self.azimuthal_angles[segment_idx],
                             self.detunings[segment_idx],
                             self.durations[segment_idx],
                             self.maximum_rabi_rate,
@@ -456,9 +454,7 @@ class DrivenControl:
                 control_info["rabi_rates"] = list(
                     self.rabi_rates / self.maximum_rabi_rate
                 )
-                control_info["azimuthal_angles"] = list(
-                    np.arctan2(amplitude_y, amplitude_x)
-                )
+                control_info["azimuthal_angles"] = list(self.azimuthal_angles)
                 control_info["detuning"] = list(self.detunings)
                 control_info["duration"] = list(self.durations)
 
