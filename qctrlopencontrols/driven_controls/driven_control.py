@@ -223,7 +223,7 @@ class DrivenControl:
 
     @property
     def maximum_rabi_rate(self) -> float:
-        """
+        r"""
         Returns the maximum Rabi rate of the control.
 
         Returns
@@ -236,7 +236,7 @@ class DrivenControl:
 
     @property
     def maximum_detuning(self) -> float:
-        """
+        r"""
         Returns the maximum detuning of the control.
 
         Returns
@@ -248,7 +248,7 @@ class DrivenControl:
 
     @property
     def amplitude_x(self) -> np.ndarray:
-        """
+        r"""
         Returns the X-Amplitude.
 
         Returns
@@ -261,7 +261,7 @@ class DrivenControl:
 
     @property
     def amplitude_y(self) -> np.ndarray:
-        """
+        r"""
         Returns the Y-Amplitude.
 
         Returns
@@ -274,7 +274,7 @@ class DrivenControl:
 
     @property
     def angles(self) -> np.ndarray:
-        """
+        r"""
         Returns the Bloch sphere rotation angles.
 
         Returns
@@ -293,7 +293,7 @@ class DrivenControl:
 
     @property
     def directions(self) -> np.ndarray:
-        """
+        r"""
         Returns the Bloch sphere rotation directions.
 
         Returns
@@ -332,7 +332,7 @@ class DrivenControl:
 
     @property
     def times(self) -> np.ndarray:
-        """
+        r"""
         Returns the boundary times of the control segments.
 
         Returns
@@ -346,7 +346,7 @@ class DrivenControl:
 
     @property
     def maximum_duration(self) -> float:
-        """
+        r"""
         Returns the duration of the longest control segment.
 
         Returns
@@ -359,7 +359,7 @@ class DrivenControl:
 
     @property
     def minimum_duration(self) -> float:
-        """
+        r"""
         Returns the duration of the shortest control segment.
 
         Returns
@@ -372,7 +372,7 @@ class DrivenControl:
 
     @property
     def duration(self) -> float:
-        """
+        r"""
         Returns the total duration of the control.
 
         Returns
