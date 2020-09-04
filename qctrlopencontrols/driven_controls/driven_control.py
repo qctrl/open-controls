@@ -56,9 +56,9 @@ class DrivenControl:
         Represented as a 1D array of length :math:`N`, where :math:`N` is number of segments. You
         can omit this field if the detuning is zero on all segments.
     durations : np.ndarray, optional
-        The durations :math:`\{\delta t_n\}` for each segment, in units seconds. Every element must
-        be positive. Represented as a 1D array of length :math:`N`, where :math:`N` is number of
-        segments. Defaults to an array of ones if omitted.
+        The durations :math:`\{\delta t_n\}` for each segment, in units of seconds. Every element
+        must be positive. Represented as a 1D array of length :math:`N`, where :math:`N` is number
+        of segments. Defaults to an array of ones if omitted.
     name : string, optional
         An optional string to name the control. Defaults to ``None``.
 
@@ -338,7 +338,7 @@ class DrivenControl:
         Returns
         ------
         np.ndarray
-            The boundary times of the control segments, :math:`\{t_{n-1}\}` (starting with
+            The boundary times of the control segments, :math:`\{t_n}\}` (starting with
             :math:`t_0=0`).
         """
 
@@ -538,7 +538,7 @@ class DrivenControl:
 
         For cylndrical coordinates, the four lists are Rabi rate, azimuthal angle, detuning, and
         duration. The maximum Rabi rate is also included in the data, and the the Rabi rate is
-        normalized to the maximum Rabi rate.
+        normalized to that maximum Rabi rate.
 
         For CSV, the data are output as five columns, with one row of titles, followed by rows of
         data. The maximum Rabi rate is the same in each row. For JSON, the data are output as a
@@ -606,7 +606,7 @@ class DrivenControl:
     ):
 
         """
-        Returns a dictionary formatted for plotting using the qctrl-visualizer package.
+        Returns a dictionary formatted for plotting using the ``qctrl-visualizer`` package.
 
         Parameters
         ----------
@@ -620,7 +620,7 @@ class DrivenControl:
         -------
         dict
             Dictionary with plot data that can be used by the `plot_controls`
-            method of the qctrl-visualizer package. It has keywords 'Rabi rate'
+            method of the ``qctrl-visualizer`` package. It has keywords 'Rabi rate'
             and 'Detuning' for 'cylindrical' coordinates and 'X amplitude', 'Y amplitude',
             and 'Detuning' for 'cartesian' coordinates.
 
