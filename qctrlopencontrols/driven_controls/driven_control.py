@@ -527,10 +527,9 @@ class DrivenControl:
         operators sampled in time (corresponding to the segmentation of the Rabi rate, azimuthal
         angle, and detuning).
 
-        The exact data produced depends on the file type and coordinate system. In all cases, the
-        data contain four lists of real floating point numbers. Each list has the same length, and
-        the :math:`n`'th element of each list describes the :math:`n`'th segment of the driven
-        control.
+        The exact data format depends on the file type and coordinate system. In all cases, the data
+        contain four lists of real floating point numbers. Each list has the same length, and the
+        :math:`n`'th element of each list describes the :math:`n`'th segment of the driven control.
 
         For Cartesian coordinates, the four lists are X-amplitude, Y-amplitude, detuning, and
         duration. The maximum Rabi rate is also included in the data, and the X-amplitude and
@@ -540,18 +539,19 @@ class DrivenControl:
         duration. The maximum Rabi rate is also included in the data, and the the Rabi rate is
         normalized to that maximum Rabi rate.
 
-        For CSV, the data are output as five columns, with one row of titles, followed by rows of
-        data. The maximum Rabi rate is the same in each row. For JSON, the data are output as a
-        single object with four appropriately-named arrays, a "maximum_rabi_rate" field giving the
-        maximum Rabi rate, and optionally a "name" field giving the `name` of the control.
+        For CSV, the data are formatted as five columns, with one row of titles, followed by
+        :math:`N` rows of data. The first four columns contain the relevant Cartesian or cylindrical
+        data. The fifth column contains the maximum Rabi rate, and has the same value in each row.
+
+        For JSON, the data are formatted as a single object (dictionary) with four array fields, a
+        "maximum_rabi_rate" field giving the maximum Rabi rate, and optionally a "name" field giving
+        the `name` of the control.
 
         For example, the CSV cylindrical representation of a control with two segments would be::
 
             rabi_rate,azimuthal_angle,detuning,duration,maximum_rabi_rate
             0.8,1.57,3000000.,0.000001,10000000
             1.0,3.14,-3000000.,0.000002,1000000
-
-        Note that the Rabi rate on each segment is normalized to the maximum Rabi rate.
 
         The JSON Cartesian representation of the same control would be::
 
@@ -563,8 +563,6 @@ class DrivenControl:
                 "detuning": [3000000.0,-3000000.0],
                 "duration": [0.000001,0.000002],
             }
-
-        Note that the amplitudes on each segment are normalized to the maximum Rabi rate.
         """
         _file_types = [v.value for v in FileType]
         _file_formats = [v.value for v in FileFormat]

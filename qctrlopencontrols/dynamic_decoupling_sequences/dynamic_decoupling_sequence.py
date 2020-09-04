@@ -286,8 +286,7 @@ class DynamicDecouplingSequence:
             Specified file format for saving the control. Defaults to
             'Q-CTRL expanded'; Currently it does not support any other format.
             For detail of the `Q-CTRL Expanded Format` consult
-            `Q-CTRL Control Data Format
-            <https://docs.q-ctrl.com/wiki/output-data-formats#q-ctrl-hardware>` _.
+            :py:meth:`DrivenControl.export_to_file`.
         file_type : str, optional
             One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
@@ -297,11 +296,6 @@ class DynamicDecouplingSequence:
             Maximum Rabi Rate; Defaults to :math:`2\\pi`
         maximum_detuning_rate : float, optional
             Maximum Detuning Rate; Defaults to :math:`2\\pi`
-
-        References
-        ----------
-        `Q-CTRL Control Data Format
-        <https://docs.q-ctrl.com/wiki/output-data-formats#q-ctrl-hardware>` _.
 
         Raises
         ------
