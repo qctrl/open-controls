@@ -522,7 +522,49 @@ class DrivenControl:
 
         Notes
         -----
-        The Q-CTRL expanded format can 
+        The Q-CTRL expanded format is designed for direct integration of control solutions into
+        experimental hardware. The format represents controls as vectors defined for the relevant
+        operators sampled in time (corresponding to the segmentation of the Rabi rate, azimuthal
+        angle, and detuning).
+
+        The exact data produced depends on the file type and coordinate system. In all cases, the
+        data contain four lists of real floating point numbers. Each list has the same length, and
+        the :math:`n`'th element of each list describes the :math:`n`'th segment of the driven
+        control.
+
+        For Cartesian coordinates, the four lists are X-amplitude, Y-amplitude, detuning, and
+        duration. The maximum Rabi rate is also included in the data, and the X-amplitude and
+        Y-amplitude are normalized to that maximum Rabi rate.
+
+        For cylndrical coordinates, the four lists are Rabi rate, azimuthal angle, detuning, and
+        duration. The maximum Rabi rate is also included in the data, and the the Rabi rate is
+        normalized to the maximum Rabi rate.
+
+        For CSV, the data are output as five columns, with one row of titles, followed by rows of
+        data. The maximum Rabi rate is the same in each row. For JSON, the data are output as a
+        single object with four appropriately-named arrays, a "maximum_rabi_rate" field giving the
+        maximum Rabi rate, and optionally a "name" field giving the `name` of the control.
+
+        For example, the CSV cylindrical representation of a control with two segments would be::
+
+            rabi_rate,azimuthal_angle,detuning,duration,maximum_rabi_rate
+            0.8,1.57,3000000.,0.000001,10000000
+            1.0,3.14,-3000000.,0.000002,1000000
+
+        Note that the Rabi rate on each segment is normalized to the maximum Rabi rate.
+
+        The JSON Cartesian representation of the same control would be::
+
+            {
+                "name": "a custom control",
+                "maximum_rabi_rate": 1000000,
+                "amplitude_x": [0.0,-1.0],
+                "amplitude_y": [0.8,0.0],
+                "detuning": [3000000.0,-3000000.0],
+                "duration": [0.000001,0.000002],
+            }
+
+        Note that the amplitudes on each segment are normalized to the maximum Rabi rate.
         """
         _file_types = [v.value for v in FileType]
         _file_formats = [v.value for v in FileFormat]
@@ -563,20 +605,21 @@ class DrivenControl:
         self, coordinates=Coordinate.CYLINDRICAL.value, dimensionless_rabi_rate=True
     ):
 
-        """ Returns a dictionary formatted for plotting using the qctrl-visualizer package.
+        """
+        Returns a dictionary formatted for plotting using the qctrl-visualizer package.
 
         Parameters
         ----------
-        dimensionless_rabi_rate: boolean
-            If True, normalizes the Rabi rate so that its largest absolute value is 1.
         coordinates: string
             Indicates whether the Rabi frequency should be plotted in terms of its
-            'cylindrical' or 'cartesian' components.
+            'cylindrical' or 'cartesian' components. Defaults to 'cylindrical'.
+        dimensionless_rabi_rate: boolean
+            If ``True``, normalizes the Rabi rate so that its largest absolute value is 1.
 
         Returns
         -------
         dict
-            Dictionary with plot data that can be used by the plot_controls
+            Dictionary with plot data that can be used by the `plot_controls`
             method of the qctrl-visualizer package. It has keywords 'Rabi rate'
             and 'Detuning' for 'cylindrical' coordinates and 'X amplitude', 'Y amplitude',
             and 'Detuning' for 'cartesian' coordinates.
