@@ -38,31 +38,52 @@ from ..utils import (
 
 
 class DrivenControl:
-    """
-    Creates a driven control. A driven is a set of segments made up of amplitude vectors
-    and corresponding durations.
+    r"""
+    A piecewise-constant driven control for a single qubit.
 
     Parameters
     ----------
     rabi_rates : np.ndarray, optional
-        1-D array of size nx1 where n is number of segments;
-        Each entry is the rabi rate for the segment. Defaults to None.
+        The Rabi rates :math:`\{\Omega_n\}` for each segment, in units of radians per second. Every
+        element must be non-negative. Represented as a 1D array of length :math:`N`, where :math:`N`
+        is number of segments. You can omit this field if the Rabi rate is zero on all segments.
     azimuthal_angles : np.ndarray, optional
-        1-D array of size nx1 where n is the number of segments;
-        Each entry is the azimuthal angle for the segment; Defaults to None.
+        The azimuthal angles :math:`\{\phi_n\}` for each segment. Represented as a 1D array of
+        length :math:`N`, where :math:`N` is number of segments. You can omit this field if the
+        azimuthal angle is zero on all segments.
     detunings : np.ndarray, optional
-        1-D array of size nx1 where n is the number of segments;
-        Each entry is the detuning angle for the segment; Defaults to None.
+        The detunings :math:`\{\Delta_n\}` for each segment, in units of radians per second.
+        Represented as a 1D array of length :math:`N`, where :math:`N` is number of segments. You
+        can omit this field if the detuning is zero on all segments.
     durations : np.ndarray, optional
-        1-D array of size nx1 where n is the number of segments;
-        Each entry is the duration of the segment (in seconds); Defaults to None.
+        The durations :math:`\{\delta t_n\}` for each segment, in units seconds. Every element must
+        be positive. Represented as a 1D array of length :math:`N`, where :math:`N` is number of
+        segments. Defaults to an array of ones if omitted.
     name : string, optional
-        An optional string to name the driven control. Defaults to None.
+        An optional string to name the control. Defaults to ``None``.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid.
+
+    Notes
+    -----
+    This class represents a control for a single driven qubit with Hamiltonian:
+
+    .. math::
+
+        H(t) = \frac{1}{2}\left(\Omega(t) e^{i\phi(t)} \sigma_- +
+                                \Omega(t) e^{-i\phi(t)}\sigma_+\right) +
+               \frac{1}{2}\Delta(t)\sigma_z,
+
+    where :math:`\Omega(t)` is the Rabi rate, :math:`\phi(t)` is the azimuthal angle (or drive
+    phase), :math:`\Delta(t)` is the detuning, :math:`\sigma_\pm = (\sigma_x \mp \sigma_y)/2`,
+    and :math:`\sigma_k` are the Pauli matrices.
+
+    The controls are piecewise-constant, meaning :math:`\Omega(t)=\Omega_n` for
+    :math:`t_{n-1}\leq t<t_n`, where :math:`t_0=0` and :math:`t_n=t_{n-1}+\delta t_n` (and similarly
+    for :math:`\phi(t)` and :math:`\Delta(t)`).
     """
 
     def __init__(
@@ -195,7 +216,7 @@ class DrivenControl:
         Returns
         -------
         int
-            The number of segments in the driven control.
+            The number of segments in the driven control, :math:`N`.
         """
 
         return self.rabi_rates.shape[0]
@@ -203,12 +224,12 @@ class DrivenControl:
     @property
     def maximum_rabi_rate(self) -> float:
         """
-        Returns the maximum rabi rate of the control.
+        Returns the maximum Rabi rate of the control.
 
         Returns
         -------
         float
-            The maximum rabi rate of the control.
+            The maximum Rabi rate of the control, :math:`\max_n \Omega_n`.
         """
 
         return np.amax(self.rabi_rates)
@@ -221,19 +242,19 @@ class DrivenControl:
         Returns
         -------
         float
-            The maximum detuning of the control.
+            The maximum detuning of the control, :math:`\max_n \Delta_n`.
         """
         return np.amax(self.detunings)
 
     @property
     def amplitude_x(self) -> np.ndarray:
         """
-        Return the X-Amplitude.
+        Returns the X-Amplitude.
 
         Returns
         -------
         np.ndarray
-            X-Amplitude of each segment.
+            The X-Amplitude of each segment, :math:`\{\Omega_n \cos \phi_n\}`.
         """
 
         return self.rabi_rates * np.cos(self.azimuthal_angles)
@@ -241,12 +262,12 @@ class DrivenControl:
     @property
     def amplitude_y(self) -> np.ndarray:
         """
-        Return the Y-Amplitude.
+        Returns the Y-Amplitude.
 
         Returns
         -------
         np.ndarray
-            Y-Amplitude of each segment.
+            The Y-Amplitude of each segment, :math:`\{\Omega_n \sin \phi_n\}`.
         """
 
         return self.rabi_rates * np.sin(self.azimuthal_angles)
@@ -254,12 +275,13 @@ class DrivenControl:
     @property
     def angles(self) -> np.ndarray:
         """
-        Returns the angles.
+        Returns the Bloch sphere rotation angles.
 
         Returns
         -------
         np.ndarray
-            Angles as 1-D array of floats.
+            The total Bloch sphere rotation angles on each segment,
+            :math:`\{(\Omega_n^2+\Delta_n^2)\delta t_n\}`.
         """
 
         amplitudes = np.sqrt(
@@ -271,14 +293,15 @@ class DrivenControl:
 
     @property
     def directions(self) -> np.ndarray:
-
         """
-        Returns the directions.
+        Returns the Bloch sphere rotation directions.
 
         Returns
         -------
         np.ndarray
-            Directions as 1-D array of floats.
+            The Bloch sphere rotation direction on each segment,
+            :math:`\{\mathbf v_n/\|\mathbf v_n\|\}`, where
+            :math:`\mathbf v_n=(\Omega_n\cos\phi_n, \Omega_n\sin\phi_n, \Delta_n)`.
         """
         amplitudes = np.sqrt(
             self.amplitude_x ** 2 + self.amplitude_y ** 2 + self.detunings ** 2
@@ -310,13 +333,13 @@ class DrivenControl:
     @property
     def times(self) -> np.ndarray:
         """
-        Returns the time of each segment within the duration
-        of the control.
+        Returns the boundary times of the control segments.
 
         Returns
         ------
         np.ndarray
-            Segment times as 1-D array of floats.
+            The boundary times of the control segments, :math:`\{t_{n-1}\}` (starting with
+            :math:`t_0=0`).
         """
 
         return np.insert(np.cumsum(self.durations), 0, 0.0)
@@ -324,12 +347,12 @@ class DrivenControl:
     @property
     def maximum_duration(self) -> float:
         """
-        Returns the maximum duration of all the control segments.
+        Returns the duration of the longest control segment.
 
         Returns
         -------
         float
-            The maximum duration of all the control segments.
+            The duration of the longest control segment, :math:`\max_n \delta t_n`.
         """
 
         return np.amax(self.durations)
@@ -337,12 +360,12 @@ class DrivenControl:
     @property
     def minimum_duration(self) -> float:
         """
-        Returns the minimum duration of all the control segments.
+        Returns the duration of the shortest control segment.
 
         Returns
         -------
         float
-            The minimum duration of all the controls segments.
+            The duration of the shortest control segment, :math:`\min_n \delta t_n`.
         """
 
         return np.amin(self.durations)
@@ -355,7 +378,7 @@ class DrivenControl:
         Returns
         -------
         float
-            Total duration of the control.
+            The total duration of the control, :math:`t_N=\sum_n \delta t_n`.
         """
 
         return np.sum(self.durations)
@@ -480,34 +503,30 @@ class DrivenControl:
         file_type=FileType.CSV.value,
         coordinates=Coordinate.CYLINDRICAL.value,
     ):
-        """Prepares and saves the driven control in a file.
+        """
+        Prepares and saves the driven control in a file.
 
         Parameters
         ----------
-        filename : str, optional
+        filename : str
             Name and path of the file to save the control into.
-            Defaults to None
         file_format : str
-            Specified file format for saving the control. Defaults to
-            'Q-CTRL expanded'; Currently it does not support any other format.
-            For detail of the `Q-CTRL Expanded Format` consult
-            `Q-CTRL Control Data Format
-            <https://docs.q-ctrl.com/wiki/output-data-formats#q-ctrl-hardware>` _.
+            Specified file format for saving the control. Defaults to 'Q-CTRL expanded'. Currently
+            does not support any other format. For detail of the Q-CTRL expanded format, see below.
         file_type : str, optional
-            One of 'CSV' or 'JSON'; defaults to 'CSV'.
+            One of 'CSV' or 'JSON'. Defaults to 'CSV'.
         coordinates : str, optional
-            Indicates the co-ordinate system requested. Must be one of
-            'cylindrical', 'cartesian'; defaults to 'cylindrical'
-
-        References
-        ----------
-        `Q-CTRL Control Data Format
-        <https://docs.q-ctrl.com/wiki/output-data-formats#q-ctrl-hardware>` _.
+            The coordinate system in which to save the control. Must be 'cylindrical' or
+            'cartesian'. Defaults to 'cylindrical'.
 
         Raises
         ------
         ArgumentsValueError
             Raised if some of the parameters are invalid.
+
+        Notes
+        -----
+        The Q-CTRL expanded format can 
         """
         _file_types = [v.value for v in FileType]
         _file_formats = [v.value for v in FileFormat]
