@@ -446,6 +446,11 @@ def _new_scrofulous_control(
     DrivenControl
         The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
 
+    Raises
+    ------
+    ArgumentsValueError
+        Raised when an argument is invalid.
+
     Notes
     -----
     A SCROFULOUS driven control [#]_ consists of three control segments:
@@ -853,6 +858,11 @@ def _new_corpse_in_scrofulous_control(
     DrivenControl
         The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
 
+    Raises
+    ------
+    ArgumentsValueError
+        Raised when an argument is invalid.
+
     See Also
     --------
     _new_corpse_control, _new_scrofulous_control
@@ -865,15 +875,24 @@ def _new_corpse_in_scrofulous_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\Gamma^{\theta_1}_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_1`, :math:`0`
-       :math:`\Gamma^{\theta_1}_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_1+\pi`, :math:`0`
-       :math:`\Gamma^{\theta_1}_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_1`, :math:`0`
-       :math:`\Gamma^{\theta_2}_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_2`, :math:`0`
-       :math:`\Gamma^{\theta_2}_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_2+\pi`, :math:`0`
-       :math:`\Gamma^{\theta_2}_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_2`, :math:`0`
-       :math:`\Gamma^{\theta_3}_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_3`, :math:`0`
-       :math:`\Gamma^{\theta_3}_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_3+\pi`, :math:`0`
-       :math:`\Gamma^{\theta_3}_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_3`, :math:`0`
+       :math:`\Gamma^{\theta_1}_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\phi+\phi_1`", :math:`0`
+       :math:`\Gamma^{\theta_1}_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\phi+\phi_1+\pi`", :math:`0`
+       :math:`\Gamma^{\theta_1}_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\phi+\phi_1`", :math:`0`
+       :math:`\Gamma^{\theta_2}_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\phi+\phi_2`", :math:`0`
+       :math:`\Gamma^{\theta_2}_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\phi+\phi_2+\pi`", :math:`0`
+       :math:`\Gamma^{\theta_2}_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\phi+\phi_2`", :math:`0`
+       :math:`\Gamma^{\theta_3}_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\phi+\phi_3`", :math:`0`
+       :math:`\Gamma^{\theta_3}_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\phi+\phi_3+\pi`", :math:`0`
+       :math:`\Gamma^{\theta_3}_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\phi+\phi_3`", :math:`0`
 
     where
 
@@ -890,7 +909,8 @@ def _new_corpse_in_scrofulous_control(
     angles, and
 
     .. math::
-        \Gamma^{\theta'}_1 &= 2\pi + \frac{\theta'}{2} - \sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right]
+        \Gamma^{\theta'}_1 &= 2\pi + \frac{\theta'}{2}
+            - \sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right]
 
         \Gamma^{\theta'}_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right]
 
@@ -1001,6 +1021,11 @@ def _new_wamf1_control(
     DrivenControl
         The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
 
+    Raises
+    ------
+    ArgumentsValueError
+        Raised when an argument is invalid.
+
     Notes
     -----
     A WAMF1 [#]_ driven control consists of four control segments:
@@ -1009,8 +1034,10 @@ def _new_wamf1_control(
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
        :math:`\theta_+/4\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
-       :math:`\theta_+/4\Omega_{\rm max}`, :math:`\Omega_{\rm max}\theta_-/\theta_+`, :math:`\phi`, :math:`0`
-       :math:`\theta_+/4\Omega_{\rm max}`, :math:`\Omega_{\rm max}\theta_-/\theta_+`, :math:`\phi`, :math:`0`
+       :math:`\theta_+/4\Omega_{\rm max}`, :math:`\Omega_{\rm max}\theta_-/\theta_+`,"
+       :math:`\phi`", :math:`0`
+       :math:`\theta_+/4\Omega_{\rm max}`, :math:`\Omega_{\rm max}\theta_-/\theta_+`, "
+       :math:`\phi`", :math:`0`
        :math:`\theta_+/4\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
 
     where :math:`\theta_\pm = \theta+2\pi k_\theta\pm \delta_\theta`, and the integer
