@@ -78,23 +78,23 @@ def new_predefined_driven_control(scheme: str = PRIMITIVE, **kwargs):
 
     # Raise error if the input driven_control_type is not known
     if scheme == PRIMITIVE:
-        driven_control = _new_primitive_control(**kwargs)
+        driven_control = new_primitive_control(**kwargs)
     elif scheme == BB1:
-        driven_control = _new_bb1_control(**kwargs)
+        driven_control = new_bb1_control(**kwargs)
     elif scheme == SK1:
-        driven_control = _new_sk1_control(**kwargs)
+        driven_control = new_sk1_control(**kwargs)
     elif scheme == WAMF1:
-        driven_control = _new_wamf1_control(**kwargs)
+        driven_control = new_wamf1_control(**kwargs)
     elif scheme == CORPSE:
-        driven_control = _new_corpse_control(**kwargs)
+        driven_control = new_corpse_control(**kwargs)
     elif scheme == CORPSE_IN_BB1:
-        driven_control = _new_corpse_in_bb1_control(**kwargs)
+        driven_control = new_corpse_in_bb1_control(**kwargs)
     elif scheme == CORPSE_IN_SK1:
-        driven_control = _new_corpse_in_sk1_control(**kwargs)
+        driven_control = new_corpse_in_sk1_control(**kwargs)
     elif scheme == SCROFULOUS:
-        driven_control = _new_scrofulous_control(**kwargs)
+        driven_control = new_scrofulous_control(**kwargs)
     elif scheme == CORPSE_IN_SCROFULOUS:
-        driven_control = _new_corpse_in_scrofulous_control(**kwargs)
+        driven_control = new_corpse_in_scrofulous_control(**kwargs)
     else:
         raise ArgumentsValueError(
             "Unknown predefined pulse type. See help(new_predefined_driven_control) to display all"
@@ -211,7 +211,7 @@ def _derive_segments(
     return segments
 
 
-def _new_primitive_control(
+def new_primitive_control(
     rabi_rotation: float,
     azimuthal_angle: float = 0.0,
     maximum_rabi_rate: float = 2.0 * np.pi,
@@ -251,7 +251,7 @@ def _new_primitive_control(
     )
 
 
-def _new_bb1_control(
+def new_bb1_control(
     rabi_rotation: float,
     azimuthal_angle: float = 0.0,
     maximum_rabi_rate: float = 2.0 * np.pi,
@@ -306,7 +306,7 @@ def _new_bb1_control(
     )
 
 
-def _new_sk1_control(
+def new_sk1_control(
     rabi_rotation: float,
     azimuthal_angle: float = 0.0,
     maximum_rabi_rate: float = 2.0 * np.pi,
@@ -360,7 +360,7 @@ def _new_sk1_control(
     )
 
 
-def _new_scrofulous_control(
+def new_scrofulous_control(
     rabi_rotation: float,
     azimuthal_angle: float = 0.0,
     maximum_rabi_rate: float = 2.0 * np.pi,
@@ -451,7 +451,7 @@ def _new_scrofulous_control(
     )
 
 
-def _new_corpse_control(
+def new_corpse_control(
     rabi_rotation: float,
     azimuthal_angle: float = 0.0,
     maximum_rabi_rate: float = 2.0 * np.pi,
@@ -505,7 +505,7 @@ def _new_corpse_control(
     )
 
 
-def _new_corpse_in_bb1_control(
+def new_corpse_in_bb1_control(
     rabi_rotation: float,
     azimuthal_angle: float = 0.0,
     maximum_rabi_rate: float = 2.0 * np.pi,
@@ -573,7 +573,7 @@ def _new_corpse_in_bb1_control(
     )
 
 
-def _new_corpse_in_sk1_control(
+def new_corpse_in_sk1_control(
     rabi_rotation: float,
     azimuthal_angle: float = 0.0,
     maximum_rabi_rate: float = 2.0 * np.pi,
@@ -637,7 +637,7 @@ def _new_corpse_in_sk1_control(
     )
 
 
-def _new_corpse_in_scrofulous_control(
+def new_corpse_in_scrofulous_control(
     rabi_rotation: float,
     azimuthal_angle: float = 0.0,
     maximum_rabi_rate: float = 2.0 * np.pi,
@@ -739,7 +739,7 @@ def _new_corpse_in_scrofulous_control(
     )
 
 
-def _new_wamf1_control(
+def new_wamf1_control(
     rabi_rotation: float,
     azimuthal_angle: float = 0.0,
     maximum_rabi_rate: float = 2.0 * np.pi,
