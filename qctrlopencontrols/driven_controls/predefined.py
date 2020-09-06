@@ -652,7 +652,7 @@ def new_corpse_in_bb1_control(
 
     See Also
     --------
-    _new_corpse_control, _new_bb1_control
+    new_corpse_control, new_bb1_control
 
     Notes
     -----
@@ -758,7 +758,7 @@ def new_corpse_in_sk1_control(
 
     See Also
     --------
-    _new_corpse_control, _new_sk1_control
+    new_corpse_control, new_sk1_control
 
     Notes
     -----
@@ -865,7 +865,7 @@ def new_corpse_in_scrofulous_control(
 
     See Also
     --------
-    _new_corpse_control, _new_scrofulous_control
+    new_corpse_control, new_scrofulous_control
 
     Notes
     -----
