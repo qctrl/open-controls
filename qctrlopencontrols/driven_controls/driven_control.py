@@ -536,7 +536,7 @@ class DrivenControl:
         Y-amplitude are normalized to that maximum Rabi rate.
 
         For cylindrical coordinates, the four lists are Rabi rate, azimuthal angle, detuning, and
-        duration. The maximum Rabi rate is also included in the data, and the the Rabi rate is
+        duration. The maximum Rabi rate is also included in the data, and the Rabi rate is
         normalized to that maximum Rabi rate.
 
         For CSV, the data are formatted as five columns, with one row of titles, followed by
