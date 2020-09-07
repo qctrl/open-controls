@@ -249,12 +249,12 @@ class DrivenControl:
     @property
     def amplitude_x(self) -> np.ndarray:
         r"""
-        Returns the X-Amplitude.
+        Returns the x-amplitude.
 
         Returns
         -------
         np.ndarray
-            The X-Amplitude of each segment, :math:`\{\Omega_n \cos \phi_n\}`.
+            The x-amplitude of each segment, :math:`\{\Omega_n \cos \phi_n\}`.
         """
 
         return self.rabi_rates * np.cos(self.azimuthal_angles)
@@ -262,12 +262,12 @@ class DrivenControl:
     @property
     def amplitude_y(self) -> np.ndarray:
         r"""
-        Returns the Y-Amplitude.
+        Returns the y-amplitude.
 
         Returns
         -------
         np.ndarray
-            The Y-Amplitude of each segment, :math:`\{\Omega_n \sin \phi_n\}`.
+            The y-amplitude of each segment, :math:`\{\Omega_n \sin \phi_n\}`.
         """
 
         return self.rabi_rates * np.sin(self.azimuthal_angles)
