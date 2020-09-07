@@ -43,6 +43,8 @@ def new_predefined_driven_control(scheme: str = PRIMITIVE, **kwargs):
     """
     Creates a new driven control based on the given scheme.
 
+    Equivalent to calling the corresponding ``new_<scheme>_control`` function.
+
     Parameters
     ----------
     scheme : string, optional
@@ -759,9 +761,6 @@ def new_corpse_in_sk1_control(
     See Also
     --------
     new_corpse_control, new_sk1_control
-=======
-    _new_corpse_control, _new_sk1_control
->>>>>>> master
 
     Notes
     -----
