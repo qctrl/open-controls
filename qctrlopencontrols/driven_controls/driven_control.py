@@ -520,7 +520,7 @@ class DrivenControl:
         ----------
         filename : str
             Name and path of the file to save the control into.
-        file_format : str
+        file_format : str, optional
             Specified file format for saving the control. Defaults to 'Q-CTRL expanded'. Currently
             does not support any other format. For details of the Q-CTRL expanded format, see Notes.
         file_type : str, optional
