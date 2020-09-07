@@ -551,7 +551,7 @@ class DrivenControl:
 
             rabi_rate,azimuthal_angle,detuning,duration,maximum_rabi_rate
             0.8,1.57,3000000.,0.000001,10000000
-            1.0,3.14,-3000000.,0.000002,1000000
+            1.0,3.14,-3000000.,0.000002,10000000
 
         The JSON Cartesian representation of the same control would be::
 
