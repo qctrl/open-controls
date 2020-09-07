@@ -571,7 +571,7 @@ class DrivenControl:
 
             {
                 "name": "a custom control",
-                "maximum_rabi_rate": 1000000,
+                "maximum_rabi_rate": 10000000,
                 "amplitude_x": [0.0,-1.0],
                 "amplitude_y": [0.8,0.0],
                 "detuning": [3000000.0,-3000000.0],
