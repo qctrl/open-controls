@@ -38,31 +38,66 @@ from ..utils import (
 
 
 class DrivenControl:
-    """
-    Creates a driven control. A driven is a set of segments made up of amplitude vectors
-    and corresponding durations.
+    r"""
+    A piecewise-constant driven control for a single qubit.
 
     Parameters
     ----------
     rabi_rates : np.ndarray, optional
-        1-D array of size nx1 where n is number of segments;
-        Each entry is the rabi rate for the segment. Defaults to None.
+        The Rabi rates :math:`\{\Omega_n\}` for each segment, in units of radians per second. Every
+        element must be non-negative. Represented as a 1D array of length :math:`N`, where :math:`N`
+        is number of segments. You can omit this field if the Rabi rate is zero on all segments.
     azimuthal_angles : np.ndarray, optional
-        1-D array of size nx1 where n is the number of segments;
-        Each entry is the azimuthal angle for the segment; Defaults to None.
+        The azimuthal angles :math:`\{\phi_n\}` for each segment. Represented as a 1D array of
+        length :math:`N`, where :math:`N` is number of segments. You can omit this field if the
+        azimuthal angle is zero on all segments.
     detunings : np.ndarray, optional
-        1-D array of size nx1 where n is the number of segments;
-        Each entry is the detuning angle for the segment; Defaults to None.
+        The detunings :math:`\{\Delta_n\}` for each segment, in units of radians per second.
+        Represented as a 1D array of length :math:`N`, where :math:`N` is number of segments. You
+        can omit this field if the detuning is zero on all segments.
     durations : np.ndarray, optional
-        1-D array of size nx1 where n is the number of segments;
-        Each entry is the duration of the segment (in seconds); Defaults to None.
+        The durations :math:`\{\delta t_n\}` for each segment, in units of seconds. Every element
+        must be positive. Represented as a 1D array of length :math:`N`, where :math:`N` is number
+        of segments. Defaults to an array of ones if omitted.
     name : string, optional
-        An optional string to name the driven control. Defaults to None.
+        An optional string to name the control. Defaults to ``None``.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid.
+
+    Notes
+    -----
+    This class represents a control for a single driven qubit with Hamiltonian:
+
+    .. math::
+
+        H(t) = \frac{1}{2}\left(\Omega(t) e^{i\phi(t)} \sigma_- +
+                                \Omega(t) e^{-i\phi(t)}\sigma_+\right) +
+               \frac{1}{2}\Delta(t)\sigma_z,
+
+    where :math:`\Omega(t)` is the Rabi rate, :math:`\phi(t)` is the azimuthal angle (or drive
+    phase), :math:`\Delta(t)` is the detuning, :math:`\sigma_\pm = (\sigma_x \mp \sigma_y)/2`,
+    and :math:`\sigma_k` are the Pauli matrices.
+
+    The controls are piecewise-constant, meaning :math:`\Omega(t)=\Omega_n` for
+    :math:`t_{n-1}\leq t<t_n`, where :math:`t_0=0` and :math:`t_n=t_{n-1}+\delta t_n` (and similarly
+    for :math:`\phi(t)` and :math:`\Delta(t)`).
+
+    For each segment of the control, the constant Hamiltonian effects unitary time evolution of the
+    form:
+
+    .. math::
+
+        U_n = \exp\left[-i\frac{\theta_n}{2} (\mathbf u_n\cdot\boldsymbol \sigma)\right],
+
+    where :math:`\theta_n = \sqrt{\Omega_n^2+\Delta_n^2}\delta t_n`,
+    :math:`\mathbf u_n` is the unit vector in the direction
+    :math:`(\Omega_n\cos\phi_n, \Omega_n\sin\phi_n, \Delta_n)`, and
+    :math:`\boldsymbol\sigma=(\sigma_x, \sigma_y, \sigma_z)`. This unitary time evolution
+    corresponds to a rotation of the Bloch sphere of an angle :math:`\theta_n` about the axis
+    :math:`\mathbf u_n`.
     """
 
     def __init__(
@@ -195,71 +230,72 @@ class DrivenControl:
         Returns
         -------
         int
-            The number of segments in the driven control.
+            The number of segments in the driven control, :math:`N`.
         """
 
         return self.rabi_rates.shape[0]
 
     @property
     def maximum_rabi_rate(self) -> float:
-        """
-        Returns the maximum rabi rate of the control.
+        r"""
+        Returns the maximum Rabi rate of the control.
 
         Returns
         -------
         float
-            The maximum rabi rate of the control.
+            The maximum Rabi rate of the control, :math:`\max_n \Omega_n`.
         """
 
         return np.amax(self.rabi_rates)
 
     @property
     def maximum_detuning(self) -> float:
-        """
+        r"""
         Returns the maximum detuning of the control.
 
         Returns
         -------
         float
-            The maximum detuning of the control.
+            The maximum detuning of the control, :math:`\max_n \Delta_n`.
         """
         return np.amax(self.detunings)
 
     @property
     def amplitude_x(self) -> np.ndarray:
-        """
-        Return the X-Amplitude.
+        r"""
+        Returns the x-amplitude.
 
         Returns
         -------
         np.ndarray
-            X-Amplitude of each segment.
+            The x-amplitude of each segment, :math:`\{\Omega_n \cos \phi_n\}`.
         """
 
         return self.rabi_rates * np.cos(self.azimuthal_angles)
 
     @property
     def amplitude_y(self) -> np.ndarray:
-        """
-        Return the Y-Amplitude.
+        r"""
+        Returns the y-amplitude.
 
         Returns
         -------
         np.ndarray
-            Y-Amplitude of each segment.
+            The y-amplitude of each segment, :math:`\{\Omega_n \sin \phi_n\}`.
         """
 
         return self.rabi_rates * np.sin(self.azimuthal_angles)
 
     @property
     def angles(self) -> np.ndarray:
-        """
-        Returns the angles.
+        r"""
+        Returns the Bloch sphere rotation angles.
 
         Returns
         -------
         np.ndarray
-            Angles as 1-D array of floats.
+            The total Bloch sphere rotation angles on each segment,
+            :math:`\left\{\sqrt{\Omega_n^2+\Delta_n^2}\delta t_n\right\}`.
         """
 
         amplitudes = np.sqrt(
@@ -271,14 +307,15 @@ class DrivenControl:
 
     @property
     def directions(self) -> np.ndarray:
-
-        """
-        Returns the directions.
+        r"""
+        Returns the Bloch sphere rotation directions.
 
         Returns
         -------
         np.ndarray
-            Directions as 1-D array of floats.
+            The Bloch sphere rotation direction on each segment,
+            :math:`\{\mathbf v_n/\|\mathbf v_n\|\}`, where
+            :math:`\mathbf v_n=(\Omega_n\cos\phi_n, \Omega_n\sin\phi_n, \Delta_n)`.
         """
         amplitudes = np.sqrt(
             self.amplitude_x ** 2 + self.amplitude_y ** 2 + self.detunings ** 2
@@ -309,53 +346,53 @@ class DrivenControl:
 
     @property
     def times(self) -> np.ndarray:
-        """
-        Returns the time of each segment within the duration
-        of the control.
+        r"""
+        Returns the boundary times of the control segments.
 
         Returns
         ------
         np.ndarray
-            Segment times as 1-D array of floats.
+            The boundary times of the control segments, :math:`\{t_n\}` (starting with
+            :math:`t_0=0`).
         """
 
         return np.insert(np.cumsum(self.durations), 0, 0.0)
 
     @property
     def maximum_duration(self) -> float:
-        """
-        Returns the maximum duration of all the control segments.
+        r"""
+        Returns the duration of the longest control segment.
 
         Returns
         -------
         float
-            The maximum duration of all the control segments.
+            The duration of the longest control segment, :math:`\max_n \delta t_n`.
         """
 
         return np.amax(self.durations)
 
     @property
     def minimum_duration(self) -> float:
-        """
-        Returns the minimum duration of all the control segments.
+        r"""
+        Returns the duration of the shortest control segment.
 
         Returns
         -------
         float
-            The minimum duration of all the controls segments.
+            The duration of the shortest control segment, :math:`\min_n \delta t_n`.
         """
 
         return np.amin(self.durations)
 
     @property
     def duration(self) -> float:
-        """
+        r"""
         Returns the total duration of the control.
 
         Returns
         -------
         float
-            Total duration of the control.
+            The total duration of the control, :math:`t_N=\sum_n \delta t_n`.
         """
 
         return np.sum(self.durations)
@@ -476,34 +513,70 @@ class DrivenControl:
         file_type=FileType.CSV.value,
         coordinates=Coordinate.CYLINDRICAL.value,
     ):
-        """Prepares and saves the driven control in a file.
+        """
+        Prepares and saves the driven control in a file.
 
         Parameters
         ----------
-        filename : str, optional
+        filename : str
             Name and path of the file to save the control into.
-            Defaults to None
-        file_format : str
-            Specified file format for saving the control. Defaults to
-            'Q-CTRL expanded'; Currently it does not support any other format.
-            For detail of the `Q-CTRL Expanded Format` consult
-            `Q-CTRL Control Data Format
-            <https://docs.q-ctrl.com/wiki/output-data-formats#q-ctrl-hardware>` _.
+        file_format : str, optional
+            Specified file format for saving the control. Defaults to 'Q-CTRL expanded'. Currently
+            does not support any other format. For details of the Q-CTRL expanded format, see Notes.
         file_type : str, optional
-            One of 'CSV' or 'JSON'; defaults to 'CSV'.
+            One of 'CSV' or 'JSON'. Defaults to 'CSV'.
         coordinates : str, optional
-            Indicates the co-ordinate system requested. Must be one of
-            'cylindrical', 'cartesian'; defaults to 'cylindrical'
-
-        References
-        ----------
-        `Q-CTRL Control Data Format
-        <https://docs.q-ctrl.com/wiki/output-data-formats#q-ctrl-hardware>` _.
+            The coordinate system in which to save the control. Must be 'cylindrical' or
+            'cartesian'. Defaults to 'cylindrical'.
 
         Raises
         ------
         ArgumentsValueError
             Raised if some of the parameters are invalid.
+
+        Notes
+        -----
+        The Q-CTRL expanded format is designed for direct integration of control solutions into
+        experimental hardware. The format represents controls as vectors defined for the relevant
+        operators sampled in time (corresponding to the segmentation of the Rabi rate, azimuthal
+        angle, and detuning).
+
+        The exact data format depends on the file type and coordinate system. In all cases, the data
+        contain four lists of real floating point numbers. Each list has the same length, and the
+        :math:`n`'th element of each list describes the :math:`n`'th segment of the driven control.
+
+        For Cartesian coordinates, the four lists are X-amplitude, Y-amplitude, detuning, and
+        duration. The maximum Rabi rate is also included in the data, and the X-amplitude and
+        Y-amplitude are normalized to that maximum Rabi rate.
+
+        For cylindrical coordinates, the four lists are Rabi rate, azimuthal angle, detuning, and
+        duration. The maximum Rabi rate is also included in the data, and the Rabi rate is
+        normalized to that maximum Rabi rate.
+
+        For CSV, the data are formatted as five columns, with one row of titles, followed by
+        :math:`N` rows of data. The first four columns contain the relevant Cartesian or cylindrical
+        data. The fifth column contains the maximum Rabi rate, and has the same value in each row.
+
+        For JSON, the data are formatted as a single object (dictionary) with four array fields, a
+        "maximum_rabi_rate" field giving the maximum Rabi rate, and optionally a "name" field giving
+        the `name` of the control.
+
+        For example, the CSV cylindrical representation of a control with two segments would be::
+
+            rabi_rate,azimuthal_angle,detuning,duration,maximum_rabi_rate
+            0.8,1.57,3000000.,0.000001,10000000
+            1.0,3.14,-3000000.,0.000002,10000000
+
+        The JSON Cartesian representation of the same control would be::
+
+            {
+                "name": "a custom control",
+                "maximum_rabi_rate": 10000000,
+                "amplitude_x": [0.0,-1.0],
+                "amplitude_y": [0.8,0.0],
+                "detuning": [3000000.0,-3000000.0],
+                "duration": [0.000001,0.000002],
+            }
         """
         _file_types = [v.value for v in FileType]
         _file_formats = [v.value for v in FileFormat]
@@ -544,21 +617,23 @@ class DrivenControl:
         self, coordinates=Coordinate.CYLINDRICAL.value, dimensionless_rabi_rate=True
     ):
 
-        """ Returns a dictionary formatted for plotting using the qctrl-visualizer package.
+        """
+        Returns a dictionary formatted for plotting using the ``qctrl-visualizer`` package.
 
         Parameters
         ----------
-        dimensionless_rabi_rate: boolean
-            If True, normalizes the Rabi rate so that its largest absolute value is 1.
-        coordinates: string
+        coordinates: string, optional
             Indicates whether the Rabi frequency should be plotted in terms of its
-            'cylindrical' or 'cartesian' components.
+            'cylindrical' or 'cartesian' components. Defaults to 'cylindrical'.
+        dimensionless_rabi_rate: boolean, optional
+            If ``True``, normalizes the Rabi rate so that its largest absolute value is 1. Defaults
+            to ``True``.
 
         Returns
         -------
         dict
-            Dictionary with plot data that can be used by the plot_controls
-            method of the qctrl-visualizer package. It has keywords 'Rabi rate'
+            Dictionary with plot data that can be used by the `plot_controls`
+            method of the ``qctrl-visualizer`` package. It has keywords 'Rabi rate'
             and 'Detuning' for 'cylindrical' coordinates and 'X amplitude', 'Y amplitude',
             and 'Detuning' for 'cartesian' coordinates.
 

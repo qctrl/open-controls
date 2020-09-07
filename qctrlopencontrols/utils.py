@@ -119,8 +119,8 @@ class FileFormat(Enum):
     """
     Defines exported file format.
 
-    Currently only support Q-CTRL expanded format.
-    See details in https://docs.q-ctrl.com/wiki/output-data-formats#q-ctrl-hardware
+    Currently only supports the Q-CTRL expanded format. See :py:meth:`DrivenControl.export_to_file`
+    for details.
     """
 
     QCTRL = "Q-CTRL expanded"
