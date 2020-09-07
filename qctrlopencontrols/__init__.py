@@ -20,8 +20,17 @@ __version__ = "4.7.0"
 
 from .driven_controls.driven_control import DrivenControl
 from .driven_controls.predefined import (
+    new_bb1_control,
+    new_corpse_control,
+    new_corpse_in_bb1_control,
+    new_corpse_in_scrofulous_control,
+    new_corpse_in_sk1_control,
     new_modulated_gaussian_control,
     new_predefined_driven_control,
+    new_primitive_control,
+    new_scrofulous_control,
+    new_sk1_control,
+    new_wamf1_control,
 )
 from .dynamic_decoupling_sequences.dynamic_decoupling_sequence import (
     DynamicDecouplingSequence,
@@ -30,10 +39,19 @@ from .dynamic_decoupling_sequences.dynamic_decoupling_sequence import (
 from .dynamic_decoupling_sequences.predefined import new_predefined_dds
 
 __all__ = [
-    "convert_dds_to_driven_control",
-    "new_predefined_dds",
-    "new_modulated_gaussian_control",
-    "new_predefined_driven_control",
     "DrivenControl",
     "DynamicDecouplingSequence",
+    "convert_dds_to_driven_control",
+    "new_bb1_control",
+    "new_corpse_control",
+    "new_corpse_in_bb1_control",
+    "new_corpse_in_scrofulous_control",
+    "new_corpse_in_sk1_control",
+    "new_modulated_gaussian_control",
+    "new_predefined_dds",
+    "new_predefined_driven_control",
+    "new_primitive_control",
+    "new_scrofulous_control",
+    "new_sk1_control",
+    "new_wamf1_control",
 ]
