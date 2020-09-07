@@ -84,6 +84,20 @@ class DrivenControl:
     The controls are piecewise-constant, meaning :math:`\Omega(t)=\Omega_n` for
     :math:`t_{n-1}\leq t<t_n`, where :math:`t_0=0` and :math:`t_n=t_{n-1}+\delta t_n` (and similarly
     for :math:`\phi(t)` and :math:`\Delta(t)`).
+
+    For each segment of the control, the constant Hamiltonian effects unitary time evolution of the
+    form:
+
+    .. math::
+
+        U_n = \exp\left[-i\frac{\theta_n}{2} (\mathbf u_n\cdot\boldsymbol \sigma)\right],
+
+    where :math:`\theta_n = \sqrt{\Omega_n^2+\Delta_n^2}\delta t_n`,
+    :math:`\mathbf u_n` is the unit vector in the direction
+    :math:`(\Omega_n\cos\phi_n, \Omega_n\sin\phi_n, \Delta_n)`, and
+    :math:`\boldsymbol\sigma=(\sigma_x, \sigma_y, \sigma_z)`. This unitary time evolution
+    corresponds to a rotation of the Bloch sphere of an angle :math:`\theta_n` about the axis
+    :math:`\mathbf u_n`.
     """
 
     def __init__(
@@ -249,12 +263,12 @@ class DrivenControl:
     @property
     def amplitude_x(self) -> np.ndarray:
         r"""
-        Returns the X-Amplitude.
+        Returns the x-amplitude.
 
         Returns
         -------
         np.ndarray
-            The X-Amplitude of each segment, :math:`\{\Omega_n \cos \phi_n\}`.
+            The x-amplitude of each segment, :math:`\{\Omega_n \cos \phi_n\}`.
         """
 
         return self.rabi_rates * np.cos(self.azimuthal_angles)
@@ -262,12 +276,12 @@ class DrivenControl:
     @property
     def amplitude_y(self) -> np.ndarray:
         r"""
-        Returns the Y-Amplitude.
+        Returns the y-amplitude.
 
         Returns
         -------
         np.ndarray
-            The Y-Amplitude of each segment, :math:`\{\Omega_n \sin \phi_n\}`.
+            The y-amplitude of each segment, :math:`\{\Omega_n \sin \phi_n\}`.
         """
 
         return self.rabi_rates * np.sin(self.azimuthal_angles)
@@ -281,7 +295,7 @@ class DrivenControl:
         -------
         np.ndarray
             The total Bloch sphere rotation angles on each segment,
-            :math:`\{(\Omega_n^2+\Delta_n^2)\delta t_n\}`.
+            :math:`\left\{\sqrt{\Omega_n^2+\Delta_n^2}\delta t_n\right\}`.
         """
 
         amplitudes = np.sqrt(
@@ -338,7 +352,7 @@ class DrivenControl:
         Returns
         ------
         np.ndarray
-            The boundary times of the control segments, :math:`\{t_n}\}` (starting with
+            The boundary times of the control segments, :math:`\{t_n\}` (starting with
             :math:`t_0=0`).
         """
 
@@ -508,7 +522,7 @@ class DrivenControl:
             Name and path of the file to save the control into.
         file_format : str
             Specified file format for saving the control. Defaults to 'Q-CTRL expanded'. Currently
-            does not support any other format. For detail of the Q-CTRL expanded format, see below.
+            does not support any other format. For details of the Q-CTRL expanded format, see Notes.
         file_type : str, optional
             One of 'CSV' or 'JSON'. Defaults to 'CSV'.
         coordinates : str, optional
@@ -535,8 +549,8 @@ class DrivenControl:
         duration. The maximum Rabi rate is also included in the data, and the X-amplitude and
         Y-amplitude are normalized to that maximum Rabi rate.
 
-        For cylndrical coordinates, the four lists are Rabi rate, azimuthal angle, detuning, and
-        duration. The maximum Rabi rate is also included in the data, and the the Rabi rate is
+        For cylindrical coordinates, the four lists are Rabi rate, azimuthal angle, detuning, and
+        duration. The maximum Rabi rate is also included in the data, and the Rabi rate is
         normalized to that maximum Rabi rate.
 
         For CSV, the data are formatted as five columns, with one row of titles, followed by
@@ -551,7 +565,7 @@ class DrivenControl:
 
             rabi_rate,azimuthal_angle,detuning,duration,maximum_rabi_rate
             0.8,1.57,3000000.,0.000001,10000000
-            1.0,3.14,-3000000.,0.000002,1000000
+            1.0,3.14,-3000000.,0.000002,10000000
 
         The JSON Cartesian representation of the same control would be::
 
@@ -608,11 +622,12 @@ class DrivenControl:
 
         Parameters
         ----------
-        coordinates: string
+        coordinates: string, optional
             Indicates whether the Rabi frequency should be plotted in terms of its
             'cylindrical' or 'cartesian' components. Defaults to 'cylindrical'.
-        dimensionless_rabi_rate: boolean
-            If ``True``, normalizes the Rabi rate so that its largest absolute value is 1.
+        dimensionless_rabi_rate: boolean, optional
+            If ``True``, normalizes the Rabi rate so that its largest absolute value is 1. Defaults
+            to ``True``.
 
         Returns
         -------
