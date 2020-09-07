@@ -546,7 +546,7 @@ def new_corpse_control(
     **kwargs
 ) -> DrivenControl:
     r"""
-    Creates a compensating for off-Resonance with a pulse sequence (CORPSE) driven control.
+    Creates a compensating for off-resonance with a pulse sequence (CORPSE) driven control.
 
     CORPSE driven controls are robust to low-frequency dephasing noise.
 
@@ -759,6 +759,9 @@ def new_corpse_in_sk1_control(
     See Also
     --------
     new_corpse_control, new_sk1_control
+=======
+    _new_corpse_control, _new_sk1_control
+>>>>>>> master
 
     Notes
     -----

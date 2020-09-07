@@ -520,7 +520,7 @@ class DrivenControl:
         ----------
         filename : str
             Name and path of the file to save the control into.
-        file_format : str
+        file_format : str, optional
             Specified file format for saving the control. Defaults to 'Q-CTRL expanded'. Currently
             does not support any other format. For details of the Q-CTRL expanded format, see Notes.
         file_type : str, optional
@@ -571,7 +571,7 @@ class DrivenControl:
 
             {
                 "name": "a custom control",
-                "maximum_rabi_rate": 1000000,
+                "maximum_rabi_rate": 10000000,
                 "amplitude_x": [0.0,-1.0],
                 "amplitude_y": [0.8,0.0],
                 "detuning": [3000000.0,-3000000.0],
