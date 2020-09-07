@@ -89,7 +89,7 @@ class DrivenControl:
     form:
 
     .. math::
-        
+
         U_n = \exp\left[-i\frac{\theta_n}{2} (\mathbf u_n\cdot\boldsymbol \sigma)\right],
 
     where :math:`\theta_n = \sqrt{\Omega_n^2+\Delta_n^2}\delta t_n`,
