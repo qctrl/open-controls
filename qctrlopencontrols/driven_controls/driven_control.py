@@ -84,6 +84,20 @@ class DrivenControl:
     The controls are piecewise-constant, meaning :math:`\Omega(t)=\Omega_n` for
     :math:`t_{n-1}\leq t<t_n`, where :math:`t_0=0` and :math:`t_n=t_{n-1}+\delta t_n` (and similarly
     for :math:`\phi(t)` and :math:`\Delta(t)`).
+
+    For each segment of the control, the constant Hamiltonian effects unitary time evolution of the
+    form:
+
+    .. math::
+        
+        U_n = \exp\left[-i\frac{\theta_n}{2} (\mathbf u_n\cdot\boldsymbol \sigma)\right],
+
+    where :math:`\theta_n = \sqrt{\Omega_n^2+\Delta_n^2}\delta t_n`,
+    :math:`\mathbf u_n` is the unit vector in the direction
+    :math:`(\Omega_n\cos\phi_n, \Omega_n\sin\phi_n, \Delta_n)`, and
+    :math:`\boldsymbol\sigma=(\sigma_x, \sigma_y, \sigma_z)`. This unitary time evolution
+    corresponds to a rotation of the Bloch sphere of an angle :math:`\theta_n` about the axis
+    :math:`\mathbf u_n`.
     """
 
     def __init__(
@@ -281,7 +295,7 @@ class DrivenControl:
         -------
         np.ndarray
             The total Bloch sphere rotation angles on each segment,
-            :math:`\{(\Omega_n^2+\Delta_n^2)\delta t_n\}`.
+            :math:`\left\{\sqrt{\Omega_n^2+\Delta_n^2}\delta t_n\right\}`.
         """
 
         amplitudes = np.sqrt(
@@ -338,7 +352,7 @@ class DrivenControl:
         Returns
         ------
         np.ndarray
-            The boundary times of the control segments, :math:`\{t_n}\}` (starting with
+            The boundary times of the control segments, :math:`\{t_n\}` (starting with
             :math:`t_0=0`).
         """
 
@@ -608,11 +622,12 @@ class DrivenControl:
 
         Parameters
         ----------
-        coordinates: string
+        coordinates: string, optional
             Indicates whether the Rabi frequency should be plotted in terms of its
             'cylindrical' or 'cartesian' components. Defaults to 'cylindrical'.
-        dimensionless_rabi_rate: boolean
-            If ``True``, normalizes the Rabi rate so that its largest absolute value is 1.
+        dimensionless_rabi_rate: boolean, optional
+            If ``True``, normalizes the Rabi rate so that its largest absolute value is 1. Defaults
+            to ``True``.
 
         Returns
         -------
