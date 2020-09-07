@@ -119,7 +119,7 @@ class FileFormat(Enum):
     """
     Defines exported file format.
 
-    Currently only support Q-CTRL expanded format. See :py:meth:`DrivenControl.export_to_file` for
+    Currently only supports the Q-CTRL expanded format. See :py:meth:`DrivenControl.export_to_file` for
     details.
     """
 
