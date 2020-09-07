@@ -422,7 +422,7 @@ def new_scrofulous_control(
     **kwargs
 ) -> DrivenControl:
     r"""
-    Creates a Short Composite ROtation For Undoing Length Over and Under Shoot (SCROFULOUS) driven
+    Creates a short composite rotation for undoing length over and under shoot (SCROFULOUS) driven
     control.
 
     SCROFULOUS driven controls are robust to low-frequency noise sources that perturb the amplitude
@@ -546,7 +546,7 @@ def new_corpse_control(
     **kwargs
 ) -> DrivenControl:
     r"""
-    Creates a Compensating for Off-Resonance with a Pulse SEquence (CORPSE) driven control.
+    Creates a compensating for off-Resonance with a pulse sequence (CORPSE) driven control.
 
     CORPSE driven controls are robust to low-frequency dephasing noise.
 
