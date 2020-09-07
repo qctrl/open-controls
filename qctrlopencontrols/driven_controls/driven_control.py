@@ -535,7 +535,7 @@ class DrivenControl:
         duration. The maximum Rabi rate is also included in the data, and the X-amplitude and
         Y-amplitude are normalized to that maximum Rabi rate.
 
-        For cylndrical coordinates, the four lists are Rabi rate, azimuthal angle, detuning, and
+        For cylindrical coordinates, the four lists are Rabi rate, azimuthal angle, detuning, and
         duration. The maximum Rabi rate is also included in the data, and the the Rabi rate is
         normalized to that maximum Rabi rate.
 
