@@ -48,7 +48,7 @@ sphinx = "^2.2.0"
 sphinx-rtd-theme = "^0.4.3"
 nbval = "^0.9.5"
 qctrl-visualizer = "^2.1.0"
-isort = "^4.3.21"
+isort = "^5.4.2"
 
 [tool.black]
 exclude = '''
@@ -61,11 +61,8 @@ exclude = '''
 '''
 
 [tool.isort]
-multi_line_output = "3"
-include_trailing_comma = "True"
-use_parentheses = "True"
+profile = "black"
 force_grid_wrap = "2"
-line_length = "88"
 known_first_party = "qctrlopencontrols"
 
 [tool.dephell.main]
