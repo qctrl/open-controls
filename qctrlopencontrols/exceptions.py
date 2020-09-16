@@ -53,4 +53,4 @@ class ArgumentsValueError(QctrlError):
         if extras is not None:
             for key in self.extras:
                 self.message += "\n" + str(key) + "=" + repr(self.extras[key])
-        super(ArgumentsValueError, self).__init__(self.message)
+        super().__init__(self.message)
