@@ -161,7 +161,7 @@ def _add_pre_post_rotations(
 
 
 def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
-    """
+    r"""
     Creates a new instance of one of the predefined dynamic decoupling sequences.
 
     Parameters
@@ -186,13 +186,28 @@ def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
 
     Returns
     ------
-    qctrlopencontrols.dynamic_decoupling_sequences.DynamicDecouplingSequence
-        A dynamical decuopling sequence corresponding to `scheme`.
+    DynamicDecouplingSequence
+        A dynamical decoupling sequence corresponding to `scheme`.
 
     Raises
     -----
     ArgumentsValueError
         Raised when an argument is invalid.
+
+    Notes
+    ____
+     Dynamic Decoupling Sequence (DDS) is canonically defined as a series of :math:`n`-instantaneous
+     unitary operations, often :math:`\pi`-pulses, executed at time offsets :math:`\{t_j\}_{j=1}^n`
+     over the time interval with a total duration :math:`\tau`. The :math:`j`-the operation applied
+     at time :math:`t_j` can be parameterized as
+     .. math:: U_j = \exp\left(-\frac{i}{2}(\omega_j \cos \phi_j \simga_x
+                                + \omega_j\sin \phi_j\sigma_y + \delta_j\sigma_z)\right) \;,
+    where :math:`\omega_j` is the rabi rotation, :math:`\phi_j` is the azimuthal angle, and
+    :math:`\delta_j` is the detuning rotation.
+
+    Note that in practice all DDS typically have a :math:`X_{\pi/2}` operation at the start and
+    finish. This is because it is assumed that the qubit is initially in the state :math:`|0\rangle`
+    and a superposition needs to be created and removed to make the qubit sensitive to dephasing.
     """
 
     if scheme == RAMSEY:
@@ -269,32 +284,38 @@ def _check_duration(duration: Optional[float] = None) -> float:
 
 
 def _new_ramsey_sequence(duration=None, pre_post_rotation=False, **kwargs):
-    """
+    r"""
     Creates Ramsey sequence.
 
     Parameters
     ----------
     duration : float, optional
-        Total duration of the sequence. Defaults to None
+        Total duration of the sequence. Defaults to None.
     pre_post_rotation : bool, optional
-        If True, a :math:`X_{\\pi.2}` rotation
-        is added at the start and end of the sequence.
+        If True, a :math:`X_{\pi/2}` rotation is added at the start and end of the sequence.
     kwargs : dict
-        Additional keywords required by
-        qctrlopencontrols.sequences.DynamicDecouplingSequence
+        Additional keywords required by `DynamicDecouplingSequence`.
 
     Returns
     -------
-    qctrlopencontrols.dynamic_decoupling_sequences.DynamicDecouplingSequence
-        The Ramsey sequence
+    DynamicDecouplingSequence
+        The Ramsey sequence.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid.
 
+    Notes
+    ----
+
+    The Ramsey dynamical decoupling sequence (DDS) is simply free evolution between the start and
+    finish of the DDS. Technically, the Ramsey DDS does not dynamically decouple from the
+    environment, nevertheless, it is a useful sequence for characterization and testing protocols
+    and hence it is included. Ramsey DDS is parameterized by just the duration and contains no
+    offsets in between the start and finish of the sequence.
     """
-    duration = _check_duration(duration)
+
     offsets = []
     rabi_rotations = []
     azimuthal_angles = []
@@ -317,29 +338,38 @@ def _new_ramsey_sequence(duration=None, pre_post_rotation=False, **kwargs):
 
 
 def _new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
-    """
+    r"""
     Creates Spin Echo Sequence.
 
     Parameters
-    ---------
+    ----------
     duration : float, optional
-        Total duration of the sequence. Defaults to None
+        Total duration of the sequence. Defaults to None.
     pre_post_rotation : bool, optional
-        If True, a :math:`\\pi.2` rotation is added at the
-        start and end of the sequence.
+        If True, a :math:`\pi/2` rotation is added at the start and end of the sequence.
     kwargs : dict
-        Additional keywords required by
-        qctrlopencontrols.sequences.DynamicDecouplingSequence
+        Additional keywords required by `DynamicDecouplingSequence`.
 
     Returns
     -------
-    qctrlopencontrols.dynamic_decoupling_sequences.DynamicDecouplingSequence
-        Spin echo sequence
+    DynamicDecouplingSequence
+        Spin echo sequence.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid.
+
+    Notes
+    -----
+    The spin echo (SE) [#]_ dynamical decoupling sequence (DDS) is the simplest DDS.
+    It is parameterized by duration :math:`\tau`. There is a single unitary operation
+    :math:`X_{\pi/2}` at :math:`t_1=\tau/2`
+
+    References
+    ----------
+    .. [#] `E. L. Hahn, Physical Review. 80, 580 (1950).
+        <https://doi.org/10.1103/PhysRev.80.580>`_
     """
 
     duration = _check_duration(duration)
