@@ -196,25 +196,25 @@ def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
     """
 
     if scheme == RAMSEY:
-        sequence = _new_ramsey_sequence(**kwargs)
+        sequence = new_ramsey_sequence(**kwargs)
     elif scheme == SPIN_ECHO:
-        sequence = _new_spin_echo_sequence(**kwargs)
+        sequence = new_spin_echo_sequence(**kwargs)
     elif scheme == CARR_PURCELL:
-        sequence = _new_carr_purcell_sequence(**kwargs)
+        sequence = new_carr_purcell_sequence(**kwargs)
     elif scheme == CARR_PURCELL_MEIBOOM_GILL:
-        sequence = _new_carr_purcell_meiboom_gill_sequence(**kwargs)
+        sequence = new_carr_purcell_meiboom_gill_sequence(**kwargs)
     elif scheme == UHRIG_SINGLE_AXIS:
-        sequence = _new_uhrig_single_axis_sequence(**kwargs)
+        sequence = new_uhrig_single_axis_sequence(**kwargs)
     elif scheme == PERIODIC_SINGLE_AXIS:
-        sequence = _new_periodic_single_axis_sequence(**kwargs)
+        sequence = new_periodic_single_axis_sequence(**kwargs)
     elif scheme == WALSH_SINGLE_AXIS:
-        sequence = _new_walsh_single_axis_sequence(**kwargs)
+        sequence = new_walsh_single_axis_sequence(**kwargs)
     elif scheme == QUADRATIC:
-        sequence = _new_quadratic_sequence(**kwargs)
+        sequence = new_quadratic_sequence(**kwargs)
     elif scheme == X_CONCATENATED:
-        sequence = _new_x_concatenated_sequence(**kwargs)
+        sequence = new_x_concatenated_sequence(**kwargs)
     elif scheme == XY_CONCATENATED:
-        sequence = _new_xy_concatenated_sequence(**kwargs)
+        sequence = new_xy_concatenated_sequence(**kwargs)
     # Raise an error if the input sequence is not known
     else:
         raise ArgumentsValueError(
@@ -268,7 +268,7 @@ def _check_duration(duration: Optional[float] = None) -> float:
     return duration
 
 
-def _new_ramsey_sequence(duration=None, pre_post_rotation=False, **kwargs):
+def new_ramsey_sequence(duration=None, pre_post_rotation=False, **kwargs):
     """
     Creates Ramsey sequence.
 
@@ -316,7 +316,7 @@ def _new_ramsey_sequence(duration=None, pre_post_rotation=False, **kwargs):
     )
 
 
-def _new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
+def new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
     """
     Creates Spin Echo Sequence.
 
@@ -368,7 +368,7 @@ def _new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
     )
 
 
-def _new_carr_purcell_sequence(
+def new_carr_purcell_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -434,7 +434,7 @@ def _new_carr_purcell_sequence(
     )
 
 
-def _new_carr_purcell_meiboom_gill_sequence(
+def new_carr_purcell_meiboom_gill_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -501,7 +501,7 @@ def _new_carr_purcell_meiboom_gill_sequence(
     )
 
 
-def _new_uhrig_single_axis_sequence(
+def new_uhrig_single_axis_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -568,7 +568,7 @@ def _new_uhrig_single_axis_sequence(
     )
 
 
-def _new_periodic_single_axis_sequence(
+def new_periodic_single_axis_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -635,7 +635,7 @@ def _new_periodic_single_axis_sequence(
     )
 
 
-def _new_walsh_single_axis_sequence(
+def new_walsh_single_axis_sequence(
     duration=None, paley_order=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -718,7 +718,7 @@ def _new_walsh_single_axis_sequence(
     )
 
 
-def _new_quadratic_sequence(
+def new_quadratic_sequence(
     duration=None,
     number_inner_offsets=None,
     number_outer_offsets=None,
@@ -827,7 +827,7 @@ def _new_quadratic_sequence(
     )
 
 
-def _new_x_concatenated_sequence(
+def new_x_concatenated_sequence(
     duration=1.0, concatenation_order=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -909,7 +909,7 @@ def _new_x_concatenated_sequence(
     )
 
 
-def _new_xy_concatenated_sequence(
+def new_xy_concatenated_sequence(
     duration=1.0, concatenation_order=None, pre_post_rotation=False, **kwargs
 ):
     """
