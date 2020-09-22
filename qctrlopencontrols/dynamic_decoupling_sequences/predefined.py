@@ -368,7 +368,7 @@ def new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
     )
 
 
-def new_carr_purcell_sequence(
+def new_cp_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -434,7 +434,7 @@ def new_carr_purcell_sequence(
     )
 
 
-def new_carr_purcell_meiboom_gill_sequence(
+def new_cpmg_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -501,7 +501,7 @@ def new_carr_purcell_meiboom_gill_sequence(
     )
 
 
-def new_uhrig_single_axis_sequence(
+def new_single_axis_uhrig_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -568,7 +568,7 @@ def new_uhrig_single_axis_sequence(
     )
 
 
-def new_periodic_single_axis_sequence(
+def new_single_axis_periodic_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -635,7 +635,7 @@ def new_periodic_single_axis_sequence(
     )
 
 
-def new_walsh_single_axis_sequence(
+def new_single_axis_walsh_sequence(
     duration=None, paley_order=None, pre_post_rotation=False, **kwargs
 ):
     """
