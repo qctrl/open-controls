@@ -200,7 +200,7 @@ def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
     elif scheme == SPIN_ECHO:
         sequence = new_spin_echo_sequence(**kwargs)
     elif scheme == CARR_PURCELL:
-        sequence = new_cp_sequence(**kwargs)
+        sequence = new_carr_purcell_sequence(**kwargs)
     elif scheme == CARR_PURCELL_MEIBOOM_GILL:
         sequence = new_cpmg_sequence(**kwargs)
     elif scheme == UHRIG_SINGLE_AXIS:
@@ -368,7 +368,7 @@ def new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
     )
 
 
-def new_cp_sequence(
+def new_carr_purcell_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """
