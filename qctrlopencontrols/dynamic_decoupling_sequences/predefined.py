@@ -187,7 +187,7 @@ def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
     Returns
     ------
     qctrlopencontrols.dynamic_decoupling_sequences.DynamicDecouplingSequence
-        A dynamical decuopling sequence corresponding to `scheme`.
+        A dynamical decoupling sequence corresponding to `scheme`.
 
     Raises
     -----
@@ -202,13 +202,13 @@ def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
     elif scheme == CARR_PURCELL:
         sequence = new_carr_purcell_sequence(**kwargs)
     elif scheme == CARR_PURCELL_MEIBOOM_GILL:
-        sequence = new_carr_purcell_meiboom_gill_sequence(**kwargs)
+        sequence = new_cpmg_sequence(**kwargs)
     elif scheme == UHRIG_SINGLE_AXIS:
-        sequence = new_uhrig_single_axis_sequence(**kwargs)
+        sequence = new_uhrig_sequence(**kwargs)
     elif scheme == PERIODIC_SINGLE_AXIS:
-        sequence = new_periodic_single_axis_sequence(**kwargs)
+        sequence = new_periodic_sequence(**kwargs)
     elif scheme == WALSH_SINGLE_AXIS:
-        sequence = new_walsh_single_axis_sequence(**kwargs)
+        sequence = new_walsh_sequence(**kwargs)
     elif scheme == QUADRATIC:
         sequence = new_quadratic_sequence(**kwargs)
     elif scheme == X_CONCATENATED:
@@ -434,7 +434,7 @@ def new_carr_purcell_sequence(
     )
 
 
-def new_carr_purcell_meiboom_gill_sequence(
+def new_cpmg_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -501,7 +501,7 @@ def new_carr_purcell_meiboom_gill_sequence(
     )
 
 
-def new_uhrig_single_axis_sequence(
+def new_uhrig_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -568,7 +568,7 @@ def new_uhrig_single_axis_sequence(
     )
 
 
-def new_periodic_single_axis_sequence(
+def new_periodic_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -635,7 +635,7 @@ def new_periodic_single_axis_sequence(
     )
 
 
-def new_walsh_single_axis_sequence(
+def new_walsh_sequence(
     duration=None, paley_order=None, pre_post_rotation=False, **kwargs
 ):
     """
