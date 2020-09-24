@@ -36,7 +36,19 @@ from .dynamic_decoupling_sequences.dynamic_decoupling_sequence import (
     DynamicDecouplingSequence,
     convert_dds_to_driven_control,
 )
-from .dynamic_decoupling_sequences.predefined import new_predefined_dds
+from .dynamic_decoupling_sequences.predefined import (
+    new_carr_purcell_sequence,
+    new_cpmg_sequence,
+    new_periodic_sequence,
+    new_predefined_dds,
+    new_quadratic_sequence,
+    new_ramsey_sequence,
+    new_spin_echo_sequence,
+    new_uhrig_sequence,
+    new_walsh_sequence,
+    new_x_concatenated_sequence,
+    new_xy_concatenated_sequence,
+)
 
 __all__ = [
     "DrivenControl",
@@ -54,4 +66,14 @@ __all__ = [
     "new_scrofulous_control",
     "new_sk1_control",
     "new_wamf1_control",
+    "new_carr_purcell_sequence",
+    "new_cpmg_sequence",
+    "new_periodic_sequence",
+    "new_quadratic_sequence",
+    "new_ramsey_sequence",
+    "new_spin_echo_sequence",
+    "new_uhrig_sequence",
+    "new_walsh_sequence",
+    "new_x_concatenated_sequence",
+    "new_xy_concatenated_sequence",
 ]
