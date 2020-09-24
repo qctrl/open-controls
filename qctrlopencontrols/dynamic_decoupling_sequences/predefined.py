@@ -142,9 +142,15 @@ def _add_pre_post_rotations(
     if (preserves_10 and preserves_11) or (not preserves_10 and not preserves_11):
         final_azimuthal = np.pi
 
-    offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration],)
+    offsets = np.insert(
+        offsets,
+        [0, offsets.shape[0]],
+        [0, duration],
+    )
     rabi_rotations = np.insert(
-        rabi_rotations, [0, rabi_rotations.shape[0]], [rabi_value, rabi_value],
+        rabi_rotations,
+        [0, rabi_rotations.shape[0]],
+        [rabi_value, rabi_value],
     )
     azimuthal_angles = np.insert(
         azimuthal_angles,
@@ -204,11 +210,11 @@ def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
     elif scheme == CARR_PURCELL_MEIBOOM_GILL:
         sequence = new_cpmg_sequence(**kwargs)
     elif scheme == UHRIG_SINGLE_AXIS:
-        sequence = new_single_axis_uhrig_sequence(**kwargs)
+        sequence = new_uhrig_sequence(**kwargs)
     elif scheme == PERIODIC_SINGLE_AXIS:
-        sequence = new_single_axis_periodic_sequence(**kwargs)
+        sequence = new_periodic_sequence(**kwargs)
     elif scheme == WALSH_SINGLE_AXIS:
-        sequence = new_single_axis_walsh_sequence(**kwargs)
+        sequence = new_walsh_sequence(**kwargs)
     elif scheme == QUADRATIC:
         sequence = new_quadratic_sequence(**kwargs)
     elif scheme == X_CONCATENATED:
@@ -501,7 +507,7 @@ def new_cpmg_sequence(
     )
 
 
-def new_single_axis_uhrig_sequence(
+def new_uhrig_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -568,7 +574,7 @@ def new_single_axis_uhrig_sequence(
     )
 
 
-def new_single_axis_periodic_sequence(
+def new_periodic_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
     """
@@ -635,7 +641,7 @@ def new_single_axis_periodic_sequence(
     )
 
 
-def new_single_axis_walsh_sequence(
+def new_walsh_sequence(
     duration=None, paley_order=None, pre_post_rotation=False, **kwargs
 ):
     """
