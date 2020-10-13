@@ -39,9 +39,8 @@ from ..utils import (
 
 
 class DynamicDecouplingSequence:
-    """
+    r"""
     Create a dynamic decoupling sequence.
-    Can be made of perfect operations, or realistic pulses.
 
     Parameters
     ----------
@@ -49,19 +48,19 @@ class DynamicDecouplingSequence:
         Defaults to 1. The total time in seconds for the sequence.
     offsets : np.ndarray
         Defaults to None.
-        The times offsets in s for the center of pulses.
+        The times offsets :math:`\{t_j\}` in seconds for the center of pulses.
         If None, defaults to one operation at halfway [0.5].
     rabi_rotations : np.ndarray
         Defaults to None.
-        The rabi rotations at each time offset.
-        If None, defaults to np.pi at each time offset.
+        The rabi rotation :math:`\omega_j` at each time offset :math:`t_j`.
+        If None, defaults to :math:`\pi` at each time offset.
     azimuthal_angles : np.ndarray
         Defaults to None.
-        The azimuthal angles at each time offset.
+        The azimuthal angle :math:`\phi_j` at each time offset :math:`t_j`.
         If None, defaults to 0 at each time offset.
     detuning_rotations : np.ndarray
         Defaults to None.
-        The detuning rotations at each time offset.
+        The detuning rotation :math:`\delta_j` at each time offset :math:`t_j`.
         If None, defaults to 0 at each time offset.
     name : str
         Name of the sequence. Defaults to None.
@@ -70,6 +69,23 @@ class DynamicDecouplingSequence:
     ------
     qctrlopencontrols.exceptions.ArgumentsValueError
         is raised if one of the inputs is invalid.
+
+    Notes
+    ____
+    Dynamical decoupling sequence (DDS) is canonically defined as a series of
+    :math:`n`-instantaneous unitary operations, often :math:`\pi`-pulses, executed
+    at time offsets :math:`\{t_j\}_{j=1}^n` over the time interval with a total
+    duration :math:`\tau`. The :math:`j`-the operation applied at time
+    :math:`t_j` can be parameterized as
+
+    .. math::
+        U_j = \exp\left[-\frac{i}{2}(\omega_j \cos \phi_j \sigma_x + \omega_j\sin \phi_j\sigma_y
+        + \delta_j\sigma_z)\right] \;,
+
+    Note that in practice all DDSs typically have a :math:`X_{\pi/2}` operation at the start and
+    end of the sequence. This is because it is assumed that the qubit is initially in the
+    state :math:`|0\rangle` and a superposition needs to be created and removed to make the qubit
+    sensitive to dephasing.
     """
 
     def __init__(
