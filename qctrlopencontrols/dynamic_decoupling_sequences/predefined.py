@@ -886,7 +886,7 @@ def new_quadratic_sequence(
     :math:`n_1`, and number of outer offsets :math:`n_2`. The outer sequence consists of
     :math:`n_2` pulses of type :math:`X_{\pi}`, which partition the time-domain into :math:`n_2+1`
     sub-intervals on which inner sequences consisting of :math:`n_1` pulses of type
-    :math:`Z_{\pi}`are nested. The total number of offsets is :math:`n = n_1 + n_2(n_1 + 1)`.
+    :math:`Z_{\pi}` are nested. The total number of offsets is :math:`n = n_1 + n_2(n_1 + 1)`.
 
     The pulse times for outer sequence :math:`(X_{\pi}^1, \cdots, X_{\pi}^{n_2})` are defined
     according to the Uhrig sequence for :math:`t \in [0, \tau]`. The :math:`j`-th
