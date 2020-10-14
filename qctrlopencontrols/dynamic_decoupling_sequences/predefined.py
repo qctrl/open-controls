@@ -893,7 +893,7 @@ def new_quadratic_sequence(
     :math:`X_{\pi}` pulse, therefore has timing offset defined by
 
     .. math::
-        t_x^i = \tau \sin^2 \left[ \frac{i\pi}{2(n_2 + 1)}  \right] \;,
+        t_x^j = \tau \sin^2 \left[ \frac{j \pi}{2(n_2 + 1)}  \right] \;,
 
     where :math:`j = 1, \cdots, n_2`. On each sub-interval defined by the outer sequence,
     an inner sequence :math:`(Z_{\pi}^1, \cdots, Z_{\pi}^{n_1})` is implemented. The pulse times
