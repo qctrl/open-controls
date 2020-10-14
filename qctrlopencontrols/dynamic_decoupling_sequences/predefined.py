@@ -908,7 +908,7 @@ def new_quadratic_sequence(
 
     References
     ----------
-    .. [#] `Jacob R. West, Bryan H. Fong, and Daniel A. Lidar,
+    .. [#] `J. R. West, B. H. Fong, and D. A. Lidar,
         Physical Review Letters 104, 130501 (2010).
         <https://doi.org/10.1103/PhysRevLett.104.130501>`_
     """
