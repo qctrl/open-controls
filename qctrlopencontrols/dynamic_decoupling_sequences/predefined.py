@@ -1017,7 +1017,7 @@ def new_x_concatenated_sequence(
     Notes
     -----
     The :math:`X`-concatenated sequence is constructed by recursively concatenating
-    control seuqnce structures. It's parameterized by the concatenation order :math:`l` and
+    control sequence structures. It's parameterized by the concatenation order :math:`l` and
     the duration of the total sequence :math:`\tau`. Let the :math:`l`-th order of concatenation
     be denoted as :math:`C_l(\tau)`. In this scheme, zeroth order concatenation of duration
     :math:`\tau` is defined as free evolution over a period of :math:`\tau`. We use a notation
