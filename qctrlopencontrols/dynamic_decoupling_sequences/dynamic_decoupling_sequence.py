@@ -75,7 +75,7 @@ class DynamicDecouplingSequence:
     Dynamical decoupling sequence (DDS) is canonically defined as a series of
     :math:`n`-instantaneous unitary operations, often :math:`\pi`-pulses, executed
     at time offsets :math:`\{t_j\}_{j=1}^n` over the time interval with a total
-    duration :math:`\tau`. The :math:`j`-the operation applied at time
+    duration :math:`\tau`. The :math:`j`-th operation applied at time
     :math:`t_j` can be parameterized as
 
     .. math::
