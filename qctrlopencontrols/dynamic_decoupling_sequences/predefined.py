@@ -410,6 +410,11 @@ def new_carr_purcell_sequence(
     DynamicDecouplingSequence
         The Carr-Purcell sequence.
 
+    Raises
+    ------
+    ArgumentsValueError
+        Raised when an argument is invalid.
+
     See Also
     --------
     new_cpmg_sequence
@@ -424,11 +429,6 @@ def new_carr_purcell_sequence(
         t_i = \frac{\tau}{n} \left( \frac{1}{2} +i - 1\right) \;,
 
     where :math:`i = 1, \cdots, n`.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     References
     ----------
@@ -495,6 +495,11 @@ def new_cpmg_sequence(
     DynamicDecouplingSequence
         The Carr-Purcell-Meiboom-Gill sequence.
 
+    Raises
+    ------
+    ArgumentsValueError
+        Raised when an argument is invalid.
+
     See Also
     --------
     new_carr_purcell_sequence
@@ -514,11 +519,6 @@ def new_cpmg_sequence(
     ----------
     .. [#] `S. Meiboom and D. Gill, Review of Scientific Instruments 29:8, 688 (1958)
         <https://link.aps.org/doi/10.1063/1.1716296>`_
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
     """
     duration = _check_duration(duration)
     number_of_offsets = number_of_offsets or 1
@@ -581,6 +581,11 @@ def new_uhrig_sequence(
     DynamicDecouplingSequence
         The Uhrig sequence.
 
+    Raises
+    ------
+    ArgumentsValueError
+        Raised when an argument is invalid.
+
     Notes
     -----
     The Uhrig sequence [#]_ is parameterized by duration :math:`\tau` and number of
@@ -595,11 +600,6 @@ def new_uhrig_sequence(
     ----------
     .. [#] `G. S. Uhrig, Physical Review Letters 98, 100504 (2007)
         <https://link.aps.org/doi/10.1103/PhysRevLett.98.100504>`_
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
     """
     duration = _check_duration(duration)
     number_of_offsets = number_of_offsets or 1
@@ -662,6 +662,11 @@ def new_periodic_sequence(
     DynamicDecouplingSequence
         The periodic sequence.
 
+    Raises
+    ------
+    ArgumentsValueError
+        Raised when an argument is invalid.
+
     Notes
     -----
     The periodic sequence [#]_ is parameterized by duration :math:`\tau` and number of
@@ -676,11 +681,6 @@ def new_periodic_sequence(
     ----------
     .. [#] `Lorenza Viola and Emanuel Knill, Physical Review Letters 90, 037901 (2003)
         <https://link.aps.org/doi/10.1103/PhysRevLett.90.037901>`_
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
     """
     duration = _check_duration(duration)
     number_of_offsets = number_of_offsets or 1
@@ -743,6 +743,11 @@ def new_walsh_sequence(
     DynamicDecouplingSequence
         The Walsh sequence.
 
+    Raises
+    ------
+    ArgumentsValueError
+        Raised when an argument is invalid.
+
     Notes
     -----
     The Walsh sequence is defined by the switching function :math:`y(t)` given by a
@@ -757,7 +762,7 @@ def new_walsh_sequence(
     function of Paley order :math:`k` is denoted :math:`{\rm PAL}_k(x)` and defined as
 
     .. math::
-        {\rm PAL}_k(x) = \Pi_{j = 1}^m R_j(x)^{b_j} \;, \quad\; x \ in [0, 1] \;.
+        {\rm PAL}_k(x) = \Pi_{j = 1}^m R_j(x)^{b_j} \;, \quad\; x \in [0, 1] \;.
 
     where :math:`(b_m, b_{m-1}, \cdots, b_1)_2` is the binary representation of :math:`k`.
     That is
@@ -781,11 +786,6 @@ def new_walsh_sequence(
 
     .. [#] `H. Ball and M. J Biercuk, EPJ Quantum Technol. 2, 11 (2015)
         <https://doi.org/10.1140/epjqt/s40507-015-0022-4>`_
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
     """
     duration = _check_duration(duration)
     paley_order = paley_order or 1
@@ -857,10 +857,10 @@ def new_quadratic_sequence(
         Defaults to None.
         The total duration of the sequence :math:`\tau`.
     number_inner_offsets : int, optional
-        Number of inner Z :math:`\pi`-pulses :math:`n_1`. Defaults to None.
+        Number of inner :math:`Z_{\pi}` pulses :math:`n_1`. Defaults to None.
         Not used if number_of_offsets is supplied.
     number_outer_offsets : int, optional
-        Number of outer X :math:`\pi`-pulses :math:`n_2`. Defaults to None.
+        Number of outer :math:`X_{\pi}` pulses :math:`n_2`. Defaults to None.
         Not used if number_of_offsets is supplied.
     pre_post_rotation : bool, optional
         If True, a :math:`X_{\pi/2}` rotation is added at the
@@ -872,6 +872,11 @@ def new_quadratic_sequence(
     -------
     DynamicDecouplingSequence
         The quadratic sequence.
+
+    Raises
+    ------
+    ArgumentsValueError
+        Raised when an argument is invalid.
 
     See Also
     --------
@@ -902,11 +907,6 @@ def new_quadratic_sequence(
                     + t_{x}^{j - 1} \;,
 
     where :math:`k = 1, \cdots, n_1` and :math:`j = 1, \cdots, n_2 + 1`.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     References
     ----------
@@ -1010,6 +1010,11 @@ def new_x_concatenated_sequence(
     DynamicDecouplingSequence
         The :math:`X`-concatenated sequence.
 
+    Raises
+    ------
+    ArgumentsValueError
+        Raised when an argument is invalid.
+
     See Also
     --------
     new_xy_concatenated_sequence
@@ -1036,11 +1041,6 @@ def new_x_concatenated_sequence(
     ----------
     .. [#] `K. Khodjasteh and D. A. Lidar, Physical Review Letters 95, 180501 (2005)
         <https://doi.org/10.1103/PhysRevLett.95.180501>`_
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
     """
     duration = _check_duration(duration)
 
@@ -1117,6 +1117,11 @@ def new_xy_concatenated_sequence(
     DynamicDecouplingSequence
         The :math:`XY`-concatenated sequence.
 
+    Raises
+    ------
+    ArgumentsValueError
+        Raised when an argument is invalid.
+
     See Also
     --------
     new_x_concatenated_sequence
@@ -1145,10 +1150,6 @@ def new_xy_concatenated_sequence(
     .. [#] `K. Khodjasteh and D. A. Lidar, Physical Review Letters 95, 180501 (2005)
         <https://doi.org/10.1103/PhysRevLett.95.180501>`_
 
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
     """
     duration = _check_duration(duration)
 
