@@ -860,7 +860,7 @@ def new_quadratic_sequence(
         Number of inner Z-pi Pulses :math:`n_1`. Defaults to None.
         Not used if number_of_offsets is supplied.
     number_outer_offsets : int, optional
-        Number of outer X-pi Pulses :math:`n_2`. Defaults to None.
+        Number of outer X :math:`\pi`-pulses :math:`n_2`. Defaults to None.
         Not used if number_of_offsets is supplied.
     pre_post_rotation : bool, optional
         If True, a :math:`X_{\pi/2}` rotation is added at the
