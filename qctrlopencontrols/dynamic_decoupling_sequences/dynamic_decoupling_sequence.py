@@ -40,7 +40,7 @@ from ..utils import (
 
 class DynamicDecouplingSequence:
     r"""
-    Create a dynamic decoupling sequence.
+    Creates a dynamic decoupling sequence.
 
     Parameters
     ----------
