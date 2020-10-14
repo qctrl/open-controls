@@ -731,7 +731,7 @@ def new_walsh_sequence(
     duration : float
         Total duration of the sequence :math:`\tau`. Defaults to None.
     paley_order : int, optional
-        The paley order :math:`k` of the walsh sequence. Defaults to 1.
+        The paley order :math:`k` of the Walsh sequence. Defaults to 1.
     pre_post_rotation : bool, optional
         If True, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence.
