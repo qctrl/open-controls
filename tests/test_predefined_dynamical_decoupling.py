@@ -36,13 +36,12 @@ from qctrlopencontrols.constants import (
     SIGMA_Y,
     SIGMA_Z,
 )
-from qctrlopencontrols.exceptions import ArgumentsValueError
 
 
-def test_ramsey():
+def test_ramsey_sequence():
 
     """
-    Tests Ramsey sequence.
+    Tests the Ramsey sequence.
     """
 
     duration = 10.0
@@ -70,10 +69,10 @@ def test_ramsey():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
 
-def test_spin_echo():
+def test_spin_echo_sequence():
 
     """
-    Test for Spin Echo Sequence.
+    Test the spin echo sequence.
     """
 
     duration = 10.0
@@ -103,9 +102,9 @@ def test_spin_echo():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
 
-def test_curr_purcell():
+def test_carr_purcell_sequence():
     """
-    Test for Carr-Purcell (CP) sequence.
+    Test the Carr-Purcell sequence.
     """
 
     duration = 10.0
@@ -488,7 +487,7 @@ def test_x_concatenated_sequence():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
 
-def test_xyconcatenated_sequence():
+def test_xy_concatenated_sequence():
     """
     Tests the XY-concatenated sequence.
     """
