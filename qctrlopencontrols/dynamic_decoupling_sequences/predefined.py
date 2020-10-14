@@ -23,18 +23,6 @@ from typing import (
 
 import numpy as np
 
-from ..constants import (
-    CARR_PURCELL,
-    CARR_PURCELL_MEIBOOM_GILL,
-    PERIODIC_SINGLE_AXIS,
-    QUADRATIC,
-    RAMSEY,
-    SPIN_ECHO,
-    UHRIG_SINGLE_AXIS,
-    WALSH_SINGLE_AXIS,
-    X_CONCATENATED,
-    XY_CONCATENATED,
-)
 from ..exceptions import ArgumentsValueError
 from .dynamic_decoupling_sequence import DynamicDecouplingSequence
 
@@ -158,86 +146,6 @@ def _add_pre_post_rotations(
     )
 
     return offsets, rabi_rotations, azimuthal_angles, detuning_rotations
-
-
-def new_predefined_dds(scheme=SPIN_ECHO, **kwargs):
-    """
-    Creates a new instance of one of the predefined dynamic decoupling sequences.
-
-    Parameters
-    ----------
-    scheme : string
-        The name of the sequence. The available options are:
-
-        - 'Ramsey'
-        - 'spin echo'
-        - 'Carr-Purcell'
-        - 'Carr-Purcell-Meiboom-Gill'
-        - 'Uhrig single-axis'
-        - 'Periodic single-axis'
-        - 'Walsh single-axis'
-        - 'quadratic'
-        - 'X concatenated'
-        - 'XY concatenated'
-
-        Defaults to 'spin echo'.
-    kwargs : dict, optional
-        Additional keyword argument to create the sequence.
-
-    Returns
-    ------
-    qctrlopencontrols.dynamic_decoupling_sequences.DynamicDecouplingSequence
-        A dynamical decoupling sequence corresponding to `scheme`.
-
-    Raises
-    -----
-    ArgumentsValueError
-        Raised when an argument is invalid.
-    """
-
-    if scheme == RAMSEY:
-        sequence = new_ramsey_sequence(**kwargs)
-    elif scheme == SPIN_ECHO:
-        sequence = new_spin_echo_sequence(**kwargs)
-    elif scheme == CARR_PURCELL:
-        sequence = new_carr_purcell_sequence(**kwargs)
-    elif scheme == CARR_PURCELL_MEIBOOM_GILL:
-        sequence = new_cpmg_sequence(**kwargs)
-    elif scheme == UHRIG_SINGLE_AXIS:
-        sequence = new_uhrig_sequence(**kwargs)
-    elif scheme == PERIODIC_SINGLE_AXIS:
-        sequence = new_periodic_sequence(**kwargs)
-    elif scheme == WALSH_SINGLE_AXIS:
-        sequence = new_walsh_sequence(**kwargs)
-    elif scheme == QUADRATIC:
-        sequence = new_quadratic_sequence(**kwargs)
-    elif scheme == X_CONCATENATED:
-        sequence = new_x_concatenated_sequence(**kwargs)
-    elif scheme == XY_CONCATENATED:
-        sequence = new_xy_concatenated_sequence(**kwargs)
-    # Raise an error if the input sequence is not known
-    else:
-        raise ArgumentsValueError(
-            "Unknown predefined sequence scheme. Allowed schemes are: "
-            + ", ".join(
-                [
-                    RAMSEY,
-                    SPIN_ECHO,
-                    CARR_PURCELL,
-                    CARR_PURCELL_MEIBOOM_GILL,
-                    UHRIG_SINGLE_AXIS,
-                    PERIODIC_SINGLE_AXIS,
-                    WALSH_SINGLE_AXIS,
-                    QUADRATIC,
-                    X_CONCATENATED,
-                    XY_CONCATENATED,
-                ]
-            )
-            + ".",
-            {"sequence_name": scheme},
-        )
-
-    return sequence
 
 
 def _check_duration(duration: Optional[float] = None) -> float:
