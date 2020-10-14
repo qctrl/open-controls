@@ -679,7 +679,7 @@ def new_periodic_sequence(
 
     References
     ----------
-    .. [#] `Lorenza Viola and Emanuel Knill, Physical Review Letters 90, 037901 (2003).
+    .. [#] `L. Viola and E. Knill, Physical Review Letters 90, 037901 (2003).
         <https://link.aps.org/doi/10.1103/PhysRevLett.90.037901>`_
     """
     duration = _check_duration(duration)
