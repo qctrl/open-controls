@@ -45,7 +45,7 @@ class DynamicDecouplingSequence:
     Parameters
     ----------
     duration : float
-        Defaults to 1. The total time in seconds for the sequence.
+        Defaults to 1. The total time in seconds for the sequence :math:`\tau`.
     offsets : np.ndarray
         Defaults to None.
         The times offsets :math:`\{t_j\}` in seconds for the center of pulses.
@@ -83,7 +83,7 @@ class DynamicDecouplingSequence:
         + \delta_j\sigma_z)\right] \;,
 
     Note that in practice all DDSs typically have a :math:`X_{\pi/2}` operation at the start
-    :math:`t_0` and end :math:`t_\tau` of the sequence. This is because it is assumed that the
+    :math:`t = 0` and end :math:`t = \tau` of the sequence. This is because it is assumed that the
     qubit is initially in the state :math:`|0\rangle` and a superposition needs to be created and
     removed to make the qubit sensitive to dephasing.
     """
