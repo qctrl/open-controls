@@ -1023,9 +1023,9 @@ def new_x_concatenated_sequence(
     control sequence structures. It's parameterized by the concatenation order :math:`l` and
     the duration of the total sequence :math:`\tau`. Let the :math:`l`-th order of concatenation
     be denoted as :math:`C_l(\tau)`. In this scheme, zeroth order concatenation of duration
-    :math:`\tau` is defined as free evolution over a period of :math:`\tau`. We use a notation
-    of :math:`{\mathcal 1}(\tau)` to mean free evolution over duration :math:`\tau`.
-    We define the base sequence to be:
+    :math:`\tau` is defined as free evolution over a period of :math:`\tau`. Using the notation
+    :math:`{\mathcal 1}(\tau)` to represent free evolution over duration :math:`\tau`, the
+    the base sequence is:
 
     .. math::
         C_0(\tau) = {\mathcal 1}(\tau) \;.
