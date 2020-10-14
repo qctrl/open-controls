@@ -82,10 +82,10 @@ class DynamicDecouplingSequence:
         U_j = \exp\left[-\frac{i}{2}(\omega_j \cos \phi_j \sigma_x + \omega_j\sin \phi_j\sigma_y
         + \delta_j\sigma_z)\right] \;,
 
-    Note that in practice all DDSs typically have a :math:`X_{\pi/2}` operation at the start and
-    end of the sequence. This is because it is assumed that the qubit is initially in the
-    state :math:`|0\rangle` and a superposition needs to be created and removed to make the qubit
-    sensitive to dephasing.
+    Note that in practice all DDSs typically have a :math:`X_{\pi/2}` operation at the start
+    :math:`t_0` and end :math:`t_\tau` of the sequence. This is because it is assumed that the
+    qubit is initially in the state :math:`|0\rangle` and a superposition needs to be created and
+    removed to make the qubit sensitive to dephasing.
     """
 
     def __init__(
