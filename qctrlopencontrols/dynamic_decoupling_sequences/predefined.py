@@ -269,30 +269,40 @@ def _check_duration(duration: Optional[float] = None) -> float:
 
 
 def new_ramsey_sequence(duration=None, pre_post_rotation=False, **kwargs):
-    """
-    Creates Ramsey sequence.
+    r"""
+    Creates the Ramsey sequence.
 
     Parameters
     ----------
     duration : float, optional
-        Total duration of the sequence. Defaults to None
+        Total duration of the sequence :math:`\tau`. Defaults to None.
     pre_post_rotation : bool, optional
-        If True, a :math:`X_{\\pi.2}` rotation
+        If True, a :math:`X_{\pi / 2}` rotation
         is added at the start and end of the sequence.
     kwargs : dict
-        Additional keywords required by
-        qctrlopencontrols.sequences.DynamicDecouplingSequence
+        Additional keywords required by DynamicDecouplingSequence.
 
     Returns
     -------
-    qctrlopencontrols.dynamic_decoupling_sequences.DynamicDecouplingSequence
-        The Ramsey sequence
+    DynamicDecouplingSequence
+        The Ramsey sequence.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid.
 
+    Notes
+    -----
+    Technically, the Ramsey sequence [#]_ does not decouple the system from the environment.
+    Nevertheless, it is a useful sequence for characterization and testing protocols
+    and hence it is included. The sequence is parameterized by the duration :math:`\tau`
+    and contains no offsets in between the start and the end time of the sequence.
+
+    References
+    ----------
+    .. [#] `N. F. Ramsey, Physical Review 78, 695 (1950).
+        <https://link.aps.org/doi/10.1103/PhysRev.78.695>`_
     """
     duration = _check_duration(duration)
     offsets = []
@@ -317,29 +327,38 @@ def new_ramsey_sequence(duration=None, pre_post_rotation=False, **kwargs):
 
 
 def new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
-    """
-    Creates Spin Echo Sequence.
+    r"""
+    Creates the spin echo sequence.
 
     Parameters
     ---------
     duration : float, optional
-        Total duration of the sequence. Defaults to None
+        Total duration of the sequence :math:`\tau`. Defaults to None.
     pre_post_rotation : bool, optional
-        If True, a :math:`\\pi.2` rotation is added at the
+        If True, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence.
     kwargs : dict
-        Additional keywords required by
-        qctrlopencontrols.sequences.DynamicDecouplingSequence
+        Additional keywords required by DynamicDecouplingSequence.
 
     Returns
     -------
-    qctrlopencontrols.dynamic_decoupling_sequences.DynamicDecouplingSequence
-        Spin echo sequence
+    DynamicDecouplingSequence
+        The spin echo sequence.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid.
+
+    Notes
+    -----
+    The spin echo sequence [#]_ is parameterized by duration :math:`\tau`. There is a single
+    :math:`X_{\pi}` unitary operation at :math:`t_1 = \frac{\tau}{2}`.
+
+    References
+    ----------
+    .. [#] `E. L. Hahn, Physical Review 80, 580 (1950).
+        <https://link.aps.org/doi/10.1103/PhysRev.80.580>`_
     """
 
     duration = _check_duration(duration)
@@ -371,31 +390,50 @@ def new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
 def new_carr_purcell_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
-    """
-    Creates Carr-Purcell Sequence.
+    r"""
+    Creates the Carr-Purcell sequence.
 
     Parameters
     ---------
     duration : float, optional
-        Total duration of the sequence. Defaults to None
+        Total duration of the sequence :math:`\tau`. Defaults to None.
     number_of_offsets : int, optional
-        Number of offsets. Defaults to None
+        Number of offsets :math:`n`. Defaults to None.
     pre_post_rotation : bool, optional
-        If True, a :math:`\\pi.2` rotation is added at the
+        If True, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence.
     kwargs : dict
-        Additional keywords required by
-        qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
+        Additional keywords required by DynamicDecouplingSequence.
 
     Returns
     -------
-    qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
-        Carr-Purcell sequence
+    DynamicDecouplingSequence
+        The Carr-Purcell sequence.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid.
+
+    See Also
+    --------
+    new_cpmg_sequence
+
+    Notes
+    -----
+    The Carr-Purcell sequence [#]_ is parameterized by the number of offsets :math:`n`
+    and duration :math:`\tau`. The sequence is made up of a set of :math:`X_{\pi}`
+    operations applied at
+
+    .. math::
+        t_i = \frac{\tau}{n} \left(i -  \frac{1}{2}\right) \;,
+
+    where :math:`i = 1, \cdots, n`.
+
+    References
+    ----------
+    .. [#] `H. Y. Carr and E. M. Purcell, Physical Review 94, 630 (1954).
+        <https://link.aps.org/doi/10.1103/PhysRev.94.630>`_
     """
     duration = _check_duration(duration)
     number_of_offsets = number_of_offsets or 1
@@ -437,31 +475,50 @@ def new_carr_purcell_sequence(
 def new_cpmg_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
-    """
-    Creates Carr-Purcell-Meiboom-Gill Sequences.
+    r"""
+    Creates the Carr-Purcell-Meiboom-Gill sequence.
 
     Parameters
     ---------
     duration : float
-        Total duration of the sequence. Defaults to None
+        Total duration of the sequence :math:`\tau`. Defaults to None.
     number_of_offsets : int, optional
-        Number of offsets. Defaults to None
+        Number of offsets :math:`n`. Defaults to None.
     pre_post_rotation : bool, optional
-        If True, a :math:`\\pi.2` rotation is added at the
+        If True, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence.
     kwargs : dict
-        Additional keywords required by
-        qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
+        Additional keywords required by DynamicDecouplingSequence.
 
     Returns
     -------
-    qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
-        Carr-Purcell-Meiboom-Gill sequence
+    DynamicDecouplingSequence
+        The Carr-Purcell-Meiboom-Gill sequence.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid.
+
+    See Also
+    --------
+    new_carr_purcell_sequence
+
+    Notes
+    -----
+    The Carr-Purcell-Meiboom-Gill sequence [#]_ has the same timing and number of offsets as the
+    Carr-Purcell sequence. However, the intermediate :math:`\pi` rotations are applied along the
+    :math:`Y` axis. That is, it consists of :math:`Y_{\pi}` operations applied at times
+
+    .. math::
+        t_i = \frac{\tau}{n} \left(i - \frac{1}{2}\right) \;,
+
+    where :math:`i = 1, \cdots, n`.
+
+    References
+    ----------
+    .. [#] `S. Meiboom and D. Gill, Review of Scientific Instruments 29:8, 688 (1958).
+        <https://link.aps.org/doi/10.1063/1.1716296>`_
     """
     duration = _check_duration(duration)
     number_of_offsets = number_of_offsets or 1
@@ -504,31 +561,45 @@ def new_cpmg_sequence(
 def new_uhrig_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
-    """
-    Creates Uhrig Single Axis Sequence.
+    r"""
+    Creates the Uhrig sequence.
 
     Parameters
     ---------
     duration : float
-        Total duration of the sequence. Defaults to None
+        Total duration of the sequence :math:`\tau`. Defaults to None.
     number_of_offsets : int, optional
-        Number of offsets. Defaults to None
+        Number of offsets. Defaults to None.
     pre_post_rotation : bool, optional
-        If True, a :math:`\\pi.2` rotation is added at the
+        If True, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence.
     kwargs : dict
-        Additional keywords required by
-        qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
+        Additional keywords required by DynamicDecouplingSequence.
 
     Returns
     -------
-    qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
-        Uhrig (single-axis) sequence
+    DynamicDecouplingSequence
+        The Uhrig sequence.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid.
+
+    Notes
+    -----
+    The Uhrig sequence [#]_ is parameterized by duration :math:`\tau` and number of
+    offsets :math:`n`. The sequence consists of :math:`Y_{\pi}` operations at offsets given by
+
+    .. math::
+        t_i = \tau \sin^2 \left( \frac{i\pi}{2(n+1)} \right) \;,
+
+    where :math:`i = 1, \cdots, n`.
+
+    References
+    ----------
+    .. [#] `G. S. Uhrig, Physical Review Letters 98, 100504 (2007).
+        <https://link.aps.org/doi/10.1103/PhysRevLett.98.100504>`_
     """
     duration = _check_duration(duration)
     number_of_offsets = number_of_offsets or 1
@@ -571,31 +642,45 @@ def new_uhrig_sequence(
 def new_periodic_sequence(
     duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
 ):
-    """
-    Creates Periodic Single Axis Sequence.
+    r"""
+    Creates the periodic sequence.
 
     Parameters
     ---------
     duration : float
-        Total duration of the sequence. Defaults to None
+        Total duration of the sequence :math:`\tau`. Defaults to None.
     number_of_offsets : int, optional
-        Number of offsets. Defaults to None
+        Number of offsets :math:`n`. Defaults to None.
     pre_post_rotation : bool, optional
-        If True, a :math:`\\pi.2` rotation is added at the
+        If True, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence.
     kwargs : dict
-        Additional keywords required by
-        qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
+        Additional keywords required by DynamicDecouplingSequence.
 
     Returns
     -------
-    qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
-        Periodic (single-axis) sequence
+    DynamicDecouplingSequence
+        The periodic sequence.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid.
+
+    Notes
+    -----
+    The periodic sequence [#]_ is parameterized by duration :math:`\tau` and number of
+    offsets :math:`n`. The sequence consists of :math:`X_{\pi}` operations at offsets given by
+
+    .. math::
+        t_i = \frac{\tau}{n + 1} \;,
+
+    where :math:`i = 1, \cdots, n`.
+
+    References
+    ----------
+    .. [#] `L. Viola and E. Knill, Physical Review Letters 90, 037901 (2003).
+        <https://link.aps.org/doi/10.1103/PhysRevLett.90.037901>`_
     """
     duration = _check_duration(duration)
     number_of_offsets = number_of_offsets or 1
@@ -638,31 +723,69 @@ def new_periodic_sequence(
 def new_walsh_sequence(
     duration=None, paley_order=None, pre_post_rotation=False, **kwargs
 ):
-    """
-    Creates Walsh Single Axis Sequence.
+    r"""
+    Creates the Walsh sequence.
 
     Parameters
     ---------
     duration : float
-        Total duration of the sequence. Defaults to None
+        Total duration of the sequence :math:`\tau`. Defaults to None.
     paley_order : int, optional
-        Defaults to 1. The paley order of the walsh sequence.
+        The paley order :math:`k` of the Walsh sequence. Defaults to 1.
     pre_post_rotation : bool, optional
-        If True, a :math:`\\pi.2` rotation is added at the
+        If True, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence.
     kwargs : dict
-        Additional keywords required by
-        qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
+        Additional keywords required by DynamicDecouplingSequence.
 
     Returns
     -------
-    qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
-        Walsh (single-axis) sequence
+    DynamicDecouplingSequence
+        The Walsh sequence.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid.
+
+    Notes
+    -----
+    The Walsh sequence is defined by the switching function :math:`y(t)` given by a
+    Walsh function. To define the Walsh sequence, we first introduce the Rademacher
+    function [#]_, which is defined as
+
+    .. math::
+        R_j(x) := {\rm sgn}\left[\sin(2^j \pi x)\right] \;, \quad\; x \in [0, 1]\;, \; j \geq 0 \;.
+
+    The :math:`j`-th Rademacher function :math:`R_j(x)` is thus a periodic square wave switching
+    :math:`2^{j-1}` times between :math:`\pm 1` over the interval :math:`[0, 1]`. The Walsh
+    function of Paley order :math:`k` is denoted :math:`{\rm PAL}_k(x)` and defined as
+
+    .. math::
+        {\rm PAL}_k(x) = \Pi_{j = 1}^m R_j(x)^{b_j} \;, \quad\; x \in [0, 1] \;.
+
+    where :math:`(b_m, b_{m-1}, \cdots, b_1)` is the binary representation of :math:`k`.
+    That is
+
+    .. math::
+        k = b_m 2^{m-1} + b_{m-1}2^{m-2} + \cdots + b_12^0 \;,
+
+    where :math:`m = m(k)` indexes the most significant binary bit of :math:`k`.
+
+    The :math:`k`-th order Walsh sequence [#]_ is then defined by
+
+    .. math::
+        y(t) = {\rm PAL}_k(t / \tau) \;
+
+    with offset times :math:`\{t_j / \tau\}` defined at the switching times of the Walsh function.
+
+    References
+    ----------
+    .. [#] `H. Rademacher, Math. Ann. 87, 112–138 (1922).
+        <https://doi.org/10.1007/BF01458040>`_
+
+    .. [#] `H. Ball and M. J Biercuk, EPJ Quantum Technol. 2, 11 (2015).
+        <https://doi.org/10.1140/epjqt/s40507-015-0022-4>`_
     """
     duration = _check_duration(duration)
     paley_order = paley_order or 1
@@ -725,36 +848,69 @@ def new_quadratic_sequence(
     pre_post_rotation=False,
     **kwargs
 ):
-    """
-    Creates Quadratic Decoupling Sequence.
+    r"""
+    Creates the quadratic sequence.
 
     Parameters
     ----------
     duration : float, optional
-        defaults to None
-        The total duration of the sequence
-    number_outer_offsets : int, optional
-        Number of outer X-pi Pulses. Defaults to None. Not used if number_of_offsets
-        is supplied.
+        Defaults to None.
+        The total duration of the sequence :math:`\tau`.
     number_inner_offsets : int, optional
-        Number of inner Z-pi Pulses. Defaults to None. Not used if number_of_offsets
-        is supplied
+        Number of inner :math:`Z_{\pi}` pulses :math:`n_1`. Defaults to None.
+    number_outer_offsets : int, optional
+        Number of outer :math:`X_{\pi}` pulses :math:`n_2`. Defaults to None.
     pre_post_rotation : bool, optional
-        If True, a :math:`\\pi.2` rotation is added at the
+        If True, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence.
     kwargs : dict
-        Additional keywords required by
-        qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
+        Additional keywords required by DynamicDecouplingSequence.
 
     Returns
     -------
-    qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
-        Quadratic sequence
+    DynamicDecouplingSequence
+        The quadratic sequence.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid.
+
+    See Also
+    --------
+    new_uhrig_sequence
+
+    Notes
+    -----
+    The quadratic sequence [#]_ is parameterized by duration :math:`\tau`, number of inner offsets
+    :math:`n_1`, and number of outer offsets :math:`n_2`. The outer sequence consists of
+    :math:`n_2` pulses of type :math:`X_{\pi}`, which partition the time-domain into :math:`n_2+1`
+    sub-intervals on which inner sequences consisting of :math:`n_1` pulses of type
+    :math:`Z_{\pi}` are nested. The total number of offsets is :math:`n = n_1 + n_2(n_1 + 1)`.
+
+    The pulse times for outer sequence :math:`(X_{\pi}^1, \cdots, X_{\pi}^{n_2})` are defined
+    according to the Uhrig sequence for :math:`t \in [0, \tau]`. The :math:`j`-th
+    :math:`X_{\pi}` pulse, therefore has timing offset defined by
+
+    .. math::
+        t_x^j = \tau \sin^2 \left[ \frac{j \pi}{2(n_2 + 1)}  \right] \;,
+
+    where :math:`j = 1, \cdots, n_2`. On each sub-interval defined by the outer sequence,
+    an inner sequence :math:`(Z_{\pi}^1, \cdots, Z_{\pi}^{n_1})` is implemented. The pulse times
+    for the inner sequences are also defined according to the Uhrig sequence. The :math:`k`-th
+    pulse of the :math:`j`-th inner sequence has timing offset defined by
+
+    .. math::
+        t_z(k, j) = (t_x^j - t_x^{j - 1}) \sin^2 \left[ \frac{k \pi} {2 (n_1 + 1)} \right]
+                    + t_{x}^{j - 1} \;,
+
+    where :math:`k = 1, \cdots, n_1` and :math:`j = 1, \cdots, n_2 + 1`.
+
+    References
+    ----------
+    .. [#] `J. R. West, B. H. Fong, and D. A. Lidar,
+        Physical Review Letters 104, 130501 (2010).
+        <https://doi.org/10.1103/PhysRevLett.104.130501>`_
     """
     duration = _check_duration(duration)
 
@@ -830,34 +986,59 @@ def new_quadratic_sequence(
 def new_x_concatenated_sequence(
     duration=1.0, concatenation_order=None, pre_post_rotation=False, **kwargs
 ):
-    """
-    Creates X-Concatenated Dynamic Decoupling Sequence.
-    Concatenation of base sequence C(\tau/2)XC(\tau/2)X
+    r"""
+    Creates the :math:`X`-concatenated sequence.
 
     Parameters
     ----------
     duration : float, optional
-        defaults to None
-        The total duration of the sequence
+        Defaults to None.
+        The total duration of the sequence :math:`\tau`.
     concatenation_order : int, optional
-        defaults to None
-        The number of concatenation of base sequence
+        Defaults to None.
+        The number of concatenation of base sequence.
     pre_post_rotation : bool, optional
-        If True, a :math:`\\pi.2` rotation is added at the
+        If True, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence.
     kwargs : dict
-        Additional keywords required by
-        qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
+        Additional keywords required by DynamicDecouplingSequence.
 
     Returns
     -------
-    qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
-        X concatenated sequence
+    DynamicDecouplingSequence
+        The :math:`X`-concatenated sequence.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid.
+
+    See Also
+    --------
+    new_xy_concatenated_sequence
+
+    Notes
+    -----
+    The :math:`X`-concatenated sequence is constructed by recursively concatenating
+    control sequence structures. It's parameterized by the concatenation order :math:`l` and
+    the duration of the total sequence :math:`\tau`. Let the :math:`l`-th order of concatenation
+    be denoted as :math:`C_l(\tau)`. In this scheme, zeroth order concatenation of duration
+    :math:`\tau` is defined as free evolution over a period of :math:`\tau`. Using the notation
+    :math:`{\mathcal 1}(\tau)` to represent free evolution over duration :math:`\tau`, the
+    the base sequence is:
+
+    .. math::
+        C_0(\tau) = {\mathcal 1}(\tau) \;.
+
+    The :math:`l`-th order :math:`X`-concatenated sequence can be recursively defined as
+
+    .. math::
+        C_l(\tau) = C_{l - 1}(\tau / 2) X_{\pi} C_{l - 1}(\tau / 2) X_{\pi} \;.
+
+    References
+    ----------
+    .. [#] `K. Khodjasteh and D. A. Lidar, Physical Review Letters 95, 180501 (2005).
+        <https://doi.org/10.1103/PhysRevLett.95.180501>`_
     """
     duration = _check_duration(duration)
 
@@ -912,34 +1093,61 @@ def new_x_concatenated_sequence(
 def new_xy_concatenated_sequence(
     duration=1.0, concatenation_order=None, pre_post_rotation=False, **kwargs
 ):
-    """
-    Creates XY-Concatenated Dynamic Decoupling Sequence.
-    Concatenation of base sequence C(\tau/4)XC(\tau/4)YC(\tau/4)XC(\tau/4)Y
+    r"""
+    Creates the :math:`XY`-Concatenated sequence.
 
     Parameters
     ----------
     duration : float, optional
-        defaults to None
-        The total duration of the sequence
+        Defaults to None.
+        The total duration of the sequence :math:`\tau`.
     concatenation_order : int, optional
-        defaults to None
-        The number of concatenation of base sequence
+        Defaults to None.
+        The number of concatenation of base sequence :math:`l`.
     pre_post_rotation : bool, optional
-        If True, a :math:`\\pi.2` rotation is added at the
+        If True, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence.
     kwargs : dict
-        Additional keywords required by
-        qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
+        Additional keywords required by DynamicDecouplingSequence.
 
     Returns
     -------
-    qctrlopencontrols.dynamical_decoupling_sequences.DynamicDecouplingSequence
-        XY concatenated sequence.
+    DynamicDecouplingSequence
+        The :math:`XY`-concatenated sequence.
 
     Raises
     ------
     ArgumentsValueError
         Raised when an argument is invalid.
+
+    See Also
+    --------
+    new_x_concatenated_sequence
+
+    Notes
+    -----
+    The :math:`XY`-concatenated sequence is constructed by recursively concatenating
+    control sequence structures. It's parameterized by the concatenation order :math:`l` and
+    the duration of the total sequence :math:`\tau`. Let the :math:`l`-th order of concatenation
+    be denoted as :math:`C_l(\tau)`. In this scheme, zeroth order concatenation of duration
+    :math:`\tau` is defined as free evolution over a period of :math:`\tau`. Using the notation
+    :math:`{\mathcal 1}(\tau)` to represent free evolution over duration :math:`\tau`, the
+    the base sequence is:
+
+    .. math::
+        C_0(\tau) = {\mathcal 1}(\tau) \;.
+
+    The :math:`l`-th order :math:`XY`-concatenated sequence can be recursively defined as
+
+    .. math::
+        C_l(\tau) = C_{l - 1}(\tau / 4) X_{\pi} C_{l - 1}(\tau / 4) Y_{\pi}
+                    C_{l - 1}(\tau / 4) X_{\pi} C_{l - 1}(\tau / 4) Y_{\pi} \;.
+
+    References
+    ----------
+    .. [#] `K. Khodjasteh and D. A. Lidar, Physical Review Letters 95, 180501 (2005).
+        <https://doi.org/10.1103/PhysRevLett.95.180501>`_
+
     """
     duration = _check_duration(duration)
 
