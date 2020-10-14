@@ -857,7 +857,7 @@ def new_quadratic_sequence(
         Defaults to None.
         The total duration of the sequence :math:`\tau`.
     number_inner_offsets : int, optional
-        Number of inner Z-pi Pulses :math:`n_1`. Defaults to None.
+        Number of inner Z :math:`\pi`-pulses :math:`n_1`. Defaults to None.
         Not used if number_of_offsets is supplied.
     number_outer_offsets : int, optional
         Number of outer X :math:`\pi`-pulses :math:`n_2`. Defaults to None.
