@@ -502,7 +502,7 @@ def new_cpmg_sequence(
     Notes
     -----
     The Carr-Purcell-Meiboom-Gill sequence [#]_ has the same timing and number of offsets as the
-    Carr-Purcell sequence. However, the intermediate :math:`Pi` rotations are applied along the
+    Carr-Purcell sequence. However, the intermediate :math:`\pi` rotations are applied along the
     :math:`Y` axis. That is, it consists of :math:`Y_{\pi}` operations applied at times
 
     .. math::
