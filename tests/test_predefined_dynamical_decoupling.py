@@ -18,22 +18,23 @@ Tests for Predefined DDS.
 
 
 import numpy as np
-import pytest
 
-from qctrlopencontrols import new_predefined_dds
+from qctrlopencontrols import (
+    new_carr_purcell_sequence,
+    new_cpmg_sequence,
+    new_periodic_sequence,
+    new_quadratic_sequence,
+    new_ramsey_sequence,
+    new_spin_echo_sequence,
+    new_uhrig_sequence,
+    new_walsh_sequence,
+    new_x_concatenated_sequence,
+    new_xy_concatenated_sequence,
+)
 from qctrlopencontrols.constants import (
-    CARR_PURCELL,
-    CARR_PURCELL_MEIBOOM_GILL,
-    PERIODIC_SINGLE_AXIS,
-    QUADRATIC,
     SIGMA_X,
     SIGMA_Y,
     SIGMA_Z,
-    SPIN_ECHO,
-    UHRIG_SINGLE_AXIS,
-    WALSH_SINGLE_AXIS,
-    X_CONCATENATED,
-    XY_CONCATENATED,
 )
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
@@ -46,7 +47,7 @@ def test_ramsey():
 
     duration = 10.0
 
-    sequence = new_predefined_dds(scheme="Ramsey", duration=duration)
+    sequence = new_ramsey_sequence(duration=duration)
 
     _offsets = np.array([])
     _rabi_rotations = np.array([])
@@ -58,9 +59,7 @@ def test_ramsey():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = new_predefined_dds(
-        scheme="Ramsey", duration=duration, pre_post_rotation=True
-    )
+    sequence = new_ramsey_sequence(duration=duration, pre_post_rotation=True)
 
     _rabi_rotations = np.array([np.pi / 2, np.pi / 2])
     _azimuthal_angles = np.array([0.0, np.pi])
@@ -79,7 +78,7 @@ def test_spin_echo():
 
     duration = 10.0
 
-    sequence = new_predefined_dds(scheme=SPIN_ECHO, duration=duration)
+    sequence = new_spin_echo_sequence(duration=duration)
 
     _offsets = np.array([duration / 2.0])
     _rabi_rotations = np.array([np.pi])
@@ -91,9 +90,7 @@ def test_spin_echo():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = new_predefined_dds(
-        scheme=SPIN_ECHO, duration=duration, pre_post_rotation=True
-    )
+    sequence = new_spin_echo_sequence(duration=duration, pre_post_rotation=True)
 
     _offsets = np.array([0, duration / 2.0, duration])
     _rabi_rotations = np.array([np.pi / 2, np.pi, np.pi / 2])
@@ -114,8 +111,8 @@ def test_curr_purcell():
     duration = 10.0
     number_of_offsets = 4
 
-    sequence = new_predefined_dds(
-        scheme=CARR_PURCELL, duration=duration, number_of_offsets=number_of_offsets
+    sequence = new_carr_purcell_sequence(
+        duration=duration, number_of_offsets=number_of_offsets
     )
 
     _spacing = duration / number_of_offsets
@@ -136,11 +133,8 @@ def test_curr_purcell():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = new_predefined_dds(
-        scheme=CARR_PURCELL,
-        duration=duration,
-        number_of_offsets=number_of_offsets,
-        pre_post_rotation=True,
+    sequence = new_carr_purcell_sequence(
+        duration=duration, number_of_offsets=number_of_offsets, pre_post_rotation=True,
     )
 
     _offsets = np.array(
@@ -163,18 +157,16 @@ def test_curr_purcell():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
 
-def test_curr_purcell_meiboom_sequence():
+def test_cpmg_sequence():
     """
-    Tests for Carr-Purcell-Meiboom-Sequence (CPMG) sequence.
+    Tests the CPMG sequence.
     """
 
     duration = 10.0
     number_of_offsets = 4
 
-    sequence = new_predefined_dds(
-        scheme=CARR_PURCELL_MEIBOOM_GILL,
-        duration=duration,
-        number_of_offsets=number_of_offsets,
+    sequence = new_cpmg_sequence(
+        duration=duration, number_of_offsets=number_of_offsets,
     )
 
     _spacing = duration / number_of_offsets
@@ -195,11 +187,8 @@ def test_curr_purcell_meiboom_sequence():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = new_predefined_dds(
-        scheme=CARR_PURCELL_MEIBOOM_GILL,
-        duration=duration,
-        number_of_offsets=number_of_offsets,
-        pre_post_rotation=True,
+    sequence = new_cpmg_sequence(
+        duration=duration, number_of_offsets=number_of_offsets, pre_post_rotation=True,
     )
 
     _offsets = np.array(
@@ -222,16 +211,16 @@ def test_curr_purcell_meiboom_sequence():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
 
-def test_uhrig_single_axis_sequence():
+def test_uhrig_sequence():
     """
-    Tests for Uhrig Single Axis Sequence.
+    Tests the Uhrig sequence.
     """
 
     duration = 10.0
     number_of_offsets = 4
 
-    sequence = new_predefined_dds(
-        scheme=UHRIG_SINGLE_AXIS, duration=duration, number_of_offsets=number_of_offsets
+    sequence = new_uhrig_sequence(
+        duration=duration, number_of_offsets=number_of_offsets
     )
 
     constant = 0.5 / (number_of_offsets + 1)
@@ -250,11 +239,8 @@ def test_uhrig_single_axis_sequence():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = new_predefined_dds(
-        scheme=UHRIG_SINGLE_AXIS,
-        duration=duration,
-        number_of_offsets=number_of_offsets,
-        pre_post_rotation=True,
+    sequence = new_uhrig_sequence(
+        duration=duration, number_of_offsets=number_of_offsets, pre_post_rotation=True,
     )
 
     _offsets = np.array(_delta_positions)
@@ -272,18 +258,16 @@ def test_uhrig_single_axis_sequence():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
 
-def test_periodic_single_axis_sequence():
+def test_periodic_sequence():
     """
-    Tests for Periodic Single Axis Sequence.
+    Tests the periodic sequence.
     """
 
     duration = 10.0
     number_of_offsets = 4
 
-    sequence = new_predefined_dds(
-        scheme=PERIODIC_SINGLE_AXIS,
-        duration=duration,
-        number_of_offsets=number_of_offsets,
+    sequence = new_periodic_sequence(
+        duration=duration, number_of_offsets=number_of_offsets,
     )
 
     constant = 1 / (number_of_offsets + 1)
@@ -301,11 +285,8 @@ def test_periodic_single_axis_sequence():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = new_predefined_dds(
-        scheme=PERIODIC_SINGLE_AXIS,
-        duration=duration,
-        number_of_offsets=number_of_offsets,
-        pre_post_rotation=True,
+    sequence = new_periodic_sequence(
+        duration=duration, number_of_offsets=number_of_offsets, pre_post_rotation=True,
     )
 
     _offsets = np.array(_delta_positions)
@@ -321,17 +302,15 @@ def test_periodic_single_axis_sequence():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
 
-def test_walsh_single_axis_sequence():
+def test_walsh_sequence():
     """
-    Tests for Periodic Single Axis Sequence.
+    Tests the Walsh sequence.
     """
 
     duration = 10.0
     paley_order = 20
 
-    sequence = new_predefined_dds(
-        scheme=WALSH_SINGLE_AXIS, duration=duration, paley_order=paley_order
-    )
+    sequence = new_walsh_sequence(duration=duration, paley_order=paley_order)
 
     hamming_weight = 5
     samples = 2 ** hamming_weight
@@ -362,11 +341,8 @@ def test_walsh_single_axis_sequence():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = new_predefined_dds(
-        scheme=WALSH_SINGLE_AXIS,
-        duration=duration,
-        paley_order=paley_order,
-        pre_post_rotation=True,
+    sequence = new_walsh_sequence(
+        duration=duration, paley_order=paley_order, pre_post_rotation=True,
     )
 
     _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration],)
@@ -385,15 +361,14 @@ def test_walsh_single_axis_sequence():
 
 def test_quadratic_sequence():
     """
-    Tests for Quadratic Sequence.
+    Tests the quadratic sequence.
     """
 
     duration = 10.0
     number_inner_offsets = 4
     number_outer_offsets = 4
 
-    sequence = new_predefined_dds(
-        scheme=QUADRATIC,
+    sequence = new_quadratic_sequence(
         duration=duration,
         number_inner_offsets=number_inner_offsets,
         number_outer_offsets=number_outer_offsets,
@@ -446,8 +421,7 @@ def test_quadratic_sequence():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = new_predefined_dds(
-        scheme=QUADRATIC,
+    sequence = new_quadratic_sequence(
         duration=duration,
         number_inner_offsets=number_inner_offsets,
         number_outer_offsets=number_outer_offsets,
@@ -471,18 +445,15 @@ def test_quadratic_sequence():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
 
-def test_xconcatenated_sequence():
+def test_x_concatenated_sequence():
     """
-    Tests X-CDD Sequence.
+    Tests the X-concatenated sequence.
     """
-
     duration = 10.0
     concatenation_order = 3
 
-    sequence = new_predefined_dds(
-        scheme=X_CONCATENATED,
-        duration=duration,
-        concatenation_order=concatenation_order,
+    sequence = new_x_concatenated_sequence(
+        duration=duration, concatenation_order=concatenation_order,
     )
 
     _spacing = duration / (2 ** concatenation_order)
@@ -498,8 +469,7 @@ def test_xconcatenated_sequence():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = new_predefined_dds(
-        scheme=X_CONCATENATED,
+    sequence = new_x_concatenated_sequence(
         duration=duration,
         concatenation_order=concatenation_order,
         pre_post_rotation=True,
@@ -520,16 +490,14 @@ def test_xconcatenated_sequence():
 
 def test_xyconcatenated_sequence():
     """
-    Tests XY4-CDD Sequence.
+    Tests the XY-concatenated sequence.
     """
 
     duration = 10.0
     concatenation_order = 2
 
-    sequence = new_predefined_dds(
-        scheme=XY_CONCATENATED,
-        duration=duration,
-        concatenation_order=concatenation_order,
+    sequence = new_xy_concatenated_sequence(
+        duration=duration, concatenation_order=concatenation_order,
     )
 
     _spacing = duration / (2 ** (concatenation_order * 2))
@@ -592,8 +560,7 @@ def test_xyconcatenated_sequence():
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
-    sequence = new_predefined_dds(
-        scheme=XY_CONCATENATED,
+    sequence = new_xy_concatenated_sequence(
         duration=duration,
         concatenation_order=concatenation_order,
         pre_post_rotation=True,
@@ -614,62 +581,6 @@ def test_xyconcatenated_sequence():
     assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
-
-
-def test_attribute_values():
-    """
-    Tests the correctness of the attribute values.
-    """
-
-    # Check that errors are raised correctly
-
-    # duration cannot be <= 0
-    with pytest.raises(ArgumentsValueError):
-        _ = new_predefined_dds(scheme=SPIN_ECHO, duration=-2)
-
-        # number_of_offsets cannot be <= 0
-        _ = new_predefined_dds(
-            scheme=CARR_PURCELL_MEIBOOM_GILL, duration=2, number_of_offsets=-1
-        )
-        # for QDD, none of the offsets can be <=0
-        _ = new_predefined_dds(
-            scheme=QUADRATIC,
-            duration=2,
-            number_inner_offsets=-1,
-            number_outer_offsets=2,
-        )
-        _ = new_predefined_dds(
-            scheme=QUADRATIC,
-            duration=2,
-            number_inner_offsets=1,
-            number_outer_offsets=-2,
-        )
-        _ = new_predefined_dds(
-            scheme=QUADRATIC,
-            duration=2,
-            number_inner_offsets=-1,
-            number_outer_offsets=-2,
-        )
-
-        # for x-cdd and xy-cdd concatenation_order cannot be <=0
-        _ = new_predefined_dds(
-            scheme=X_CONCATENATED, duration=2, concatenation_order=-1
-        )
-        _ = new_predefined_dds(
-            scheme=X_CONCATENATED, duration=-2, concatenation_order=1
-        )
-        _ = new_predefined_dds(
-            scheme=X_CONCATENATED, duration=-2, concatenation_order=-1
-        )
-        _ = new_predefined_dds(
-            scheme=XY_CONCATENATED, duration=2, concatenation_order=-1
-        )
-        _ = new_predefined_dds(
-            scheme=XY_CONCATENATED, duration=-2, concatenation_order=1
-        )
-        _ = new_predefined_dds(
-            scheme=XY_CONCATENATED, duration=-2, concatenation_order=-1
-        )
 
 
 def _pulses_produce_identity(sequence):
@@ -717,9 +628,7 @@ def test_if_ramsey_sequence_is_identity():
     Tests if the product of the pulses in the Ramsey sequence with pre/post
     pi/2-pulses is an identity.
     """
-    ramsey_sequence = new_predefined_dds(
-        scheme="Ramsey", duration=10.0, pre_post_rotation=True
-    )
+    ramsey_sequence = new_ramsey_sequence(duration=10.0, pre_post_rotation=True)
 
     assert _pulses_produce_identity(ramsey_sequence)
 
@@ -729,9 +638,7 @@ def test_if_spin_echo_sequence_is_identity():
     Tests if the product of the pulses in a Spin Echo sequence with pre/post
     pi/2-pulses is an identity.
     """
-    spin_echo_sequence = new_predefined_dds(
-        scheme=SPIN_ECHO, duration=10.0, pre_post_rotation=True
-    )
+    spin_echo_sequence = new_spin_echo_sequence(duration=10.0, pre_post_rotation=True)
 
     assert _pulses_produce_identity(spin_echo_sequence)
 
@@ -741,8 +648,8 @@ def test_if_carr_purcell_sequence_with_odd_pulses_is_identity():
     Tests if the product of the pulses in a Carr-Purcell sequence with pre/post
     pi/2-pulses is an identity, when the number of pulses is odd.
     """
-    odd_carr_purcell_sequence = new_predefined_dds(
-        scheme=CARR_PURCELL, duration=10.0, number_of_offsets=7, pre_post_rotation=True
+    odd_carr_purcell_sequence = new_carr_purcell_sequence(
+        duration=10.0, number_of_offsets=7, pre_post_rotation=True
     )
 
     assert _pulses_produce_identity(odd_carr_purcell_sequence)
@@ -753,8 +660,8 @@ def test_if_carr_purcell_sequence_with_even_pulses_is_identity():
     Tests if the product of the pulses in a Carr-Purcell sequence with pre/post
     pi/2-pulses is an identity, when the number of pulses is even.
     """
-    even_carr_purcell_sequence = new_predefined_dds(
-        scheme=CARR_PURCELL, duration=10.0, number_of_offsets=8, pre_post_rotation=True
+    even_carr_purcell_sequence = new_carr_purcell_sequence(
+        duration=10.0, number_of_offsets=8, pre_post_rotation=True
     )
 
     assert _pulses_produce_identity(even_carr_purcell_sequence)
@@ -765,11 +672,8 @@ def test_if_cpmg_sequence_with_odd_pulses_is_identity():
     Tests if the product of the pulses in a CPMG sequence with pre/post
     pi/2-pulses and an extra Z rotation is an identity, when the number of pulses is odd.
     """
-    odd_cpmg_sequence = new_predefined_dds(
-        scheme=CARR_PURCELL_MEIBOOM_GILL,
-        duration=10.0,
-        number_of_offsets=7,
-        pre_post_rotation=True,
+    odd_cpmg_sequence = new_cpmg_sequence(
+        duration=10.0, number_of_offsets=7, pre_post_rotation=True,
     )
 
     assert _pulses_produce_identity(odd_cpmg_sequence)
@@ -780,11 +684,8 @@ def test_if_cpmg_sequence_with_even_pulses_is_identity():
     Tests if the product of the pulses in a CPMG sequence with pre/post
     pi/2-pulses is an identity, when the number of pulses is even.
     """
-    even_cpmg_sequence = new_predefined_dds(
-        scheme=CARR_PURCELL_MEIBOOM_GILL,
-        duration=10.0,
-        number_of_offsets=8,
-        pre_post_rotation=True,
+    even_cpmg_sequence = new_cpmg_sequence(
+        duration=10.0, number_of_offsets=8, pre_post_rotation=True,
     )
 
     assert _pulses_produce_identity(even_cpmg_sequence)
@@ -795,11 +696,8 @@ def test_if_uhrig_sequence_with_odd_pulses_is_identity():
     Tests if the product of the pulses in an Uhrig sequence with pre/post
     pi/2-pulses and an extra Z rotation is an identity, when the number of pulses is odd.
     """
-    odd_uhrig_sequence = new_predefined_dds(
-        scheme=UHRIG_SINGLE_AXIS,
-        duration=10.0,
-        number_of_offsets=7,
-        pre_post_rotation=True,
+    odd_uhrig_sequence = new_uhrig_sequence(
+        duration=10.0, number_of_offsets=7, pre_post_rotation=True,
     )
 
     assert _pulses_produce_identity(odd_uhrig_sequence)
@@ -810,11 +708,8 @@ def test_if_uhrig_sequence_with_even_pulses_is_identity():
     Tests if the product of the pulses in an Uhrig sequence with pre/post
     pi/2-pulses is an identity, when the number of pulses is even.
     """
-    even_uhrig_sequence = new_predefined_dds(
-        scheme=UHRIG_SINGLE_AXIS,
-        duration=10.0,
-        number_of_offsets=8,
-        pre_post_rotation=True,
+    even_uhrig_sequence = new_uhrig_sequence(
+        duration=10.0, number_of_offsets=8, pre_post_rotation=True,
     )
 
     assert _pulses_produce_identity(even_uhrig_sequence)
@@ -825,11 +720,8 @@ def test_if_periodic_sequence_with_odd_pulses_is_identity():
     Tests if the product of the pulses in a periodic DDS with pre/post
     pi/2-pulses is an identity, when the number of pulses is odd.
     """
-    odd_periodic_sequence = new_predefined_dds(
-        scheme=PERIODIC_SINGLE_AXIS,
-        duration=10.0,
-        number_of_offsets=7,
-        pre_post_rotation=True,
+    odd_periodic_sequence = new_periodic_sequence(
+        duration=10.0, number_of_offsets=7, pre_post_rotation=True,
     )
 
     assert _pulses_produce_identity(odd_periodic_sequence)
@@ -840,11 +732,8 @@ def test_if_periodic_sequence_with_even_pulses_is_identity():
     Tests if the product of the pulses in a periodic DDS with pre/post
     pi/2-pulses is an identity, when the number of pulses is even.
     """
-    even_periodic_sequence = new_predefined_dds(
-        scheme=PERIODIC_SINGLE_AXIS,
-        duration=10.0,
-        number_of_offsets=8,
-        pre_post_rotation=True,
+    even_periodic_sequence = new_periodic_sequence(
+        duration=10.0, number_of_offsets=8, pre_post_rotation=True,
     )
 
     assert _pulses_produce_identity(even_periodic_sequence)
@@ -855,8 +744,8 @@ def test_if_walsh_sequence_with_odd_pulses_is_identity():
     Tests if the product of the pulses in a Walsh sequence with pre/post
     pi/2-pulses is an identity, when the number of pulses is odd.
     """
-    odd_walsh_sequence = new_predefined_dds(
-        scheme=WALSH_SINGLE_AXIS, duration=10.0, paley_order=7, pre_post_rotation=True
+    odd_walsh_sequence = new_walsh_sequence(
+        duration=10.0, paley_order=7, pre_post_rotation=True
     )
 
     # A Walsh sequence with paley_order 7 has 5 pi-pulses + 2 pi/2-pulses,
@@ -871,8 +760,8 @@ def test_if_walsh_sequence_with_even_pulses_is_identity():
     Tests if the product of the pulses in a quadratic sequence with pre/post
     pi/2-pulses is an identity, when the number of pulses is even.
     """
-    even_walsh_sequence = new_predefined_dds(
-        scheme=WALSH_SINGLE_AXIS, duration=10.0, paley_order=6, pre_post_rotation=True
+    even_walsh_sequence = new_walsh_sequence(
+        duration=10.0, paley_order=6, pre_post_rotation=True
     )
 
     # A Walsh sequence with paley_order 6 has 4 pi-pulses + 2 pi/2-pulses,
@@ -887,8 +776,7 @@ def test_if_quadratic_sequence_with_odd_pulses_is_identity():
     Tests if the product of the pulses in a quadratic sequence with pre/post
     pi/2-pulses is an identity, when the total number of pulses is odd.
     """
-    odd_quadratic_sequence = new_predefined_dds(
-        scheme=QUADRATIC,
+    odd_quadratic_sequence = new_quadratic_sequence(
         duration=10.0,
         number_inner_offsets=7,
         number_outer_offsets=7,
@@ -907,8 +795,7 @@ def test_if_quadratic_sequence_with_even_pulses_is_identity():
     Tests if the product of the pulses in a quadratic sequence with pre/post
     pi/2-pulses is an identity, when the total number of pulses is even.
     """
-    even_quadratic_sequence = new_predefined_dds(
-        scheme=QUADRATIC,
+    even_quadratic_sequence = new_quadratic_sequence(
         duration=10.0,
         number_inner_offsets=8,
         number_outer_offsets=8,
@@ -928,8 +815,7 @@ def test_if_quadratic_sequence_with_odd_inner_pulses_is_identity():
     pi/2-pulses and an extra rotation is an identity, when the total number
     of inner pulses is odd.
     """
-    inner_odd_quadratic_sequence = new_predefined_dds(
-        scheme=QUADRATIC,
+    inner_odd_quadratic_sequence = new_quadratic_sequence(
         duration=10.0,
         number_inner_offsets=7,
         number_outer_offsets=8,
@@ -948,8 +834,7 @@ def test_if_quadratic_sequence_with_even_inner_pulses_is_identity():
     Tests if the product of the pulses in a quadratic sequence with pre/post
     pi/2-pulses is an identity, when the total number of inner pulses is even.
     """
-    inner_even_quadratic_sequence = new_predefined_dds(
-        scheme=QUADRATIC,
+    inner_even_quadratic_sequence = new_quadratic_sequence(
         duration=10.0,
         number_inner_offsets=8,
         number_outer_offsets=7,
@@ -968,11 +853,8 @@ def test_if_x_concatenated_sequence_is_identity():
     Tests if the product of the pulses in an X concatenated sequence with pre/post
     pi/2-pulses is an identity.
     """
-    x_concat_sequence = new_predefined_dds(
-        scheme=X_CONCATENATED,
-        duration=10.0,
-        concatenation_order=4,
-        pre_post_rotation=True,
+    x_concat_sequence = new_x_concatenated_sequence(
+        duration=10.0, concatenation_order=4, pre_post_rotation=True,
     )
 
     assert _pulses_produce_identity(x_concat_sequence)
@@ -983,11 +865,8 @@ def test_if_xy_concatenated_sequence_is_identity():
     Tests if the product of the pulses in an XY concatenated sequence with pre/post
     pi/2-pulses is an identity.
     """
-    xy_concat_sequence = new_predefined_dds(
-        scheme=XY_CONCATENATED,
-        duration=10.0,
-        concatenation_order=4,
-        pre_post_rotation=True,
+    xy_concat_sequence = new_xy_concatenated_sequence(
+        duration=10.0, concatenation_order=4, pre_post_rotation=True,
     )
 
     assert _pulses_produce_identity(xy_concat_sequence)
