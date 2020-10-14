@@ -301,7 +301,7 @@ def new_ramsey_sequence(duration=None, pre_post_rotation=False, **kwargs):
 
     References
     ----------
-    .. [#] `Norman F. Ramsey, Physical Review 78, 695 (1950)
+    .. [#] `N. F. Ramsey, Physical Review 78, 695 (1950).
         <https://link.aps.org/doi/10.1103/PhysRev.78.695>`_
     """
     duration = _check_duration(duration)
@@ -357,7 +357,7 @@ def new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
 
     References
     ----------
-    .. [#] `E. L. Hahn, Physical Review 80, 580 (1950)
+    .. [#] `E. L. Hahn, Physical Review 80, 580 (1950).
         <https://link.aps.org/doi/10.1103/PhysRev.80.580>`_
     """
 
@@ -426,13 +426,13 @@ def new_carr_purcell_sequence(
     operations applied at
 
     .. math::
-        t_i = \frac{\tau}{n} \left( \frac{1}{2} +i - 1\right) \;,
+        t_i = \frac{\tau}{n} \left(i -  \frac{1}{2}\right) \;,
 
     where :math:`i = 1, \cdots, n`.
 
     References
     ----------
-    .. [#] `H. Y. Carr and E. M. Purcell, Physical Review 94, 630 (1954)
+    .. [#] `H. Y. Carr and E. M. Purcell, Physical Review 94, 630 (1954).
         <https://link.aps.org/doi/10.1103/PhysRev.94.630>`_
     """
     duration = _check_duration(duration)
@@ -511,13 +511,13 @@ def new_cpmg_sequence(
     :math:`Y` axis. That is, it consists of :math:`Y_{\pi}` operations applied at times
 
     .. math::
-        t_i = \frac{\tau}{n} \left( \frac{1}{2} +i - 1\right) \;,
+        t_i = \frac{\tau}{n} \left(i - \frac{1}{2}\right) \;,
 
     where :math:`i = 1, \cdots, n`.
 
     References
     ----------
-    .. [#] `S. Meiboom and D. Gill, Review of Scientific Instruments 29:8, 688 (1958)
+    .. [#] `S. Meiboom and D. Gill, Review of Scientific Instruments 29:8, 688 (1958).
         <https://link.aps.org/doi/10.1063/1.1716296>`_
     """
     duration = _check_duration(duration)
@@ -598,7 +598,7 @@ def new_uhrig_sequence(
 
     References
     ----------
-    .. [#] `G. S. Uhrig, Physical Review Letters 98, 100504 (2007)
+    .. [#] `G. S. Uhrig, Physical Review Letters 98, 100504 (2007).
         <https://link.aps.org/doi/10.1103/PhysRevLett.98.100504>`_
     """
     duration = _check_duration(duration)
@@ -679,7 +679,7 @@ def new_periodic_sequence(
 
     References
     ----------
-    .. [#] `Lorenza Viola and Emanuel Knill, Physical Review Letters 90, 037901 (2003)
+    .. [#] `Lorenza Viola and Emanuel Knill, Physical Review Letters 90, 037901 (2003).
         <https://link.aps.org/doi/10.1103/PhysRevLett.90.037901>`_
     """
     duration = _check_duration(duration)
@@ -764,7 +764,7 @@ def new_walsh_sequence(
     .. math::
         {\rm PAL}_k(x) = \Pi_{j = 1}^m R_j(x)^{b_j} \;, \quad\; x \in [0, 1] \;.
 
-    where :math:`(b_m, b_{m-1}, \cdots, b_1)_2` is the binary representation of :math:`k`.
+    where :math:`(b_m, b_{m-1}, \cdots, b_1)` is the binary representation of :math:`k`.
     That is
 
     .. math::
@@ -781,10 +781,10 @@ def new_walsh_sequence(
 
     References
     ----------
-    .. [#] `H. Rademacher, Math. Ann. 87, 112–138 (1922)
+    .. [#] `H. Rademacher, Math. Ann. 87, 112–138 (1922).
         <https://doi.org/10.1007/BF01458040>`_
 
-    .. [#] `H. Ball and M. J Biercuk, EPJ Quantum Technol. 2, 11 (2015)
+    .. [#] `H. Ball and M. J Biercuk, EPJ Quantum Technol. 2, 11 (2015).
         <https://doi.org/10.1140/epjqt/s40507-015-0022-4>`_
     """
     duration = _check_duration(duration)
@@ -858,10 +858,8 @@ def new_quadratic_sequence(
         The total duration of the sequence :math:`\tau`.
     number_inner_offsets : int, optional
         Number of inner :math:`Z_{\pi}` pulses :math:`n_1`. Defaults to None.
-        Not used if number_of_offsets is supplied.
     number_outer_offsets : int, optional
         Number of outer :math:`X_{\pi}` pulses :math:`n_2`. Defaults to None.
-        Not used if number_of_offsets is supplied.
     pre_post_rotation : bool, optional
         If True, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence.
@@ -911,7 +909,7 @@ def new_quadratic_sequence(
     References
     ----------
     .. [#] `Jacob R. West, Bryan H. Fong, and Daniel A. Lidar,
-        Physical Review Letters 104, 130501 (2010)
+        Physical Review Letters 104, 130501 (2010).
         <https://doi.org/10.1103/PhysRevLett.104.130501>`_
     """
     duration = _check_duration(duration)
@@ -1027,7 +1025,7 @@ def new_x_concatenated_sequence(
     be denoted as :math:`C_l(\tau)`. In this scheme, zeroth order concatenation of duration
     :math:`\tau` is defined as free evolution over a period of :math:`\tau`. We use a notation
     of :math:`{\mathcal 1}(\tau)` to mean free evolution over duration :math:`\tau`.
-    We define the base DSS to be:
+    We define the base sequence to be:
 
     .. math::
         C_0(\tau) = {\mathcal 1}(\tau) \;.
@@ -1039,7 +1037,7 @@ def new_x_concatenated_sequence(
 
     References
     ----------
-    .. [#] `K. Khodjasteh and D. A. Lidar, Physical Review Letters 95, 180501 (2005)
+    .. [#] `K. Khodjasteh and D. A. Lidar, Physical Review Letters 95, 180501 (2005).
         <https://doi.org/10.1103/PhysRevLett.95.180501>`_
     """
     duration = _check_duration(duration)
@@ -1134,7 +1132,7 @@ def new_xy_concatenated_sequence(
     be denoted as :math:`C_l(\tau)`. In this scheme, zeroth order concatenation of duration
     :math:`\tau` is defined as free evolution over a period of :math:`\tau`. We use a notation
     of :math:`{\mathcal 1}(\tau)` to mean free evolution over duration :math:`\tau`.
-    We define the base DSS to be:
+    We define the base sequence to be:
 
     .. math::
         C_0(\tau) = {\mathcal 1}(\tau) \;.
@@ -1147,7 +1145,7 @@ def new_xy_concatenated_sequence(
 
     References
     ----------
-    .. [#] `K. Khodjasteh and D. A. Lidar, Physical Review Letters 95, 180501 (2005)
+    .. [#] `K. Khodjasteh and D. A. Lidar, Physical Review Letters 95, 180501 (2005).
         <https://doi.org/10.1103/PhysRevLett.95.180501>`_
 
     """
