@@ -593,7 +593,7 @@ def new_uhrig_sequence(
 
     References
     ----------
-    .. [#] `Götz S. Uhrig, Physical Review Letters 98, 100504 (2007)
+    .. [#] `G. S. Uhrig, Physical Review Letters 98, 100504 (2007)
         <https://link.aps.org/doi/10.1103/PhysRevLett.98.100504>`_
 
     Raises
