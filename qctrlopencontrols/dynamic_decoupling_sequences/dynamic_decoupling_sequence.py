@@ -71,7 +71,7 @@ class DynamicDecouplingSequence:
         is raised if one of the inputs is invalid.
 
     Notes
-    ____
+    -----
     Dynamical decoupling sequence (DDS) is canonically defined as a series of
     :math:`n`-instantaneous unitary operations, often :math:`\pi`-pulses, executed
     at time offsets :math:`\{t_j\}_{j=1}^n` over the time interval with a total
