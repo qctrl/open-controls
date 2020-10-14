@@ -779,7 +779,7 @@ def new_walsh_sequence(
     .. [#] `H. Rademacher, Math. Ann. 87, 112–138 (1922)
         <https://doi.org/10.1007/BF01458040>`_
 
-    .. [#] `Harrison Ball & Michael J Biercuk, EPJ Quantum Technol. 2, 11 (2015)
+    .. [#] `H. Ball and M. J Biercuk, EPJ Quantum Technol. 2, 11 (2015)
         <https://doi.org/10.1140/epjqt/s40507-015-0022-4>`_
 
     Raises
