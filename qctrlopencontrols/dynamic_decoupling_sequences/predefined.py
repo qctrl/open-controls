@@ -179,7 +179,7 @@ def new_ramsey_sequence(duration=1.0, pre_post_rotation=False, name=None):
     Parameters
     ----------
     duration : float, optional
-        Total duration of the sequence :math:`\tau` (in second). Defaults to 1.
+        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi / 2}` rotation
         is added at the start and end of the sequence. Defaults to ``False``.
@@ -235,7 +235,7 @@ def new_spin_echo_sequence(duration=1.0, pre_post_rotation=False, name=None):
     Parameters
     ---------
     duration : float, optional
-        Total duration of the sequence :math:`\tau` (in second). Defaults to 1.
+        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence. Defaults to ``False``.
