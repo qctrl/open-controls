@@ -235,7 +235,7 @@ def new_spin_echo_sequence(duration=1.0, pre_post_rotation=False, name=None):
     Parameters
     ---------
     duration : float, optional
-        Total duration of the sequence :math:`\tau`. Defaults to None.
+        Total duration of the sequence :math:`\tau` (in second). Defaults to 1.
     pre_post_rotation : bool, optional
         If True, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence.
@@ -257,9 +257,11 @@ def new_spin_echo_sequence(duration=1.0, pre_post_rotation=False, name=None):
     .. [#] `E. L. Hahn, Physical Review 80, 580 (1950).
         <https://link.aps.org/doi/10.1103/PhysRev.80.580>`_
     """
+
     check_arguments(
         duration > 0, "Sequence duration must be above zero:", {"duration": duration}
     )
+
     offsets = duration * np.array([0.5])
     rabi_rotations = np.array([np.pi])
     azimuthal_angles = np.zeros(offsets.shape)
