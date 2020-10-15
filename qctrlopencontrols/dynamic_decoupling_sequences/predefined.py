@@ -172,19 +172,19 @@ def _check_duration(duration: Optional[float] = None) -> float:
     return duration
 
 
-def new_ramsey_sequence(duration=1, pre_post_rotation=False, name=None):
+def new_ramsey_sequence(duration=1.0, pre_post_rotation=False, name=None):
     r"""
     Creates the Ramsey sequence.
 
     Parameters
     ----------
     duration : float, optional
-        Total duration of the sequence :math:`\tau` (in second). Defaults to 1.
+        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     pre_post_rotation : bool, optional
-        If True, a :math:`X_{\pi / 2}` rotation
-        is added at the start and end of the sequence.
+        If ``True``, a :math:`X_{\pi / 2}` rotation
+        is added at the start and end of the sequence. Defaults to ``False``.
     name : string, optional
-        Name of the sequence.
+        Name of the sequence. Defaults to ``None``.
 
     Returns
     -------
@@ -228,29 +228,24 @@ def new_ramsey_sequence(duration=1, pre_post_rotation=False, name=None):
     )
 
 
-def new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
+def new_spin_echo_sequence(duration=1.0, pre_post_rotation=False, name=None):
     r"""
     Creates the spin echo sequence.
 
     Parameters
     ---------
     duration : float, optional
-        Total duration of the sequence :math:`\tau`. Defaults to None.
+        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     pre_post_rotation : bool, optional
-        If True, a :math:`X_{\pi/2}` rotation is added at the
-        start and end of the sequence.
-    kwargs : dict
-        Additional keywords required by DynamicDecouplingSequence.
+        If ``True``, a :math:`X_{\pi/2}` rotation is added at the
+        start and end of the sequence. Defaults to ``False``.
+    name : string, optional
+        Name of the sequence. Defaults to ``None``.
 
     Returns
     -------
     DynamicDecouplingSequence
         The spin echo sequence.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     Notes
     -----
@@ -263,7 +258,10 @@ def new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
         <https://link.aps.org/doi/10.1103/PhysRev.80.580>`_
     """
 
-    duration = _check_duration(duration)
+    check_arguments(
+        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+    )
+
     offsets = duration * np.array([0.5])
     rabi_rotations = np.array([np.pi])
     azimuthal_angles = np.zeros(offsets.shape)
@@ -285,7 +283,7 @@ def new_spin_echo_sequence(duration=None, pre_post_rotation=False, **kwargs):
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs
+        name=name,
     )
 
 
