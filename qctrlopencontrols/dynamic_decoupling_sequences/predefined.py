@@ -24,6 +24,7 @@ from typing import (
 import numpy as np
 
 from ..exceptions import ArgumentsValueError
+from ..utils import check_arguments
 from .dynamic_decoupling_sequence import DynamicDecouplingSequence
 
 
@@ -63,11 +64,6 @@ def _add_pre_post_rotations(
     tuple
         Containing the (offsets, rabi_rotations, azimuthal_angles, detuning_rotations)
         resulting after the addition of pi/2 pulses at the start and end of the sequence.
-
-    Raises
-    -----
-    ArgumentsValueError
-        Raised when sequence does not consist solely of X, Y, and Z pi-pulses.
     """
     # Count the number of X, Y, and Z pi-pulses
     x_pi_pulses = np.count_nonzero(
@@ -99,15 +95,15 @@ def _add_pre_post_rotations(
     )
 
     # Check if the sequence consists solely of X, Y, and Z pi-pulses
-    if len(offsets) != x_pi_pulses + y_pi_pulses + z_pi_pulses:
-        raise ArgumentsValueError(
-            "Sequence contains pulses that are not X, Y, or Z pi-pulses.",
-            {
-                "rabi_rotations": rabi_rotations,
-                "azimuthal_angles": azimuthal_angles,
-                "detuning_rotations": detuning_rotations,
-            },
-        )
+    check_arguments(
+        len(offsets) == x_pi_pulses + y_pi_pulses + z_pi_pulses,
+        "Sequence contains pulses that are not X, Y, or Z pi-pulses.",
+        {
+            "rabi_rotations": rabi_rotations,
+            "azimuthal_angles": azimuthal_angles,
+            "detuning_rotations": detuning_rotations,
+        },
+    )
 
     # parameters for pre-post pulses
     rabi_value = np.pi / 2
@@ -176,29 +172,24 @@ def _check_duration(duration: Optional[float] = None) -> float:
     return duration
 
 
-def new_ramsey_sequence(duration=None, pre_post_rotation=False, **kwargs):
+def new_ramsey_sequence(duration=1, pre_post_rotation=False, name=None):
     r"""
     Creates the Ramsey sequence.
 
     Parameters
     ----------
     duration : float, optional
-        Total duration of the sequence :math:`\tau`. Defaults to None.
+        Total duration of the sequence :math:`\tau` (in second). Defaults to 1.
     pre_post_rotation : bool, optional
         If True, a :math:`X_{\pi / 2}` rotation
         is added at the start and end of the sequence.
-    kwargs : dict
-        Additional keywords required by DynamicDecouplingSequence.
+    name : string, optional
+        Name of the sequence.
 
     Returns
     -------
     DynamicDecouplingSequence
         The Ramsey sequence.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     Notes
     -----
@@ -212,7 +203,10 @@ def new_ramsey_sequence(duration=None, pre_post_rotation=False, **kwargs):
     .. [#] `N. F. Ramsey, Physical Review 78, 695 (1950).
         <https://link.aps.org/doi/10.1103/PhysRev.78.695>`_
     """
-    duration = _check_duration(duration)
+    check_arguments(
+        duration > 0, "Sequence duration must be above zero:", {"duration": duration}
+    )
+
     offsets = []
     rabi_rotations = []
     azimuthal_angles = []
@@ -230,7 +224,7 @@ def new_ramsey_sequence(duration=None, pre_post_rotation=False, **kwargs):
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs
+        name=name,
     )
 
 
