@@ -259,7 +259,7 @@ def new_spin_echo_sequence(duration=1.0, pre_post_rotation=False, name=None):
     """
 
     check_arguments(
-        duration > 0, "Sequence duration must be above zero:", {"duration": duration}
+        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
     )
 
     offsets = duration * np.array([0.5])
