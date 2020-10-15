@@ -288,7 +288,7 @@ def new_spin_echo_sequence(duration=1.0, pre_post_rotation=False, name=None):
 
 
 def new_carr_purcell_sequence(
-    duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
+    duration=1.0, number_of_offsets=1, pre_post_rotation=False, name=None
 ):
     r"""
     Creates the Carr-Purcell sequence.
@@ -296,24 +296,19 @@ def new_carr_purcell_sequence(
     Parameters
     ---------
     duration : float, optional
-        Total duration of the sequence :math:`\tau`. Defaults to None.
+        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     number_of_offsets : int, optional
-        Number of offsets :math:`n`. Defaults to None.
+        Number of offsets :math:`n`. Defaults to 1.
     pre_post_rotation : bool, optional
-        If True, a :math:`X_{\pi/2}` rotation is added at the
-        start and end of the sequence.
-    kwargs : dict
-        Additional keywords required by DynamicDecouplingSequence.
+        If ``True``, a :math:`X_{\pi/2}` rotation is added at the
+        start and end of the sequence. Defaults to ``False``.
+    name : string, optional
+        Name of the sequence. Defaults to ``None``.
 
     Returns
     -------
     DynamicDecouplingSequence
         The Carr-Purcell sequence.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     See Also
     --------
@@ -335,14 +330,15 @@ def new_carr_purcell_sequence(
     .. [#] `H. Y. Carr and E. M. Purcell, Physical Review 94, 630 (1954).
         <https://link.aps.org/doi/10.1103/PhysRev.94.630>`_
     """
-    duration = _check_duration(duration)
-    number_of_offsets = number_of_offsets or 1
-    number_of_offsets = int(number_of_offsets)
-    if number_of_offsets <= 0.0:
-        raise ArgumentsValueError(
-            "Number of offsets must be above zero:",
-            {"number_of_offsets": number_of_offsets},
-        )
+
+    check_arguments(
+        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+    )
+    check_arguments(
+        number_of_offsets >= 1,
+        "Number of offsets must be above zero:",
+        {"number_of_offsets": number_of_offsets},
+    )
 
     offsets = _carr_purcell_meiboom_gill_offsets(duration, number_of_offsets)
 
@@ -368,7 +364,7 @@ def new_carr_purcell_sequence(
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs
+        name=name,
     )
 
 
