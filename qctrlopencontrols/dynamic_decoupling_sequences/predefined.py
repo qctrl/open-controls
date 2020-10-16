@@ -1185,7 +1185,9 @@ def _carr_purcell_meiboom_gill_offsets(
         The offset values
     """
     # in case a float number is passed
-    spacing = 1.0 / int(number_of_offsets)
+    number_of_offsets = int(number_of_offsets)
+
+    spacing = 1.0 / number_of_offsets
     start = spacing * 0.5
 
     # prepare the offsets for delta comb
