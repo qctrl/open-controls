@@ -451,22 +451,22 @@ def new_cpmg_sequence(
 
 
 def new_uhrig_sequence(
-    duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
+    duration=1.0, number_of_offsets=1, pre_post_rotation=False, name=None
 ):
     r"""
     Creates the Uhrig sequence.
 
     Parameters
     ---------
-    duration : float
-        Total duration of the sequence :math:`\tau`. Defaults to None.
+    duration : float, optional
+        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     number_of_offsets : int, optional
-        Number of offsets. Defaults to None.
+        Number of offsets. Defaults to 1.
     pre_post_rotation : bool, optional
-        If True, a :math:`X_{\pi/2}` rotation is added at the
-        start and end of the sequence.
-    kwargs : dict
-        Additional keywords required by DynamicDecouplingSequence.
+        If ``True``, a :math:`X_{\pi/2}` rotation is added at the
+        start and end of the sequence. Defaults to ``False``.
+    name : string, optional
+        Name of the sequence. Defaults to ``None``.
 
     Returns
     -------
@@ -493,14 +493,15 @@ def new_uhrig_sequence(
     .. [#] `G. S. Uhrig, Physical Review Letters 98, 100504 (2007).
         <https://link.aps.org/doi/10.1103/PhysRevLett.98.100504>`_
     """
-    duration = _check_duration(duration)
-    number_of_offsets = number_of_offsets or 1
-    number_of_offsets = int(number_of_offsets)
-    if number_of_offsets <= 0.0:
-        raise ArgumentsValueError(
-            "Number of offsets must be above zero:",
-            {"number_of_offsets": number_of_offsets},
-        )
+
+    check_arguments(
+        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+    )
+    check_arguments(
+        number_of_offsets >= 1,
+        "Number of offsets must be above zero:",
+        {"number_of_offsets": number_of_offsets},
+    )
 
     offsets = _uhrig_single_axis_offsets(duration, number_of_offsets)
     rabi_rotations = np.zeros(offsets.shape)
@@ -527,7 +528,7 @@ def new_uhrig_sequence(
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs
+        name=name,
     )
 
 
@@ -1216,6 +1217,8 @@ def _uhrig_single_axis_offsets(
     numpy.ndarray
         The offset values
     """
+    # in case a float number is passed
+    number_of_offsets = int(number_of_offsets)
 
     # prepare the offsets for delta comb
     constant = 1.0 / (2 * number_of_offsets + 2)
