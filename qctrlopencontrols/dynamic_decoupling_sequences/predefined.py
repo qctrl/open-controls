@@ -340,6 +340,8 @@ def new_carr_purcell_sequence(
         {"number_of_offsets": number_of_offsets},
     )
 
+    # in case a float number is passed
+    number_of_offsets = int(number_of_offsets)
     offsets = _carr_purcell_meiboom_gill_offsets(duration, number_of_offsets)
 
     rabi_rotations = np.zeros(offsets.shape)
@@ -421,6 +423,8 @@ def new_cpmg_sequence(
         {"number_of_offsets": number_of_offsets},
     )
 
+    # in case a float number is passed
+    number_of_offsets = int(number_of_offsets)
     offsets = _carr_purcell_meiboom_gill_offsets(duration, number_of_offsets)
     rabi_rotations = np.zeros(offsets.shape)
     azimuthal_angles = np.zeros(offsets.shape)
@@ -503,6 +507,8 @@ def new_uhrig_sequence(
         {"number_of_offsets": number_of_offsets},
     )
 
+    # in case a float number is passed
+    number_of_offsets = int(number_of_offsets)
     offsets = _uhrig_single_axis_offsets(duration, number_of_offsets)
     rabi_rotations = np.zeros(offsets.shape)
     azimuthal_angles = np.zeros(offsets.shape)
@@ -1185,8 +1191,6 @@ def _carr_purcell_meiboom_gill_offsets(
     numpy.ndarray
         The offset values
     """
-    # in case a float number is passed
-    number_of_offsets = int(number_of_offsets)
 
     spacing = 1.0 / number_of_offsets
     start = spacing * 0.5
@@ -1217,8 +1221,6 @@ def _uhrig_single_axis_offsets(
     numpy.ndarray
         The offset values
     """
-    # in case a float number is passed
-    number_of_offsets = int(number_of_offsets)
 
     # prepare the offsets for delta comb
     constant = 1.0 / (2 * number_of_offsets + 2)
