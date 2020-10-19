@@ -821,11 +821,9 @@ def new_quadratic_sequence(
     # offsets include inner and outer offsets
     # the extra 1 dimension in columns is where we add the outer offset back
     offsets = np.zeros((len(inner_durations), number_inner_offsets + 1))
-    for inner_duration_idx, _ in enumerate(inner_durations):
+    for inner_duration_idx, inner_duration in enumerate(inner_durations):
         inner_offset = (
-            _uhrig_single_axis_offsets(
-                inner_durations[inner_duration_idx], number_inner_offsets
-            )
+            _uhrig_single_axis_offsets(inner_duration, number_inner_offsets)
             + outer_offsets[inner_duration_idx]
         )
         offsets[inner_duration_idx, 0:number_inner_offsets] = inner_offset
