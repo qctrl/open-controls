@@ -677,7 +677,7 @@ def new_walsh_sequence(duration=1.0, paley_order=1, pre_post_rotation=False, nam
         duration > 0, "Sequence duration must be above zero.", {"duration": duration}
     )
     check_arguments(
-        1 <= paley_order < 2000,
+        1 <= paley_order <= 2000,
         "Paley order must be between 1 and 2000",
         {"paley_order": paley_order},
     )
