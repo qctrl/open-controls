@@ -477,11 +477,6 @@ def new_uhrig_sequence(
     DynamicDecouplingSequence
         The Uhrig sequence.
 
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
-
     Notes
     -----
     The Uhrig sequence [#]_ is parameterized by duration :math:`\tau` and number of
@@ -539,32 +534,27 @@ def new_uhrig_sequence(
 
 
 def new_periodic_sequence(
-    duration=None, number_of_offsets=None, pre_post_rotation=False, **kwargs
+    duration=1.0, number_of_offsets=1, pre_post_rotation=False, name=None
 ):
     r"""
     Creates the periodic sequence.
 
     Parameters
     ---------
-    duration : float
-        Total duration of the sequence :math:`\tau`. Defaults to None.
+    duration : float, optional
+        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     number_of_offsets : int, optional
-        Number of offsets :math:`n`. Defaults to None.
+        Number of offsets :math:`n`. Defaults to 1.
     pre_post_rotation : bool, optional
-        If True, a :math:`X_{\pi/2}` rotation is added at the
-        start and end of the sequence.
-    kwargs : dict
-        Additional keywords required by DynamicDecouplingSequence.
+        If ``True``, a :math:`X_{\pi/2}` rotation is added at the
+        start and end of the sequence. Defaults to ``False``.
+    name : string, optional
+        Name of the sequence. Defaults to ``None``.
 
     Returns
     -------
     DynamicDecouplingSequence
         The periodic sequence.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     Notes
     -----
@@ -581,18 +571,21 @@ def new_periodic_sequence(
     .. [#] `L. Viola and E. Knill, Physical Review Letters 90, 037901 (2003).
         <https://link.aps.org/doi/10.1103/PhysRevLett.90.037901>`_
     """
-    duration = _check_duration(duration)
-    number_of_offsets = number_of_offsets or 1
+
+    check_arguments(
+        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+    )
+    check_arguments(
+        number_of_offsets >= 1,
+        "Number of offsets must be above zero:",
+        {"number_of_offsets": number_of_offsets},
+    )
+
+    # in case a float number is passed
     number_of_offsets = int(number_of_offsets)
-    if number_of_offsets <= 0.0:
-        raise ArgumentsValueError(
-            "Number of offsets must be above zero:",
-            {"number_of_offsets": number_of_offsets},
-        )
 
     spacing = 1.0 / (number_of_offsets + 1)
-    deltas = [k * spacing for k in range(1, number_of_offsets + 1)]
-    deltas = np.array(deltas)
+    deltas = np.array([k * spacing for k in range(1, number_of_offsets + 1)])
     offsets = duration * deltas
     rabi_rotations = np.zeros(offsets.shape)
     rabi_rotations[0:] = np.pi
@@ -615,7 +608,7 @@ def new_periodic_sequence(
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs
+        name=name,
     )
 
 
