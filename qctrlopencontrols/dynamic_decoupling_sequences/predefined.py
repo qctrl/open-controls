@@ -921,7 +921,7 @@ def new_x_concatenated_sequence(
         duration > 0, "Sequence duration must be above zero.", {"duration": duration}
     )
     check_arguments(
-        concatenation_order > 0,
+        concatenation_order >= 1,
         "Concatenation oder must be above zero:",
         {"concatenation_order": concatenation_order},
     )
@@ -1023,7 +1023,7 @@ def new_xy_concatenated_sequence(
         duration > 0, "Sequence duration must be above zero.", {"duration": duration}
     )
     check_arguments(
-        concatenation_order > 0,
+        concatenation_order >= 1,
         "Concatenation oder must be above zero:",
         {"concatenation_order": concatenation_order},
     )
