@@ -840,9 +840,9 @@ def new_quadratic_sequence(
     detuning_rotations = detuning_rotations.flatten()
 
     # remove the last entry corresponding to the duration
-    offsets = offsets[0:-1]
-    rabi_rotations = rabi_rotations[0:-1]
-    detuning_rotations = detuning_rotations[0:-1]
+    offsets = offsets[:-1]
+    rabi_rotations = rabi_rotations[:-1]
+    detuning_rotations = detuning_rotations[:-1]
 
     azimuthal_angles = np.zeros(offsets.shape)
 
