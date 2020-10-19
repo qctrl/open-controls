@@ -16,14 +16,10 @@
 Module for defining commonly used dynamical decoupling sequences.
 """
 
-from typing import (
-    Optional,
-    Tuple,
-)
+from typing import Tuple
 
 import numpy as np
 
-from ..exceptions import ArgumentsValueError
 from ..utils import check_arguments
 from .dynamic_decoupling_sequence import DynamicDecouplingSequence
 
@@ -144,34 +140,6 @@ def _add_pre_post_rotations(
     return offsets, rabi_rotations, azimuthal_angles, detuning_rotations
 
 
-def _check_duration(duration: Optional[float] = None) -> float:
-    """
-    Validates sequence duration.
-
-    Parameters
-    ----------
-    duration : float, optional
-        Total duration of the sequence. Defaults to None.
-
-    Returns
-    -------
-    float
-        The validated duration
-
-    Raises
-    ------
-    ArgumentsValueError
-        If the duration is negative.
-    """
-    if duration is None:
-        duration = 1.0
-    if duration <= 0.0:
-        raise ArgumentsValueError(
-            "Sequence duration must be above zero:", {"duration": duration}
-        )
-    return duration
-
-
 def new_ramsey_sequence(duration=1.0, pre_post_rotation=False, name=None):
     r"""
     Creates the Ramsey sequence.
@@ -233,7 +201,7 @@ def new_spin_echo_sequence(duration=1.0, pre_post_rotation=False, name=None):
     Creates the spin echo sequence.
 
     Parameters
-    ---------
+    ----------
     duration : float, optional
         Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     pre_post_rotation : bool, optional
@@ -294,7 +262,7 @@ def new_carr_purcell_sequence(
     Creates the Carr-Purcell sequence.
 
     Parameters
-    ---------
+    ----------
     duration : float, optional
         Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     number_of_offsets : int, optional
@@ -377,7 +345,7 @@ def new_cpmg_sequence(
     Creates the Carr-Purcell-Meiboom-Gill sequence.
 
     Parameters
-    ---------
+    ----------
     duration : float, optional
         Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     number_of_offsets : int, optional
@@ -461,7 +429,7 @@ def new_uhrig_sequence(
     Creates the Uhrig sequence.
 
     Parameters
-    ---------
+    ----------
     duration : float, optional
         Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     number_of_offsets : int, optional
@@ -540,7 +508,7 @@ def new_periodic_sequence(
     Creates the periodic sequence.
 
     Parameters
-    ---------
+    ----------
     duration : float, optional
         Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     number_of_offsets : int, optional
@@ -617,7 +585,7 @@ def new_walsh_sequence(duration=1.0, paley_order=1, pre_post_rotation=False, nam
     Creates the Walsh sequence.
 
     Parameters
-    ---------
+    ----------
     duration : float, optional
         Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     paley_order : int, optional
@@ -1158,7 +1126,7 @@ def _carr_purcell_meiboom_gill_offsets(
         The number of offsets. Defaults to 1.
 
     Returns
-    ------
+    -------
     numpy.ndarray
         The offset values
     """
@@ -1188,7 +1156,7 @@ def _uhrig_single_axis_offsets(
         The number of offsets. Defaults to 1.
 
     Returns
-    ------
+    -------
     numpy.ndarray
         The offset values
     """
@@ -1206,7 +1174,7 @@ def _uhrig_single_axis_offsets(
 def _concatenation_x(concatenation_sequence: int = 1) -> np.ndarray:
     """
     Prepares the sequence of operations for x-concatenated
-    dynamical decoupling sequence
+    dynamical decoupling sequence.
 
     Parameters
     ----------
@@ -1214,7 +1182,7 @@ def _concatenation_x(concatenation_sequence: int = 1) -> np.ndarray:
         Duration of the total sequence. Defaults to 1.
 
     Returns
-    ------
+    -------
     numpy.ndarray
         The offset values.
     """
@@ -1236,7 +1204,7 @@ def _concatenation_x(concatenation_sequence: int = 1) -> np.ndarray:
 def _concatenation_xy(concatenation_sequence: int = 1) -> np.ndarray:
     """
     Prepares the sequence of operations for x-concatenated
-    dynamical decoupling sequence
+    dynamical decoupling sequence.
 
     Parameters
     ----------
@@ -1244,7 +1212,7 @@ def _concatenation_xy(concatenation_sequence: int = 1) -> np.ndarray:
         Duration of the total sequence. Defaults to 1.
 
     Returns
-    ------
+    -------
     numpy.ndarray
         The offset values.
     """
