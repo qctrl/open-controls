@@ -693,7 +693,7 @@ def new_walsh_sequence(duration=1.0, paley_order=1, pre_post_rotation=False, nam
 
     binary_string = np.binary_repr(paley_order)
     binary_order = [int(binary_string[i]) for i in range(hamming_weight)]
-    walsh_array = np.ones([samples])
+    walsh_array = np.ones(samples)
     for i in range(hamming_weight):
         walsh_array *= (
             np.sign(np.sin(2 ** (i + 1) * np.pi * relative_offset))
@@ -705,9 +705,9 @@ def new_walsh_sequence(duration=1.0, paley_order=1, pre_post_rotation=False, nam
         if walsh_array[i] != walsh_array[i + 1]:
             walsh_relative_offsets.append((i + 1) * (1.0 / samples))
     walsh_relative_offsets = np.array(walsh_relative_offsets, dtype=np.float)
+
     offsets = duration * walsh_relative_offsets
-    rabi_rotations = np.zeros(offsets.shape)
-    rabi_rotations[0:] = np.pi
+    rabi_rotations = np.full(offsets.shape, np.pi)
     azimuthal_angles = np.zeros(offsets.shape)
     detuning_rotations = np.zeros(offsets.shape)
 
