@@ -585,8 +585,7 @@ def new_periodic_sequence(
     number_of_offsets = int(number_of_offsets)
 
     spacing = 1.0 / (number_of_offsets + 1)
-    deltas = [k * spacing for k in range(1, number_of_offsets + 1)]
-    deltas = np.array(deltas)
+    deltas = np.array([k * spacing for k in range(1, number_of_offsets + 1)])
     offsets = duration * deltas
     rabi_rotations = np.zeros(offsets.shape)
     rabi_rotations[0:] = np.pi
