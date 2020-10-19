@@ -867,7 +867,7 @@ def new_quadratic_sequence(
 
 
 def new_x_concatenated_sequence(
-    duration=1.0, concatenation_order=None, pre_post_rotation=False, name=None
+    duration=1.0, concatenation_order=1, pre_post_rotation=False, name=None
 ):
     r"""
     Creates the :math:`X`-concatenated sequence.
@@ -877,8 +877,7 @@ def new_x_concatenated_sequence(
     duration : float, optional
         The total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     concatenation_order : int, optional
-        Defaults to None.
-        The number of concatenation of base sequence.
+        The number of concatenation of base sequence. Defaults to 1.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence. Defaults to ``False``.
