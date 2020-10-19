@@ -732,11 +732,11 @@ def new_walsh_sequence(duration=1.0, paley_order=1, pre_post_rotation=False, nam
 
 
 def new_quadratic_sequence(
-    duration=None,
-    number_inner_offsets=None,
-    number_outer_offsets=None,
+    duration=1.0,
+    number_inner_offsets=1,
+    number_outer_offsets=1,
     pre_post_rotation=False,
-    **kwargs
+    name=None,
 ):
     r"""
     Creates the quadratic sequence.
@@ -744,27 +744,21 @@ def new_quadratic_sequence(
     Parameters
     ----------
     duration : float, optional
-        Defaults to None.
-        The total duration of the sequence :math:`\tau`.
+        The total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     number_inner_offsets : int, optional
-        Number of inner :math:`Z_{\pi}` pulses :math:`n_1`. Defaults to None.
+        Number of inner :math:`Z_{\pi}` pulses :math:`n_1`. Defaults to 1.
     number_outer_offsets : int, optional
-        Number of outer :math:`X_{\pi}` pulses :math:`n_2`. Defaults to None.
+        Number of outer :math:`X_{\pi}` pulses :math:`n_2`. Defaults to 1.
     pre_post_rotation : bool, optional
-        If True, a :math:`X_{\pi/2}` rotation is added at the
-        start and end of the sequence.
-    kwargs : dict
-        Additional keywords required by DynamicDecouplingSequence.
+        If ``True``, a :math:`X_{\pi/2}` rotation is added at the
+        start and end of the sequence. Defaults to ``False``.
+    name : string, optional
+        Name of the sequence. Defaults to ``None``.
 
     Returns
     -------
     DynamicDecouplingSequence
         The quadratic sequence.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     See Also
     --------
@@ -802,40 +796,40 @@ def new_quadratic_sequence(
         Physical Review Letters 104, 130501 (2010).
         <https://doi.org/10.1103/PhysRevLett.104.130501>`_
     """
-    duration = _check_duration(duration)
 
-    number_inner_offsets = number_inner_offsets or 1
+    check_arguments(
+        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+    )
+    check_arguments(
+        number_inner_offsets >= 1,
+        "Number of offsets of inner pulses must be above zero:",
+        {"number_inner_offsets": number_inner_offsets},
+    )
+    check_arguments(
+        number_outer_offsets >= 1,
+        "Number of offsets of outer pulses must be above zero:",
+        {"number_outer_offsets": number_outer_offsets},
+    )
+
     number_inner_offsets = int(number_inner_offsets)
-    if number_inner_offsets <= 0.0:
-        raise ArgumentsValueError(
-            "Number of offsets of inner pulses must be above zero:",
-            {"number_inner_offsets": number_inner_offsets},
-            extras={"duration": duration, "number_outer_offsets": number_outer_offsets},
-        )
-
-    number_outer_offsets = number_outer_offsets or 1
     number_outer_offsets = int(number_outer_offsets)
-    if number_outer_offsets <= 0.0:
-        raise ArgumentsValueError(
-            "Number of offsets of outer pulses must be above zero:",
-            {"number_inner_offsets": number_outer_offsets},
-            extras={"duration": duration, "number_inner_offsets": number_inner_offsets},
-        )
-
     outer_offsets = _uhrig_single_axis_offsets(duration, number_outer_offsets)
-    outer_offsets = np.insert(outer_offsets, [0, outer_offsets.shape[0]], [0, duration])
-    starts = outer_offsets[0:-1]
-    ends = outer_offsets[1:]
-    inner_durations = ends - starts
+    outer_offsets = np.insert(outer_offsets, [0, len(outer_offsets)], [0, duration])
 
-    offsets = np.zeros((inner_durations.shape[0], number_inner_offsets + 1))
-    for inner_duration_idx in range(inner_durations.shape[0]):
-        inn_off = _uhrig_single_axis_offsets(
-            inner_durations[inner_duration_idx], number_inner_offsets
+    inner_durations = np.diff(outer_offsets)
+
+    # offsets include inner and outer offsets
+    # the extra 1 dimension in columns is where we add the outer offset back
+    offsets = np.zeros((len(inner_durations), number_inner_offsets + 1))
+    for inner_duration_idx, _ in enumerate(inner_durations):
+        inner_offset = (
+            _uhrig_single_axis_offsets(
+                inner_durations[inner_duration_idx], number_inner_offsets
+            )
+            + outer_offsets[inner_duration_idx]
         )
-        inn_off = inn_off + starts[inner_duration_idx]
-        offsets[inner_duration_idx, 0:number_inner_offsets] = inn_off
-    offsets[0:number_outer_offsets, -1] = outer_offsets[1:-1]
+        offsets[inner_duration_idx, 0:number_inner_offsets] = inner_offset
+    offsets[:, -1] = outer_offsets[1:]
 
     rabi_rotations = np.zeros(offsets.shape)
     detuning_rotations = np.zeros(offsets.shape)
@@ -843,14 +837,15 @@ def new_quadratic_sequence(
     rabi_rotations[0:number_outer_offsets, -1] = np.pi
     detuning_rotations[0 : (number_outer_offsets + 1), 0:number_inner_offsets] = np.pi
 
-    offsets = np.reshape(offsets, (-1,))
-    rabi_rotations = np.reshape(rabi_rotations, (-1,))
-    detuning_rotations = np.reshape(detuning_rotations, (-1,))
+    offsets = offsets.flatten()
+    rabi_rotations = rabi_rotations.flatten()
+    detuning_rotations = detuning_rotations.flatten()
 
     # remove the last entry corresponding to the duration
     offsets = offsets[0:-1]
     rabi_rotations = rabi_rotations[0:-1]
     detuning_rotations = detuning_rotations[0:-1]
+
     azimuthal_angles = np.zeros(offsets.shape)
 
     if pre_post_rotation:
@@ -869,7 +864,7 @@ def new_quadratic_sequence(
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs
+        name=name,
     )
 
 
