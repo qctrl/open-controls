@@ -1228,7 +1228,7 @@ def _concatenation_x(concatenation_sequence: int = 1) -> np.ndarray:
     if concatenation_sequence == 1:
         return np.array([1, 0, 1, 0])
 
-    cumulated_operations = np.concatenate(
+    return np.concatenate(
         (
             _concatenation_x(concatenation_sequence - 1),
             np.array([0]),
@@ -1237,7 +1237,6 @@ def _concatenation_x(concatenation_sequence: int = 1) -> np.ndarray:
         ),
         axis=0,
     )
-    return cumulated_operations
 
 
 def _concatenation_xy(concatenation_sequence: int = 1) -> np.ndarray:
