@@ -935,7 +935,7 @@ def new_x_concatenated_sequence(
 
     values, counts = np.unique(pos_cum_sum, return_counts=True)
 
-    offsets = [values[idx] for idx, count in enumerate(counts) if count % 2 == 0]
+    offsets = [value for value, count in zip(values, counts) if count % 2 == 0]
 
     if concatenation_order % 2 == 1:
         offsets = offsets[:-1]
