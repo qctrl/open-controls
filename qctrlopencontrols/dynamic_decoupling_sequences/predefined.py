@@ -612,33 +612,26 @@ def new_periodic_sequence(
     )
 
 
-def new_walsh_sequence(
-    duration=None, paley_order=None, pre_post_rotation=False, **kwargs
-):
+def new_walsh_sequence(duration=1.0, paley_order=1, pre_post_rotation=False, name=None):
     r"""
     Creates the Walsh sequence.
 
     Parameters
     ---------
-    duration : float
-        Total duration of the sequence :math:`\tau`. Defaults to None.
+    duration : float, optional
+        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     paley_order : int, optional
         The paley order :math:`k` of the Walsh sequence. Defaults to 1.
     pre_post_rotation : bool, optional
-        If True, a :math:`X_{\pi/2}` rotation is added at the
-        start and end of the sequence.
-    kwargs : dict
-        Additional keywords required by DynamicDecouplingSequence.
+        If ``True``, a :math:`X_{\pi/2}` rotation is added at the
+        start and end of the sequence. Defaults to ``False``.
+    name : string, optional
+        Name of the sequence. Defaults to ``None``.
 
     Returns
     -------
     DynamicDecouplingSequence
         The Walsh sequence.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     Notes
     -----
@@ -679,13 +672,18 @@ def new_walsh_sequence(
     .. [#] `H. Ball and M. J Biercuk, EPJ Quantum Technol. 2, 11 (2015).
         <https://doi.org/10.1140/epjqt/s40507-015-0022-4>`_
     """
-    duration = _check_duration(duration)
-    paley_order = paley_order or 1
+
+    check_arguments(
+        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+    )
+    check_arguments(
+        1 <= paley_order < 2000,
+        "Paley order must be between 1 and 2000",
+        {"paley_order": paley_order},
+    )
+
+    # in case a float number is passed
     paley_order = int(paley_order)
-    if paley_order < 1 or paley_order > 2000:
-        raise ArgumentsValueError(
-            "Paley order must be between 1 and 2000.", {"paley_order": paley_order}
-        )
 
     hamming_weight = int(np.floor(np.log2(paley_order))) + 1
 
@@ -729,7 +727,7 @@ def new_walsh_sequence(
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs
+        name=name,
     )
 
 
