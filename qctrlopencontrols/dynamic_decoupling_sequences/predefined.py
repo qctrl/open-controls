@@ -921,7 +921,7 @@ def new_x_concatenated_sequence(
         duration > 0, "Sequence duration must be above zero.", {"duration": duration}
     )
     check_arguments(
-        concatenation_order > 0,
+        concatenation_order >= 1,
         "Concatenation oder must be above zero:",
         {"concatenation_order": concatenation_order},
     )
@@ -967,7 +967,7 @@ def new_x_concatenated_sequence(
 
 
 def new_xy_concatenated_sequence(
-    duration=1.0, concatenation_order=None, pre_post_rotation=False, **kwargs
+    duration=1.0, concatenation_order=1, pre_post_rotation=False, name=None
 ):
     r"""
     Creates the :math:`XY`-Concatenated sequence.
@@ -975,26 +975,19 @@ def new_xy_concatenated_sequence(
     Parameters
     ----------
     duration : float, optional
-        Defaults to None.
-        The total duration of the sequence :math:`\tau`.
+        The total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     concatenation_order : int, optional
-        Defaults to None.
-        The number of concatenation of base sequence :math:`l`.
+        The number of concatenation of base sequence :math:`l`. Defaults to 1.
     pre_post_rotation : bool, optional
-        If True, a :math:`X_{\pi/2}` rotation is added at the
-        start and end of the sequence.
-    kwargs : dict
-        Additional keywords required by DynamicDecouplingSequence.
+        If ``True``, a :math:`X_{\pi/2}` rotation is added at the
+        start and end of the sequence. Defaults to ``False``.
+    name : string, optional
+        Name of the sequence. Defaults to ``None``.
 
     Returns
     -------
     DynamicDecouplingSequence
         The :math:`XY`-concatenated sequence.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     See Also
     --------
@@ -1025,16 +1018,17 @@ def new_xy_concatenated_sequence(
         <https://doi.org/10.1103/PhysRevLett.95.180501>`_
 
     """
-    duration = _check_duration(duration)
 
-    concatenation_order = concatenation_order or 1
+    check_arguments(
+        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+    )
+    check_arguments(
+        concatenation_order >= 1,
+        "Concatenation oder must be above zero:",
+        {"concatenation_order": concatenation_order},
+    )
+
     concatenation_order = int(concatenation_order)
-    if concatenation_order <= 0.0:
-        raise ArgumentsValueError(
-            "Concatenation order must be above zero:",
-            {"concatenation_order": concatenation_order},
-            extras={"duration": duration},
-        )
 
     unit_spacing = duration / (2 ** (concatenation_order * 2))
     cumulations = _concatenation_xy(concatenation_order)
@@ -1047,7 +1041,7 @@ def new_xy_concatenated_sequence(
     rabi_positions = np.cumsum(rabi_positions)
 
     values, counts = np.unique(rabi_positions, return_counts=True)
-    rabi_offsets = [values[i] for i in range(counts.shape[0]) if counts[i] % 2 == 0]
+    rabi_offsets = [value for value, count in zip(values, counts) if count % 2 == 0]
 
     azimuthal_operations = cumulations[cumulations != -1]
     azimuthal_operations = azimuthal_operations[azimuthal_operations != -3]
@@ -1058,7 +1052,7 @@ def new_xy_concatenated_sequence(
 
     values, counts = np.unique(azimuthal_positions, return_counts=True)
     azimuthal_offsets = [
-        values[i] for i in range(counts.shape[0]) if counts[i] % 2 == 0
+        value for value, count in zip(values, counts) if count % 2 == 0
     ]
 
     detuning_operations = cumulations[cumulations != -2]
@@ -1069,7 +1063,7 @@ def new_xy_concatenated_sequence(
     detuning_positions = np.cumsum(detuning_positions)
 
     values, counts = np.unique(detuning_positions, return_counts=True)
-    detuning_offsets = [values[i] for i in range(counts.shape[0]) if counts[i] % 2 == 0]
+    detuning_offsets = [value for value, count in zip(values, counts) if count % 2 == 0]
 
     # right now we have got all the offset positions separately; now have
     # put then all together
@@ -1146,7 +1140,7 @@ def new_xy_concatenated_sequence(
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs
+        name=name,
     )
 
 
