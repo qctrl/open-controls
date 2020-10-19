@@ -867,7 +867,7 @@ def new_quadratic_sequence(
 
 
 def new_x_concatenated_sequence(
-    duration=1.0, concatenation_order=None, pre_post_rotation=False, **kwargs
+    duration=1.0, concatenation_order=1, pre_post_rotation=False, name=None
 ):
     r"""
     Creates the :math:`X`-concatenated sequence.
@@ -875,26 +875,19 @@ def new_x_concatenated_sequence(
     Parameters
     ----------
     duration : float, optional
-        Defaults to None.
-        The total duration of the sequence :math:`\tau`.
+        The total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
     concatenation_order : int, optional
-        Defaults to None.
-        The number of concatenation of base sequence.
+        The number of concatenation of base sequence. Defaults to 1.
     pre_post_rotation : bool, optional
-        If True, a :math:`X_{\pi/2}` rotation is added at the
-        start and end of the sequence.
-    kwargs : dict
-        Additional keywords required by DynamicDecouplingSequence.
+        If ``True``, a :math:`X_{\pi/2}` rotation is added at the
+        start and end of the sequence. Defaults to ``False``.
+    name : string, optional
+        Name of the sequence. Defaults to ``None``.
 
     Returns
     -------
     DynamicDecouplingSequence
         The :math:`X`-concatenated sequence.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     See Also
     --------
@@ -923,17 +916,17 @@ def new_x_concatenated_sequence(
     .. [#] `K. Khodjasteh and D. A. Lidar, Physical Review Letters 95, 180501 (2005).
         <https://doi.org/10.1103/PhysRevLett.95.180501>`_
     """
-    duration = _check_duration(duration)
 
-    concatenation_order = concatenation_order or 1
+    check_arguments(
+        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+    )
+    check_arguments(
+        concatenation_order > 0,
+        "Concatenation oder must be above zero:",
+        {"concatenation_order": concatenation_order},
+    )
+
     concatenation_order = int(concatenation_order)
-    if concatenation_order <= 0.0:
-        raise ArgumentsValueError(
-            "Concatenation oder must be above zero:",
-            {"concatenation_order": concatenation_order},
-            extras={"duration": duration},
-        )
-
     unit_spacing = duration / (2 ** concatenation_order)
     cumulations = _concatenation_x(concatenation_order)
 
@@ -942,10 +935,10 @@ def new_x_concatenated_sequence(
 
     values, counts = np.unique(pos_cum_sum, return_counts=True)
 
-    offsets = [values[i] for i in range(counts.shape[0]) if counts[i] % 2 == 0]
+    offsets = [value for value, count in zip(values, counts) if count % 2 == 0]
 
     if concatenation_order % 2 == 1:
-        offsets = offsets[0:-1]
+        offsets = offsets[:-1]
 
     offsets = np.array(offsets)
     rabi_rotations = np.zeros(offsets.shape)
@@ -969,7 +962,7 @@ def new_x_concatenated_sequence(
         rabi_rotations=rabi_rotations,
         azimuthal_angles=azimuthal_angles,
         detuning_rotations=detuning_rotations,
-        **kwargs
+        name=name,
     )
 
 
@@ -1235,7 +1228,7 @@ def _concatenation_x(concatenation_sequence: int = 1) -> np.ndarray:
     if concatenation_sequence == 1:
         return np.array([1, 0, 1, 0])
 
-    cumulated_operations = np.concatenate(
+    return np.concatenate(
         (
             _concatenation_x(concatenation_sequence - 1),
             np.array([0]),
@@ -1244,7 +1237,6 @@ def _concatenation_x(concatenation_sequence: int = 1) -> np.ndarray:
         ),
         axis=0,
     )
-    return cumulated_operations
 
 
 def _concatenation_xy(concatenation_sequence: int = 1) -> np.ndarray:
