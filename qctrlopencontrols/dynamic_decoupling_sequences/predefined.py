@@ -173,7 +173,7 @@ def new_ramsey_sequence(duration, pre_post_rotation=False, name=None):
     """
     check_arguments(
         duration > 0,
-        "Sequence duration must be greater than zero:",
+        "Sequence duration must be greater than zero.",
         {"duration": duration},
     )
 
@@ -268,7 +268,7 @@ def new_carr_purcell_sequence(
     Parameters
     ----------
     duration : float
-        Total duration of the sequence :math:`\tau` (in seconds)
+        Total duration of the sequence :math:`\tau` (in seconds).
     number_of_offsets : int
         Number of offsets :math:`n`
     pre_post_rotation : bool, optional
@@ -310,7 +310,7 @@ def new_carr_purcell_sequence(
     )
     check_arguments(
         number_of_offsets >= 1,
-        "Number of offsets must be greater than zero:",
+        "Number of offsets must be greater than zero.",
         {"number_of_offsets": number_of_offsets},
     )
 
@@ -393,7 +393,7 @@ def new_cpmg_sequence(duration, number_of_offsets, pre_post_rotation=False, name
     )
     check_arguments(
         number_of_offsets >= 1,
-        "Number of offsets must be greater than zero:",
+        "Number of offsets must be greater than zero.",
         {"number_of_offsets": number_of_offsets},
     )
 
@@ -472,7 +472,7 @@ def new_uhrig_sequence(duration, number_of_offsets, pre_post_rotation=False, nam
     )
     check_arguments(
         number_of_offsets >= 1,
-        "Number of offsets must be greater than zero:",
+        "Number of offsets must be greater than zero.",
         {"number_of_offsets": number_of_offsets},
     )
 
@@ -553,7 +553,7 @@ def new_periodic_sequence(
     )
     check_arguments(
         number_of_offsets >= 1,
-        "Number of offsets must be greater than zero:",
+        "Number of offsets must be greater than zero.",
         {"number_of_offsets": number_of_offsets},
     )
 
@@ -656,7 +656,7 @@ def new_walsh_sequence(duration, paley_order, pre_post_rotation=False, name=None
     )
     check_arguments(
         1 <= paley_order <= 2000,
-        "Paley order must be between 1 and 2000",
+        "Paley order must be between 1 and 2000.",
         {"paley_order": paley_order},
     )
 
@@ -782,12 +782,12 @@ def new_quadratic_sequence(
     )
     check_arguments(
         number_inner_offsets >= 1,
-        "Number of offsets of inner pulses must be greater than zero:",
+        "Number of offsets of inner pulses must be greater than zero.",
         {"number_inner_offsets": number_inner_offsets},
     )
     check_arguments(
         number_outer_offsets >= 1,
-        "Number of offsets of outer pulses must be greater than zero:",
+        "Number of offsets of outer pulses must be greater than zero.",
         {"number_outer_offsets": number_outer_offsets},
     )
 
@@ -904,7 +904,7 @@ def new_x_concatenated_sequence(
     )
     check_arguments(
         concatenation_order >= 1,
-        "Concatenation oder must be greater than zero:",
+        "Concatenation oder must be greater than zero.",
         {"concatenation_order": concatenation_order},
     )
 
@@ -1008,7 +1008,7 @@ def new_xy_concatenated_sequence(
     )
     check_arguments(
         concatenation_order >= 1,
-        "Concatenation oder must be greater than zero:",
+        "Concatenation oder must be greater than zero.",
         {"concatenation_order": concatenation_order},
     )
 
