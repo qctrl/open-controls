@@ -125,7 +125,9 @@ def test_dynamical_decoupling_sequence():
         )
 
         # duration cannot be negative
-        _ = DynamicDecouplingSequence(duration=-2.0)
+        _ = DynamicDecouplingSequence(
+            duration=-2.0, offsets=2.0 / 2000 * np.ones((20000, 1))
+        )
 
 
 def test_sequence_plot():
@@ -206,6 +208,7 @@ def test_pretty_string_format():
     _name = "test_sequence"
 
     dd_sequence = DynamicDecouplingSequence(
+        duration=_duration,
         offsets=_offsets,
         rabi_rotations=_rabi_rotations,
         azimuthal_angles=_azimuthal_angles,
@@ -247,6 +250,7 @@ def test_pretty_string_format():
     assert _pretty_string == str(dd_sequence)
 
     dd_sequence = DynamicDecouplingSequence(
+        duration=_duration,
         offsets=_offsets,
         rabi_rotations=_rabi_rotations,
         azimuthal_angles=_azimuthal_angles,

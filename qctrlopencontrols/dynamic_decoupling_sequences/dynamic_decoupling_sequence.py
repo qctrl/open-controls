@@ -34,6 +34,7 @@ from ..utils import (
     Coordinate,
     FileFormat,
     FileType,
+    check_arguments,
     create_repr_from_attributes,
 )
 
@@ -45,30 +46,23 @@ class DynamicDecouplingSequence:
     Parameters
     ----------
     duration : float
-        Defaults to 1. The total time in seconds for the sequence :math:`\tau`.
+        The total time in seconds for the sequence :math:`\tau`.
     offsets : np.ndarray
-        Defaults to None.
         The times offsets :math:`\{t_j\}` in seconds for the center of pulses.
-        If None, defaults to one operation at halfway [0.5].
-    rabi_rotations : np.ndarray
-        Defaults to None.
+    rabi_rotations : np.ndarray, optional
         The rabi rotation :math:`\omega_j` at each time offset :math:`t_j`.
-        If None, defaults to :math:`\pi` at each time offset.
-    azimuthal_angles : np.ndarray
-        Defaults to None.
+        Defaults to ``None``.
+        If not provided, it will be set as :math:`\pi` at each time offset.
+    azimuthal_angles : np.ndarray, optional
         The azimuthal angle :math:`\phi_j` at each time offset :math:`t_j`.
-        If None, defaults to 0 at each time offset.
-    detuning_rotations : np.ndarray
-        Defaults to None.
+        Defaults to ``None``.
+        If not provided, it will be set as 0 at each time offset.
+    detuning_rotations : np.ndarray, optional
         The detuning rotation :math:`\delta_j` at each time offset :math:`t_j`.
-        If None, defaults to 0 at each time offset.
-    name : str
+        Defaults to ``None``.
+        If not provided, it will be set as 0 at each time offset.
+    name : str, optional
         Name of the sequence. Defaults to None.
-
-    Raises
-    ------
-    qctrlopencontrols.exceptions.ArgumentsValueError
-        is raised if one of the inputs is invalid.
 
     Notes
     -----
@@ -90,96 +84,73 @@ class DynamicDecouplingSequence:
 
     def __init__(
         self,
-        duration: float = 1.0,
-        offsets: Optional[np.ndarray] = None,
+        duration: float,
+        offsets: np.ndarray,
         rabi_rotations: Optional[np.ndarray] = None,
         azimuthal_angles: Optional[np.ndarray] = None,
         detuning_rotations: Optional[np.ndarray] = None,
-        name: Optional[str] = None,
+        name: str = None,
     ):
 
-        self.duration = duration
-        if self.duration <= 0.0:
-            raise ArgumentsValueError(
-                "Sequence duration must be above zero:", {"duration": self.duration}
-            )
-
-        if offsets is None:
-            offsets = [0.5]
-
-        self.offsets = np.array(offsets, dtype=np.float)
-        if self.offsets.shape[0] > UPPER_BOUND_OFFSETS:
-            raise ArgumentsValueError(
-                "Number of offsets is above the allowed number of maximum offsets. ",
-                {
-                    "number_of_offsets": self.offsets.shape[0],
-                    "allowed_maximum_offsets": UPPER_BOUND_OFFSETS,
-                },
-            )
-
-        if np.any(self.offsets < 0.0) or np.any(self.offsets > self.duration):
-            raise ArgumentsValueError(
-                "Offsets for dynamic decoupling sequence must be between 0 and sequence "
-                "duration (inclusive). ",
-                {"offsets": offsets, "duration": duration},
-            )
+        check_arguments(
+            duration > 0,
+            "Sequence duration must be above zero.",
+            {"duration": duration},
+        )
+        offsets = np.asarray(offsets)
+        check_arguments(
+            len(offsets) <= UPPER_BOUND_OFFSETS,
+            "Number of offsets is above the allowed number of maximum offsets. ",
+            {"offsets": offsets},
+            extras={
+                "number_of_offsets": len(offsets),
+                "allowed_maximum_offsets": UPPER_BOUND_OFFSETS,
+            },
+        )
+        check_arguments(
+            np.all(offsets >= 0.0) and np.all(offsets <= duration),
+            "Offsets for dynamic decoupling sequence must be between 0 and the sequence "
+            "duration (inclusive). ",
+            {"offsets": offsets, "duration": duration},
+        )
 
         if rabi_rotations is None:
-            rabi_rotations = np.pi * np.ones((len(self.offsets),))
-
-        if azimuthal_angles is None:
-            azimuthal_angles = np.zeros((len(self.offsets),))
-
-        if detuning_rotations is None:
-            detuning_rotations = np.zeros((len(self.offsets),))
-
-        self.rabi_rotations = np.array(rabi_rotations, dtype=np.float)
-        self.azimuthal_angles = np.array(azimuthal_angles, dtype=np.float)
-        self.detuning_rotations = np.array(detuning_rotations, dtype=np.float)
-
-        if len(self.rabi_rotations) != self.number_of_offsets:
-            raise ArgumentsValueError(
+            rabi_rotations = np.pi * np.ones(len(offsets))
+        else:
+            check_arguments(
+                len(rabi_rotations) == len(offsets),
                 "rabi rotations must have the same length as offsets. ",
                 {"offsets": offsets, "rabi_rotations": rabi_rotations},
             )
 
-        if len(self.azimuthal_angles) != self.number_of_offsets:
-            raise ArgumentsValueError(
+        if azimuthal_angles is None:
+            azimuthal_angles = np.zeros(len(offsets))
+        else:
+            check_arguments(
+                len(azimuthal_angles) == len(offsets),
                 "azimuthal angles must have the same length as offsets. ",
                 {"offsets": offsets, "azimuthal_angles": azimuthal_angles},
             )
 
-        if len(self.detuning_rotations) != self.number_of_offsets:
-            raise ArgumentsValueError(
+        if detuning_rotations is None:
+            detuning_rotations = np.zeros(len(offsets))
+        else:
+            check_arguments(
+                len(detuning_rotations) == len(offsets),
                 "detuning rotations must have the same length as offsets. ",
-                {
-                    "offsets": offsets,
-                    "detuning_rotations": detuning_rotations,
-                    "len(detuning_rotations)": len(self.detuning_rotations),
-                    "number_of_offsets": self.number_of_offsets,
-                },
+                {"offsets": offsets, "detuning_rotations": detuning_rotations},
             )
 
+        self.duration = duration
+        self.offsets = offsets
+        self.rabi_rotations = np.array(rabi_rotations, dtype=np.float)
+        self.azimuthal_angles = np.array(azimuthal_angles, dtype=np.float)
+        self.detuning_rotations = np.array(detuning_rotations, dtype=np.float)
         self.name = name
-        if self.name is not None:
-            self.name = str(self.name)
-
-    @property
-    def number_of_offsets(self) -> int:
-        """
-        Returns the number of offsets.
-
-        Returns
-        ------
-        int
-            The number of offsets in the dynamic decoupling sequence
-        """
-
-        return len(self.offsets)
 
     def export(self) -> Dict:
         """
-        Returns a dictionary formatted for plotting using the qctrl-visualizer package.
+        Returns a dictionary for plotting using the qctrl-visualizer package.
 
         Returns
         -------
@@ -189,23 +160,18 @@ class DynamicDecouplingSequence:
             and 'Detuning'.
         """
 
-        plot_dictionary = {}
-
-        plot_r = self.rabi_rotations
-        plot_theta = self.azimuthal_angles
-        plot_offsets = self.offsets
-        plot_detunings = self.detuning_rotations
-
-        plot_dictionary["Rabi"] = [
-            {"rotation": r * np.exp(1.0j * theta), "offset": t}
-            for r, theta, t in zip(plot_r, plot_theta, plot_offsets)
-        ]
-
-        plot_dictionary["Detuning"] = [
-            {"rotation": v, "offset": t} for v, t in zip(plot_detunings, plot_offsets)
-        ]
-
-        return plot_dictionary
+        return {
+            "Rabi": [
+                {"rotation": rabi * np.exp(1.0j * theta), "offset": offset}
+                for rabi, theta, offset in zip(
+                    self.rabi_rotations, self.azimuthal_angles, self.offsets
+                )
+            ],
+            "Detuning": [
+                {"rotation": rotation, "offset": offset}
+                for rotation, offset in zip(self.detuning_rotations, self.offsets)
+            ],
+        }
 
     def __repr__(self):
         """
@@ -231,7 +197,7 @@ class DynamicDecouplingSequence:
 
     def __str__(self):
         """
-        Prepares a friendly string format for a Dynamic Decoupling Sequence.
+        Prepares a friendly string format for a dynamical decoupling sequence.
         """
 
         dd_sequence_string = list()
@@ -291,7 +257,7 @@ class DynamicDecouplingSequence:
         maximum_detuning_rate: float = 2 * np.pi,
     ) -> None:
         """
-        Prepares and saves the dynamic decoupling sequence in a file.
+        Prepares and saves the dynamical decoupling sequence in a file.
 
         Parameters
         ----------
