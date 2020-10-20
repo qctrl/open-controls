@@ -140,14 +140,14 @@ def _add_pre_post_rotations(
     return offsets, rabi_rotations, azimuthal_angles, detuning_rotations
 
 
-def new_ramsey_sequence(duration=1.0, pre_post_rotation=False, name=None):
+def new_ramsey_sequence(duration, pre_post_rotation=False, name=None):
     r"""
     Creates the Ramsey sequence.
 
     Parameters
     ----------
-    duration : float, optional
-        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
+    duration : float
+        Total duration of the sequence :math:`\tau` (in seconds).
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi / 2}` rotation
         is added at the start and end of the sequence. Defaults to ``False``.
@@ -172,7 +172,9 @@ def new_ramsey_sequence(duration=1.0, pre_post_rotation=False, name=None):
         <https://link.aps.org/doi/10.1103/PhysRev.78.695>`_
     """
     check_arguments(
-        duration > 0, "Sequence duration must be above zero:", {"duration": duration}
+        duration > 0,
+        "Sequence duration must be greater than zero.",
+        {"duration": duration},
     )
 
     offsets = []
@@ -196,14 +198,14 @@ def new_ramsey_sequence(duration=1.0, pre_post_rotation=False, name=None):
     )
 
 
-def new_spin_echo_sequence(duration=1.0, pre_post_rotation=False, name=None):
+def new_spin_echo_sequence(duration, pre_post_rotation=False, name=None):
     r"""
     Creates the spin echo sequence.
 
     Parameters
     ----------
-    duration : float, optional
-        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
+    duration : float
+        Total duration of the sequence :math:`\tau` (in seconds).
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence. Defaults to ``False``.
@@ -227,13 +229,15 @@ def new_spin_echo_sequence(duration=1.0, pre_post_rotation=False, name=None):
     """
 
     check_arguments(
-        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+        duration > 0,
+        "Sequence duration must be greater than zero.",
+        {"duration": duration},
     )
 
-    offsets = duration * np.array([0.5])
+    offsets = np.array([duration / 2.0])
     rabi_rotations = np.array([np.pi])
-    azimuthal_angles = np.zeros(offsets.shape)
-    detuning_rotations = np.zeros(offsets.shape)
+    azimuthal_angles = np.zeros(1)
+    detuning_rotations = np.zeros(1)
 
     if pre_post_rotation:
         (
@@ -256,17 +260,17 @@ def new_spin_echo_sequence(duration=1.0, pre_post_rotation=False, name=None):
 
 
 def new_carr_purcell_sequence(
-    duration=1.0, number_of_offsets=1, pre_post_rotation=False, name=None
+    duration, number_of_offsets, pre_post_rotation=False, name=None
 ):
     r"""
     Creates the Carr-Purcell sequence.
 
     Parameters
     ----------
-    duration : float, optional
-        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
-    number_of_offsets : int, optional
-        Number of offsets :math:`n`. Defaults to 1.
+    duration : float
+        Total duration of the sequence :math:`\tau` (in seconds).
+    number_of_offsets : int
+        Number of offsets :math:`n`.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence. Defaults to ``False``.
@@ -300,11 +304,13 @@ def new_carr_purcell_sequence(
     """
 
     check_arguments(
-        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+        duration > 0,
+        "Sequence duration must be greater than zero.",
+        {"duration": duration},
     )
     check_arguments(
         number_of_offsets >= 1,
-        "Number of offsets must be above zero:",
+        "Number of offsets must be greater than zero.",
         {"number_of_offsets": number_of_offsets},
     )
 
@@ -338,18 +344,16 @@ def new_carr_purcell_sequence(
     )
 
 
-def new_cpmg_sequence(
-    duration=1.0, number_of_offsets=1, pre_post_rotation=False, name=None
-):
+def new_cpmg_sequence(duration, number_of_offsets, pre_post_rotation=False, name=None):
     r"""
     Creates the Carr-Purcell-Meiboom-Gill sequence.
 
     Parameters
     ----------
-    duration : float, optional
-        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
-    number_of_offsets : int, optional
-        Number of offsets :math:`n`. Defaults to 1.
+    duration : float
+        Total duration of the sequence :math:`\tau` (in seconds).
+    number_of_offsets : int
+        Number of offsets :math:`n`.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence. Defaults to ``False``.
@@ -383,11 +387,13 @@ def new_cpmg_sequence(
     """
 
     check_arguments(
-        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+        duration > 0,
+        "Sequence duration must be greater than zero.",
+        {"duration": duration},
     )
     check_arguments(
         number_of_offsets >= 1,
-        "Number of offsets must be above zero:",
+        "Number of offsets must be greater than zero.",
         {"number_of_offsets": number_of_offsets},
     )
 
@@ -422,18 +428,16 @@ def new_cpmg_sequence(
     )
 
 
-def new_uhrig_sequence(
-    duration=1.0, number_of_offsets=1, pre_post_rotation=False, name=None
-):
+def new_uhrig_sequence(duration, number_of_offsets, pre_post_rotation=False, name=None):
     r"""
     Creates the Uhrig sequence.
 
     Parameters
     ----------
-    duration : float, optional
-        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
-    number_of_offsets : int, optional
-        Number of offsets. Defaults to 1.
+    duration : float
+        Total duration of the sequence :math:`\tau` (in seconds).
+    number_of_offsets : int
+        Number of offsets :math:`n`.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence. Defaults to ``False``.
@@ -462,11 +466,13 @@ def new_uhrig_sequence(
     """
 
     check_arguments(
-        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+        duration > 0,
+        "Sequence duration must be greater than zero.",
+        {"duration": duration},
     )
     check_arguments(
         number_of_offsets >= 1,
-        "Number of offsets must be above zero:",
+        "Number of offsets must be greater than zero.",
         {"number_of_offsets": number_of_offsets},
     )
 
@@ -502,17 +508,17 @@ def new_uhrig_sequence(
 
 
 def new_periodic_sequence(
-    duration=1.0, number_of_offsets=1, pre_post_rotation=False, name=None
+    duration, number_of_offsets, pre_post_rotation=False, name=None
 ):
     r"""
     Creates the periodic sequence.
 
     Parameters
     ----------
-    duration : float, optional
-        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
-    number_of_offsets : int, optional
-        Number of offsets :math:`n`. Defaults to 1.
+    duration : float
+        Total duration of the sequence :math:`\tau` (in seconds).
+    number_of_offsets : int
+        Number of offsets :math:`n`.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence. Defaults to ``False``.
@@ -541,11 +547,13 @@ def new_periodic_sequence(
     """
 
     check_arguments(
-        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+        duration > 0,
+        "Sequence duration must be greater than zero.",
+        {"duration": duration},
     )
     check_arguments(
         number_of_offsets >= 1,
-        "Number of offsets must be above zero:",
+        "Number of offsets must be greater than zero.",
         {"number_of_offsets": number_of_offsets},
     )
 
@@ -580,16 +588,16 @@ def new_periodic_sequence(
     )
 
 
-def new_walsh_sequence(duration=1.0, paley_order=1, pre_post_rotation=False, name=None):
+def new_walsh_sequence(duration, paley_order, pre_post_rotation=False, name=None):
     r"""
     Creates the Walsh sequence.
 
     Parameters
     ----------
-    duration : float, optional
-        Total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
-    paley_order : int, optional
-        The paley order :math:`k` of the Walsh sequence. Defaults to 1.
+    duration : float
+        Total duration of the sequence :math:`\tau` (in seconds).
+    paley_order : int
+        The paley order :math:`k` of the Walsh sequence.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence. Defaults to ``False``.
@@ -642,11 +650,13 @@ def new_walsh_sequence(duration=1.0, paley_order=1, pre_post_rotation=False, nam
     """
 
     check_arguments(
-        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+        duration > 0,
+        "Sequence duration must be greater than zero.",
+        {"duration": duration},
     )
     check_arguments(
         1 <= paley_order <= 2000,
-        "Paley order must be between 1 and 2000",
+        "Paley order must be between 1 and 2000.",
         {"paley_order": paley_order},
     )
 
@@ -700,9 +710,9 @@ def new_walsh_sequence(duration=1.0, paley_order=1, pre_post_rotation=False, nam
 
 
 def new_quadratic_sequence(
-    duration=1.0,
-    number_inner_offsets=1,
-    number_outer_offsets=1,
+    duration,
+    number_inner_offsets,
+    number_outer_offsets,
     pre_post_rotation=False,
     name=None,
 ):
@@ -711,12 +721,12 @@ def new_quadratic_sequence(
 
     Parameters
     ----------
-    duration : float, optional
-        The total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
-    number_inner_offsets : int, optional
-        Number of inner :math:`Z_{\pi}` pulses :math:`n_1`. Defaults to 1.
-    number_outer_offsets : int, optional
-        Number of outer :math:`X_{\pi}` pulses :math:`n_2`. Defaults to 1.
+    duration : float
+        The total duration of the sequence :math:`\tau` (in seconds).
+    number_inner_offsets : int
+        Number of inner :math:`Z_{\pi}` pulses :math:`n_1`.
+    number_outer_offsets : int
+        Number of outer :math:`X_{\pi}` pulses :math:`n_2`.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence. Defaults to ``False``.
@@ -766,16 +776,18 @@ def new_quadratic_sequence(
     """
 
     check_arguments(
-        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+        duration > 0,
+        "Sequence duration must be greater than zero.",
+        {"duration": duration},
     )
     check_arguments(
         number_inner_offsets >= 1,
-        "Number of offsets of inner pulses must be above zero:",
+        "Number of offsets of inner pulses must be greater than zero.",
         {"number_inner_offsets": number_inner_offsets},
     )
     check_arguments(
         number_outer_offsets >= 1,
-        "Number of offsets of outer pulses must be above zero:",
+        "Number of offsets of outer pulses must be greater than zero.",
         {"number_outer_offsets": number_outer_offsets},
     )
 
@@ -835,17 +847,17 @@ def new_quadratic_sequence(
 
 
 def new_x_concatenated_sequence(
-    duration=1.0, concatenation_order=1, pre_post_rotation=False, name=None
+    duration, concatenation_order, pre_post_rotation=False, name=None
 ):
     r"""
     Creates the :math:`X`-concatenated sequence.
 
     Parameters
     ----------
-    duration : float, optional
-        The total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
-    concatenation_order : int, optional
-        The number of concatenation of base sequence. Defaults to 1.
+    duration : float
+        The total duration of the sequence :math:`\tau` (in seconds).
+    concatenation_order : int
+        The number of concatenation of base sequence.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence. Defaults to ``False``.
@@ -886,11 +898,13 @@ def new_x_concatenated_sequence(
     """
 
     check_arguments(
-        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+        duration > 0,
+        "Sequence duration must be greater than zero.",
+        {"duration": duration},
     )
     check_arguments(
         concatenation_order >= 1,
-        "Concatenation oder must be above zero:",
+        "Concatenation oder must be greater than zero.",
         {"concatenation_order": concatenation_order},
     )
 
@@ -935,17 +949,17 @@ def new_x_concatenated_sequence(
 
 
 def new_xy_concatenated_sequence(
-    duration=1.0, concatenation_order=1, pre_post_rotation=False, name=None
+    duration, concatenation_order, pre_post_rotation=False, name=None
 ):
     r"""
     Creates the :math:`XY`-Concatenated sequence.
 
     Parameters
     ----------
-    duration : float, optional
-        The total duration of the sequence :math:`\tau` (in seconds). Defaults to 1.
+    duration : float
+        The total duration of the sequence :math:`\tau` (in seconds).
     concatenation_order : int, optional
-        The number of concatenation of base sequence :math:`l`. Defaults to 1.
+        The number of concatenation of base sequence :math:`l`.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence. Defaults to ``False``.
@@ -988,11 +1002,13 @@ def new_xy_concatenated_sequence(
     """
 
     check_arguments(
-        duration > 0, "Sequence duration must be above zero.", {"duration": duration}
+        duration > 0,
+        "Sequence duration must be greater than zero.",
+        {"duration": duration},
     )
     check_arguments(
         concatenation_order >= 1,
-        "Concatenation oder must be above zero:",
+        "Concatenation oder must be greater than zero.",
         {"concatenation_order": concatenation_order},
     )
 
