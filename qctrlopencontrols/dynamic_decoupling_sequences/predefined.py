@@ -270,7 +270,7 @@ def new_carr_purcell_sequence(
     duration : float
         Total duration of the sequence :math:`\tau` (in seconds).
     number_of_offsets : int
-        Number of offsets :math:`n`
+        Number of offsets :math:`n`.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
         start and end of the sequence. Defaults to ``False``.
