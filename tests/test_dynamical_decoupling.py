@@ -206,6 +206,7 @@ def test_pretty_string_format():
     _name = "test_sequence"
 
     dd_sequence = DynamicDecouplingSequence(
+        duration=_duration,
         offsets=_offsets,
         rabi_rotations=_rabi_rotations,
         azimuthal_angles=_azimuthal_angles,
@@ -247,6 +248,7 @@ def test_pretty_string_format():
     assert _pretty_string == str(dd_sequence)
 
     dd_sequence = DynamicDecouplingSequence(
+        duration=_duration,
         offsets=_offsets,
         rabi_rotations=_rabi_rotations,
         azimuthal_angles=_azimuthal_angles,
