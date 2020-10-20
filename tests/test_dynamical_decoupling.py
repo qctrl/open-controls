@@ -125,7 +125,9 @@ def test_dynamical_decoupling_sequence():
         )
 
         # duration cannot be negative
-        _ = DynamicDecouplingSequence(duration=-2.0)
+        _ = DynamicDecouplingSequence(
+            duration=-2.0, offsets=2.0 / 2000 * np.ones((20000, 1))
+        )
 
 
 def test_sequence_plot():
