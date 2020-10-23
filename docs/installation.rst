@@ -57,13 +57,11 @@ Once the clone is complete, you have two options:
 #. 
    Using Poetry
 
-   .. code-block:: shell
+   Follow the instructions from the
+   `Poetry documentation <https://python-poetry.org/docs/#installation>`_ to
+   install Poetry.
 
-      cd python-open-controls
-      ./setup-poetry.sh
-
-   **Note:** if you are on Windows, you'll need to install
-   `Poetry <https://poetry.eustace.io>`_ manually, and use:
+   After you have installed Poetry, use:
 
    .. code-block:: shell
 
