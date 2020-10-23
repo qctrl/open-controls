@@ -74,13 +74,11 @@ Once the clone is complete, you have two options:
 
 1. Using Poetry
 
-   ```shell
-   cd python-open-controls
-   ./setup-poetry.sh
-   ```
+   Follow the instructions from the
+   [Poetry documentation](https://python-poetry.org/docs/#installation) to
+   install Poetry.
 
-   **Note:** if you are on Windows, you'll need to install
-   [Poetry](https://poetry.eustace.io) manually, and use:
+   After you have installed Poetry, use:
 
    ```bash
    cd python-open-controls
