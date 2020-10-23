@@ -11,7 +11,7 @@ then
 fi
 
 # Check Poetry installed
-poetry --version | grep 0.12
+poetry --version
 if [ $? -ne 0 ]
 then
     echo "--- Poetry not detected, installing..."
