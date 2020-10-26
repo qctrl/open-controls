@@ -175,7 +175,9 @@ class DynamicDecouplingSequence:
 
     def __repr__(self):
         """
-        Returns a string representation for the object. The returned string looks like a valid
+        Returns a string representation for the object.
+
+        The returned string looks like a valid
         Python expression that could be used to recreate the object, including default arguments.
 
         Returns
@@ -200,84 +202,68 @@ class DynamicDecouplingSequence:
         Prepares a friendly string format for a dynamical decoupling sequence.
         """
 
-        dd_sequence_string = list()
+        def _array_to_str(arr: np.ndarray) -> str:
+            """
+            Converts elements of an array to a string.
+            [1, 2] -> "1, 2"
+            """
+            return ", ".join(arr.astype(str))
+
+        sequence_string = list()
 
         if self.name is not None:
-            dd_sequence_string.append("{}:".format(self.name))
+            sequence_string.append("{}:".format(self.name))
 
-        dd_sequence_string.append("Duration = {}".format(self.duration))
+        sequence_string.append("Duration = {}".format(self.duration))
 
-        pretty_offset = [str(offset / self.duration) for offset in list(self.offsets)]
-        pretty_offset = ",".join(pretty_offset)
-
-        dd_sequence_string.append(
-            "Offsets = [{}] x {}".format(pretty_offset, self.duration)
+        sequence_string.append(
+            f"Offsets = [{_array_to_str(self.offsets / self.duration)}] x {self.duration}"
         )
 
-        pretty_rabi_rotations = [
-            str(rabi_rotation / np.pi) for rabi_rotation in list(self.rabi_rotations)
-        ]
-        pretty_rabi_rotations = ",".join(pretty_rabi_rotations)
-
-        dd_sequence_string.append(
-            "Rabi Rotations = [{}] x pi".format(pretty_rabi_rotations)
+        sequence_string.append(
+            f"Rabi Rotations = [{_array_to_str(self.rabi_rotations / np.pi)}] x pi"
         )
 
-        pretty_azimuthal_angles = [
-            str(azimuthal_angle / np.pi)
-            for azimuthal_angle in list(self.azimuthal_angles)
-        ]
-        pretty_azimuthal_angles = ",".join(pretty_azimuthal_angles)
-
-        dd_sequence_string.append(
-            "Azimuthal Angles = [{}] x pi".format(pretty_azimuthal_angles)
+        sequence_string.append(
+            f"Azimuthal Angles = [{_array_to_str(self.azimuthal_angles / np.pi)}] x pi"
         )
 
-        pretty_detuning_rotations = [
-            str(detuning_rotation / np.pi)
-            for detuning_rotation in list(self.detuning_rotations)
-        ]
-        pretty_detuning_rotations = ",".join(pretty_detuning_rotations)
-
-        dd_sequence_string.append(
-            "Detuning Rotations = [{}] x pi".format(pretty_detuning_rotations)
+        sequence_string.append(
+            f"Detuning Rotations = [{_array_to_str(self.detuning_rotations / np.pi)}] x pi"
         )
 
-        dd_sequence_string = "\n".join(dd_sequence_string)
-
-        return dd_sequence_string
+        return "\n".join(sequence_string)
 
     def export_to_file(
         self,
-        filename: Optional[str] = None,
+        file_name: str,
         file_format: str = FileFormat.QCTRL.value,
         file_type: str = FileType.CSV.value,
         coordinates: str = Coordinate.CYLINDRICAL.value,
         maximum_rabi_rate: float = 2 * np.pi,
         maximum_detuning_rate: float = 2 * np.pi,
     ) -> None:
-        """
+        r"""
         Prepares and saves the dynamical decoupling sequence in a file.
 
         Parameters
         ----------
-        filename : str, optional
+        file_name : str
             Name and path of the file to save the control into.
-            Defaults to None
         file_format : str
             Specified file format for saving the control. Defaults to
             'Q-CTRL expanded'; Currently it does not support any other format.
             For detail of the `Q-CTRL Expanded Format` consult
             :py:meth:`DrivenControl.export_to_file`.
         file_type : str, optional
-            One of 'CSV' or 'JSON'; defaults to 'CSV'.
+            One of 'CSV' or 'JSON'. Defaults to 'CSV'.
         coordinates : str, optional
             Indicates the co-ordinate system requested. Must be one of
             'cylindrical', 'cartesian'; defaults to 'cylindrical'
         maximum_rabi_rate : float, optional
-            Maximum Rabi Rate; Defaults to :math:`2\\pi`
+            Maximum Rabi Rate; Defaults to :math:`2\pi`.
         maximum_detuning_rate : float, optional
-            Maximum Detuning Rate; Defaults to :math:`2\\pi`
+            Maximum Detuning Rate; Defaults to :math:`2\pi`.
 
         Raises
         ------
@@ -291,15 +277,13 @@ class DynamicDecouplingSequence:
         integration with Q-CTRL BLACK OPAL's 1-Qubit workspace.
         """
 
-        driven_control = convert_dds_to_driven_control(
+        convert_dds_to_driven_control(
             dynamic_decoupling_sequence=self,
             maximum_rabi_rate=maximum_rabi_rate,
             maximum_detuning_rate=maximum_detuning_rate,
             name=self.name,
-        )
-
-        driven_control.export_to_file(
-            filename=filename,
+        ).export_to_file(
+            filename=file_name,
             file_format=file_format,
             file_type=file_type,
             coordinates=coordinates,
@@ -311,7 +295,7 @@ def convert_dds_to_driven_control(
     maximum_rabi_rate: float = 2 * np.pi,
     maximum_detuning_rate: float = 2 * np.pi,
     minimum_segment_duration: float = 0.0,
-    **kwargs
+    **kwargs,
 ) -> DrivenControl:
     """
     Creates a Driven Control based on the supplied DDS and other relevant information.
@@ -513,7 +497,7 @@ def convert_dds_to_driven_control(
             azimuthal_angles=[0.0],
             detunings=[0.0],
             durations=[sequence_duration],
-            **kwargs
+            **kwargs,
         )
 
     control_rabi_rates = np.zeros((operations.shape[1] * 2,))
@@ -558,7 +542,7 @@ def convert_dds_to_driven_control(
         azimuthal_angles=control_azimuthal_angles,
         detunings=control_detunings,
         durations=control_durations,
-        **kwargs
+        **kwargs,
     )
 
 

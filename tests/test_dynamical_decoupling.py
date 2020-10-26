@@ -219,26 +219,26 @@ def test_pretty_string_format():
     _pretty_string = ["test_sequence:"]
     _pretty_string.append("Duration = {}".format(_duration))
     _pretty_string.append(
-        "Offsets = [{},{},{}] x {}".format(
+        "Offsets = [{}, {}, {}] x {}".format(
             _offsets[0], _offsets[1], _offsets[2], _duration
         )
     )
     _pretty_string.append(
-        "Rabi Rotations = [{},{},{}] x pi".format(
+        "Rabi Rotations = [{}, {}, {}] x pi".format(
             _rabi_rotations[0] / np.pi,
             _rabi_rotations[1] / np.pi,
             _rabi_rotations[2] / np.pi,
         )
     )
     _pretty_string.append(
-        "Azimuthal Angles = [{},{},{}] x pi".format(
+        "Azimuthal Angles = [{}, {}, {}] x pi".format(
             _azimuthal_angles[0] / np.pi,
             _azimuthal_angles[1] / np.pi,
             _azimuthal_angles[2] / np.pi,
         )
     )
     _pretty_string.append(
-        "Detuning Rotations = [{},{},{}] x pi".format(
+        "Detuning Rotations = [{}, {}, {}] x pi".format(
             _detuning_rotations[0] / np.pi,
             _detuning_rotations[1] / np.pi,
             _detuning_rotations[2] / np.pi,
@@ -260,26 +260,26 @@ def test_pretty_string_format():
     _pretty_string = list()
     _pretty_string.append("Duration = {}".format(_duration))
     _pretty_string.append(
-        "Offsets = [{},{},{}] x {}".format(
+        "Offsets = [{}, {}, {}] x {}".format(
             _offsets[0], _offsets[1], _offsets[2], _duration
         )
     )
     _pretty_string.append(
-        "Rabi Rotations = [{},{},{}] x pi".format(
+        "Rabi Rotations = [{}, {}, {}] x pi".format(
             _rabi_rotations[0] / np.pi,
             _rabi_rotations[1] / np.pi,
             _rabi_rotations[2] / np.pi,
         )
     )
     _pretty_string.append(
-        "Azimuthal Angles = [{},{},{}] x pi".format(
+        "Azimuthal Angles = [{}, {}, {}] x pi".format(
             _azimuthal_angles[0] / np.pi,
             _azimuthal_angles[1] / np.pi,
             _azimuthal_angles[2] / np.pi,
         )
     )
     _pretty_string.append(
-        "Detuning Rotations = [{},{},{}] x pi".format(
+        "Detuning Rotations = [{}, {}, {}] x pi".format(
             _detuning_rotations[0] / np.pi,
             _detuning_rotations[1] / np.pi,
             _detuning_rotations[2] / np.pi,
