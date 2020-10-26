@@ -236,7 +236,7 @@ class DynamicDecouplingSequence:
 
     def export_to_file(
         self,
-        file_name: str,
+        filename: str,
         file_format: str = FileFormat.QCTRL.value,
         file_type: str = FileType.CSV.value,
         coordinates: str = Coordinate.CYLINDRICAL.value,
@@ -248,7 +248,7 @@ class DynamicDecouplingSequence:
 
         Parameters
         ----------
-        file_name : str
+        filename : str
             Name and path of the file to save the control into.
         file_format : str
             Specified file format for saving the control. Defaults to
@@ -283,7 +283,7 @@ class DynamicDecouplingSequence:
             maximum_detuning_rate=maximum_detuning_rate,
             name=self.name,
         ).export_to_file(
-            filename=file_name,
+            filename=filename,
             file_format=file_format,
             file_type=file_type,
             coordinates=coordinates,
