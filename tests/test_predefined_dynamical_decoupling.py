@@ -108,13 +108,11 @@ def test_carr_purcell_sequence():
     """
 
     duration = 10.0
-    number_of_offsets = 4
+    offset_count = 4
 
-    sequence = new_carr_purcell_sequence(
-        duration=duration, number_of_offsets=number_of_offsets
-    )
+    sequence = new_carr_purcell_sequence(duration=duration, offset_count=offset_count)
 
-    _spacing = duration / number_of_offsets
+    _spacing = duration / offset_count
     _offsets = np.array(
         [
             _spacing * 0.5,
@@ -133,7 +131,7 @@ def test_carr_purcell_sequence():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
     sequence = new_carr_purcell_sequence(
-        duration=duration, number_of_offsets=number_of_offsets, pre_post_rotation=True,
+        duration=duration, offset_count=offset_count, pre_post_rotation=True,
     )
 
     _offsets = np.array(
@@ -162,13 +160,11 @@ def test_cpmg_sequence():
     """
 
     duration = 10.0
-    number_of_offsets = 4
+    offset_count = 4
 
-    sequence = new_cpmg_sequence(
-        duration=duration, number_of_offsets=number_of_offsets,
-    )
+    sequence = new_cpmg_sequence(duration=duration, offset_count=offset_count,)
 
-    _spacing = duration / number_of_offsets
+    _spacing = duration / offset_count
     _offsets = np.array(
         [
             _spacing * 0.5,
@@ -187,7 +183,7 @@ def test_cpmg_sequence():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
     sequence = new_cpmg_sequence(
-        duration=duration, number_of_offsets=number_of_offsets, pre_post_rotation=True,
+        duration=duration, offset_count=offset_count, pre_post_rotation=True,
     )
 
     _offsets = np.array(
@@ -216,16 +212,14 @@ def test_uhrig_sequence():
     """
 
     duration = 10.0
-    number_of_offsets = 4
+    offset_count = 4
 
-    sequence = new_uhrig_sequence(
-        duration=duration, number_of_offsets=number_of_offsets
-    )
+    sequence = new_uhrig_sequence(duration=duration, offset_count=offset_count)
 
-    constant = 0.5 / (number_of_offsets + 1)
+    constant = 0.5 / (offset_count + 1)
     _delta_positions = [
         duration * (np.sin(np.pi * (k + 1) * constant)) ** 2
-        for k in range(number_of_offsets)
+        for k in range(offset_count)
     ]
 
     _offsets = np.array(_delta_positions)
@@ -239,7 +233,7 @@ def test_uhrig_sequence():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
     sequence = new_uhrig_sequence(
-        duration=duration, number_of_offsets=number_of_offsets, pre_post_rotation=True,
+        duration=duration, offset_count=offset_count, pre_post_rotation=True,
     )
 
     _offsets = np.array(_delta_positions)
@@ -263,17 +257,13 @@ def test_periodic_sequence():
     """
 
     duration = 10.0
-    number_of_offsets = 4
+    offset_count = 4
 
-    sequence = new_periodic_sequence(
-        duration=duration, number_of_offsets=number_of_offsets,
-    )
+    sequence = new_periodic_sequence(duration=duration, offset_count=offset_count,)
 
-    constant = 1 / (number_of_offsets + 1)
+    constant = 1 / (offset_count + 1)
     # prepare the offsets for delta comb
-    _delta_positions = [
-        duration * k * constant for k in range(1, number_of_offsets + 1)
-    ]
+    _delta_positions = [duration * k * constant for k in range(1, offset_count + 1)]
     _offsets = np.array(_delta_positions)
     _rabi_rotations = np.array([np.pi, np.pi, np.pi, np.pi])
     _azimuthal_angles = np.array([0, 0, 0, 0])
@@ -285,7 +275,7 @@ def test_periodic_sequence():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
     sequence = new_periodic_sequence(
-        duration=duration, number_of_offsets=number_of_offsets, pre_post_rotation=True,
+        duration=duration, offset_count=offset_count, pre_post_rotation=True,
     )
 
     _offsets = np.array(_delta_positions)
@@ -364,46 +354,46 @@ def test_quadratic_sequence():
     """
 
     duration = 10.0
-    number_inner_offsets = 4
-    number_outer_offsets = 4
+    inner_offset_count = 4
+    outer_offset_count = 4
 
     sequence = new_quadratic_sequence(
         duration=duration,
-        number_inner_offsets=number_inner_offsets,
-        number_outer_offsets=number_outer_offsets,
+        inner_offset_count=inner_offset_count,
+        outer_offset_count=outer_offset_count,
     )
 
-    _offsets = np.zeros((number_outer_offsets + 1, number_inner_offsets + 1))
+    _offsets = np.zeros((outer_offset_count + 1, inner_offset_count + 1))
 
-    constant = 0.5 / (number_outer_offsets + 1)
+    constant = 0.5 / (outer_offset_count + 1)
     _delta_positions = [
         duration * (np.sin(np.pi * (k + 1) * constant)) ** 2
-        for k in range(number_outer_offsets)
+        for k in range(outer_offset_count)
     ]
 
     _outer_offsets = np.array(_delta_positions)
-    _offsets[0:number_outer_offsets, -1] = _outer_offsets
+    _offsets[0:outer_offset_count, -1] = _outer_offsets
 
     _outer_offsets = np.insert(
         _outer_offsets, [0, _outer_offsets.shape[0]], [0, duration],
     )
     _inner_durations = _outer_offsets[1:] - _outer_offsets[0:-1]
 
-    constant = 0.5 / (number_inner_offsets + 1)
+    constant = 0.5 / (inner_offset_count + 1)
     _delta_positions = [
-        (np.sin(np.pi * (k + 1) * constant)) ** 2 for k in range(number_inner_offsets)
+        (np.sin(np.pi * (k + 1) * constant)) ** 2 for k in range(inner_offset_count)
     ]
     _delta_positions = np.array(_delta_positions)
     for inner_sequence_idx in range(_inner_durations.shape[0]):
         _inner_deltas = _inner_durations[inner_sequence_idx] * _delta_positions
         _inner_deltas = _outer_offsets[inner_sequence_idx] + _inner_deltas
-        _offsets[inner_sequence_idx, 0:number_inner_offsets] = _inner_deltas
+        _offsets[inner_sequence_idx, 0:inner_offset_count] = _inner_deltas
 
     _rabi_rotations = np.zeros(_offsets.shape)
     _detuning_rotations = np.zeros(_offsets.shape)
 
-    _rabi_rotations[0:number_outer_offsets, -1] = np.pi
-    _detuning_rotations[0 : (number_outer_offsets + 1), 0:number_inner_offsets] = np.pi
+    _rabi_rotations[0:outer_offset_count, -1] = np.pi
+    _detuning_rotations[0 : (outer_offset_count + 1), 0:inner_offset_count] = np.pi
 
     _offsets = np.reshape(_offsets, (-1,))
     _rabi_rotations = np.reshape(_rabi_rotations, (-1,))
@@ -422,8 +412,8 @@ def test_quadratic_sequence():
 
     sequence = new_quadratic_sequence(
         duration=duration,
-        number_inner_offsets=number_inner_offsets,
-        number_outer_offsets=number_outer_offsets,
+        inner_offset_count=inner_offset_count,
+        outer_offset_count=outer_offset_count,
         pre_post_rotation=True,
     )
 
@@ -648,7 +638,7 @@ def test_if_carr_purcell_sequence_with_odd_pulses_is_identity():
     pi/2-pulses is an identity, when the number of pulses is odd.
     """
     odd_carr_purcell_sequence = new_carr_purcell_sequence(
-        duration=10.0, number_of_offsets=7, pre_post_rotation=True
+        duration=10.0, offset_count=7, pre_post_rotation=True
     )
 
     assert _pulses_produce_identity(odd_carr_purcell_sequence)
@@ -660,7 +650,7 @@ def test_if_carr_purcell_sequence_with_even_pulses_is_identity():
     pi/2-pulses is an identity, when the number of pulses is even.
     """
     even_carr_purcell_sequence = new_carr_purcell_sequence(
-        duration=10.0, number_of_offsets=8, pre_post_rotation=True
+        duration=10.0, offset_count=8, pre_post_rotation=True
     )
 
     assert _pulses_produce_identity(even_carr_purcell_sequence)
@@ -672,7 +662,7 @@ def test_if_cpmg_sequence_with_odd_pulses_is_identity():
     pi/2-pulses and an extra Z rotation is an identity, when the number of pulses is odd.
     """
     odd_cpmg_sequence = new_cpmg_sequence(
-        duration=10.0, number_of_offsets=7, pre_post_rotation=True,
+        duration=10.0, offset_count=7, pre_post_rotation=True,
     )
 
     assert _pulses_produce_identity(odd_cpmg_sequence)
@@ -684,7 +674,7 @@ def test_if_cpmg_sequence_with_even_pulses_is_identity():
     pi/2-pulses is an identity, when the number of pulses is even.
     """
     even_cpmg_sequence = new_cpmg_sequence(
-        duration=10.0, number_of_offsets=8, pre_post_rotation=True,
+        duration=10.0, offset_count=8, pre_post_rotation=True,
     )
 
     assert _pulses_produce_identity(even_cpmg_sequence)
@@ -696,7 +686,7 @@ def test_if_uhrig_sequence_with_odd_pulses_is_identity():
     pi/2-pulses and an extra Z rotation is an identity, when the number of pulses is odd.
     """
     odd_uhrig_sequence = new_uhrig_sequence(
-        duration=10.0, number_of_offsets=7, pre_post_rotation=True,
+        duration=10.0, offset_count=7, pre_post_rotation=True,
     )
 
     assert _pulses_produce_identity(odd_uhrig_sequence)
@@ -708,7 +698,7 @@ def test_if_uhrig_sequence_with_even_pulses_is_identity():
     pi/2-pulses is an identity, when the number of pulses is even.
     """
     even_uhrig_sequence = new_uhrig_sequence(
-        duration=10.0, number_of_offsets=8, pre_post_rotation=True,
+        duration=10.0, offset_count=8, pre_post_rotation=True,
     )
 
     assert _pulses_produce_identity(even_uhrig_sequence)
@@ -720,7 +710,7 @@ def test_if_periodic_sequence_with_odd_pulses_is_identity():
     pi/2-pulses is an identity, when the number of pulses is odd.
     """
     odd_periodic_sequence = new_periodic_sequence(
-        duration=10.0, number_of_offsets=7, pre_post_rotation=True,
+        duration=10.0, offset_count=7, pre_post_rotation=True,
     )
 
     assert _pulses_produce_identity(odd_periodic_sequence)
@@ -732,7 +722,7 @@ def test_if_periodic_sequence_with_even_pulses_is_identity():
     pi/2-pulses is an identity, when the number of pulses is even.
     """
     even_periodic_sequence = new_periodic_sequence(
-        duration=10.0, number_of_offsets=8, pre_post_rotation=True,
+        duration=10.0, offset_count=8, pre_post_rotation=True,
     )
 
     assert _pulses_produce_identity(even_periodic_sequence)
@@ -777,8 +767,8 @@ def test_if_quadratic_sequence_with_odd_pulses_is_identity():
     """
     odd_quadratic_sequence = new_quadratic_sequence(
         duration=10.0,
-        number_inner_offsets=7,
-        number_outer_offsets=7,
+        inner_offset_count=7,
+        outer_offset_count=7,
         pre_post_rotation=True,
     )
 
@@ -796,8 +786,8 @@ def test_if_quadratic_sequence_with_even_pulses_is_identity():
     """
     even_quadratic_sequence = new_quadratic_sequence(
         duration=10.0,
-        number_inner_offsets=8,
-        number_outer_offsets=8,
+        inner_offset_count=8,
+        outer_offset_count=8,
         pre_post_rotation=True,
     )
 
@@ -816,8 +806,8 @@ def test_if_quadratic_sequence_with_odd_inner_pulses_is_identity():
     """
     inner_odd_quadratic_sequence = new_quadratic_sequence(
         duration=10.0,
-        number_inner_offsets=7,
-        number_outer_offsets=8,
+        inner_offset_count=7,
+        outer_offset_count=8,
         pre_post_rotation=True,
     )
 
@@ -835,8 +825,8 @@ def test_if_quadratic_sequence_with_even_inner_pulses_is_identity():
     """
     inner_even_quadratic_sequence = new_quadratic_sequence(
         duration=10.0,
-        number_inner_offsets=8,
-        number_outer_offsets=7,
+        inner_offset_count=8,
+        outer_offset_count=7,
         pre_post_rotation=True,
     )
 
