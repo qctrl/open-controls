@@ -260,7 +260,7 @@ def new_spin_echo_sequence(duration, pre_post_rotation=False, name=None):
 
 
 def new_carr_purcell_sequence(
-    duration, number_of_offsets, pre_post_rotation=False, name=None
+    duration, offset_count, pre_post_rotation=False, name=None
 ):
     r"""
     Creates the Carr-Purcell sequence.
@@ -269,7 +269,7 @@ def new_carr_purcell_sequence(
     ----------
     duration : float
         Total duration of the sequence :math:`\tau` (in seconds).
-    number_of_offsets : int
+    offset_count : int
         Number of offsets :math:`n`.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
@@ -309,14 +309,14 @@ def new_carr_purcell_sequence(
         {"duration": duration},
     )
     check_arguments(
-        number_of_offsets >= 1,
+        offset_count >= 1,
         "Number of offsets must be greater than zero.",
-        {"number_of_offsets": number_of_offsets},
+        {"offset_count": offset_count},
     )
 
     # in case a float number is passed
-    number_of_offsets = int(number_of_offsets)
-    offsets = _carr_purcell_meiboom_gill_offsets(duration, number_of_offsets)
+    offset_count = int(offset_count)
+    offsets = _carr_purcell_meiboom_gill_offsets(duration, offset_count)
 
     rabi_rotations = np.zeros(offsets.shape)
     # set all as X_pi
@@ -344,7 +344,7 @@ def new_carr_purcell_sequence(
     )
 
 
-def new_cpmg_sequence(duration, number_of_offsets, pre_post_rotation=False, name=None):
+def new_cpmg_sequence(duration, offset_count, pre_post_rotation=False, name=None):
     r"""
     Creates the Carr-Purcell-Meiboom-Gill sequence.
 
@@ -352,7 +352,7 @@ def new_cpmg_sequence(duration, number_of_offsets, pre_post_rotation=False, name
     ----------
     duration : float
         Total duration of the sequence :math:`\tau` (in seconds).
-    number_of_offsets : int
+    offset_count : int
         Number of offsets :math:`n`.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
@@ -392,14 +392,14 @@ def new_cpmg_sequence(duration, number_of_offsets, pre_post_rotation=False, name
         {"duration": duration},
     )
     check_arguments(
-        number_of_offsets >= 1,
+        offset_count >= 1,
         "Number of offsets must be greater than zero.",
-        {"number_of_offsets": number_of_offsets},
+        {"offset_count": offset_count},
     )
 
     # in case a float number is passed
-    number_of_offsets = int(number_of_offsets)
-    offsets = _carr_purcell_meiboom_gill_offsets(duration, number_of_offsets)
+    offset_count = int(offset_count)
+    offsets = _carr_purcell_meiboom_gill_offsets(duration, offset_count)
     rabi_rotations = np.zeros(offsets.shape)
     azimuthal_angles = np.zeros(offsets.shape)
 
@@ -428,7 +428,7 @@ def new_cpmg_sequence(duration, number_of_offsets, pre_post_rotation=False, name
     )
 
 
-def new_uhrig_sequence(duration, number_of_offsets, pre_post_rotation=False, name=None):
+def new_uhrig_sequence(duration, offset_count, pre_post_rotation=False, name=None):
     r"""
     Creates the Uhrig sequence.
 
@@ -436,7 +436,7 @@ def new_uhrig_sequence(duration, number_of_offsets, pre_post_rotation=False, nam
     ----------
     duration : float
         Total duration of the sequence :math:`\tau` (in seconds).
-    number_of_offsets : int
+    offset_count : int
         Number of offsets :math:`n`.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
@@ -471,14 +471,14 @@ def new_uhrig_sequence(duration, number_of_offsets, pre_post_rotation=False, nam
         {"duration": duration},
     )
     check_arguments(
-        number_of_offsets >= 1,
+        offset_count >= 1,
         "Number of offsets must be greater than zero.",
-        {"number_of_offsets": number_of_offsets},
+        {"offset_count": offset_count},
     )
 
     # in case a float number is passed
-    number_of_offsets = int(number_of_offsets)
-    offsets = _uhrig_single_axis_offsets(duration, number_of_offsets)
+    offset_count = int(offset_count)
+    offsets = _uhrig_single_axis_offsets(duration, offset_count)
     rabi_rotations = np.zeros(offsets.shape)
     azimuthal_angles = np.zeros(offsets.shape)
 
@@ -507,9 +507,7 @@ def new_uhrig_sequence(duration, number_of_offsets, pre_post_rotation=False, nam
     )
 
 
-def new_periodic_sequence(
-    duration, number_of_offsets, pre_post_rotation=False, name=None
-):
+def new_periodic_sequence(duration, offset_count, pre_post_rotation=False, name=None):
     r"""
     Creates the periodic sequence.
 
@@ -517,7 +515,7 @@ def new_periodic_sequence(
     ----------
     duration : float
         Total duration of the sequence :math:`\tau` (in seconds).
-    number_of_offsets : int
+    offset_count : int
         Number of offsets :math:`n`.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
@@ -552,16 +550,16 @@ def new_periodic_sequence(
         {"duration": duration},
     )
     check_arguments(
-        number_of_offsets >= 1,
+        offset_count >= 1,
         "Number of offsets must be greater than zero.",
-        {"number_of_offsets": number_of_offsets},
+        {"offset_count": offset_count},
     )
 
     # in case a float number is passed
-    number_of_offsets = int(number_of_offsets)
+    offset_count = int(offset_count)
 
-    spacing = 1.0 / (number_of_offsets + 1)
-    deltas = np.array([k * spacing for k in range(1, number_of_offsets + 1)])
+    spacing = 1.0 / (offset_count + 1)
+    deltas = np.array([k * spacing for k in range(1, offset_count + 1)])
     offsets = duration * deltas
     rabi_rotations = np.zeros(offsets.shape)
     rabi_rotations[0:] = np.pi
@@ -711,8 +709,8 @@ def new_walsh_sequence(duration, paley_order, pre_post_rotation=False, name=None
 
 def new_quadratic_sequence(
     duration,
-    number_inner_offsets,
-    number_outer_offsets,
+    inner_offset_count,
+    outer_offset_count,
     pre_post_rotation=False,
     name=None,
 ):
@@ -723,9 +721,9 @@ def new_quadratic_sequence(
     ----------
     duration : float
         The total duration of the sequence :math:`\tau` (in seconds).
-    number_inner_offsets : int
+    inner_offset_count : int
         Number of inner :math:`Z_{\pi}` pulses :math:`n_1`.
-    number_outer_offsets : int
+    outer_offset_count : int
         Number of outer :math:`X_{\pi}` pulses :math:`n_2`.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
@@ -781,39 +779,39 @@ def new_quadratic_sequence(
         {"duration": duration},
     )
     check_arguments(
-        number_inner_offsets >= 1,
+        inner_offset_count >= 1,
         "Number of offsets of inner pulses must be greater than zero.",
-        {"number_inner_offsets": number_inner_offsets},
+        {"inner_offset_count": inner_offset_count},
     )
     check_arguments(
-        number_outer_offsets >= 1,
+        outer_offset_count >= 1,
         "Number of offsets of outer pulses must be greater than zero.",
-        {"number_outer_offsets": number_outer_offsets},
+        {"outer_offset_count": outer_offset_count},
     )
 
-    number_inner_offsets = int(number_inner_offsets)
-    number_outer_offsets = int(number_outer_offsets)
-    outer_offsets = _uhrig_single_axis_offsets(duration, number_outer_offsets)
+    inner_offset_count = int(inner_offset_count)
+    outer_offset_count = int(outer_offset_count)
+    outer_offsets = _uhrig_single_axis_offsets(duration, outer_offset_count)
     outer_offsets = np.insert(outer_offsets, [0, len(outer_offsets)], [0, duration])
 
     inner_durations = np.diff(outer_offsets)
 
     # offsets include inner and outer offsets
     # the extra 1 dimension in columns is where we add the outer offset back
-    offsets = np.zeros((len(inner_durations), number_inner_offsets + 1))
+    offsets = np.zeros((len(inner_durations), inner_offset_count + 1))
     for inner_duration_idx, inner_duration in enumerate(inner_durations):
         inner_offset = (
-            _uhrig_single_axis_offsets(inner_duration, number_inner_offsets)
+            _uhrig_single_axis_offsets(inner_duration, inner_offset_count)
             + outer_offsets[inner_duration_idx]
         )
-        offsets[inner_duration_idx, 0:number_inner_offsets] = inner_offset
+        offsets[inner_duration_idx, 0:inner_offset_count] = inner_offset
     offsets[:, -1] = outer_offsets[1:]
 
     rabi_rotations = np.zeros(offsets.shape)
     detuning_rotations = np.zeros(offsets.shape)
 
-    rabi_rotations[0:number_outer_offsets, -1] = np.pi
-    detuning_rotations[0 : (number_outer_offsets + 1), 0:number_inner_offsets] = np.pi
+    rabi_rotations[0:outer_offset_count, -1] = np.pi
+    detuning_rotations[0 : (outer_offset_count + 1), 0:inner_offset_count] = np.pi
 
     offsets = offsets.flatten()
     rabi_rotations = rabi_rotations.flatten()
@@ -1129,7 +1127,7 @@ def new_xy_concatenated_sequence(
 
 
 def _carr_purcell_meiboom_gill_offsets(
-    duration: float = 1.0, number_of_offsets: int = 1
+    duration: float = 1.0, offset_count: int = 1
 ) -> np.ndarray:
     """
     Calculates offset values for Carr-Purcell_Meiboom-Gill sequence.
@@ -1138,7 +1136,7 @@ def _carr_purcell_meiboom_gill_offsets(
     ----------
     duration : float, optional
         Duration of the total sequence. Defaults to 1.0.
-    number_of_offsets : int, optional
+    offset_count : int, optional
         The number of offsets. Defaults to 1.
 
     Returns
@@ -1147,29 +1145,27 @@ def _carr_purcell_meiboom_gill_offsets(
         The offset values
     """
 
-    spacing = 1.0 / number_of_offsets
+    spacing = 1.0 / offset_count
     start = spacing * 0.5
 
     # prepare the offsets for delta comb
-    deltas = spacing * np.arange(number_of_offsets)
+    deltas = spacing * np.arange(offset_count)
     deltas += start
     offsets = deltas * duration
 
     return offsets
 
 
-def _uhrig_single_axis_offsets(
-    duration: float = 1.0, number_of_offsets: int = 1
-) -> np.ndarray:
+def _uhrig_single_axis_offsets(duration: float, offset_count: int) -> np.ndarray:
     """
     Calculates oOffset values for Uhrig Single Axis Sequence.
 
     Parameters
     ----------
-    duration : float, optional
-        Duration of the total sequence. Defaults to 1.0.
-    number_of_offsets : int, optional
-        The number of offsets. Defaults to 1.
+    duration : float
+        Duration of the total sequence.
+    offset_count : int, optional
+        The number of offsets.
 
     Returns
     -------
@@ -1178,24 +1174,24 @@ def _uhrig_single_axis_offsets(
     """
 
     # prepare the offsets for delta comb
-    constant = 1.0 / (2 * number_of_offsets + 2)
+    constant = 1.0 / (2 * offset_count + 2)
     deltas = np.array(
-        [(np.sin(np.pi * k * constant)) ** 2 for k in range(1, number_of_offsets + 1)]
+        [(np.sin(np.pi * k * constant)) ** 2 for k in range(1, offset_count + 1)]
     )
     offsets = duration * deltas
 
     return offsets
 
 
-def _concatenation_x(concatenation_sequence: int = 1) -> np.ndarray:
+def _concatenation_x(concatenation_sequence: int) -> np.ndarray:
     """
     Prepares the sequence of operations for x-concatenated
     dynamical decoupling sequence.
 
     Parameters
     ----------
-    concatenation_sequence : int, optional
-        Duration of the total sequence. Defaults to 1.
+    concatenation_sequence : int
+        Duration of the total sequence.
 
     Returns
     -------
@@ -1217,15 +1213,15 @@ def _concatenation_x(concatenation_sequence: int = 1) -> np.ndarray:
     )
 
 
-def _concatenation_xy(concatenation_sequence: int = 1) -> np.ndarray:
+def _concatenation_xy(concatenation_sequence) -> np.ndarray:
     """
     Prepares the sequence of operations for x-concatenated
     dynamical decoupling sequence.
 
     Parameters
     ----------
-    concatenation_sequence : int, optional
-        Duration of the total sequence. Defaults to 1.
+    concatenation_sequence : int
+        Duration of the total sequence.
 
     Returns
     -------
