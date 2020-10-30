@@ -110,9 +110,7 @@ def test_carr_purcell_sequence():
     duration = 10.0
     offset_count = 4
 
-    sequence = new_carr_purcell_sequence(
-        duration=duration, offset_count=offset_count
-    )
+    sequence = new_carr_purcell_sequence(duration=duration, offset_count=offset_count)
 
     _spacing = duration / offset_count
     _offsets = np.array(
@@ -164,9 +162,7 @@ def test_cpmg_sequence():
     duration = 10.0
     offset_count = 4
 
-    sequence = new_cpmg_sequence(
-        duration=duration, offset_count=offset_count,
-    )
+    sequence = new_cpmg_sequence(duration=duration, offset_count=offset_count,)
 
     _spacing = duration / offset_count
     _offsets = np.array(
@@ -218,9 +214,7 @@ def test_uhrig_sequence():
     duration = 10.0
     offset_count = 4
 
-    sequence = new_uhrig_sequence(
-        duration=duration, offset_count=offset_count
-    )
+    sequence = new_uhrig_sequence(duration=duration, offset_count=offset_count)
 
     constant = 0.5 / (offset_count + 1)
     _delta_positions = [
@@ -265,15 +259,11 @@ def test_periodic_sequence():
     duration = 10.0
     offset_count = 4
 
-    sequence = new_periodic_sequence(
-        duration=duration, offset_count=offset_count,
-    )
+    sequence = new_periodic_sequence(duration=duration, offset_count=offset_count,)
 
     constant = 1 / (offset_count + 1)
     # prepare the offsets for delta comb
-    _delta_positions = [
-        duration * k * constant for k in range(1, offset_count + 1)
-    ]
+    _delta_positions = [duration * k * constant for k in range(1, offset_count + 1)]
     _offsets = np.array(_delta_positions)
     _rabi_rotations = np.array([np.pi, np.pi, np.pi, np.pi])
     _azimuthal_angles = np.array([0, 0, 0, 0])
