@@ -552,19 +552,6 @@ def _check_valid_operation(
     """
     Private method to check if there is a rabi_rotation and detuning rotation at the same
     offset.
-
-    Parameters
-    ----------
-    rabi_rotations : numpy.ndarray
-        Rabi rotations at each offset
-    detuning_rotations : numpy.ndarray
-        Detuning rotations at each offset
-
-    Returns
-    -------
-    bool
-        Returns True if there is not an instance of rabi rotation and detuning rotation
-        at the same offset
     """
 
     rabi_rotation_index = set(np.where(rabi_rotations > 0.0)[0])
@@ -578,49 +565,24 @@ def _check_valid_operation(
     return True
 
 
-def _check_maximum_rotation_rate(maximum_rabi_rate, maximum_detuning_rate):
+def _check_maximum_rotation_rate(
+    maximum_rabi_rate: float, maximum_detuning_rate: float
+) -> None:
     """
     Checks if the maximum rabi and detuning rate are within valid limits.
-
-    Parameters
-    ----------
-    maximum_rabi_rate : float
-        Maximum Rabi Rate;
-    maximum_detuning_rate : float
-        Maximum Detuning Rate;
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid or a valid driven control cannot be
-        created from the sequence parameters, maximum rabi rate and maximum detuning
-        rate provided.
     """
-
     # check against global parameters
-    if maximum_rabi_rate <= 0.0 or maximum_rabi_rate > UPPER_BOUND_RABI_RATE:
-        raise ArgumentsValueError(
-            "Maximum rabi rate must be greater than 0 and less or equal to {0}".format(
-                UPPER_BOUND_RABI_RATE
-            ),
-            {"maximum_rabi_rate": maximum_rabi_rate},
-            extras={
-                "maximum_detuning_rate": maximum_detuning_rate,
-                "allowed_maximum_rabi_rate": UPPER_BOUND_RABI_RATE,
-            },
-        )
+    check_arguments(
+        0 < maximum_rabi_rate <= UPPER_BOUND_RABI_RATE,
+        f"Maximum rabi rate must be greater than 0 and less or equal to {UPPER_BOUND_RABI_RATE}.",
+        {"maximum_rabi_rate": maximum_rabi_rate},
+        extras={"allowed_maximum_rabi_rate": UPPER_BOUND_RABI_RATE,},
+    )
 
-    if (
-        maximum_detuning_rate <= 0.0
-        or maximum_detuning_rate > UPPER_BOUND_DETUNING_RATE
-    ):
-        raise ArgumentsValueError(
-            "Maximum detuning rate must be greater than 0 and less or equal to {0}".format(
-                UPPER_BOUND_DETUNING_RATE
-            ),
-            {"maximum_detuning_rate": maximum_detuning_rate,},
-            extras={
-                "maximum_rabi_rate": maximum_rabi_rate,
-                "allowed_maximum_detuning_rate": UPPER_BOUND_DETUNING_RATE,
-            },
-        )
+    check_arguments(
+        0 < maximum_detuning_rate <= UPPER_BOUND_DETUNING_RATE,
+        "Maximum detuning rate must be greater than 0 and less or equal to "
+        f"{UPPER_BOUND_DETUNING_RATE}",
+        {"maximum_detuning_rate": maximum_detuning_rate,},
+        extras={"allowed_maximum_detuning_rate": UPPER_BOUND_DETUNING_RATE,},
+    )
