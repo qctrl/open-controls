@@ -12,6 +12,7 @@ Configuration file for the Sphinx documentation builder.
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+import datetime
 import os
 import sys
 
@@ -25,7 +26,10 @@ package_info = parsed["tool"]["poetry"]
 project = package_info["description"]
 author = ", ".join(package_info["authors"])
 release = package_info["version"]
-copyright = "2020 Q-CTRL Pty Ltd & Q-CTRL Inc. All rights reserved."  # pylint: disable=redefined-builtin
+now = datetime.datetime.now()
+copyright = "{} Q-CTRL. All rights reserved.".format(now.year)
+
+# pylint: disable=redefined-builtin
 
 # -- HTML Variables ----------------------------------------------------------
 # Variables to insert into _templates/layout.html
