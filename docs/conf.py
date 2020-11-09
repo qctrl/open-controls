@@ -26,7 +26,7 @@ package_info = parsed["tool"]["poetry"]
 project = package_info["description"]
 author = ", ".join(package_info["authors"])
 release = package_info["version"]
-copyright = f'{datetime.datetime.now().year} Q-CTRL. All rights reserved.' #pylint: disable=redefined-builtin
+copyright = f"{datetime.datetime.now().year} Q-CTRL. All rights reserved."  # pylint: disable=redefined-builtin
 
 # -- HTML Variables ----------------------------------------------------------
 # Variables to insert into _templates/layout.html
