@@ -5,5 +5,9 @@ The Q-CTRL Open Controls Python package provides a comprehensive library of publ
 error-robust quantum control protocols.
 
 .. toctree::
-   installation
-   qctrlopencontrols
+  :caption: API Reference
+  :maxdepth: 1
+   
+   Installation <installation.rst>
+   DrivenControl <DrivenControl.rst>
+   DynamicalDecoupling <DynamicalDecoupling.rst>
