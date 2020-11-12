@@ -9,5 +9,5 @@ error-robust quantum control protocols.
   :maxdepth: 1
    
    Installation <installation.rst>
-   DrivenControl <DrivenControl.rst>
-   DynamicalDecoupling <DynamicalDecoupling.rst>
+   DrivenControl <drivencontrol.rst>
+   DynamicalDecoupling <dynamicaldecoupling.rst>
