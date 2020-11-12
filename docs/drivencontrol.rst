@@ -6,8 +6,7 @@ Driven Controls
 
 .. autosummary::
     :nosignatures:
-    :toctree:   
-    :template: autosummary/function.rst
+    :toctree: qctrlopencontrols
 
     ~DrivenControl
     ~new_bb1_control

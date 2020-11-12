@@ -2,10 +2,13 @@
 Dynamical Decoupling
 ********************
 
+.. automodule:: qctrlopencontrols
+
 .. autosummary::
     :nosignatures:
-    :toctree: qctrlopencontrols 
-   
+    :toctree: qctrlopencontrols
+
+    ~qctrlopencontrols.DynamicDecouplingSequence
     ~qctrlopencontrols.new_carr_purcell_sequence
     ~qctrlopencontrols.new_cpmg_sequence
     ~qctrlopencontrols.new_periodic_sequence
@@ -16,3 +19,4 @@ Dynamical Decoupling
     ~qctrlopencontrols.new_walsh_sequence
     ~qctrlopencontrols.new_x_concatenated_sequence
     ~qctrlopencontrols.new_xy_concatenated_sequence
+    ~qctrlopencontrols.convert_dds_to_driven_control
