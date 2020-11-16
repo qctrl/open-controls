@@ -103,9 +103,7 @@ def new_predefined_driven_control(scheme: str = PRIMITIVE, **kwargs):
     return driven_control
 
 
-def _validate_rabi_parameters(
-    rabi_rotation: float, maximum_rabi_rate: float,
-) -> Tuple[float, float]:
+def _validate_rabi_parameters(rabi_rotation: float, maximum_rabi_rate: float) -> None:
     """
     Adds some checks etc for all the predefined pulses
 
