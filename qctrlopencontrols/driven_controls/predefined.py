@@ -16,10 +16,7 @@
 Module for defining commonly used driven controls.
 """
 
-from typing import (
-    List,
-    Tuple,
-)
+from typing import List
 
 import numpy as np
 
