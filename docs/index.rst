@@ -9,7 +9,7 @@ The Q-CTRL Open Controls Python package provides a comprehensive library of publ
    Installation <installation.rst>
 
 .. toctree::
-  :maxdepth: 2
+  :maxdepth: 1
   :caption: Driven Control 
 
   Class  <qctrlopencontrols.driven_controls.driven_control.rst>
