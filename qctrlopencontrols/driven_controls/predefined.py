@@ -16,10 +16,7 @@
 Module for defining commonly used driven controls.
 """
 
-from typing import (
-    List,
-    Tuple,
-)
+from typing import List
 
 import numpy as np
 
@@ -103,51 +100,30 @@ def new_predefined_driven_control(scheme: str = PRIMITIVE, **kwargs):
     return driven_control
 
 
-def _predefined_common_attributes(
-    azimuthal_angle: float, rabi_rotation: float, maximum_rabi_rate: float = 2 * np.pi,
-) -> Tuple[float, float, float]:
+def _validate_rabi_parameters(rabi_rotation: float, maximum_rabi_rate: float) -> None:
     """
     Adds some checks etc for all the predefined pulses
 
     Parameters
     ----------
-    azimuthal_angle : float
-        The azimuthal position of the pulse.
     rabi_rotation : float
         The total polar angle to be performed by the pulse.
         Defined in polar coordinates.
-    maximum_rabi_rate : float, optional
-        Defaults to 2.*np.pi
+    maximum_rabi_rate : float
         The maximum rabi frequency for the pulse.
-
-    Returns
-    -------
-    tuple
-        Tuple of floats made of:
-            (azimuthal, rabi_rotation, maximum_rabi_rate)
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
     """
 
-    maximum_rabi_rate = float(maximum_rabi_rate)
-    if maximum_rabi_rate <= 0:
-        raise ArgumentsValueError(
-            "Maximum rabi angular frequency should be greater than zero.",
-            {"maximum_rabi_rate": maximum_rabi_rate},
-        )
+    check_arguments(
+        maximum_rabi_rate > 0,
+        "Maximum rabi angular frequency should be greater than zero.",
+        {"maximum_rabi_rate": maximum_rabi_rate},
+    )
 
-    rabi_rotation = float(rabi_rotation)
-    if rabi_rotation == 0:
-        raise ArgumentsValueError(
-            "The rabi rotation must be non zero.", {"rabi_rotation": rabi_rotation}
-        )
-
-    azimuthal_angle = float(azimuthal_angle)
-
-    return (azimuthal_angle, rabi_rotation, maximum_rabi_rate)
+    check_arguments(
+        rabi_rotation != 0,
+        "The rabi rotation must be non-zero.",
+        {"rabi_rotation": rabi_rotation},
+    )
 
 
 def _get_transformed_rabi_rotation_wimperis(rabi_rotation: float) -> float:
@@ -246,8 +222,8 @@ def new_primitive_control(
        :math:`\theta/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
     """
 
-    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
-        azimuthal_angle, rabi_rotation, maximum_rabi_rate
+    _validate_rabi_parameters(
+        rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
 
     return DrivenControl(
@@ -310,8 +286,9 @@ def new_bb1_control(
     .. [#] `S. Wimperis, Journal of Magnetic Resonance, Series A 109, 2 (1994).
         <https://doi.org/10.1006/jmra.1994.1159>`_
     """
-    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
-        azimuthal_angle, rabi_rotation, maximum_rabi_rate
+
+    _validate_rabi_parameters(
+        rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
 
     phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
@@ -390,8 +367,9 @@ def new_sk1_control(
     .. [#] `K. R. Brown, A. W. Harrow, and I. L. Chuang, Physical Review A 72, 039905 (2005).
         <https://doi.org/10.1103/PhysRevA.72.039905>`_
     """
-    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
-        azimuthal_angle, rabi_rotation, maximum_rabi_rate
+
+    _validate_rabi_parameters(
+        rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
 
     phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
@@ -482,8 +460,9 @@ def new_scrofulous_control(
     .. [#] `H. K. Cummins, G. Llewellyn, and J. A. Jones, Physical Review A 67, 042308 (2003).
         <https://doi.org/10.1103/PhysRevA.67.042308>`_
     """
-    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
-        azimuthal_angle, rabi_rotation, maximum_rabi_rate
+
+    _validate_rabi_parameters(
+        rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
 
     # Create a lookup table for rabi rotation and phase angles, taken from the official paper.
@@ -596,8 +575,9 @@ def new_corpse_control(
     .. [#] `H. K. Cummins, G. Llewellyn, and J. A. Jones, Physical Review A 67, 042308 (2003).
         <https://doi.org/10.1103/PhysRevA.67.042308>`_
     """
-    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
-        azimuthal_angle, rabi_rotation, maximum_rabi_rate
+
+    _validate_rabi_parameters(
+        rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
 
     k = np.arcsin(np.sin(rabi_rotation / 2.0) / 2.0)
@@ -690,8 +670,8 @@ def new_corpse_in_bb1_control(
         Physical Review A 90, 012316 (2014). <https://doi.org/10.1103/PhysRevA.90.012316>`_
     """
 
-    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
-        azimuthal_angle, rabi_rotation, maximum_rabi_rate
+    _validate_rabi_parameters(
+        rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
 
     phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
@@ -794,9 +774,11 @@ def new_corpse_in_sk1_control(
     .. [#] `C. Kabytayev, T. J. Green, K. Khodjasteh, M. J. Biercuk, L. Viola, and K. R. Brown,
         Physical Review A 90, 012316 (2014). <https://doi.org/10.1103/PhysRevA.90.012316>`_
     """
-    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
-        azimuthal_angle, rabi_rotation, maximum_rabi_rate
+
+    _validate_rabi_parameters(
+        rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
+
     phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
     k = np.arcsin(np.sin(rabi_rotation / 2.0) / 2.0)
 
@@ -926,8 +908,9 @@ def new_corpse_in_scrofulous_control(
     .. [#] `T. Ichikawa, M. Bando, Y. Kondo, and M. Nakahara, Physical Review A 84, 062311 (2011).
         <https://doi.org/10.1103/PhysRevA.84.062311>`_
     """
-    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
-        azimuthal_angle, rabi_rotation, maximum_rabi_rate
+
+    _validate_rabi_parameters(
+        rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
 
     # Create a lookup table for rabi rotation and phase angles, taken from
@@ -1054,8 +1037,9 @@ def new_wamf1_control(
     .. [#] `H. Ball and M. J. Biercuk, EPJ Quantum Technology 2, 11 (2015).
         <https://doi.org/10.1140/epjqt/s40507-015-0022-4>`_
     """
-    (azimuthal_angle, rabi_rotation, maximum_rabi_rate) = _predefined_common_attributes(
-        azimuthal_angle, rabi_rotation, maximum_rabi_rate
+
+    _validate_rabi_parameters(
+        rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
 
     if np.isclose(rabi_rotation, np.pi):
