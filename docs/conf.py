@@ -8,6 +8,8 @@ Configuration file for the Sphinx documentation builder.
 
 # -- Path setup --------------------------------------------------------------
 
+import inspect
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -16,6 +18,8 @@ import os
 import sys
 
 import toml
+
+import qctrlopencontrols
 
 sys.path.insert(0, os.path.abspath(".."))
 
@@ -99,3 +103,38 @@ html_js_files = [
     "https://docs.q-ctrl.com/assets/js/readthedocs.js",
 ]
 html_logo = "_static/logo.svg"
+
+
+public_apis = qctrlopencontrols.__all__
+
+
+def get_members(module):
+    """
+    Returns a list of publicly accessible methods for the given module.
+    """
+    return {
+        "qctrlopencontrols." + name: name
+        for name, member in inspect.getmembers(module)
+        if (inspect.isclass(member) or inspect.isfunction(member))
+        and name in public_apis
+    }
+
+
+# Builds filename/url mappings for the objects
+drivencontrol = [
+    qctrlopencontrols.driven_controls.driven_control,
+    qctrlopencontrols.driven_controls.predefined,
+]
+dynamicaldecoupling = [
+    qctrlopencontrols.dynamic_decoupling_sequences.dynamic_decoupling_sequence,
+    qctrlopencontrols.dynamic_decoupling_sequences.predefined,
+]
+
+filename_map = {}
+
+for v in drivencontrol:
+    filename_map.update(get_members(v))
+for v in dynamicaldecoupling:
+    filename_map.update(get_members(v))
+
+autosummary_filename_map = filename_map
