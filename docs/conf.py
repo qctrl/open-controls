@@ -132,9 +132,9 @@ dynamicaldecoupling = [
 
 filename_map = {}
 
-for v in drivencontrol:
-    filename_map.update(get_members(v))
-for v in dynamicaldecoupling:
-    filename_map.update(get_members(v))
+for member in drivencontrol:
+    filename_map.update(get_members(member))
+for member in dynamicaldecoupling:
+    filename_map.update(get_members(member))
 
 autosummary_filename_map = filename_map
