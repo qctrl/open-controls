@@ -6,20 +6,20 @@
 
     qctrlopencontrols
 
-.. automodule:: qctrlopencontrols.driven_controls
+.. automodule:: qctrlopencontrols
   .. autosummary::
-    :toctree: .
+    :toctree: qctrlopencontrols
     :nosignatures:
     :template: qctrlopencontrols/module.rst
+    :recursive:
 
-    driven_control
-    predefined
+    driven_controls
 
-.. automodule:: qctrlopencontrols.dynamic_decoupling_sequences
+.. automodule:: qctrlopencontrols
   .. autosummary::
-    :toctree: .
+    :toctree: qctrlopencontrols
     :nosignatures:
     :template: qctrlopencontrols/module.rst
+    :recursive:
 
-     dynamic_decoupling_sequence
-     predefined
+     dynamic_decoupling_sequences

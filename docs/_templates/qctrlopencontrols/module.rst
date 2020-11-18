@@ -2,14 +2,11 @@
 
 .. _{{fullname}}:
 
-Driven Control
 {{ underline }}
-
-.. currentmodule:: {{ module.split('.')[0] }}
 
 .. autosummary::
    :nosignatures:
-   :toctree: .
+   :toctree: {{ module.split('.')[0] }}
 
    {% for item in classes %}
    {%- if not item.startswith('_') %}

@@ -7,7 +7,7 @@ Q-CTRL Open Controls
 
 .. autosummary::
    :nosignatures:
-   :toctree: .
+   :toctree: {{module}}
 
    {% for item in qctrlopencontrols  %}
    {%- if not item.startswith('_') %}
