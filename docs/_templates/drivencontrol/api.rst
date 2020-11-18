@@ -5,18 +5,15 @@
 Driven Control
 {{ underline }}
 
-{%
-  set module_name =  {"driven_controls": driven_controls,
-                       "dynamic_decoupling_sequences": dynamic_decoupling_sequences }
-%}
+.. currentmodule:: {{ module.split('.')[0] }}
 
 .. autosummary::
    :nosignatures:
-   :toctree: {{ module }}
+   :toctree: {{ module.split('.')[0] }}
 
-   {% for item in module_name[objname]   %}
+   {% for item in classes %}
    {%- if not item.startswith('_') %}
-       ~{{ module }}.{{ item }}
+       ~{{ module.split('.')[0] }}.{{ item }}
    {%- endif -%}
    {%- endfor %}
    {% for item in functions %}
@@ -24,3 +21,4 @@ Driven Control
        ~{{ module.split('.')[0] }}.{{ item }}
    {%- endif -%}
    {%- endfor %}
+

@@ -1,8 +1,7 @@
 # pylint: disable=invalid-name
 """
 Configuration file for the Sphinx documentation builder.
-"""
-# This file only contains a selection of the most common options. For a full
+"""  # This file only contains a selection of the most common options. For a full
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
@@ -110,7 +109,7 @@ public_apis = qctrlopencontrols.__all__
 
 def get_members(module):
     """
-    Returns a list of publicly accessible methods for the given module.
+    Returns a dict of publicly accessible methods for the given module.
     """
     return {
         "qctrlopencontrols." + name: name
@@ -118,6 +117,23 @@ def get_members(module):
         if (inspect.isclass(member) or inspect.isfunction(member))
         and name in public_apis
     }
+
+
+def group_apis(modules, exclude=None):
+    """
+    Returns a list of publicly accessible methods for the given module.
+    """
+    apis = []
+    _exclude = [] if exclude is None else exclude
+    for module in modules:
+        apis += [
+            name
+            for name, member in inspect.getmembers(module)
+            if (inspect.isclass(member) or inspect.isfunction(member))
+            and name in public_apis
+            and member not in _exclude
+        ]
+    return list(sorted(set(apis)))
 
 
 # Builds filename/url mappings for the objects
@@ -130,8 +146,14 @@ dynamicaldecoupling = [
     qctrlopencontrols.dynamic_decoupling_sequences.predefined,
 ]
 
-filename_map = {}
+autosummary_context = {
+    "driven_controls": group_apis(drivencontrol),
+    "dynamic_decoupling_sequences": group_apis(
+        dynamicaldecoupling, exclude=[qctrlopencontrols.DrivenControl]
+    ),
+}
 
+filename_map = {}
 for member in drivencontrol:
     filename_map.update(get_members(member))
 for member in dynamicaldecoupling:
