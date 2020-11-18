@@ -16,8 +16,8 @@ The Q-CTRL Open Controls Python package provides a comprehensive library of publ
   :maxdepth: 1
   :caption: API Reference
 
-  Driven Control <qctrlopencontrols.driven_controls.rst>
-  Dynamical Decoupling <qctrlopencontrols.dynamic_decoupling_sequences.rst>
+  Driven controls <qctrlopencontrols.driven_controls.rst>
+  Dynamical decoupling sequences <qctrlopencontrols.dynamic_decoupling_sequences.rst>
 
 
 
