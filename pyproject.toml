@@ -44,10 +44,10 @@ mypy = "^0.770"
 pytest = "^5.0"
 pylint = "^2.3"
 pylint_runner = "^0.5.4"
-sphinx = "^2.2.0"
+sphinx = "^3.2.1"
 sphinx-rtd-theme = "^0.4.3"
 nbval = "^0.9.5"
-qctrl-visualizer = "^2.1.0"
+qctrl-visualizer = "^2.3.0"
 isort = "^5.4.2"
 
 [tool.black]
