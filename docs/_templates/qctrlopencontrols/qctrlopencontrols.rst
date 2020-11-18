@@ -3,7 +3,7 @@
 .. _{{fullname}}:
 
 Q-CTRL Open Controls
-{{ underline }}
+{{ underline }}{{ underline }}
 
 .. autosummary::
    :nosignatures:

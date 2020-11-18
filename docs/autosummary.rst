@@ -2,7 +2,7 @@
 
 .. autosummary::
     :toctree: .
-    :template: drivencontrol/drivencontrol.rst
+    :template: qctrlopencontrols/qctrlopencontrols.rst
 
     qctrlopencontrols
 
@@ -10,7 +10,7 @@
   .. autosummary::
     :toctree: .
     :nosignatures:
-    :template: drivencontrol/api.rst
+    :template: qctrlopencontrols/module.rst
 
     driven_control
     predefined
@@ -19,7 +19,7 @@
   .. autosummary::
     :toctree: .
     :nosignatures:
-    :template: drivencontrol/api.rst
+    :template: qctrlopencontrols/module.rst
 
      dynamic_decoupling_sequence
      predefined
