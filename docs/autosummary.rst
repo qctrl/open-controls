@@ -1,22 +1,14 @@
 .. Automatically generates summaries and documentation.
 
-.. automodule:: qctrlopencontrols
-  .. autosummary::
+.. autosummary::
     :toctree: .
     :template: drivencontrol/drivencontrol.rst
 
-    driven_controls
-
-.. automodule:: qctrlopencontrols
-  .. autosummary::
-    :toctree: .
-    :template: drivencontrol/drivencontrol.rst
-
-    dynamic_decoupling_sequences
+    qctrlopencontrols
 
 .. automodule:: qctrlopencontrols.driven_controls
   .. autosummary::
-    :toctree: . 
+    :toctree: .
     :nosignatures:
     :template: drivencontrol/api.rst
 

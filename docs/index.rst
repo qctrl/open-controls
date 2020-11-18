@@ -6,18 +6,15 @@ The Q-CTRL Open Controls Python package provides a comprehensive library of publ
 
 .. toctree::
   :maxdepth: 1
-  :caption: Setup
 
-  Installation <installation.rst>
+   Installation <installation.rst>
 
 
 
 .. toctree::
   :maxdepth: 1
-  :caption: API Reference
 
-  Driven controls <qctrlopencontrols.driven_controls.rst>
-  Dynamical decoupling sequences <qctrlopencontrols.dynamic_decoupling_sequences.rst>
+  API Reference <qctrlopencontrols.rst>
 
 
 

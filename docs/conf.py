@@ -7,8 +7,6 @@ Configuration file for the Sphinx documentation builder.
 
 # -- Path setup --------------------------------------------------------------
 
-import inspect
-
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -59,6 +57,7 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
     "sphinx_rtd_theme",
+    "sphinx.ext.viewcode",
 ]
 
 master_doc = "index"
@@ -106,57 +105,10 @@ html_logo = "_static/logo.svg"
 
 public_apis = qctrlopencontrols.__all__
 
-
-def get_members(module):
-    """
-    Returns a dict of publicly accessible methods for the given module.
-    """
-    return {
-        "qctrlopencontrols." + name: name
-        for name, member in inspect.getmembers(module)
-        if (inspect.isclass(member) or inspect.isfunction(member))
-        and name in public_apis
-    }
-
-
-def group_apis(modules, exclude=None):
-    """
-    Returns a list of publicly accessible methods for the given module.
-    """
-    apis = []
-    _exclude = [] if exclude is None else exclude
-    for module in modules:
-        apis += [
-            name
-            for name, member in inspect.getmembers(module)
-            if (inspect.isclass(member) or inspect.isfunction(member))
-            and name in public_apis
-            and member not in _exclude
-        ]
-    return list(sorted(set(apis)))
-
-
-# Builds filename/url mappings for the objects
-drivencontrol = [
-    qctrlopencontrols.driven_controls.driven_control,
-    qctrlopencontrols.driven_controls.predefined,
-]
-dynamicaldecoupling = [
-    qctrlopencontrols.dynamic_decoupling_sequences.dynamic_decoupling_sequence,
-    qctrlopencontrols.dynamic_decoupling_sequences.predefined,
-]
-
 autosummary_context = {
-    "driven_controls": group_apis(drivencontrol),
-    "dynamic_decoupling_sequences": group_apis(
-        dynamicaldecoupling, exclude=[qctrlopencontrols.DrivenControl]
-    ),
+    "qctrlopencontrols": public_apis,
 }
-
-filename_map = {}
-for member in drivencontrol:
-    filename_map.update(get_members(member))
-for member in dynamicaldecoupling:
-    filename_map.update(get_members(member))
-
-autosummary_filename_map = filename_map
+# Builds filename/url mappings for the objects
+autosummary_filename_map = {
+    qctrlopencontrols.__name__ + "." + api: api for api in public_apis
+}

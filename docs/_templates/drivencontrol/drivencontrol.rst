@@ -2,19 +2,14 @@
 
 .. _{{fullname}}:
 
-Driven Control
+Q-CTRL Open Controls
 {{ underline }}
-
-{%
-  set module_name =  {"driven_controls": driven_controls,
-                       "dynamic_decoupling_sequences": dynamic_decoupling_sequences }
-%}
 
 .. autosummary::
    :nosignatures:
    :toctree: .
 
-   {% for item in module_name[objname]   %}
+   {% for item in qctrlopencontrols  %}
    {%- if not item.startswith('_') %}
        ~{{ module }}.{{ item }}
    {%- endif -%}
