@@ -12,7 +12,7 @@ Driven Control
 
 .. autosummary::
    :nosignatures:
-   :toctree: {{ module }}
+   :toctree: .
 
    {% for item in module_name[objname]   %}
    {%- if not item.startswith('_') %}

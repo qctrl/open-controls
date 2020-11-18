@@ -9,7 +9,7 @@ Driven Control
 
 .. autosummary::
    :nosignatures:
-   :toctree: {{ module.split('.')[0] }}
+   :toctree: .
 
    {% for item in classes %}
    {%- if not item.startswith('_') %}
