@@ -2,8 +2,7 @@
 """
 Configuration file for the Sphinx documentation builder.
 """  # This file only contains a selection of the most common options. For a full
-# list see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
+# list see the documentation: https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 # -- Path setup --------------------------------------------------------------
 
@@ -12,6 +11,7 @@ Configuration file for the Sphinx documentation builder.
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import datetime
+import inspect
 import os
 import sys
 
@@ -113,3 +113,21 @@ autosummary_context = {
 autosummary_filename_map = {
     qctrlopencontrols.__name__ + "." + api: api for api in public_apis
 }
+
+# update class members
+for _class in [
+    value for name, value in inspect.getmembers(qctrlopencontrols, inspect.isclass)
+]:
+    autosummary_filename_map.update(
+        {
+            qctrlopencontrols.__name__
+            + "."
+            + _class.__name__
+            + "."
+            + attribute: _class.__name__
+            + "."
+            + attribute
+            for attribute in dir(_class)
+            if not attribute.startswith("_")
+        }
+    )
