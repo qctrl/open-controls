@@ -106,15 +106,26 @@ html_logo = "_static/logo.svg"
 
 public_apis = qctrlopencontrols.__all__
 
+# the key of autosummary_context can be used
+# as variable in the template
+# here `qctrlopencontrols` is used in the template for
+# providing a list of all public APIs
 autosummary_context = {
     "qctrlopencontrols": public_apis,
 }
+
 # Builds filename/url mappings for the objects
+
+# autosummary_filename_map allows us to customize the name of individual doc for each API
+# by mapping the name from the key to the value, to provide a better URL reflecting how
+# the APIs are exposed
+
+# update file name class and function
 autosummary_filename_map = {
     qctrlopencontrols.__name__ + "." + api: api for api in public_apis
 }
 
-# update class members
+# update file name for class methods and attributes
 for _class in [
     value for name, value in inspect.getmembers(qctrlopencontrols, inspect.isclass)
 ]:
