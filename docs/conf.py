@@ -1,10 +1,8 @@
 # pylint: disable=invalid-name
 """
 Configuration file for the Sphinx documentation builder.
-"""
-# This file only contains a selection of the most common options. For a full
-# list see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
+"""  # This file only contains a selection of the most common options. For a full
+# list see the documentation: https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 # -- Path setup --------------------------------------------------------------
 
@@ -13,10 +11,13 @@ Configuration file for the Sphinx documentation builder.
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import datetime
+import inspect
 import os
 import sys
 
 import toml
+
+import qctrlopencontrols
 
 sys.path.insert(0, os.path.abspath(".."))
 
@@ -52,10 +53,12 @@ html_context = {
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     "sphinx.ext.coverage",
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
     "sphinx_rtd_theme",
+    "sphinx.ext.viewcode",
 ]
 
 master_doc = "index"
@@ -78,6 +81,16 @@ html_theme = "sphinx_rtd_theme"
 
 html_title = html_context["var_title"]
 
+# Theme options
+html_theme_options = {
+    # Toc options
+    "collapse_navigation": False,
+    "includehidden": False,
+}
+
+# Option to automatically generate summaries.
+autosummary_generate = True
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
@@ -89,3 +102,43 @@ html_js_files = [
     "https://docs.q-ctrl.com/assets/js/readthedocs.js",
 ]
 html_logo = "_static/logo.svg"
+
+
+public_apis = qctrlopencontrols.__all__
+
+# the key of autosummary_context can be used
+# as variable in the template
+# here `qctrlopencontrols` is used in the template for
+# providing a list of all public APIs
+autosummary_context = {
+    "qctrlopencontrols": public_apis,
+}
+
+# Builds filename/url mappings for the objects
+
+# autosummary_filename_map allows us to customize the name of individual doc for each API
+# by mapping the name from the key to the value, to provide a better URL reflecting how
+# the APIs are exposed
+
+# update file name class and function
+autosummary_filename_map = {
+    qctrlopencontrols.__name__ + "." + api: api for api in public_apis
+}
+
+# update file name for class methods and attributes
+for _class in [
+    value for name, value in inspect.getmembers(qctrlopencontrols, inspect.isclass)
+]:
+    autosummary_filename_map.update(
+        {
+            qctrlopencontrols.__name__
+            + "."
+            + _class.__name__
+            + "."
+            + attribute: _class.__name__
+            + "."
+            + attribute
+            for attribute in dir(_class)
+            if not attribute.startswith("_")
+        }
+    )

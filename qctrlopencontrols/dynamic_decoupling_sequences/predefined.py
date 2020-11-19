@@ -873,7 +873,7 @@ def new_x_concatenated_sequence(
 
     Notes
     -----
-    The :math:`X`-concatenated sequence is constructed by recursively concatenating
+    The :math:`X`-concatenated sequence [#]_ is constructed by recursively concatenating
     control sequence structures. It's parameterized by the concatenation order :math:`l` and
     the duration of the total sequence :math:`\tau`. Let the :math:`l`-th order of concatenation
     be denoted as :math:`C_l(\tau)`. In this scheme, zeroth order concatenation of duration
@@ -950,7 +950,7 @@ def new_xy_concatenated_sequence(
     duration, concatenation_order, pre_post_rotation=False, name=None
 ):
     r"""
-    Creates the :math:`XY`-Concatenated sequence.
+    Creates the :math:`XY`-concatenated sequence.
 
     Parameters
     ----------
@@ -975,7 +975,7 @@ def new_xy_concatenated_sequence(
 
     Notes
     -----
-    The :math:`XY`-concatenated sequence is constructed by recursively concatenating
+    The :math:`XY`-concatenated sequence [#]_ is constructed by recursively concatenating
     control sequence structures. It's parameterized by the concatenation order :math:`l` and
     the duration of the total sequence :math:`\tau`. Let the :math:`l`-th order of concatenation
     be denoted as :math:`C_l(\tau)`. In this scheme, zeroth order concatenation of duration
