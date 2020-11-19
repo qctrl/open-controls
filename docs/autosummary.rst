@@ -4,13 +4,12 @@
     :toctree: .
     :template: qctrlopencontrols/qctrlopencontrols.rst
 
-    qctrlopencontrols
+     qctrlopencontrols
 
 .. automodule:: qctrlopencontrols
   .. autosummary::
     :toctree: qctrlopencontrols
     :nosignatures:
-    :template: qctrlopencontrols/module.rst
     :recursive:
 
     driven_controls
@@ -19,7 +18,6 @@
   .. autosummary::
     :toctree: qctrlopencontrols
     :nosignatures:
-    :template: qctrlopencontrols/module.rst
     :recursive:
 
      dynamic_decoupling_sequences
