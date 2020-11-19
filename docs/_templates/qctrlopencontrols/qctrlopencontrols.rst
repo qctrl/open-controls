@@ -14,8 +14,3 @@ Q-CTRL Open Controls
        ~{{ module }}.{{ item }}
    {%- endif -%}
    {%- endfor %}
-   {% for item in functions %}
-   {%- if not item.startswith('_') %}
-      ~{{ module }}.{{ item }}
-   {%- endif -%}
-   {%- endfor %}
