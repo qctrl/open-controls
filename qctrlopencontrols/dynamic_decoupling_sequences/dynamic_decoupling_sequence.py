@@ -25,7 +25,6 @@ import numpy as np
 
 from ..constants import (
     UPPER_BOUND_DETUNING_RATE,
-    UPPER_BOUND_OFFSETS,
     UPPER_BOUND_RABI_RATE,
 )
 from ..driven_controls.driven_control import DrivenControl
@@ -49,18 +48,12 @@ class DynamicDecouplingSequence:
         The total time in seconds for the sequence :math:`\tau`.
     offsets : np.ndarray
         The times offsets :math:`\{t_j\}` in seconds for the center of pulses.
-    rabi_rotations : np.ndarray, optional
+    rabi_rotations : np.ndarray
         The rabi rotation :math:`\omega_j` at each time offset :math:`t_j`.
-        Defaults to ``None``.
-        If not provided, it will be set as :math:`\pi` at each time offset.
-    azimuthal_angles : np.ndarray, optional
+    azimuthal_angles : np.ndarray
         The azimuthal angle :math:`\phi_j` at each time offset :math:`t_j`.
-        Defaults to ``None``.
-        If not provided, it will be set as 0 at each time offset.
-    detuning_rotations : np.ndarray, optional
+    detuning_rotations : np.ndarray
         The detuning rotation :math:`\delta_j` at each time offset :math:`t_j`.
-        Defaults to ``None``.
-        If not provided, it will be set as 0 at each time offset.
     name : str, optional
         Name of the sequence. Defaults to None.
 
@@ -86,10 +79,10 @@ class DynamicDecouplingSequence:
         self,
         duration: float,
         offsets: np.ndarray,
-        rabi_rotations: Optional[np.ndarray] = None,
-        azimuthal_angles: Optional[np.ndarray] = None,
-        detuning_rotations: Optional[np.ndarray] = None,
-        name: str = None,
+        rabi_rotations: np.ndarray,
+        azimuthal_angles: np.ndarray,
+        detuning_rotations: np.ndarray,
+        name: Optional[str] = None,
     ):
 
         check_arguments(
@@ -97,55 +90,40 @@ class DynamicDecouplingSequence:
             "Sequence duration must be above zero.",
             {"duration": duration},
         )
+
         offsets = np.asarray(offsets)
         check_arguments(
-            len(offsets) <= UPPER_BOUND_OFFSETS,
-            "Number of offsets is above the allowed number of maximum offsets. ",
-            {"offsets": offsets},
-            extras={
-                "number_of_offsets": len(offsets),
-                "allowed_maximum_offsets": UPPER_BOUND_OFFSETS,
-            },
-        )
-        check_arguments(
-            np.all(offsets >= 0.0) and np.all(offsets <= duration),
+            np.all((offsets >= 0) & (duration >= offsets)),
             "Offsets for dynamic decoupling sequence must be between 0 and the sequence "
             "duration (inclusive). ",
             {"offsets": offsets, "duration": duration},
         )
 
-        if rabi_rotations is None:
-            rabi_rotations = np.pi * np.ones(len(offsets))
-        else:
-            check_arguments(
-                len(rabi_rotations) == len(offsets),
-                "rabi rotations must have the same length as offsets. ",
-                {"offsets": offsets, "rabi_rotations": rabi_rotations},
-            )
+        _offset_count = len(offsets)
 
-        if azimuthal_angles is None:
-            azimuthal_angles = np.zeros(len(offsets))
-        else:
-            check_arguments(
-                len(azimuthal_angles) == len(offsets),
-                "azimuthal angles must have the same length as offsets. ",
-                {"offsets": offsets, "azimuthal_angles": azimuthal_angles},
-            )
+        check_arguments(
+            len(rabi_rotations) == _offset_count,
+            "rabi rotations must have the same length as offsets. ",
+            {"offsets": offsets, "rabi_rotations": rabi_rotations},
+        )
 
-        if detuning_rotations is None:
-            detuning_rotations = np.zeros(len(offsets))
-        else:
-            check_arguments(
-                len(detuning_rotations) == len(offsets),
-                "detuning rotations must have the same length as offsets. ",
-                {"offsets": offsets, "detuning_rotations": detuning_rotations},
-            )
+        check_arguments(
+            len(azimuthal_angles) == _offset_count,
+            "azimuthal angles must have the same length as offsets. ",
+            {"offsets": offsets, "azimuthal_angles": azimuthal_angles},
+        )
+
+        check_arguments(
+            len(detuning_rotations) == _offset_count,
+            "detuning rotations must have the same length as offsets. ",
+            {"offsets": offsets, "detuning_rotations": detuning_rotations},
+        )
 
         self.duration = duration
         self.offsets = offsets
-        self.rabi_rotations = np.array(rabi_rotations, dtype=np.float)
-        self.azimuthal_angles = np.array(azimuthal_angles, dtype=np.float)
-        self.detuning_rotations = np.array(detuning_rotations, dtype=np.float)
+        self.rabi_rotations = np.asarray(rabi_rotations, dtype=np.float)
+        self.azimuthal_angles = np.asarray(azimuthal_angles, dtype=np.float)
+        self.detuning_rotations = np.asarray(detuning_rotations, dtype=np.float)
         self.name = name
 
     def export(self) -> Dict:
