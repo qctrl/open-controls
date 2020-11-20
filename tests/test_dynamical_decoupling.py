@@ -117,16 +117,13 @@ def test_dynamical_decoupling_sequence():
 
     with pytest.raises(ArgumentsValueError):
 
-        # not more than 10000 offsets
-        _ = DynamicDecouplingSequence(
-            duration=2.0,
-            offsets=2.0 / 2000 * np.ones((20000, 1)),
-            rabi_rotations=np.pi * np.ones((20000, 1)),
-        )
-
         # duration cannot be negative
         _ = DynamicDecouplingSequence(
-            duration=-2.0, offsets=2.0 / 2000 * np.ones((20000, 1))
+            duration=-2.0,
+            offsets=2.0 / 2000 * np.ones((2000, 1)),
+            rabi_rotations=np.pi * np.ones((2000, 1)),
+            azimuthal_angles=np.ones((2000, 1)),
+            detuning_rotations=np.zeros((2000, 1)),
         )
 
 
