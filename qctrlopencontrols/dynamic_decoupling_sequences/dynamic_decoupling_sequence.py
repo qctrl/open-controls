@@ -50,9 +50,9 @@ class DynamicDecouplingSequence:
         The times offsets :math:`\{t_j\}` in seconds for the center of pulses.
     rabi_rotations : np.ndarray
         The rabi rotation :math:`\omega_j` at each time offset :math:`t_j`.
-    azimuthal_angles : np.ndarray, optional
+    azimuthal_angles : np.ndarray
         The azimuthal angle :math:`\phi_j` at each time offset :math:`t_j`.
-    detuning_rotations : np.ndarray, optional
+    detuning_rotations : np.ndarray
         The detuning rotation :math:`\delta_j` at each time offset :math:`t_j`.
     name : str, optional
         Name of the sequence. Defaults to None.
