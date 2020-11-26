@@ -1,6 +1,6 @@
 
-Q-CTRL Open Controls
-====================
+Q-CTRL Open Controls Python package
+===================================
 
 
 .. image:: https://github.com/qctrl/python-open-controls/workflows/Push%20workflow/badge.svg
