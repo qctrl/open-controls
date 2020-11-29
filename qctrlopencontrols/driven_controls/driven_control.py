@@ -398,7 +398,8 @@ class DrivenControl:
         return np.sum(self.durations)
 
     def _qctrl_expanded_export_content(self, file_type, coordinates):
-        """Private method to prepare the content to be saved in Q-CTRL expanded format
+        """
+        Prepare the content to be saved in Q-CTRL expanded format.
 
         Parameters
         ----------
@@ -416,7 +417,7 @@ class DrivenControl:
         control_info = None
         amplitude_x = self.amplitude_x
         amplitude_y = self.amplitude_y
-        if coordinates == Coordinate.CYLINDRICAL.value:
+        if coordinates == Coordinate.CARTESIAN.value:
             if file_type == FileType.CSV.value:
                 control_info = list()
                 control_info.append(

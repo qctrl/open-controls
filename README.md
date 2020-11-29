@@ -1,4 +1,5 @@
-# Q-CTRL Open Controls
+# Q-CTRL Open Controls Python package
+
 [![Actions Status](https://github.com/qctrl/python-open-controls/workflows/Push%20workflow/badge.svg)](https://github.com/qctrl/python-open-controls/actions?query=workflow%3A"Push+workflow")
 [![Actions Status](https://github.com/qctrl/python-open-controls/workflows/Release%20workflow/badge.svg)](https://github.com/qctrl/python-open-controls/actions?query=workflow%3A"Release+workflow")
 
