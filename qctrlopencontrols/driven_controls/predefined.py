@@ -20,84 +20,9 @@ from typing import List
 
 import numpy as np
 
-from ..constants import (
-    BB1,
-    CORPSE,
-    CORPSE_IN_BB1,
-    CORPSE_IN_SCROFULOUS,
-    CORPSE_IN_SK1,
-    PRIMITIVE,
-    SCROFULOUS,
-    SK1,
-    WAMF1,
-)
 from ..exceptions import ArgumentsValueError
 from ..utils import check_arguments
 from .driven_control import DrivenControl
-
-
-def new_predefined_driven_control(scheme: str = PRIMITIVE, **kwargs):
-    """
-    Creates a new driven control based on the given scheme.
-
-    Equivalent to calling the corresponding ``new_<scheme>_control`` function.
-
-    Parameters
-    ----------
-    scheme : string, optional
-        The name of the driven control type. The available options are:
-
-        - 'primitive'
-        - 'BB1'
-        - 'SK1'
-        - 'CORPSE'
-        - 'CORPSE in BB1'
-        - 'CORPSE in SK1'
-        - 'WAMF1'
-        - 'SCROFULOUS'
-        - 'CORPSE in SCROFULOUS'
-
-        Defaults to 'primitive'.
-    kwargs : dict, optional
-        Additional keyword argument to create the control.
-
-    Returns
-    -------
-    DrivenControl
-        A driven control corresponding to `scheme`.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
-    """
-
-    # Raise error if the input driven_control_type is not known
-    if scheme == PRIMITIVE:
-        driven_control = new_primitive_control(**kwargs)
-    elif scheme == BB1:
-        driven_control = new_bb1_control(**kwargs)
-    elif scheme == SK1:
-        driven_control = new_sk1_control(**kwargs)
-    elif scheme == WAMF1:
-        driven_control = new_wamf1_control(**kwargs)
-    elif scheme == CORPSE:
-        driven_control = new_corpse_control(**kwargs)
-    elif scheme == CORPSE_IN_BB1:
-        driven_control = new_corpse_in_bb1_control(**kwargs)
-    elif scheme == CORPSE_IN_SK1:
-        driven_control = new_corpse_in_sk1_control(**kwargs)
-    elif scheme == SCROFULOUS:
-        driven_control = new_scrofulous_control(**kwargs)
-    elif scheme == CORPSE_IN_SCROFULOUS:
-        driven_control = new_corpse_in_scrofulous_control(**kwargs)
-    else:
-        raise ArgumentsValueError(
-            "Unknown predefined pulse type. See help(new_predefined_driven_control) to display all"
-            + " allowed inputs.",
-            {"scheme": scheme},
-        )
-    return driven_control
 
 
 def _validate_rabi_parameters(rabi_rotation: float, maximum_rabi_rate: float) -> None:
