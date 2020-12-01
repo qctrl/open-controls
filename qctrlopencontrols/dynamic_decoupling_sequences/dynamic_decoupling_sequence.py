@@ -283,10 +283,10 @@ def convert_dds_to_driven_control(
         The base DDS. Its offsets should be sorted in ascending order in time.
     maximum_rabi_rate : float, optional
         Maximum Rabi Rate; Defaults to 2*pi.
-        Must be greater than 0 and less or equal to UPPER_BOUND_RABI_RATE, if set.
+        Must be greater than 0, if set.
     maximum_detuning_rate : float, optional
         Maximum Detuning Rate; Defaults to 2*pi.
-        Must be greater than 0 and less or equal to UPPER_BOUND_DETUNING_RATE, if set.
+        Must be greater than 0, if set.
     minimum_segment_duration : float, optional
         If set, further restricts the duration of every segment of the Driven Controls.
         Defaults to 0, in which case it does not affect the duration of the pulses.
@@ -330,7 +330,16 @@ def convert_dds_to_driven_control(
     If appropriate control segments cannot be created, the conversion process raises
     an ArgumentsValueError.
     """
-
+    check_arguments(
+        maximum_detuning_rate > 0,
+        "Maximum detuning rate must be positive.",
+        {"maximum_detuning_rate": maximum_detuning_rate},
+    )
+    check_arguments(
+        maximum_rabi_rate > 0,
+        "Maximum rabi rate must be positive.",
+        {"maximum_rabi_rate": maximum_rabi_rate},
+    )
     if dynamic_decoupling_sequence is None:
         raise ArgumentsValueError(
             "Dynamic decoupling sequence must be of " "DynamicDecoupling type.",
