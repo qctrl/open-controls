@@ -20,13 +20,6 @@ from typing import Optional
 
 import numpy as np
 
-from ..constants import (
-    LOWER_BOUND_DURATION,
-    UPPER_BOUND_DETUNING_RATE,
-    UPPER_BOUND_DURATION,
-    UPPER_BOUND_RABI_RATE,
-    UPPER_BOUND_SEGMENTS,
-)
 from ..exceptions import ArgumentsValueError
 from ..utils import (
     Coordinate,
@@ -165,56 +158,6 @@ class DrivenControl:
             all(durations > 0),
             "Duration of driven control segments must all be greater than zero.",
             {"durations": durations},
-        )
-
-        # check if segments number exceeds the upper bound
-        check_arguments(
-            len(rabi_rates) <= UPPER_BOUND_SEGMENTS,
-            "The number of segments must be smaller than the upper bound {}".format(
-                UPPER_BOUND_SEGMENTS
-            ),
-            {"rabi_rates": rabi_rates},
-            extras={"number_of_segments": len(rabi_rates)},
-        )
-
-        # check if maximum rabi rate exceeds the upper bound
-        check_arguments(
-            np.max(rabi_rates) <= UPPER_BOUND_RABI_RATE,
-            "Maximum rabi rate of segments must be smaller than the upper bound {}".format(
-                UPPER_BOUND_RABI_RATE
-            ),
-            {"rabi_rates": rabi_rates},
-            extras={"maximum_rabi_rate": np.max(rabi_rates)},
-        )
-
-        # check if the maximum detuning exceeds the upper bound
-        check_arguments(
-            np.max(detunings) <= UPPER_BOUND_DETUNING_RATE,
-            "Maximum detuning of segments must be smaller than the upper bound {}".format(
-                UPPER_BOUND_DETUNING_RATE
-            ),
-            {"detunings": detunings},
-            extras={"maximum_detuning": np.max(detunings)},
-        )
-
-        # check if maximum duration exceeds the upper bound
-        check_arguments(
-            np.max(durations) <= UPPER_BOUND_DURATION,
-            "Maximum duration of segments must be smaller than the upper bound {}".format(
-                UPPER_BOUND_DURATION
-            ),
-            {"durations": durations},
-            extras={"maximum_duration": np.max(durations)},
-        )
-
-        # check if minimum duration is smaller than the lower bound
-        check_arguments(
-            np.min(durations) >= LOWER_BOUND_DURATION,
-            "Minimum duration of segments must be larger than the lower bound {}".format(
-                LOWER_BOUND_DURATION
-            ),
-            {"durations": durations},
-            extras={"minimum_duration": np.min(durations)},
         )
 
         self.rabi_rates = rabi_rates
