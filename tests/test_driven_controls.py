@@ -23,11 +23,6 @@ import numpy as np
 import pytest
 
 from qctrlopencontrols import DrivenControl
-from qctrlopencontrols.constants import (
-    UPPER_BOUND_DETUNING_RATE,
-    UPPER_BOUND_RABI_RATE,
-    UPPER_BOUND_SEGMENTS,
-)
 from qctrlopencontrols.exceptions import ArgumentsValueError
 
 
@@ -131,9 +126,6 @@ def test_driven_controls():
         _ = DrivenControl(rabi_rates=[-1])
         _ = DrivenControl(detunings=[-1])
         _ = DrivenControl(durations=[0])
-        _ = DrivenControl(rabi_rates=[1.1 * UPPER_BOUND_RABI_RATE])
-        _ = DrivenControl(detunings=[1.1 * UPPER_BOUND_DETUNING_RATE])
-        _ = DrivenControl(rabi_rates=[1] * UPPER_BOUND_SEGMENTS + [1])
         _ = DrivenControl()
         _ = DrivenControl(
             rabi_rates=[1, 2],

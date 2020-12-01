@@ -24,28 +24,5 @@ SIGMA_Z = np.array([[1.0, 0.0], [0.0, -1.0]], dtype=np.complex)
 SIGMA_M = np.array([[0.0, 1.0], [0.0, 0.0]], dtype=np.complex)
 SIGMA_P = np.array([[0.0, 0.0], [1.0, 0.0]], dtype=np.complex)
 
-
-# Defines constants for driven controls module.
-
-# Maximum allowed rabi rate
-UPPER_BOUND_RABI_RATE = 1e10
-
-# Maximum allowed detuning rate
-UPPER_BOUND_DETUNING_RATE = UPPER_BOUND_RABI_RATE
-
-# Maximum allowed duration of a control
-UPPER_BOUND_DURATION = 1e6
-
-# Minimum allowed duration of a control
-LOWER_BOUND_DURATION = 1e-12
-
-# Maximum number of segments allowed in a control
-UPPER_BOUND_SEGMENTS = 10000
-
-# Defines constants for dynamical decoupling module.
-
-# Maximum number of offsets allowed in a Dynamical Decoupling sequence.
-UPPER_BOUND_OFFSETS = 10000
-
 # Matplotlib format of data for plotting
 MATPLOTLIB = "matplotlib"

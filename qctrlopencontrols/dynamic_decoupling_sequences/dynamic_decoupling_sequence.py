@@ -23,10 +23,6 @@ from typing import (
 
 import numpy as np
 
-from ..constants import (
-    UPPER_BOUND_DETUNING_RATE,
-    UPPER_BOUND_RABI_RATE,
-)
 from ..driven_controls.driven_control import DrivenControl
 from ..exceptions import ArgumentsValueError
 from ..utils import (
@@ -347,8 +343,6 @@ def convert_dds_to_driven_control(
             {"minimum_segment_duration": minimum_segment_duration},
         )
 
-    _check_maximum_rotation_rate(maximum_rabi_rate, maximum_detuning_rate)
-
     sequence_duration = dynamic_decoupling_sequence.duration
     offsets = dynamic_decoupling_sequence.offsets
     rabi_rotations = dynamic_decoupling_sequence.rabi_rotations
@@ -541,26 +535,3 @@ def _check_valid_operation(
         return False
 
     return True
-
-
-def _check_maximum_rotation_rate(
-    maximum_rabi_rate: float, maximum_detuning_rate: float
-) -> None:
-    """
-    Checks if the maximum rabi and detuning rate are within valid limits.
-    """
-    # check against global parameters
-    check_arguments(
-        0 < maximum_rabi_rate <= UPPER_BOUND_RABI_RATE,
-        f"Maximum rabi rate must be greater than 0 and less or equal to {UPPER_BOUND_RABI_RATE}.",
-        {"maximum_rabi_rate": maximum_rabi_rate},
-        extras={"allowed_maximum_rabi_rate": UPPER_BOUND_RABI_RATE,},
-    )
-
-    check_arguments(
-        0 < maximum_detuning_rate <= UPPER_BOUND_DETUNING_RATE,
-        "Maximum detuning rate must be greater than 0 and less or equal to "
-        f"{UPPER_BOUND_DETUNING_RATE}",
-        {"maximum_detuning_rate": maximum_detuning_rate,},
-        extras={"allowed_maximum_detuning_rate": UPPER_BOUND_DETUNING_RATE,},
-    )
