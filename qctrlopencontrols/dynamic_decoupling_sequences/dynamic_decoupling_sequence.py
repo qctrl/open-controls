@@ -23,10 +23,6 @@ from typing import (
 
 import numpy as np
 
-from ..constants import (
-    UPPER_BOUND_DETUNING_RATE,
-    UPPER_BOUND_RABI_RATE,
-)
 from ..driven_controls.driven_control import DrivenControl
 from ..exceptions import ArgumentsValueError
 from ..utils import (
@@ -287,10 +283,10 @@ def convert_dds_to_driven_control(
         The base DDS. Its offsets should be sorted in ascending order in time.
     maximum_rabi_rate : float, optional
         Maximum Rabi Rate; Defaults to 2*pi.
-        Must be greater than 0 and less or equal to UPPER_BOUND_RABI_RATE, if set.
+        Must be greater than 0, if set.
     maximum_detuning_rate : float, optional
         Maximum Detuning Rate; Defaults to 2*pi.
-        Must be greater than 0 and less or equal to UPPER_BOUND_DETUNING_RATE, if set.
+        Must be greater than 0, if set.
     minimum_segment_duration : float, optional
         If set, further restricts the duration of every segment of the Driven Controls.
         Defaults to 0, in which case it does not affect the duration of the pulses.
@@ -334,7 +330,16 @@ def convert_dds_to_driven_control(
     If appropriate control segments cannot be created, the conversion process raises
     an ArgumentsValueError.
     """
-
+    check_arguments(
+        maximum_detuning_rate > 0,
+        "Maximum detuning rate must be positive.",
+        {"maximum_detuning_rate": maximum_detuning_rate},
+    )
+    check_arguments(
+        maximum_rabi_rate > 0,
+        "Maximum rabi rate must be positive.",
+        {"maximum_rabi_rate": maximum_rabi_rate},
+    )
     if dynamic_decoupling_sequence is None:
         raise ArgumentsValueError(
             "Dynamic decoupling sequence must be of " "DynamicDecoupling type.",
@@ -346,8 +351,6 @@ def convert_dds_to_driven_control(
             "Minimum segment duration must be greater or equal to 0.",
             {"minimum_segment_duration": minimum_segment_duration},
         )
-
-    _check_maximum_rotation_rate(maximum_rabi_rate, maximum_detuning_rate)
 
     sequence_duration = dynamic_decoupling_sequence.duration
     offsets = dynamic_decoupling_sequence.offsets
@@ -541,26 +544,3 @@ def _check_valid_operation(
         return False
 
     return True
-
-
-def _check_maximum_rotation_rate(
-    maximum_rabi_rate: float, maximum_detuning_rate: float
-) -> None:
-    """
-    Checks if the maximum rabi and detuning rate are within valid limits.
-    """
-    # check against global parameters
-    check_arguments(
-        0 < maximum_rabi_rate <= UPPER_BOUND_RABI_RATE,
-        f"Maximum rabi rate must be greater than 0 and less or equal to {UPPER_BOUND_RABI_RATE}.",
-        {"maximum_rabi_rate": maximum_rabi_rate},
-        extras={"allowed_maximum_rabi_rate": UPPER_BOUND_RABI_RATE,},
-    )
-
-    check_arguments(
-        0 < maximum_detuning_rate <= UPPER_BOUND_DETUNING_RATE,
-        "Maximum detuning rate must be greater than 0 and less or equal to "
-        f"{UPPER_BOUND_DETUNING_RATE}",
-        {"maximum_detuning_rate": maximum_detuning_rate,},
-        extras={"allowed_maximum_detuning_rate": UPPER_BOUND_DETUNING_RATE,},
-    )
