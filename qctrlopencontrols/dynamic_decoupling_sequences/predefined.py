@@ -186,7 +186,7 @@ def new_ramsey_sequence(duration, pre_post_rotation=False, name=None):
         offsets = duration * np.array([0.0, 1.0])
         rabi_rotations = np.array([np.pi / 2, np.pi / 2])
         azimuthal_angles = np.array([0.0, np.pi])
-        detuning_rotations = np.zeros(offsets.shape)
+        detuning_rotations = np.zeros((2,))
 
     return DynamicDecouplingSequence(
         duration=duration,
@@ -915,12 +915,13 @@ def new_x_concatenated_sequence(
 
     values, counts = np.unique(pos_cum_sum, return_counts=True)
 
-    offsets = [value for value, count in zip(values, counts) if count % 2 == 0]
+    offsets = np.array(
+        [value for value, count in zip(values, counts) if count % 2 == 0]
+    )
 
     if concatenation_order % 2 == 1:
         offsets = offsets[:-1]
 
-    offsets = np.array(offsets)
     rabi_rotations = np.zeros(offsets.shape)
     rabi_rotations[0:] = np.pi
     azimuthal_angles = np.zeros(offsets.shape)

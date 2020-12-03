@@ -16,7 +16,11 @@
 Driven control module.
 """
 import json
-from typing import Optional
+from typing import (
+    Any,
+    Dict,
+    Optional,
+)
 
 import numpy as np
 
