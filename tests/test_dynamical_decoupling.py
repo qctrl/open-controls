@@ -760,7 +760,7 @@ def test_conversion_of_tightly_packed_sequence():
     driven_control = convert_dds_to_driven_control(
         dynamic_decoupling_sequence,
         maximum_rabi_rate=20.0 * np.pi,
-        minimum_segment_duration=0.0,
+        maximum_detuning_rate=2 * np.pi,
         name=None,
     )
 
