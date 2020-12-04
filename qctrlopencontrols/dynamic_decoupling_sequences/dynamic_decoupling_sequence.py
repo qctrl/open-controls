@@ -268,7 +268,7 @@ def convert_dds_to_driven_control(
     dynamic_decoupling_sequence: DynamicDecouplingSequence,
     maximum_rabi_rate: float,
     maximum_detuning_rate: float,
-    minimum_segment_duration: Optional[float] = None,
+    minimum_segment_duration: float = 0.0,
     name=Optional[str],
 ) -> DrivenControl:
     r"""
@@ -287,8 +287,8 @@ def convert_dds_to_driven_control(
         Maximum detuning rate.
     minimum_segment_duration : float, optional
         If set, further restricts the duration of every segment of the Driven Controls.
-        Defaults to ``None``, in which case it does not affect the duration of the pulses.
-        Must be greater than 0, if set.
+        Defaults to 0, in which case it does not affect the duration of the pulses.
+        Must be greater than or equal to 0, if set.
     name : str, optional
         Name of the sequence. Defaults to None.
 
@@ -339,14 +339,11 @@ def convert_dds_to_driven_control(
         {"maximum_rabi_rate": maximum_rabi_rate},
     )
 
-    if minimum_segment_duration is not None:
-        check_arguments(
-            minimum_segment_duration > 0,
-            "Minimum segment duration must be greater than 0.",
-            {"minimum_segment_duration": minimum_segment_duration},
-        )
-    else:
-        minimum_segment_duration = 0
+    check_arguments(
+        minimum_segment_duration >= 0,
+        "Minimum segment duration must be greater than or equal to 0.",
+        {"minimum_segment_duration": minimum_segment_duration},
+    )
 
     sequence_duration = dynamic_decoupling_sequence.duration
     offsets = dynamic_decoupling_sequence.offsets
