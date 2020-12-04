@@ -269,7 +269,7 @@ def convert_dds_to_driven_control(
     maximum_rabi_rate: float,
     maximum_detuning_rate: float,
     minimum_segment_duration: float = 0.0,
-    name=Optional[str],
+    name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
     Creates a Driven Control based on the supplied DDS and other relevant information.
