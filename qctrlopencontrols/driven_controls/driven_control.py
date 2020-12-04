@@ -36,29 +36,22 @@ class DrivenControl:
 
     Parameters
     ----------
-    rabi_rates : np.ndarray, optional
+    rabi_rates : np.ndarray
         The Rabi rates :math:`\{\Omega_n\}` for each segment, in units of radians per second. Every
         element must be non-negative. Represented as a 1D array of length :math:`N`, where :math:`N`
-        is number of segments. You can omit this field if the Rabi rate is zero on all segments.
-    azimuthal_angles : np.ndarray, optional
+        is number of segments.
+    azimuthal_angles : np.ndarray
         The azimuthal angles :math:`\{\phi_n\}` for each segment. Represented as a 1D array of
-        length :math:`N`, where :math:`N` is number of segments. You can omit this field if the
-        azimuthal angle is zero on all segments.
-    detunings : np.ndarray, optional
+        length :math:`N`, where :math:`N` is number of segments.
+    detunings : np.ndarray
         The detunings :math:`\{\Delta_n\}` for each segment, in units of radians per second.
-        Represented as a 1D array of length :math:`N`, where :math:`N` is number of segments. You
-        can omit this field if the detuning is zero on all segments.
-    durations : np.ndarray, optional
+        Represented as a 1D array of length :math:`N`, where :math:`N` is number of segments.
+    durations : np.ndarray
         The durations :math:`\{\delta t_n\}` for each segment, in units of seconds. Every element
         must be positive. Represented as a 1D array of length :math:`N`, where :math:`N` is number
-        of segments. Defaults to an array of ones if omitted.
+        of segments.
     name : string, optional
         An optional string to name the control. Defaults to ``None``.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     Notes
     -----
@@ -109,7 +102,7 @@ class DrivenControl:
         detunings = np.asarray(detunings, dtype=np.float)
         durations = np.asarray(durations, dtype=np.float)
 
-        # check if all non-None inputs have the same length
+        # check if all input parameters have the same length
         parameter_length = {
             len(parameter)
             for parameter in [rabi_rates, azimuthal_angles, detunings, durations]
@@ -609,7 +602,8 @@ class DrivenControl:
         return plot_dictionary
 
     def __str__(self):
-        """Prepares a friendly string format for a Driven Control
+        """
+        Prepares a friendly string format for a Driven Control.
         """
         driven_control_string = list()
 
