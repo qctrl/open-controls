@@ -32,7 +32,7 @@ from ..utils import (
 
 class DrivenControl:
     r"""
-A piecewise-constant driven control for a single qubit.
+    A piecewise-constant driven control for a single qubit.
 
     Parameters
     ----------
@@ -168,7 +168,7 @@ A piecewise-constant driven control for a single qubit.
     @property
     def maximum_rabi_rate(self) -> float:
         r"""
-Returns the maximum Rabi rate of the control.
+        Returns the maximum Rabi rate of the control.
 
         Returns
         -------
@@ -181,7 +181,7 @@ Returns the maximum Rabi rate of the control.
     @property
     def maximum_detuning(self) -> float:
         r"""
-Returns the maximum detuning of the control.
+        Returns the maximum detuning of the control.
 
         Returns
         -------
@@ -193,7 +193,7 @@ Returns the maximum detuning of the control.
     @property
     def amplitude_x(self) -> np.ndarray:
         r"""
-Returns the x-amplitude.
+        Returns the x-amplitude.
 
         Returns
         -------
@@ -206,7 +206,7 @@ Returns the x-amplitude.
     @property
     def amplitude_y(self) -> np.ndarray:
         r"""
-Returns the y-amplitude.
+        Returns the y-amplitude.
 
         Returns
         -------
@@ -219,7 +219,7 @@ Returns the y-amplitude.
     @property
     def angles(self) -> np.ndarray:
         r"""
-Returns the Bloch sphere rotation angles.
+        Returns the Bloch sphere rotation angles.
 
         Returns
         -------
@@ -238,7 +238,7 @@ Returns the Bloch sphere rotation angles.
     @property
     def directions(self) -> np.ndarray:
         r"""
-Returns the Bloch sphere rotation directions.
+        Returns the Bloch sphere rotation directions.
 
         Returns
         -------
@@ -277,7 +277,7 @@ Returns the Bloch sphere rotation directions.
     @property
     def times(self) -> np.ndarray:
         r"""
-Returns the boundary times of the control segments.
+        Returns the boundary times of the control segments.
 
         Returns
         ------
@@ -291,7 +291,7 @@ Returns the boundary times of the control segments.
     @property
     def maximum_duration(self) -> float:
         r"""
-Returns the duration of the longest control segment.
+        Returns the duration of the longest control segment.
 
         Returns
         -------
@@ -304,7 +304,7 @@ Returns the duration of the longest control segment.
     @property
     def minimum_duration(self) -> float:
         r"""
-Returns the duration of the shortest control segment.
+        Returns the duration of the shortest control segment.
 
         Returns
         -------
@@ -317,7 +317,7 @@ Returns the duration of the shortest control segment.
     @property
     def duration(self) -> float:
         r"""
-Returns the total duration of the control.
+        Returns the total duration of the control.
 
         Returns
         -------
