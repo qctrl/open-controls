@@ -36,6 +36,10 @@ class DrivenControl:
 
     Parameters
     ----------
+    durations : np.ndarray
+        The durations :math:`\{\delta t_n\}` for each segment, in units of seconds. Every element
+        must be positive. Represented as a 1D array of length :math:`N`, where :math:`N` is number
+        of segments.
     rabi_rates : np.ndarray, optional
         The Rabi rates :math:`\{\Omega_n\}` for each segment, in units of radians per second. Every
         element must be non-negative. Represented as a 1D array of length :math:`N`, where :math:`N`
@@ -48,17 +52,8 @@ class DrivenControl:
         The detunings :math:`\{\Delta_n\}` for each segment, in units of radians per second.
         Represented as a 1D array of length :math:`N`, where :math:`N` is number of segments. You
         can omit this field if the detuning is zero on all segments.
-    durations : np.ndarray, optional
-        The durations :math:`\{\delta t_n\}` for each segment, in units of seconds. Every element
-        must be positive. Represented as a 1D array of length :math:`N`, where :math:`N` is number
-        of segments. Defaults to an array of ones if omitted.
     name : string, optional
         An optional string to name the control. Defaults to ``None``.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     Notes
     -----
@@ -95,21 +90,23 @@ class DrivenControl:
 
     def __init__(
         self,
+        durations: np.ndarray,
         rabi_rates: Optional[np.ndarray] = None,
         azimuthal_angles: Optional[np.ndarray] = None,
         detunings: Optional[np.ndarray] = None,
-        durations: Optional[np.ndarray] = None,
         name: Optional[str] = None,
     ):
 
         self.name = name
 
-        # set default values if all inputs are ``None``
-        if all(v is None for v in [rabi_rates, azimuthal_angles, detunings, durations]):
-            rabi_rates = np.array([np.pi])
-            azimuthal_angles = np.array([0.0])
-            detunings = np.array([0.0])
-            durations = np.array([1.0])
+        durations = np.asarray(durations, dtype=np.float)
+
+        # check if all the durations are greater than zero
+        check_arguments(
+            all(durations > 0),
+            "Duration of driven control segments must all be greater than zero.",
+            {"durations": durations},
+        )
 
         # check if all non-None inputs have the same length
         input_lengths = {
@@ -120,7 +117,7 @@ class DrivenControl:
 
         check_arguments(
             len(input_lengths) == 1,
-            "Rabi rates, Azimuthal angles, Detunings and Durations "
+            "If set, rabi rates, azimuthal angles, detunings and durations "
             "must be of same length",
             {
                 "rabi_rates": rabi_rates,
@@ -130,34 +127,24 @@ class DrivenControl:
             },
         )
 
-        input_length = input_lengths.pop()
+        duration_count = len(durations)
 
         if rabi_rates is None:
-            rabi_rates = np.zeros(input_length)
+            rabi_rates = np.zeros(duration_count)
         if azimuthal_angles is None:
-            azimuthal_angles = np.zeros(input_length)
+            azimuthal_angles = np.zeros(duration_count)
         if detunings is None:
-            detunings = np.zeros(input_length)
-        if durations is None:
-            durations = np.ones(input_length)
+            detunings = np.zeros(duration_count)
 
-        rabi_rates = np.array(rabi_rates, dtype=np.float).flatten()
-        azimuthal_angles = np.array(azimuthal_angles, dtype=np.float).flatten()
-        detunings = np.array(detunings, dtype=np.float).flatten()
-        durations = np.array(durations, dtype=np.float).flatten()
+        rabi_rates = np.asarray(rabi_rates, dtype=np.float64)
+        azimuthal_angles = np.asarray(azimuthal_angles, dtype=np.float64)
+        detunings = np.asarray(detunings, dtype=np.float64)
 
         # check if all the rabi_rates are greater than zero
         check_arguments(
             all(rabi_rates >= 0.0),
             "All rabi rates must be greater than zero.",
             {"rabi_rates": rabi_rates},
-        )
-
-        # check if all the durations are greater than zero
-        check_arguments(
-            all(durations > 0),
-            "Duration of driven control segments must all be greater than zero.",
-            {"durations": durations},
         )
 
         self.rabi_rates = rabi_rates
@@ -628,7 +615,8 @@ class DrivenControl:
         return plot_dictionary
 
     def __str__(self):
-        """Prepares a friendly string format for a Driven Control
+        """
+        Prepares a friendly string format for a Driven Control.
         """
         driven_control_string = list()
 

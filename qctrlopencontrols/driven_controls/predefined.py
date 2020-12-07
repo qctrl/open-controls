@@ -1122,5 +1122,6 @@ def new_modulated_gaussian_control(
     return DrivenControl(
         rabi_rates=np.abs(modulated_gaussian_segments),
         azimuthal_angles=azimuthal_angles,
+        detunings=np.zeros(segment_count),
         durations=np.array([segment_duration] * segment_count),
     )
