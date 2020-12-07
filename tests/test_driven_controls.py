@@ -20,8 +20,10 @@ Tests for driven controls.
 import os
 
 import numpy as np
+import pytest
 
 from qctrlopencontrols import DrivenControl
+from qctrlopencontrols.exceptions import ArgumentsValueError
 
 
 def _remove_file(filename):
@@ -60,6 +62,72 @@ def test_driven_controls():
     assert np.allclose(driven_control.detunings, _detunings)
     assert np.allclose(driven_control.azimuthal_angles, _azimuthal_angles)
     assert driven_control.name == _name
+
+
+def test_driven_control_default_values():
+    """
+    Tests driven control with default values and invalid input.
+    """
+    _rabi_rates = [np.pi, np.pi, 0]
+    _azimuthal_angles = [np.pi / 2, 0, -np.pi]
+    _detunings = [0, 0, 0]
+    _durations = [1, 2, 3]
+
+    _name = "driven_control"
+
+    driven_control = DrivenControl(
+        rabi_rates=None,
+        azimuthal_angles=_azimuthal_angles,
+        detunings=_detunings,
+        durations=_durations,
+        name=_name,
+    )
+
+    assert np.allclose(driven_control.rabi_rates, np.array([0.0, 0.0, 0.0]))
+    assert np.allclose(driven_control.durations, _durations)
+    assert np.allclose(driven_control.detunings, _detunings)
+    assert np.allclose(driven_control.azimuthal_angles, _azimuthal_angles)
+
+    driven_control = DrivenControl(
+        rabi_rates=_rabi_rates,
+        azimuthal_angles=None,
+        detunings=_detunings,
+        durations=_durations,
+        name=_name,
+    )
+
+    assert np.allclose(driven_control.rabi_rates, _rabi_rates)
+    assert np.allclose(driven_control.durations, _durations)
+    assert np.allclose(driven_control.detunings, _detunings)
+    assert np.allclose(driven_control.azimuthal_angles, np.array([0.0, 0.0, 0.0]))
+
+    driven_control = DrivenControl(
+        rabi_rates=_rabi_rates,
+        azimuthal_angles=_azimuthal_angles,
+        detunings=None,
+        durations=_durations,
+        name=_name,
+    )
+
+    assert np.allclose(driven_control.rabi_rates, _rabi_rates)
+    assert np.allclose(driven_control.durations, _durations)
+    assert np.allclose(driven_control.detunings, np.array([0.0, 0.0, 0.0]))
+    assert np.allclose(driven_control.azimuthal_angles, _azimuthal_angles)
+
+    driven_control = DrivenControl(durations=[1])
+    assert np.allclose(driven_control.rabi_rates, np.array([0.0]))
+    assert np.allclose(driven_control.durations, np.array([1.0]))
+    assert np.allclose(driven_control.detunings, np.array([0.0]))
+    assert np.allclose(driven_control.azimuthal_angles, np.array([0.0]))
+
+    with pytest.raises(ArgumentsValueError):
+        _ = DrivenControl(durations=[1], rabi_rates=[-1])
+
+    with pytest.raises(ArgumentsValueError):
+        _ = DrivenControl(durations=[0])
+
+    with pytest.raises(ArgumentsValueError):
+        _ = DrivenControl(durations=[1], rabi_rates=[1, 2], azimuthal_angles=[1, 2, 3],)
 
 
 def test_control_directions():

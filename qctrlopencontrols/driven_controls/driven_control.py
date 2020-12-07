@@ -32,24 +32,26 @@ from ..utils import (
 
 class DrivenControl:
     r"""
-    A piecewise-constant driven control for a single qubit.
+A piecewise-constant driven control for a single qubit.
 
     Parameters
     ----------
-    rabi_rates : np.ndarray
-        The Rabi rates :math:`\{\Omega_n\}` for each segment, in units of radians per second. Every
-        element must be non-negative. Represented as a 1D array of length :math:`N`, where :math:`N`
-        is number of segments.
-    azimuthal_angles : np.ndarray
-        The azimuthal angles :math:`\{\phi_n\}` for each segment. Represented as a 1D array of
-        length :math:`N`, where :math:`N` is number of segments.
-    detunings : np.ndarray
-        The detunings :math:`\{\Delta_n\}` for each segment, in units of radians per second.
-        Represented as a 1D array of length :math:`N`, where :math:`N` is number of segments.
     durations : np.ndarray
         The durations :math:`\{\delta t_n\}` for each segment, in units of seconds. Every element
         must be positive. Represented as a 1D array of length :math:`N`, where :math:`N` is number
         of segments.
+    rabi_rates : np.ndarray, optional
+        The Rabi rates :math:`\{\Omega_n\}` for each segment, in units of radians per second. Every
+        element must be non-negative. Represented as a 1D array of length :math:`N`, where :math:`N`
+        is number of segments. You can omit this field if the Rabi rate is zero on all segments.
+    azimuthal_angles : np.ndarray, optional
+        The azimuthal angles :math:`\{\phi_n\}` for each segment. Represented as a 1D array of
+        length :math:`N`, where :math:`N` is number of segments. You can omit this field if the
+        azimuthal angle is zero on all segments.
+    detunings : np.ndarray, optional
+        The detunings :math:`\{\Delta_n\}` for each segment, in units of radians per second.
+        Represented as a 1D array of length :math:`N`, where :math:`N` is number of segments. You
+        can omit this field if the detuning is zero on all segments.
     name : string, optional
         An optional string to name the control. Defaults to ``None``.
 
@@ -88,30 +90,35 @@ class DrivenControl:
 
     def __init__(
         self,
-        rabi_rates: np.ndarray,
-        azimuthal_angles: np.ndarray,
-        detunings: np.ndarray,
         durations: np.ndarray,
+        rabi_rates: Optional[np.ndarray] = None,
+        azimuthal_angles: Optional[np.ndarray] = None,
+        detunings: Optional[np.ndarray] = None,
         name: Optional[str] = None,
     ):
 
         self.name = name
 
-        rabi_rates = np.asarray(rabi_rates, dtype=np.float)
-        azimuthal_angles = np.asarray(azimuthal_angles, dtype=np.float)
-        detunings = np.asarray(detunings, dtype=np.float)
         durations = np.asarray(durations, dtype=np.float)
 
-        # check if all input parameters have the same length
-        parameter_length = {
-            len(parameter)
-            for parameter in [rabi_rates, azimuthal_angles, detunings, durations]
+        # check if all the durations are greater than zero
+        check_arguments(
+            all(durations > 0),
+            "Duration of driven control segments must all be greater than zero.",
+            {"durations": durations},
+        )
+
+        # check if all non-None inputs have the same length
+        input_lengths = {
+            np.array(v).size
+            for v in [rabi_rates, azimuthal_angles, detunings, durations]
+            if v is not None
         }
 
         check_arguments(
-            len(parameter_length) == 1,
-            "rabi rates, azimuthal angles, detunings and durations "
-            "must be of same length.",
+            len(input_lengths) == 1,
+            "If set, rabi rates, azimuthal angles, detunings and durations "
+            "must be of same length",
             {
                 "rabi_rates": rabi_rates,
                 "azimuthal_angles": azimuthal_angles,
@@ -120,18 +127,24 @@ class DrivenControl:
             },
         )
 
+        duration_count = len(durations)
+
+        if rabi_rates is None:
+            rabi_rates = np.zeros(duration_count)
+        if azimuthal_angles is None:
+            azimuthal_angles = np.zeros(duration_count)
+        if detunings is None:
+            detunings = np.zeros(duration_count)
+
+        rabi_rates = np.asarray(rabi_rates, dtype=np.float64)
+        azimuthal_angles = np.asarray(azimuthal_angles, dtype=np.float64)
+        detunings = np.asarray(detunings, dtype=np.float64)
+
         # check if all the rabi_rates are greater than zero
         check_arguments(
             all(rabi_rates >= 0.0),
             "All rabi rates must be greater than zero.",
             {"rabi_rates": rabi_rates},
-        )
-
-        # check if all the durations are greater than zero
-        check_arguments(
-            all(durations > 0),
-            "Duration of driven control segments must all be greater than zero.",
-            {"durations": durations},
         )
 
         self.rabi_rates = rabi_rates
@@ -155,7 +168,7 @@ class DrivenControl:
     @property
     def maximum_rabi_rate(self) -> float:
         r"""
-        Returns the maximum Rabi rate of the control.
+Returns the maximum Rabi rate of the control.
 
         Returns
         -------
@@ -168,7 +181,7 @@ class DrivenControl:
     @property
     def maximum_detuning(self) -> float:
         r"""
-        Returns the maximum detuning of the control.
+Returns the maximum detuning of the control.
 
         Returns
         -------
@@ -180,7 +193,7 @@ class DrivenControl:
     @property
     def amplitude_x(self) -> np.ndarray:
         r"""
-        Returns the x-amplitude.
+Returns the x-amplitude.
 
         Returns
         -------
@@ -193,7 +206,7 @@ class DrivenControl:
     @property
     def amplitude_y(self) -> np.ndarray:
         r"""
-        Returns the y-amplitude.
+Returns the y-amplitude.
 
         Returns
         -------
@@ -206,7 +219,7 @@ class DrivenControl:
     @property
     def angles(self) -> np.ndarray:
         r"""
-        Returns the Bloch sphere rotation angles.
+Returns the Bloch sphere rotation angles.
 
         Returns
         -------
@@ -225,7 +238,7 @@ class DrivenControl:
     @property
     def directions(self) -> np.ndarray:
         r"""
-        Returns the Bloch sphere rotation directions.
+Returns the Bloch sphere rotation directions.
 
         Returns
         -------
@@ -264,7 +277,7 @@ class DrivenControl:
     @property
     def times(self) -> np.ndarray:
         r"""
-        Returns the boundary times of the control segments.
+Returns the boundary times of the control segments.
 
         Returns
         ------
@@ -278,7 +291,7 @@ class DrivenControl:
     @property
     def maximum_duration(self) -> float:
         r"""
-        Returns the duration of the longest control segment.
+Returns the duration of the longest control segment.
 
         Returns
         -------
@@ -291,7 +304,7 @@ class DrivenControl:
     @property
     def minimum_duration(self) -> float:
         r"""
-        Returns the duration of the shortest control segment.
+Returns the duration of the shortest control segment.
 
         Returns
         -------
@@ -304,7 +317,7 @@ class DrivenControl:
     @property
     def duration(self) -> float:
         r"""
-        Returns the total duration of the control.
+Returns the total duration of the control.
 
         Returns
         -------
