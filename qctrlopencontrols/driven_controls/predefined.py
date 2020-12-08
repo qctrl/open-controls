@@ -16,7 +16,10 @@
 Module for defining commonly used driven controls.
 """
 
-from typing import List
+from typing import (
+    List,
+    Optional,
+)
 
 import numpy as np
 
@@ -113,9 +116,9 @@ def _derive_segments(
 
 def new_primitive_control(
     rabi_rotation: float,
-    azimuthal_angle: float = 0.0,
-    maximum_rabi_rate: float = 2.0 * np.pi,
-    **kwargs
+    azimuthal_angle: float,
+    maximum_rabi_rate: float,
+    name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
     Creates a primitive (square) driven control.
@@ -124,13 +127,12 @@ def new_primitive_control(
     ----------
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control.
-    maximum_rabi_rate : float, optional
+    maximum_rabi_rate : float
         The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
-        Defaults to :math:`2\pi`.
-    azimuthal_angle : float, optional
-        The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
-    kwargs : dict
-        Other keywords required to make a :py:obj:`DrivenControl`.
+    azimuthal_angle : float
+        The azimuthal angle :math:`\phi` for the rotation.
+    name : str, optional
+        An optional string to name the control. Defaults to ``None``.
 
     Returns
     -------
@@ -156,7 +158,7 @@ def new_primitive_control(
         azimuthal_angles=[azimuthal_angle],
         detunings=[0],
         durations=[rabi_rotation / maximum_rabi_rate],
-        **kwargs,
+        name=name,
     )
 
 
@@ -1122,5 +1124,6 @@ def new_modulated_gaussian_control(
     return DrivenControl(
         rabi_rates=np.abs(modulated_gaussian_segments),
         azimuthal_angles=azimuthal_angles,
+        detunings=np.zeros(segment_count),
         durations=np.array([segment_duration] * segment_count),
     )

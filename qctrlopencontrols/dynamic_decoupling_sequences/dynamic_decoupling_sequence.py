@@ -265,13 +265,13 @@ class DynamicDecouplingSequence:
 
 
 def convert_dds_to_driven_control(
-    dynamic_decoupling_sequence: DynamicDecouplingSequence = None,
-    maximum_rabi_rate: float = 2 * np.pi,
-    maximum_detuning_rate: float = 2 * np.pi,
+    dynamic_decoupling_sequence: DynamicDecouplingSequence,
+    maximum_rabi_rate: float,
+    maximum_detuning_rate: float,
     minimum_segment_duration: float = 0.0,
-    **kwargs,
+    name: Optional[str] = None,
 ) -> DrivenControl:
-    """
+    r"""
     Creates a Driven Control based on the supplied DDS and other relevant information.
 
     Currently, pulses that simultaneously contain Rabi and detuning rotations are not
@@ -279,21 +279,18 @@ def convert_dds_to_driven_control(
 
     Parameters
     ----------
-    dynamic_decoupling_sequence : qctrlopencontrols.DynamicDecouplingSequence
+    dynamic_decoupling_sequence : DynamicDecouplingSequence
         The base DDS. Its offsets should be sorted in ascending order in time.
-    maximum_rabi_rate : float, optional
-        Maximum Rabi Rate; Defaults to 2*pi.
-        Must be greater than 0, if set.
-    maximum_detuning_rate : float, optional
-        Maximum Detuning Rate; Defaults to 2*pi.
-        Must be greater than 0, if set.
+    maximum_rabi_rate : float
+        Maximum rabi rate.
+    maximum_detuning_rate : float
+        Maximum detuning rate.
     minimum_segment_duration : float, optional
         If set, further restricts the duration of every segment of the Driven Controls.
         Defaults to 0, in which case it does not affect the duration of the pulses.
-        Must be greater or equal to 0, if set.
-    kwargs : dict, optional
-        Options to make the corresponding filter type.
-        I.e. the options for primitive are described in doc for the PrimitivePulse class.
+        Must be greater than or equal to 0, if set.
+    name : str, optional
+        Name of the sequence. Defaults to None.
 
     Returns
     -------
@@ -319,9 +316,9 @@ def convert_dds_to_driven_control(
     segment is determined by (rotation/max_rabi(detuning)_rate).
 
     If the sequence contains operations at either of the extreme ends
-    :math:`\\tau_0=0` and :math:`\\tau_{n+1}=\\tau`(duration of the sequence), there
+    :math:`\tau_0=0` and :math:`\tau_{n+1}=\tau`(duration of the sequence), there
     will be segments outside the boundary (segments starting before :math:`t<0`
-    or finishing after the sequence duration :math:`t>\\tau`). In these cases, the segments
+    or finishing after the sequence duration :math:`t>\tau`). In these cases, the segments
     on either of the extreme ends are shifted appropriately so that their start/end time
     falls entirely within the duration of the sequence.
 
@@ -330,6 +327,7 @@ def convert_dds_to_driven_control(
     If appropriate control segments cannot be created, the conversion process raises
     an ArgumentsValueError.
     """
+
     check_arguments(
         maximum_detuning_rate > 0,
         "Maximum detuning rate must be positive.",
@@ -340,17 +338,12 @@ def convert_dds_to_driven_control(
         "Maximum rabi rate must be positive.",
         {"maximum_rabi_rate": maximum_rabi_rate},
     )
-    if dynamic_decoupling_sequence is None:
-        raise ArgumentsValueError(
-            "Dynamic decoupling sequence must be of " "DynamicDecoupling type.",
-            {"type(dynamic_decoupling_sequence": type(dynamic_decoupling_sequence)},
-        )
 
-    if minimum_segment_duration < 0.0:
-        raise ArgumentsValueError(
-            "Minimum segment duration must be greater or equal to 0.",
-            {"minimum_segment_duration": minimum_segment_duration},
-        )
+    check_arguments(
+        minimum_segment_duration >= 0,
+        "Minimum segment duration must be greater than or equal to 0.",
+        {"minimum_segment_duration": minimum_segment_duration},
+    )
 
     sequence_duration = dynamic_decoupling_sequence.duration
     offsets = dynamic_decoupling_sequence.offsets
@@ -359,25 +352,25 @@ def convert_dds_to_driven_control(
     detuning_rotations = dynamic_decoupling_sequence.detuning_rotations
 
     # check if all Rabi rotations are valid (i.e. have positive values)
-    if np.any(np.less(rabi_rotations, 0.0)):
-        raise ArgumentsValueError(
-            "Sequence contains negative values for Rabi rotations.",
-            {"dynamic_decoupling_sequence": str(dynamic_decoupling_sequence)},
-        )
+    check_arguments(
+        np.all(rabi_rotations >= 0.0),
+        "Sequence contains negative values for Rabi rotations.",
+        {"dynamic_decoupling_sequence": dynamic_decoupling_sequence},
+    )
 
     # check for valid operation
-    if not _check_valid_operation(
-        rabi_rotations=rabi_rotations, detuning_rotations=detuning_rotations
-    ):
-        raise ArgumentsValueError(
-            "Sequence operation includes rabi rotation and "
-            "detuning rotation at the same instance.",
-            {"dynamic_decoupling_sequence": str(dynamic_decoupling_sequence)},
-            extras={
-                "maximum_rabi_rate": maximum_rabi_rate,
-                "maximum_detuning_rate": maximum_detuning_rate,
-            },
-        )
+    check_arguments(
+        _check_valid_operation(
+            rabi_rotations=rabi_rotations, detuning_rotations=detuning_rotations
+        ),
+        "Sequence operation includes rabi rotation and "
+        "detuning rotation at the same instance.",
+        {"dynamic_decoupling_sequence": dynamic_decoupling_sequence},
+        extras={
+            "maximum_rabi_rate": maximum_rabi_rate,
+            "maximum_detuning_rate": maximum_detuning_rate,
+        },
+    )
 
     if offsets.size == 0:
         offsets = np.array([0, sequence_duration])
@@ -478,7 +471,7 @@ def convert_dds_to_driven_control(
             azimuthal_angles=[0.0],
             detunings=[0.0],
             durations=[sequence_duration],
-            **kwargs,
+            name=name,
         )
 
     control_rabi_rates = np.zeros((operations.shape[1] * 2,))
@@ -523,7 +516,7 @@ def convert_dds_to_driven_control(
         azimuthal_angles=control_azimuthal_angles,
         detunings=control_detunings,
         durations=control_durations,
-        **kwargs,
+        name=name,
     )
 
 
