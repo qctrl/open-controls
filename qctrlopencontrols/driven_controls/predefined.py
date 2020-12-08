@@ -69,17 +69,14 @@ def _get_transformed_rabi_rotation_wimperis(rabi_rotation: float) -> float:
     float
         The transformed angle as per definition for the Wimperis 1 (BB1) control.
 
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
     """
+
     # Raise error if the polar angle is incorrect
-    if rabi_rotation > 4 * np.pi:
-        raise ArgumentsValueError(
-            "The polar angle must be between -4 pi and 4 pi (inclusive).",
-            {"rabi_rotation": rabi_rotation},
-        )
+    check_arguments(
+        rabi_rotation <= 4 * np.pi,
+        "The polar angle must be between -4 pi and 4 pi (inclusive).",
+        {"rabi_rotation": rabi_rotation},
+    )
     return np.arccos(-rabi_rotation / (4 * np.pi))
 
 
@@ -164,9 +161,9 @@ def new_primitive_control(
 
 def new_bb1_control(
     rabi_rotation: float,
-    azimuthal_angle: float = 0.0,
-    maximum_rabi_rate: float = 2.0 * np.pi,
-    **kwargs
+    azimuthal_angle: float,
+    maximum_rabi_rate: float,
+    name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
     Creates a BB1 (Wimperis) driven control.
@@ -183,8 +180,8 @@ def new_bb1_control(
         Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
-    kwargs : dict
-        Other keywords required to make a :py:obj:`DrivenControl`.
+    name : str, optional
+        An optional string to name the control. Defaults to ``None``.
 
     Returns
     -------
@@ -229,16 +226,14 @@ def new_bb1_control(
         azimuthal_angle + phi_p,
     ]
     detunings = [0] * 4
-    durations = [
-        rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rotations
-    ]
+    durations = [rabi_rotation / maximum_rabi_rate for rabi_rotation in rabi_rotations]
 
     return DrivenControl(
         rabi_rates=rabi_rates,
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs,
+        name=name,
     )
 
 
