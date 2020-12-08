@@ -73,7 +73,7 @@ def _get_transformed_rabi_rotation_wimperis(rabi_rotation: float) -> float:
 
     # Raise error if the polar angle is incorrect
     check_arguments(
-        rabi_rotation <= 4 * np.pi,
+        -4 * np.pi <= rabi_rotation <= 4 * np.pi,
         "The polar angle must be between -4 pi and 4 pi (inclusive).",
         {"rabi_rotation": rabi_rotation},
     )
