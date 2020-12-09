@@ -113,8 +113,8 @@ def _derive_segments(
 
 def new_primitive_control(
     rabi_rotation: float,
-    azimuthal_angle: float,
     maximum_rabi_rate: float,
+    azimuthal_angle: float = 0.0,
     name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
@@ -127,7 +127,7 @@ def new_primitive_control(
     maximum_rabi_rate : float
         The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
     azimuthal_angle : float
-        The azimuthal angle :math:`\phi` for the rotation.
+        The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     name : str, optional
         An optional string to name the control. Defaults to ``None``.
 
@@ -161,8 +161,8 @@ def new_primitive_control(
 
 def new_bb1_control(
     rabi_rotation: float,
-    azimuthal_angle: float,
     maximum_rabi_rate: float,
+    azimuthal_angle: float = 0.0,
     name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
@@ -177,7 +177,6 @@ def new_bb1_control(
         The total Rabi rotation :math:`\theta` to be performed by the driven control.
     maximum_rabi_rate : float, optional
         The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
-        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     name : str, optional
