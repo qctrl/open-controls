@@ -15,9 +15,9 @@
 """
 Driven control module.
 """
+import csv
 import json
 from typing import (
-    Any,
     Dict,
     Optional,
 )
@@ -331,91 +331,52 @@ class DrivenControl:
 
         return np.sum(self.durations)
 
-    def _qctrl_expanded_export_content(self, file_type, coordinates):
+    def _qctrl_expanded_export_content(self, coordinates: str) -> Dict:
         """
         Prepare the content to be saved in Q-CTRL expanded format.
 
         Parameters
         ----------
-        file_type : str, optional
-            One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
             Indicates the co-ordinate system requested. Must be one of
-            'cylindrical', 'cartesian' or 'polar'; defaults to 'cylindrical'
+            'cylindrical', 'cartesian' or 'polar'. Defaults to 'cylindrical'.
 
         Returns
         -------
-        list or dict
-            Based on file_type; list if 'CSV', dict if 'JSON'
+        Dict
+            A dictionary containing the information of the control.
         """
-        control_info = None
-        amplitude_x = self.amplitude_x
-        amplitude_y = self.amplitude_y
+
+        control_info = {
+            "maximum_rabi_rate": self.maximum_rabi_rate,
+            "detuning": list(self.detunings),
+            "duration": list(self.durations),
+        }
+
+        if self.name is not None:
+            control_info["name"] = self.name
+
         if coordinates == Coordinate.CARTESIAN.value:
-            if file_type == FileType.CSV.value:
-                control_info = list()
-                control_info.append(
-                    "amplitude_x,amplitude_y,detuning,duration,maximum_rabi_rate"
-                )
-                for segment_idx in range(self.number_of_segments):
-                    control_info.append(
-                        "{},{},{},{},{}".format(
-                            amplitude_x[segment_idx] / self.maximum_rabi_rate,
-                            amplitude_y[segment_idx] / self.maximum_rabi_rate,
-                            self.detunings[segment_idx],
-                            self.durations[segment_idx],
-                            self.maximum_rabi_rate,
-                        )
-                    )
-            else:
-                control_info = dict()
-                if self.name is not None:
-                    control_info["name"] = self.name
-                control_info["maximum_rabi_rate"] = self.maximum_rabi_rate
-                control_info["amplitude_x"] = list(amplitude_x / self.maximum_rabi_rate)
-                control_info["amplitude_y"] = list(amplitude_y / self.maximum_rabi_rate)
-                control_info["detuning"] = list(self.detunings)
-                control_info["duration"] = list(self.durations)
-
+            control_info["amplitude_x"] = list(
+                self.amplitude_x / self.maximum_rabi_rate
+            )
+            control_info["amplitude_y"] = list(
+                self.amplitude_y / self.maximum_rabi_rate
+            )
         else:
-
-            if file_type == FileType.CSV.value:
-                control_info = list()
-                control_info.append(
-                    "rabi_rate,azimuthal_angle,detuning,duration,maximum_rabi_rate"
-                )
-                for segment_idx in range(self.number_of_segments):
-                    control_info.append(
-                        "{},{},{},{},{}".format(
-                            self.rabi_rates[segment_idx] / self.maximum_rabi_rate,
-                            self.azimuthal_angles[segment_idx],
-                            self.detunings[segment_idx],
-                            self.durations[segment_idx],
-                            self.maximum_rabi_rate,
-                        )
-                    )
-
-            else:
-                control_info = dict()
-                if self.name is not None:
-                    control_info["name"] = self.name
-                control_info["maximum_rabi_rate"] = self.maximum_rabi_rate
-                control_info["rabi_rates"] = list(
-                    self.rabi_rates / self.maximum_rabi_rate
-                )
-                control_info["azimuthal_angles"] = list(self.azimuthal_angles)
-                control_info["detuning"] = list(self.detunings)
-                control_info["duration"] = list(self.durations)
+            control_info["rabi_rates"] = list(self.rabi_rates / self.maximum_rabi_rate)
+            control_info["azimuthal_angles"] = list(self.azimuthal_angles)
 
         return control_info
 
     def _export_to_qctrl_expanded_format(
         self,
-        filename=None,
+        filename,
         file_type=FileType.CSV.value,
         coordinates=Coordinate.CYLINDRICAL.value,
     ):
-        """Private method to save control in qctrl_expanded_format
+        """
+        Saves control in qctrl_expanded_format.
 
         Parameters
         ----------
@@ -429,9 +390,8 @@ class DrivenControl:
             'cylindrical', 'cartesian'; defaults to 'cylindrical'
         """
 
-        control_info = self._qctrl_expanded_export_content(
-            file_type=file_type, coordinates=coordinates
-        )
+        control_info = self._qctrl_expanded_export_content(coordinates=coordinates)
+
         if file_type == FileType.CSV.value:
             with open(filename, "wt") as handle:
 
@@ -443,7 +403,7 @@ class DrivenControl:
 
     def export_to_file(
         self,
-        filename=None,
+        filename,
         file_format=FileFormat.QCTRL.value,
         file_type=FileType.CSV.value,
         coordinates=Coordinate.CYLINDRICAL.value,
@@ -463,11 +423,6 @@ class DrivenControl:
         coordinates : str, optional
             The coordinate system in which to save the control. Must be 'cylindrical' or
             'cartesian'. Defaults to 'cylindrical'.
-
-        Raises
-        ------
-        ArgumentsValueError
-            Raised if some of the parameters are invalid.
 
         Notes
         -----
@@ -517,31 +472,26 @@ class DrivenControl:
         _file_formats = [v.value for v in FileFormat]
         _coordinate_systems = [v.value for v in Coordinate]
 
-        if filename is None:
-            raise ArgumentsValueError(
-                "Invalid filename provided.", {"filename": filename}
-            )
+        check_arguments(
+            file_format in _file_formats,
+            "Requested file format is not supported. Please use "
+            "one of {}".format(_file_formats),
+            {"file_format": file_format},
+        )
 
-        if file_format not in _file_formats:
-            raise ArgumentsValueError(
-                "Requested file format is not supported. Please use "
-                "one of {}".format(_file_formats),
-                {"file_format": file_format},
-            )
+        check_arguments(
+            file_type in _file_types,
+            "Requested file type is not supported. Please use "
+            "one of {}".format(_file_types),
+            {"file_type": file_type},
+        )
 
-        if file_type not in _file_types:
-            raise ArgumentsValueError(
-                "Requested file type is not supported. Please use "
-                "one of {}".format(_file_types),
-                {"file_type": file_type},
-            )
-
-        if coordinates not in _coordinate_systems:
-            raise ArgumentsValueError(
-                "Requested coordinate type is not supported. Please use "
-                "one of {}".format(_coordinate_systems),
-                {"coordinates": coordinates},
-            )
+        check_arguments(
+            coordinates in _coordinate_systems,
+            "Requested coordinate type is not supported. Please use "
+            "one of {}".format(_coordinate_systems),
+            {"coordinates": coordinates},
+        )
 
         if file_format == FileFormat.QCTRL.value:
             self._export_to_qctrl_expanded_format(
