@@ -126,7 +126,7 @@ def new_primitive_control(
         The total Rabi rotation :math:`\theta` to be performed by the driven control.
     maximum_rabi_rate : float
         The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
-    azimuthal_angle : float
+    azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     name : str, optional
         An optional string to name the control. Defaults to ``None``.
@@ -175,7 +175,7 @@ def new_bb1_control(
     ----------
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control.
-    maximum_rabi_rate : float, optional
+    maximum_rabi_rate : float
         The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
@@ -238,9 +238,9 @@ def new_bb1_control(
 
 def new_sk1_control(
     rabi_rotation: float,
+    maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    maximum_rabi_rate: float = 2.0 * np.pi,
-    **kwargs
+    name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
     Creates a first order Solovay-Kitaev (SK1) driven control.
@@ -252,13 +252,12 @@ def new_sk1_control(
     ----------
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control.
-    maximum_rabi_rate : float, optional
+    maximum_rabi_rate : float
         The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
-        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
-    kwargs : dict
-        Other keywords required to make a :py:obj:`DrivenControl`.
+    name : str, optional
+        An optional string to name the control. Defaults to ``None``.
 
     Returns
     -------
@@ -312,7 +311,7 @@ def new_sk1_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs,
+        name=name,
     )
 
 
