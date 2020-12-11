@@ -242,9 +242,9 @@ def test_pretty_string_format():
         )
     )
 
-    _pretty_string = "\n".join(_pretty_string)
+    expected_string = "\n".join(_pretty_string)
 
-    assert _pretty_string == str(dd_sequence)
+    assert expected_string == str(dd_sequence)
 
     dd_sequence = DynamicDecouplingSequence(
         duration=_duration,
@@ -282,9 +282,9 @@ def test_pretty_string_format():
             _detuning_rotations[2] / np.pi,
         )
     )
-    _pretty_string = "\n".join(_pretty_string)
+    expected_string = "\n".join(_pretty_string)
 
-    assert _pretty_string == str(dd_sequence)
+    assert expected_string == str(dd_sequence)
 
 
 def test_conversion_to_driven_controls():
@@ -779,17 +779,13 @@ def test_free_evolution_conversion():
     """
     _duration = 10.0
     _name = "test_sequence"
-    _offsets = []
-    _rabi_rotations = []
-    _azimuthal_angles = []
-    _detuning_rotations = []
 
     dd_sequence = DynamicDecouplingSequence(
         duration=_duration,
-        offsets=_offsets,
-        rabi_rotations=_rabi_rotations,
-        azimuthal_angles=_azimuthal_angles,
-        detuning_rotations=_detuning_rotations,
+        offsets=[],
+        rabi_rotations=[],
+        azimuthal_angles=[],
+        detuning_rotations=[],
         name=_name,
     )
 

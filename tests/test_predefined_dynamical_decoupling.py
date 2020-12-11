@@ -313,13 +313,14 @@ def test_walsh_sequence():
             ** binary_order[hamming_weight - 1 - i]
         )
 
-    walsh_relative_offsets = []
-    for i in range(samples - 1):
-        if walsh_array[i] != walsh_array[i + 1]:
-            walsh_relative_offsets.append((i + 1) * (1.0 / samples))
-    walsh_relative_offsets = np.array(walsh_relative_offsets, dtype=np.float)
+    walsh_relative_offsets = np.array(
+        [
+            (i + 1) * (1.0 / samples)
+            for i in range(samples - 1)
+            if walsh_array[i] != walsh_array[i + 1]
+        ]
+    )
     _offsets = duration * walsh_relative_offsets
-    _offsets = np.array(_offsets)
 
     _rabi_rotations = np.pi * np.ones(_offsets.shape)
     _azimuthal_angles = np.zeros(_offsets.shape)
@@ -446,8 +447,9 @@ def test_x_concatenated_sequence():
     )
 
     _spacing = duration / (2 ** concatenation_order)
-    _offsets = [_spacing, 3 * _spacing, 4 * _spacing, 5 * _spacing, 7 * _spacing]
-    _offsets = np.array(_offsets)
+    _offsets = np.array(
+        [_spacing, 3 * _spacing, 4 * _spacing, 5 * _spacing, 7 * _spacing]
+    )
     _rabi_rotations = np.pi * np.ones(_offsets.shape)
 
     _azimuthal_angles = np.zeros(_offsets.shape)
@@ -490,59 +492,46 @@ def test_xy_concatenated_sequence():
     )
 
     _spacing = duration / (2 ** (concatenation_order * 2))
-    _offsets = [
-        _spacing,
-        2 * _spacing,
-        3 * _spacing,
-        4 * _spacing,
-        5 * _spacing,
-        6 * _spacing,
-        7 * _spacing,
-        9 * _spacing,
-        10 * _spacing,
-        11 * _spacing,
-        12 * _spacing,
-        13 * _spacing,
-        14 * _spacing,
-        15 * _spacing,
-    ]
-    _offsets = np.array(_offsets)
-    _rabi_rotations = [
-        np.pi,
-        np.pi,
-        np.pi,
-        0.0,
-        np.pi,
-        np.pi,
-        np.pi,
-        np.pi,
-        np.pi,
-        np.pi,
-        0,
-        np.pi,
-        np.pi,
-        np.pi,
-    ]
-    _rabi_rotations = np.array(_rabi_rotations)
-    _azimuthal_angles = [
-        0,
-        np.pi / 2,
-        0,
-        0,
-        0,
-        np.pi / 2,
-        0,
-        0,
-        np.pi / 2,
-        0,
-        0,
-        0,
-        np.pi / 2,
-        0,
-    ]
-    _azimuthal_angles = np.array(_azimuthal_angles)
-    _detuning_rotations = [0, 0, 0, np.pi, 0, 0, 0, 0, 0, 0, np.pi, 0, 0, 0]
-    _detuning_rotations = np.array(_detuning_rotations)
+    _offsets = np.array(
+        [
+            _spacing,
+            2 * _spacing,
+            3 * _spacing,
+            4 * _spacing,
+            5 * _spacing,
+            6 * _spacing,
+            7 * _spacing,
+            9 * _spacing,
+            10 * _spacing,
+            11 * _spacing,
+            12 * _spacing,
+            13 * _spacing,
+            14 * _spacing,
+            15 * _spacing,
+        ]
+    )
+    _rabi_rotations = np.array(
+        [
+            np.pi,
+            np.pi,
+            np.pi,
+            0.0,
+            np.pi,
+            np.pi,
+            np.pi,
+            np.pi,
+            np.pi,
+            np.pi,
+            0,
+            np.pi,
+            np.pi,
+            np.pi,
+        ]
+    )
+    _azimuthal_angles = np.array(
+        [0, np.pi / 2, 0, 0, 0, np.pi / 2, 0, 0, np.pi / 2, 0, 0, 0, np.pi / 2, 0,]
+    )
+    _detuning_rotations = np.array([0, 0, 0, np.pi, 0, 0, 0, 0, 0, 0, np.pi, 0, 0, 0])
 
     assert np.allclose(_offsets, sequence.offsets)
     assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
