@@ -161,7 +161,7 @@ def test_scofulous_control():
     # Test that exceptions are raised upon wrong inputs for rabi_rotation
     # (SCROFULOUS is only defined for pi/4, pi/2 and pi pulses)
     with pytest.raises(ArgumentsValueError):
-        _ = new_scrofulous_control(rabi_rotation=0.3)
+        _ = new_scrofulous_control(rabi_rotation=0.3, maximum_rabi_rate=2 * np.pi)
 
     # Construct SCROFULOUS controls for target rotations pi/4, pi/2 and pi
     scrofulous_pi = new_scrofulous_control(
