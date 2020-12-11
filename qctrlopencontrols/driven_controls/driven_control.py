@@ -580,46 +580,50 @@ class DrivenControl:
         """
         Prepares a friendly string format for a Driven Control.
         """
-        driven_control_string = list()
+        driven_control = list()
 
         if self.name is not None:
-            driven_control_string.append("{}:".format(self.name))
+            driven_control.append("{}:".format(self.name))
 
-        pretty_rabi_rates = [
-            str(rabi_rate / self.maximum_rabi_rate)
-            if self.maximum_rabi_rate != 0
-            else "0"
-            for rabi_rate in list(self.rabi_rates)
-        ]
-        pretty_rabi_rates = ",".join(pretty_rabi_rates)
-        pretty_azimuthal_angles = [
-            str(azimuthal_angle / np.pi) for azimuthal_angle in self.azimuthal_angles
-        ]
-        pretty_azimuthal_angles = ",".join(pretty_azimuthal_angles)
-        pretty_detuning = [
-            str(detuning / self.maximum_detuning) if self.maximum_detuning != 0 else "0"
-            for detuning in list(self.detunings)
-        ]
-        pretty_detuning = ",".join(pretty_detuning)
+        pretty_rabi_rates = ",".join(
+            [
+                str(rabi_rate / self.maximum_rabi_rate)
+                if self.maximum_rabi_rate != 0
+                else "0"
+                for rabi_rate in self.rabi_rates
+            ]
+        )
 
-        pretty_durations = [
-            str(duration / self.duration) for duration in self.durations
-        ]
-        pretty_durations = ",".join(pretty_durations)
+        pretty_azimuthal_angles = ",".join(
+            [str(azimuthal_angle / np.pi) for azimuthal_angle in self.azimuthal_angles]
+        )
 
-        driven_control_string.append(
+        pretty_detuning = ",".join(
+            [
+                str(detuning / self.maximum_detuning)
+                if self.maximum_detuning != 0
+                else "0"
+                for detuning in self.detunings
+            ]
+        )
+
+        pretty_durations = ",".join(
+            [str(duration / self.duration) for duration in self.durations]
+        )
+
+        driven_control.append(
             "Rabi Rates = [{}] x {}".format(pretty_rabi_rates, self.maximum_rabi_rate)
         )
-        driven_control_string.append(
+        driven_control.append(
             "Azimuthal Angles = [{}] x pi".format(pretty_azimuthal_angles)
         )
-        driven_control_string.append(
+        driven_control.append(
             "Detunings = [{}] x {}".format(pretty_detuning, self.maximum_detuning)
         )
-        driven_control_string.append(
+        driven_control.append(
             "Durations = [{}] x {}".format(pretty_durations, self.duration)
         )
-        driven_control_string = "\n".join(driven_control_string)
+        driven_control_string = "\n".join(driven_control)
 
         return driven_control_string
 
