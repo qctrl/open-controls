@@ -298,13 +298,15 @@ def test_pretty_print():
         durations=_durations,
     )
 
-    _pretty_rabi_rates = ",".join([
-        str(_rabi_rate / _maximum_rabi_rate) for _rabi_rate in _rabi_rates
-    ])
-    _pretty_azimuthal_angles = ",".join([
-        str(azimuthal_angle / np.pi) for azimuthal_angle in _azimuthal_angles
-    ])
-    _pretty_detunings = ",".join([str(detuning / _maximum_detuning) for detuning in _detunings])
+    _pretty_rabi_rates = ",".join(
+        [str(_rabi_rate / _maximum_rabi_rate) for _rabi_rate in _rabi_rates]
+    )
+    _pretty_azimuthal_angles = ",".join(
+        [str(azimuthal_angle / np.pi) for azimuthal_angle in _azimuthal_angles]
+    )
+    _pretty_detunings = ",".join(
+        [str(detuning / _maximum_detuning) for detuning in _detunings]
+    )
     _pretty_durations = ",".join([str(duration / 3.0) for duration in _durations])
 
     _pretty_string = []
@@ -338,10 +340,12 @@ def test_pretty_print():
     )
 
     _pretty_rabi_rates = ",".join(["0", "0", "0"])
-    _pretty_azimuthal_angles = ",".join([
-        str(azimuthal_angle / np.pi) for azimuthal_angle in _azimuthal_angles
-    ])
-    _pretty_detunings = ",".join([str(detuning / _maximum_detuning) for detuning in _detunings])
+    _pretty_azimuthal_angles = ",".join(
+        [str(azimuthal_angle / np.pi) for azimuthal_angle in _azimuthal_angles]
+    )
+    _pretty_detunings = ",".join(
+        [str(detuning / _maximum_detuning) for detuning in _detunings]
+    )
     _pretty_durations = ",".join([str(duration / 3.0) for duration in _durations])
 
     _pretty_string = []
@@ -374,12 +378,12 @@ def test_pretty_print():
         durations=_durations,
     )
 
-    _pretty_rabi_rates = ",".join([
-        str(_rabi_rate / _maximum_rabi_rate) for _rabi_rate in _rabi_rates
-    ])
-    _pretty_azimuthal_angles = ",".join([
-        str(azimuthal_angle / np.pi) for azimuthal_angle in _azimuthal_angles
-    ])
+    _pretty_rabi_rates = ",".join(
+        [str(_rabi_rate / _maximum_rabi_rate) for _rabi_rate in _rabi_rates]
+    )
+    _pretty_azimuthal_angles = ",".join(
+        [str(azimuthal_angle / np.pi) for azimuthal_angle in _azimuthal_angles]
+    )
     _pretty_detunings = ",".join(["0", "0", "0"])
     _pretty_durations = ",".join([str(duration / 3.0) for duration in _durations])
 
