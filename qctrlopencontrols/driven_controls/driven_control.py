@@ -391,12 +391,20 @@ class DrivenControl:
         """
 
         control_info = self._qctrl_expanded_export_content(coordinates=coordinates)
-
         if file_type == FileType.CSV.value:
-            with open(filename, "wt") as handle:
+            _ = control_info.pop("name")
+            control_info["maximum_rabi_rate"] = [
+                self.maximum_rabi_rate
+            ] * self.number_of_segments
+            field_names = sorted(control_info.keys())
+            with open(filename, "w", newline="") as file:
+                writer = csv.DictWriter(file, fieldnames=field_names)
+                writer.writeheader()
 
-                control_info = "\n".join(control_info)
-                handle.write(control_info)
+                for index in range(self.number_of_segments):
+                    writer.writerow(
+                        {name: control_info[name][index] for name in field_names}
+                    )
         else:
             with open(filename, "wt") as handle:
                 json.dump(control_info, handle, sort_keys=True, indent=4)
