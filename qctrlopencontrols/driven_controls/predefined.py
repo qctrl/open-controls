@@ -317,9 +317,9 @@ def new_sk1_control(
 
 def new_scrofulous_control(
     rabi_rotation: float,
+    maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    maximum_rabi_rate: float = 2.0 * np.pi,
-    **kwargs
+    name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
     Creates a short composite rotation for undoing length over and under shoot (SCROFULOUS) driven
@@ -333,23 +333,17 @@ def new_scrofulous_control(
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control. Must be either
         :math:`\pi/4`, :math:`\pi/2`, or :math:`\pi`.
-    maximum_rabi_rate : float, optional
+    maximum_rabi_rate : float
         The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
-        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
-    kwargs : dict
-        Other keywords required to make a :py:obj:`DrivenControl`.
+    name : str, optional
+        An optional string to name the control. Defaults to ``None``.
 
     Returns
     -------
     DrivenControl
         The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     Notes
     -----
@@ -390,6 +384,12 @@ def new_scrofulous_control(
     def degrees_to_radians(angle_in_degrees):
         return angle_in_degrees / 180 * np.pi
 
+    check_arguments(
+        np.any(np.isclose(rabi_rotation, [np.pi, np.pi / 2, np.pi / 4])),
+        "rabi_rotation angle must be either pi, pi/2 or pi/4",
+        {"rabi_rotation": rabi_rotation},
+    )
+
     if np.isclose(rabi_rotation, np.pi):
         theta_1 = degrees_to_radians(180.0)
         phi_1 = np.arccos(
@@ -402,17 +402,12 @@ def new_scrofulous_control(
             -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
         )
         phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
-    elif np.isclose(rabi_rotation, 0.25 * np.pi):
+    else:
         theta_1 = degrees_to_radians(96.7)
         phi_1 = np.arccos(
             -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
         )
         phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
-    else:
-        raise ArgumentsValueError(
-            "rabi_rotation angle must be either pi, pi/2 or pi/4",
-            {"rabi_rotation": rabi_rotation},
-        )
 
     theta_3 = theta_1
     phi_3 = phi_1
@@ -436,7 +431,7 @@ def new_scrofulous_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs,
+        name=name,
     )
 
 
