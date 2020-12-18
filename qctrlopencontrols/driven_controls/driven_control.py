@@ -15,12 +15,15 @@
 """
 Driven control module.
 """
+import csv
 import json
-from typing import Optional
+from typing import (
+    Dict,
+    Optional,
+)
 
 import numpy as np
 
-from ..exceptions import ArgumentsValueError
 from ..utils import (
     Coordinate,
     FileFormat,
@@ -327,97 +330,57 @@ class DrivenControl:
 
         return np.sum(self.durations)
 
-    def _qctrl_expanded_export_content(self, file_type, coordinates):
+    def _qctrl_expanded_export_content(self, coordinates: str) -> Dict:
         """
         Prepare the content to be saved in Q-CTRL expanded format.
 
         Parameters
         ----------
-        file_type : str, optional
-            One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
-            Indicates the co-ordinate system requested. Must be one of
-            'cylindrical', 'cartesian' or 'polar'; defaults to 'cylindrical'
+            Indicates the co-ordinate system requested. Must be
+            'cylindrical'or 'cartesian'. Defaults to 'cylindrical'.
 
         Returns
         -------
-        list or dict
-            Based on file_type; list if 'CSV', dict if 'JSON'
+        Dict
+            A dictionary containing the information of the control.
         """
-        control_info = None
-        amplitude_x = self.amplitude_x
-        amplitude_y = self.amplitude_y
+
+        control_info = {
+            "maximum_rabi_rate": self.maximum_rabi_rate,
+            "detuning": list(self.detunings),
+            "duration": list(self.durations),
+        }
+
+        if self.name is not None:
+            control_info["name"] = self.name
+
         if coordinates == Coordinate.CARTESIAN.value:
-            if file_type == FileType.CSV.value:
-                control_info = list()
-                control_info.append(
-                    "amplitude_x,amplitude_y,detuning,duration,maximum_rabi_rate"
-                )
-                for segment_idx in range(self.number_of_segments):
-                    control_info.append(
-                        "{},{},{},{},{}".format(
-                            amplitude_x[segment_idx] / self.maximum_rabi_rate,
-                            amplitude_y[segment_idx] / self.maximum_rabi_rate,
-                            self.detunings[segment_idx],
-                            self.durations[segment_idx],
-                            self.maximum_rabi_rate,
-                        )
-                    )
-            else:
-                control_info = dict()
-                if self.name is not None:
-                    control_info["name"] = self.name
-                control_info["maximum_rabi_rate"] = self.maximum_rabi_rate
-                control_info["amplitude_x"] = list(amplitude_x / self.maximum_rabi_rate)
-                control_info["amplitude_y"] = list(amplitude_y / self.maximum_rabi_rate)
-                control_info["detuning"] = list(self.detunings)
-                control_info["duration"] = list(self.durations)
-
+            control_info["amplitude_x"] = list(
+                self.amplitude_x / self.maximum_rabi_rate
+            )
+            control_info["amplitude_y"] = list(
+                self.amplitude_y / self.maximum_rabi_rate
+            )
         else:
-
-            if file_type == FileType.CSV.value:
-                control_info = list()
-                control_info.append(
-                    "rabi_rate,azimuthal_angle,detuning,duration,maximum_rabi_rate"
-                )
-                for segment_idx in range(self.number_of_segments):
-                    control_info.append(
-                        "{},{},{},{},{}".format(
-                            self.rabi_rates[segment_idx] / self.maximum_rabi_rate,
-                            self.azimuthal_angles[segment_idx],
-                            self.detunings[segment_idx],
-                            self.durations[segment_idx],
-                            self.maximum_rabi_rate,
-                        )
-                    )
-
-            else:
-                control_info = dict()
-                if self.name is not None:
-                    control_info["name"] = self.name
-                control_info["maximum_rabi_rate"] = self.maximum_rabi_rate
-                control_info["rabi_rates"] = list(
-                    self.rabi_rates / self.maximum_rabi_rate
-                )
-                control_info["azimuthal_angles"] = list(self.azimuthal_angles)
-                control_info["detuning"] = list(self.detunings)
-                control_info["duration"] = list(self.durations)
+            control_info["rabi_rates"] = list(self.rabi_rates / self.maximum_rabi_rate)
+            control_info["azimuthal_angles"] = list(self.azimuthal_angles)
 
         return control_info
 
     def _export_to_qctrl_expanded_format(
         self,
-        filename=None,
+        filename,
         file_type=FileType.CSV.value,
         coordinates=Coordinate.CYLINDRICAL.value,
     ):
-        """Private method to save control in qctrl_expanded_format
+        """
+        Saves control in qctrl_expanded_format.
 
         Parameters
         ----------
-        filename : str, optional
+        filename : str
             Name and path of the file to save the control into.
-            Defaults to None
         file_type : str, optional
             One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
@@ -425,21 +388,30 @@ class DrivenControl:
             'cylindrical', 'cartesian'; defaults to 'cylindrical'
         """
 
-        control_info = self._qctrl_expanded_export_content(
-            file_type=file_type, coordinates=coordinates
-        )
+        control_info = self._qctrl_expanded_export_content(coordinates=coordinates)
         if file_type == FileType.CSV.value:
-            with open(filename, "wt") as handle:
+            _ = control_info.pop("name")
+            control_info["maximum_rabi_rate"] = [
+                self.maximum_rabi_rate
+            ] * self.number_of_segments
+            field_names = sorted(control_info.keys())
 
-                control_info = "\n".join(control_info)
-                handle.write(control_info)
+            # note that the newline parameter here is necessary
+            # see details at https://docs.python.org/3/library/csv.html#id3
+            with open(filename, "w", newline="") as file:
+                writer = csv.DictWriter(file, fieldnames=field_names)
+                writer.writeheader()
+                for index in range(self.number_of_segments):
+                    writer.writerow(
+                        {name: control_info[name][index] for name in field_names}
+                    )
         else:
             with open(filename, "wt") as handle:
                 json.dump(control_info, handle, sort_keys=True, indent=4)
 
     def export_to_file(
         self,
-        filename=None,
+        filename,
         file_format=FileFormat.QCTRL.value,
         file_type=FileType.CSV.value,
         coordinates=Coordinate.CYLINDRICAL.value,
@@ -459,11 +431,6 @@ class DrivenControl:
         coordinates : str, optional
             The coordinate system in which to save the control. Must be 'cylindrical' or
             'cartesian'. Defaults to 'cylindrical'.
-
-        Raises
-        ------
-        ArgumentsValueError
-            Raised if some of the parameters are invalid.
 
         Notes
         -----
@@ -513,31 +480,26 @@ class DrivenControl:
         _file_formats = [v.value for v in FileFormat]
         _coordinate_systems = [v.value for v in Coordinate]
 
-        if filename is None:
-            raise ArgumentsValueError(
-                "Invalid filename provided.", {"filename": filename}
-            )
+        check_arguments(
+            file_format in _file_formats,
+            "Requested file format is not supported. Please use "
+            "one of {}".format(_file_formats),
+            {"file_format": file_format},
+        )
 
-        if file_format not in _file_formats:
-            raise ArgumentsValueError(
-                "Requested file format is not supported. Please use "
-                "one of {}".format(_file_formats),
-                {"file_format": file_format},
-            )
+        check_arguments(
+            file_type in _file_types,
+            "Requested file type is not supported. Please use "
+            "one of {}".format(_file_types),
+            {"file_type": file_type},
+        )
 
-        if file_type not in _file_types:
-            raise ArgumentsValueError(
-                "Requested file type is not supported. Please use "
-                "one of {}".format(_file_types),
-                {"file_type": file_type},
-            )
-
-        if coordinates not in _coordinate_systems:
-            raise ArgumentsValueError(
-                "Requested coordinate type is not supported. Please use "
-                "one of {}".format(_coordinate_systems),
-                {"coordinates": coordinates},
-            )
+        check_arguments(
+            coordinates in _coordinate_systems,
+            "Requested coordinate type is not supported. Please use "
+            "one of {}".format(_coordinate_systems),
+            {"coordinates": coordinates},
+        )
 
         if file_format == FileFormat.QCTRL.value:
             self._export_to_qctrl_expanded_format(
@@ -567,18 +529,13 @@ class DrivenControl:
             method of the ``qctrl-visualizer`` package. It has keywords 'Rabi rate'
             and 'Detuning' for 'cylindrical' coordinates and 'X amplitude', 'Y amplitude',
             and 'Detuning' for 'cartesian' coordinates.
-
-        Raises
-        ------
-        ArgumentsValueError
-            Raised when an argument is invalid.
         """
 
-        if coordinates not in [v.value for v in Coordinate]:
-            raise ArgumentsValueError(
-                "Unsupported coordinates provided: ",
-                arguments={"coordinates": coordinates},
-            )
+        check_arguments(
+            coordinates in [v.value for v in Coordinate],
+            "Unsupported coordinates provided: ",
+            {"coordinates": coordinates},
+        )
 
         if dimensionless_rabi_rate:
             normalizer = self.maximum_rabi_rate
@@ -618,46 +575,50 @@ class DrivenControl:
         """
         Prepares a friendly string format for a Driven Control.
         """
-        driven_control_string = list()
+        driven_control = list()
 
         if self.name is not None:
-            driven_control_string.append("{}:".format(self.name))
+            driven_control.append("{}:".format(self.name))
 
-        pretty_rabi_rates = [
-            str(rabi_rate / self.maximum_rabi_rate)
-            if self.maximum_rabi_rate != 0
-            else "0"
-            for rabi_rate in list(self.rabi_rates)
-        ]
-        pretty_rabi_rates = ",".join(pretty_rabi_rates)
-        pretty_azimuthal_angles = [
-            str(azimuthal_angle / np.pi) for azimuthal_angle in self.azimuthal_angles
-        ]
-        pretty_azimuthal_angles = ",".join(pretty_azimuthal_angles)
-        pretty_detuning = [
-            str(detuning / self.maximum_detuning) if self.maximum_detuning != 0 else "0"
-            for detuning in list(self.detunings)
-        ]
-        pretty_detuning = ",".join(pretty_detuning)
+        pretty_rabi_rates = ",".join(
+            [
+                str(rabi_rate / self.maximum_rabi_rate)
+                if self.maximum_rabi_rate != 0
+                else "0"
+                for rabi_rate in self.rabi_rates
+            ]
+        )
 
-        pretty_durations = [
-            str(duration / self.duration) for duration in self.durations
-        ]
-        pretty_durations = ",".join(pretty_durations)
+        pretty_azimuthal_angles = ",".join(
+            [str(azimuthal_angle / np.pi) for azimuthal_angle in self.azimuthal_angles]
+        )
 
-        driven_control_string.append(
+        pretty_detuning = ",".join(
+            [
+                str(detuning / self.maximum_detuning)
+                if self.maximum_detuning != 0
+                else "0"
+                for detuning in self.detunings
+            ]
+        )
+
+        pretty_durations = ",".join(
+            [str(duration / self.duration) for duration in self.durations]
+        )
+
+        driven_control.append(
             "Rabi Rates = [{}] x {}".format(pretty_rabi_rates, self.maximum_rabi_rate)
         )
-        driven_control_string.append(
+        driven_control.append(
             "Azimuthal Angles = [{}] x pi".format(pretty_azimuthal_angles)
         )
-        driven_control_string.append(
+        driven_control.append(
             "Detunings = [{}] x {}".format(pretty_detuning, self.maximum_detuning)
         )
-        driven_control_string.append(
+        driven_control.append(
             "Durations = [{}] x {}".format(pretty_durations, self.duration)
         )
-        driven_control_string = "\n".join(driven_control_string)
+        driven_control_string = "\n".join(driven_control)
 
         return driven_control_string
 
