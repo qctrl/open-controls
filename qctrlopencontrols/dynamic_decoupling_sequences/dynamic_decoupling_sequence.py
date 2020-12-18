@@ -531,9 +531,4 @@ def _check_valid_operation(
     rabi_rotation_index = set(np.where(rabi_rotations > 0.0)[0])
     detuning_rotation_index = set(np.where(detuning_rotations > 0.0)[0])
 
-    check_common_index = rabi_rotation_index.intersection(detuning_rotation_index)
-
-    if check_common_index:
-        return False
-
-    return True
+    return not rabi_rotation_index.intersection(detuning_rotation_index)
