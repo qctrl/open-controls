@@ -3,8 +3,7 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -871,9 +870,7 @@ def new_corpse_in_scrofulous_control(
     rabi_rates = [maximum_rabi_rate] * 9
     azimuthal_angles = total_angles[:, 1]
     detunings = [0] * 9
-    durations = [
-        rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rotations
-    ]
+    durations = [rabi_rotation / maximum_rabi_rate for rabi_rotation in rabi_rotations]
 
     return DrivenControl(
         rabi_rates=rabi_rates,
@@ -886,9 +883,9 @@ def new_corpse_in_scrofulous_control(
 
 def new_wamf1_control(
     rabi_rotation: float,
+    maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    maximum_rabi_rate: float = 2.0 * np.pi,
-    **kwargs
+    name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
     Creates a first-order Walsh amplitude-modulated filter (WAMF1) driven control.
@@ -900,23 +897,17 @@ def new_wamf1_control(
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control. Must be either
         :math:`\pi/4`, :math:`\pi/2`, or :math:`\pi`.
-    maximum_rabi_rate : float, optional
+    maximum_rabi_rate : float
         The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
-        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
-    kwargs : dict
-        Other keywords required to make a :py:obj:`DrivenControl`.
+    name : str, optional
+        An optional string to name the control. Defaults to ``None``.
 
     Returns
     -------
     DrivenControl
         The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     Notes
     -----
@@ -949,27 +940,26 @@ def new_wamf1_control(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
 
+    check_arguments(
+        np.any(np.isclose(rabi_rotation, [np.pi, np.pi / 2, np.pi / 4])),
+        "rabi_rotation angle must be either pi, pi/2 or pi/4",
+        {"rabi_rotation": rabi_rotation},
+    )
+
     if np.isclose(rabi_rotation, np.pi):
         theta_plus = np.pi
         theta_minus = np.pi / 2.0
     elif np.isclose(rabi_rotation, 0.5 * np.pi):
         theta_plus = np.pi * (2.5 + 0.65667825) / 4.0
         theta_minus = np.pi * (2.5 - 0.65667825) / 4.0
-    elif np.isclose(rabi_rotation, 0.25 * np.pi):
+    else:
         theta_plus = np.pi * (2.25 + 0.36256159) / 4.0
         theta_minus = np.pi * (2.25 - 0.36256159) / 4.0
-    else:
-        raise ArgumentsValueError(
-            "rabi_rotation angle must be either pi, pi/2 or pi/4",
-            {"rabi_rotation": rabi_rotation},
-        )
 
     rabi_rotations = [theta_plus, theta_minus, theta_minus, theta_plus]
     segment_duration = theta_plus / maximum_rabi_rate
 
-    rabi_rates = [
-        rabi_rotation_ / segment_duration for rabi_rotation_ in rabi_rotations
-    ]
+    rabi_rates = [rabi_rotation / segment_duration for rabi_rotation in rabi_rotations]
     azimuthal_angles = [azimuthal_angle] * 4
     detunings = [0] * 4
     durations = [segment_duration] * 4
@@ -979,7 +969,7 @@ def new_wamf1_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs,
+        name=name,
     )
 
 
