@@ -23,7 +23,6 @@ from typing import (
 
 import numpy as np
 
-from ..exceptions import ArgumentsValueError
 from ..utils import check_arguments
 from .driven_control import DrivenControl
 
@@ -317,9 +316,9 @@ def new_sk1_control(
 
 def new_scrofulous_control(
     rabi_rotation: float,
+    maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    maximum_rabi_rate: float = 2.0 * np.pi,
-    **kwargs
+    name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
     Creates a short composite rotation for undoing length over and under shoot (SCROFULOUS) driven
@@ -333,23 +332,17 @@ def new_scrofulous_control(
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control. Must be either
         :math:`\pi/4`, :math:`\pi/2`, or :math:`\pi`.
-    maximum_rabi_rate : float, optional
+    maximum_rabi_rate : float
         The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
-        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
-    kwargs : dict
-        Other keywords required to make a :py:obj:`DrivenControl`.
+    name : str, optional
+        An optional string to name the control. Defaults to ``None``.
 
     Returns
     -------
     DrivenControl
         The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     Notes
     -----
@@ -390,6 +383,12 @@ def new_scrofulous_control(
     def degrees_to_radians(angle_in_degrees):
         return angle_in_degrees / 180 * np.pi
 
+    check_arguments(
+        np.any(np.isclose(rabi_rotation, [np.pi, np.pi / 2, np.pi / 4])),
+        "rabi_rotation angle must be either pi, pi/2 or pi/4",
+        {"rabi_rotation": rabi_rotation},
+    )
+
     if np.isclose(rabi_rotation, np.pi):
         theta_1 = degrees_to_radians(180.0)
         phi_1 = np.arccos(
@@ -402,17 +401,12 @@ def new_scrofulous_control(
             -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
         )
         phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
-    elif np.isclose(rabi_rotation, 0.25 * np.pi):
+    else:
         theta_1 = degrees_to_radians(96.7)
         phi_1 = np.arccos(
             -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
         )
         phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
-    else:
-        raise ArgumentsValueError(
-            "rabi_rotation angle must be either pi, pi/2 or pi/4",
-            {"rabi_rotation": rabi_rotation},
-        )
 
     theta_3 = theta_1
     phi_3 = phi_1
@@ -436,15 +430,15 @@ def new_scrofulous_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs,
+        name=name,
     )
 
 
 def new_corpse_control(
     rabi_rotation: float,
+    maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    maximum_rabi_rate: float = 2.0 * np.pi,
-    **kwargs
+    name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
     Creates a compensating for off-resonance with a pulse sequence (CORPSE) driven control.
@@ -455,13 +449,12 @@ def new_corpse_control(
     ----------
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control.
-    maximum_rabi_rate : float, optional
+    maximum_rabi_rate : float
         The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
-        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
-    kwargs : dict
-        Other keywords required to make a :py:obj:`DrivenControl`.
+    name : str, optional
+        An optional string to name the control. Defaults to ``None``.
 
     Returns
     -------
@@ -519,15 +512,15 @@ def new_corpse_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs,
+        name=name,
     )
 
 
 def new_corpse_in_bb1_control(
     rabi_rotation: float,
+    maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    maximum_rabi_rate: float = 2.0 * np.pi,
-    **kwargs
+    name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
     Creates a CORPSE concatenated within BB1 (CORPSE in BB1) driven control.
@@ -539,13 +532,12 @@ def new_corpse_in_bb1_control(
     ----------
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control.
-    maximum_rabi_rate : float, optional
+    maximum_rabi_rate : float
         The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
-        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
-    kwargs : dict
-        Other keywords required to make a :py:obj:`DrivenControl`.
+    name : str, optional
+        An optional string to name the control. Defaults to ``None``.
 
     Returns
     -------
@@ -625,15 +617,15 @@ def new_corpse_in_bb1_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs,
+        name=name,
     )
 
 
 def new_corpse_in_sk1_control(
     rabi_rotation: float,
+    maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    maximum_rabi_rate: float = 2.0 * np.pi,
-    **kwargs
+    name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
     Creates a CORPSE concatenated within SK1 (CORPSE in SK1) driven control.
@@ -645,13 +637,12 @@ def new_corpse_in_sk1_control(
     ----------
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control.
-    maximum_rabi_rate : float, optional
+    maximum_rabi_rate : float
         The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
-        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
-    kwargs : dict
-        Other keywords required to make a :py:obj:`DrivenControl`.
+    name : str, optional
+        An optional string to name the control. Defaults to ``None``.
 
     Returns
     -------
@@ -728,15 +719,15 @@ def new_corpse_in_sk1_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs,
+        name=name,
     )
 
 
 def new_corpse_in_scrofulous_control(
     rabi_rotation: float,
+    maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    maximum_rabi_rate: float = 2.0 * np.pi,
-    **kwargs
+    name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
     Creates a CORPSE concatenated within SCROFULOUS (CORPSE in SCROFULOUS) driven control.
@@ -749,23 +740,17 @@ def new_corpse_in_scrofulous_control(
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control. Must be either
         :math:`\pi/4`, :math:`\pi/2`, or :math:`\pi`.
-    maximum_rabi_rate : float, optional
+    maximum_rabi_rate : float
         The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
-        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
-    kwargs : dict
-        Other keywords required to make a :py:obj:`DrivenControl`.
+    name : str, optional
+        An optional string to name the control. Defaults to ``None``.
 
     Returns
     -------
     DrivenControl
         The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     See Also
     --------
@@ -833,6 +818,12 @@ def new_corpse_in_scrofulous_control(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
 
+    check_arguments(
+        np.any(np.isclose(rabi_rotation, [np.pi, np.pi / 2, np.pi / 4])),
+        "rabi_rotation angle must be either pi, pi/2 or pi/4",
+        {"rabi_rotation": rabi_rotation},
+    )
+
     # Create a lookup table for rabi rotation and phase angles, taken from
     # the Cummins paper. Note: values in the paper are in degrees.
     def degrees_to_radians(angle_in_degrees):
@@ -850,17 +841,12 @@ def new_corpse_in_scrofulous_control(
             -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
         )
         phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
-    elif np.isclose(rabi_rotation, 0.25 * np.pi):
+    else:
         theta_1 = theta_3 = degrees_to_radians(96.7)
         phi_1 = phi_3 = np.arccos(
             -np.pi * np.cos(theta_1) / 2 / theta_1 / np.sin(rabi_rotation / 2)
         )
         phi_2 = phi_1 - np.arccos(-np.pi / 2 / theta_1)
-    else:
-        raise ArgumentsValueError(
-            "rabi_rotation angle must be either pi, pi/2 or pi/4",
-            {"rabi_rotation": rabi_rotation},
-        )
 
     theta_2 = np.pi
 
@@ -884,24 +870,22 @@ def new_corpse_in_scrofulous_control(
     rabi_rates = [maximum_rabi_rate] * 9
     azimuthal_angles = total_angles[:, 1]
     detunings = [0] * 9
-    durations = [
-        rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rotations
-    ]
+    durations = [rabi_rotation / maximum_rabi_rate for rabi_rotation in rabi_rotations]
 
     return DrivenControl(
         rabi_rates=rabi_rates,
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs,
+        name=name,
     )
 
 
 def new_wamf1_control(
     rabi_rotation: float,
+    maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    maximum_rabi_rate: float = 2.0 * np.pi,
-    **kwargs
+    name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
     Creates a first-order Walsh amplitude-modulated filter (WAMF1) driven control.
@@ -913,23 +897,17 @@ def new_wamf1_control(
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control. Must be either
         :math:`\pi/4`, :math:`\pi/2`, or :math:`\pi`.
-    maximum_rabi_rate : float, optional
+    maximum_rabi_rate : float
         The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
-        Defaults to :math:`2\pi`.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
-    kwargs : dict
-        Other keywords required to make a :py:obj:`DrivenControl`.
+    name : str, optional
+        An optional string to name the control. Defaults to ``None``.
 
     Returns
     -------
     DrivenControl
         The driven control :math:`\{(\delta t_n, \Omega_n, \phi_n, \Delta_n)\}`.
-
-    Raises
-    ------
-    ArgumentsValueError
-        Raised when an argument is invalid.
 
     Notes
     -----
@@ -962,27 +940,26 @@ def new_wamf1_control(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
 
+    check_arguments(
+        np.any(np.isclose(rabi_rotation, [np.pi, np.pi / 2, np.pi / 4])),
+        "rabi_rotation angle must be either pi, pi/2 or pi/4",
+        {"rabi_rotation": rabi_rotation},
+    )
+
     if np.isclose(rabi_rotation, np.pi):
         theta_plus = np.pi
         theta_minus = np.pi / 2.0
     elif np.isclose(rabi_rotation, 0.5 * np.pi):
         theta_plus = np.pi * (2.5 + 0.65667825) / 4.0
         theta_minus = np.pi * (2.5 - 0.65667825) / 4.0
-    elif np.isclose(rabi_rotation, 0.25 * np.pi):
+    else:
         theta_plus = np.pi * (2.25 + 0.36256159) / 4.0
         theta_minus = np.pi * (2.25 - 0.36256159) / 4.0
-    else:
-        raise ArgumentsValueError(
-            "rabi_rotation angle must be either pi, pi/2 or pi/4",
-            {"rabi_rotation": rabi_rotation},
-        )
 
     rabi_rotations = [theta_plus, theta_minus, theta_minus, theta_plus]
     segment_duration = theta_plus / maximum_rabi_rate
 
-    rabi_rates = [
-        rabi_rotation_ / segment_duration for rabi_rotation_ in rabi_rotations
-    ]
+    rabi_rates = [rabi_rotation / segment_duration for rabi_rotation in rabi_rotations]
     azimuthal_angles = [azimuthal_angle] * 4
     detunings = [0] * 4
     durations = [segment_duration] * 4
@@ -992,7 +969,7 @@ def new_wamf1_control(
         azimuthal_angles=azimuthal_angles,
         detunings=detunings,
         durations=durations,
-        **kwargs,
+        name=name,
     )
 
 
