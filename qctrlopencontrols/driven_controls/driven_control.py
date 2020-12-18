@@ -337,8 +337,8 @@ class DrivenControl:
         Parameters
         ----------
         coordinates : str, optional
-            Indicates the co-ordinate system requested. Must be one of
-            'cylindrical', 'cartesian' or 'polar'. Defaults to 'cylindrical'.
+            Indicates the co-ordinate system requested. Must be
+            'cylindrical'or 'cartesian'. Defaults to 'cylindrical'.
 
         Returns
         -------
@@ -532,7 +532,7 @@ class DrivenControl:
         """
 
         check_arguments(
-            coordinates not in [v.value for v in Coordinate],
+            coordinates in [v.value for v in Coordinate],
             "Unsupported coordinates provided: ",
             {"coordinates": coordinates},
         )
