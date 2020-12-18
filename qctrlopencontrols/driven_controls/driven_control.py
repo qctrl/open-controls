@@ -24,7 +24,6 @@ from typing import (
 
 import numpy as np
 
-from ..exceptions import ArgumentsValueError
 from ..utils import (
     Coordinate,
     FileFormat,
@@ -380,9 +379,8 @@ class DrivenControl:
 
         Parameters
         ----------
-        filename : str, optional
+        filename : str
             Name and path of the file to save the control into.
-            Defaults to None
         file_type : str, optional
             One of 'CSV' or 'JSON'; defaults to 'CSV'.
         coordinates : str, optional
@@ -397,10 +395,12 @@ class DrivenControl:
                 self.maximum_rabi_rate
             ] * self.number_of_segments
             field_names = sorted(control_info.keys())
+
+            # note that the newline parameter here is necessary
+            # see details at https://docs.python.org/3/library/csv.html#id3
             with open(filename, "w", newline="") as file:
                 writer = csv.DictWriter(file, fieldnames=field_names)
                 writer.writeheader()
-
                 for index in range(self.number_of_segments):
                     writer.writerow(
                         {name: control_info[name][index] for name in field_names}
@@ -529,18 +529,13 @@ class DrivenControl:
             method of the ``qctrl-visualizer`` package. It has keywords 'Rabi rate'
             and 'Detuning' for 'cylindrical' coordinates and 'X amplitude', 'Y amplitude',
             and 'Detuning' for 'cartesian' coordinates.
-
-        Raises
-        ------
-        ArgumentsValueError
-            Raised when an argument is invalid.
         """
 
-        if coordinates not in [v.value for v in Coordinate]:
-            raise ArgumentsValueError(
-                "Unsupported coordinates provided: ",
-                arguments={"coordinates": coordinates},
-            )
+        check_arguments(
+            coordinates not in [v.value for v in Coordinate],
+            "Unsupported coordinates provided: ",
+            {"coordinates": coordinates},
+        )
 
         if dimensionless_rabi_rate:
             normalizer = self.maximum_rabi_rate
