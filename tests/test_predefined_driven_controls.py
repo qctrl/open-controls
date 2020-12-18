@@ -449,7 +449,7 @@ def test_walsh_control():
     # Test that exceptions are raised upon wrong inputs for rabi_rotation
     # (WALSH control is only defined for pi/4, pi/2 and pi pulses)
     with pytest.raises(ArgumentsValueError):
-        _ = new_wamf1_control(rabi_rotation=0.3)
+        _ = new_wamf1_control(rabi_rotation=0.3, maximum_rabi_rate=np.pi)
 
     # test pi rotation
     walsh_pi = new_wamf1_control(
