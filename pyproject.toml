@@ -4,29 +4,33 @@ version = "7.0.0"
 description = "Q-CTRL Open Controls"
 license = "Apache-2.0"
 authors = ["Q-CTRL <support@q-ctrl.com>"]
-readme = "README.md"
+maintainers = ["Q-CTRL <support@q-ctrl.com>"]
+readme = "DESCRIPTION.md"
+homepage = "https://q-ctrl.com"
+repository = ""
+documentation = "https://docs.q-ctrl.com/references/python/qctrl"
 keywords = [
-    "quantum", 
-    "computing", 
-    "open source", 
-    "engineering"
+    "q-ctrl",
+    "qctrl",
+    "quantum control"
 ]
 classifiers = [
-            "Development Status :: 5 - Production/Stable",
-            "Environment :: Console",
-            "Intended Audience :: Developers",
-            "Intended Audience :: Education",
-            "Intended Audience :: Science/Research",
-            "License :: OSI Approved :: Apache Software License",
-            "Natural Language :: English",
-            "Operating System :: OS Independent",
-            "Programming Language :: Python :: 3.6",
-            "Topic :: Scientific/Engineering :: Physics",
-            "Topic :: Scientific/Engineering :: Visualization",
-            "Topic :: Software Development :: Embedded Systems",
-            "Topic :: System :: Distributed Computing"
-        ]
-repository = "https://github.com/qctrl/python-open-controls"
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Software Development :: Embedded Systems",
+    "Topic :: System :: Distributed Computing"
+]
 packages = [
     { include = "qctrlopencontrols" },
 ]
@@ -49,6 +53,10 @@ sphinx-rtd-theme = "^0.4.3"
 nbval = "^0.9.5"
 qctrl-visualizer = "^2.3.0"
 isort = "^5.4.2"
+
+[tool.poetry.urls]
+GitHub = "https://github.com/qctrl"
+Twitter = "https://twitter.com/qctrlHQ"
 
 [tool.black]
 exclude = '''
