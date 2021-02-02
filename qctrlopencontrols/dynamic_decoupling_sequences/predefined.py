@@ -957,7 +957,7 @@ def new_xy_concatenated_sequence(
     ----------
     duration : float
         The total duration of the sequence :math:`\tau` (in seconds).
-    concatenation_order : int, optional
+    concatenation_order : int
         The number of concatenation of base sequence :math:`l`.
     pre_post_rotation : bool, optional
         If ``True``, a :math:`X_{\pi/2}` rotation is added at the
@@ -1128,22 +1128,22 @@ def new_xy_concatenated_sequence(
 
 
 def _carr_purcell_meiboom_gill_offsets(
-    duration: float = 1.0, offset_count: int = 1
+    duration: float, offset_count: int
 ) -> np.ndarray:
     """
     Calculates offset values for Carr-Purcell_Meiboom-Gill sequence.
 
     Parameters
     ----------
-    duration : float, optional
-        Duration of the total sequence. Defaults to 1.0.
-    offset_count : int, optional
-        The number of offsets. Defaults to 1.
+    duration : float
+        Duration of the total sequence.
+    offset_count : int
+        The number of offsets
 
     Returns
     -------
     numpy.ndarray
-        The offset values
+        The offset values.
     """
 
     spacing = 1.0 / offset_count
@@ -1165,13 +1165,13 @@ def _uhrig_single_axis_offsets(duration: float, offset_count: int) -> np.ndarray
     ----------
     duration : float
         Duration of the total sequence.
-    offset_count : int, optional
+    offset_count : int
         The number of offsets.
 
     Returns
     -------
     numpy.ndarray
-        The offset values
+        The offset values.
     """
 
     # prepare the offsets for delta comb
