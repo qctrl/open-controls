@@ -125,6 +125,44 @@ To build locally:
 
 The generated HTML will appear in the `docs/_build/html` directory.
 
+### Formatting, linting, and static analysis
+
+Code is formatted, linted and checked using the following tools:
+- [Black](https://github.com/psf/black)
+- [Pylint](https://pypi.org/project/pylint/)
+- [isort](https://github.com/timothycrosley/isort)
+- [mypy](http://mypy-lang.org/)
+
+These checks are run on all code merged to master, and may also be run locally from the python-open-controls
+directory:
+
+```shell
+pip install black pylint_runner isort mypy
+mypy
+isort --check
+black --check .
+pylint_runner
+```
+
+Black and isort, in addition to checking code, can also automatically apply fixes. To fix all code
+in the python-open-controls tree, run:
+
+```shell
+isort
+black .
+```
+
+You can also run these checks only in the files that you changed by using the
+`pre-commit` tool. To use it, run:
+
+```shell
+pip install pre-commit
+pre-commit install
+```
+
+With this, the checks will run every time that you commit code with
+`git commit`.
+
 ## Credits
 
 See

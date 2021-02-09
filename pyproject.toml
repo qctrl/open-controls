@@ -53,6 +53,7 @@ sphinx-rtd-theme = "^0.4.3"
 nbval = "^0.9.5"
 qctrl-visualizer = "^2.3.0"
 isort = "^5.7.0"
+pre-commit = "^2.9.3"
 
 [tool.poetry.urls]
 GitHub = "https://github.com/qctrl"

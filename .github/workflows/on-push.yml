@@ -29,19 +29,10 @@ jobs:
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
         ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci docker run qctrl/python-build:3.7 /scripts/install-python-dependencies.sh
-    - name: Run Black
+        ./ci docker run qctrl/ci-images:python-3.7-ci /scripts/install-python-dependencies.sh
+    - name: Run Pre-Commit
       run: |
-        ./ci docker run qctrl/python-build:3.7 poetry run black -- --check .
-    - name: Run isort
-      run: |
-        ./ci docker run qctrl/python-build:3.7 poetry run isort -- --check -v .
-    - name: Run Pylint
-      run: |
-        ./ci docker run qctrl/python-build:3.7 poetry run pylint_runner
-    - name: Run Mypy
-      run: |
-        ./ci docker run qctrl/python-build:3.7 poetry run mypy
+        ./ci docker run qctrl/ci-images:python-3.7-ci poetry run pre-commit run -- -a
 
   pytest:
     runs-on: ubuntu-latest
