@@ -1,0 +1,45 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+# skip all the files in docs/
+exclude: 'docs/'
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+    -   id: check-added-large-files
+    -   id: check-toml
+-   repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: poetry run black
+        language: system
+        require_serial: true
+        types: [python]
+        exclude: setup.py # https://github.com/psf/black/issues/395
+      - id: isort
+        name: isort
+        entry: poetry run isort
+        require_serial: true
+        language: system
+        types: [python]
+        args: ['--filter-files']
+        exclude: setup.py
+      - id: mypy
+        name: mypy
+        entry: poetry run mypy
+        require_serial: true
+        language: system
+        types: [python]
+        exclude: setup.py
+      - id: pylint
+        entry: poetry run pylint --rcfile=.pylintrc
+        name: pylint
+        language: system
+        types: [file, python]
+        # when passing in a single file as argument the ignore entry in the .pylintrc does
+        # not seem to be considered.
+        exclude: .*(venv|setup\.py|\.conf\.py)

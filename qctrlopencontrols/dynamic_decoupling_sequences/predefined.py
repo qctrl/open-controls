@@ -122,15 +122,9 @@ def _add_pre_post_rotations(
     if (preserves_10 and preserves_11) or (not preserves_10 and not preserves_11):
         final_azimuthal = np.pi
 
-    offsets = np.insert(
-        offsets,
-        [0, offsets.shape[0]],
-        [0, duration],
-    )
+    offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration],)
     rabi_rotations = np.insert(
-        rabi_rotations,
-        [0, rabi_rotations.shape[0]],
-        [rabi_value, rabi_value],
+        rabi_rotations, [0, rabi_rotations.shape[0]], [rabi_value, rabi_value],
     )
     azimuthal_angles = np.insert(
         azimuthal_angles,

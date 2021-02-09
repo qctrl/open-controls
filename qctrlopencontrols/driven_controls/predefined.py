@@ -1020,10 +1020,7 @@ def new_modulated_gaussian_control(
     check_arguments(
         duration > minimum_segment_duration,
         "Total duration must be greater than minimum segment duration.",
-        {
-            "duration": duration,
-            "minimum_segment_duration": minimum_segment_duration,
-        },
+        {"duration": duration, "minimum_segment_duration": minimum_segment_duration,},
     )
 
     # default spread of the gaussian shaped pulse as a fraction of its duration

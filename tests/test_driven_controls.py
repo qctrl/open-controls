@@ -127,11 +127,7 @@ def test_driven_control_default_values():
         _ = DrivenControl(durations=[0])
 
     with pytest.raises(ArgumentsValueError):
-        _ = DrivenControl(
-            durations=[1],
-            rabi_rates=[1, 2],
-            azimuthal_angles=[1, 2, 3],
-        )
+        _ = DrivenControl(durations=[1], rabi_rates=[1, 2], azimuthal_angles=[1, 2, 3],)
 
 
 def test_control_directions():
