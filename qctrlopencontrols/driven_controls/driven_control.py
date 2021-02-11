@@ -69,7 +69,7 @@ class DrivenControl:
                \frac{1}{2}\Delta(t)\sigma_z,
 
     where :math:`\Omega(t)` is the Rabi rate, :math:`\phi(t)` is the azimuthal angle (or drive
-    phase), :math:`\Delta(t)` is the detuning, :math:`\sigma_\pm = (\sigma_x \mp \sigma_y)/2`,
+    phase), :math:`\Delta(t)` is the detuning, :math:`\sigma_\pm = (\sigma_x \mp i\sigma_y)/2`,
     and :math:`\sigma_k` are the Pauli matrices.
 
     The controls are piecewise-constant, meaning :math:`\Omega(t)=\Omega_n` for
