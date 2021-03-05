@@ -161,7 +161,12 @@ pre-commit install
 ```
 
 With this, the checks will run every time that you commit code with
-`git commit`.
+`git commit`. If you prefer to run the checks every time that you push changes
+instead of when you commit changes, use `pre-commit install -t pre-push`.
+
+If you no longer wish to use `pre-commit`, you can uninstall it by running
+`pre-commit uninstall` in the `python-core` directory (or by running
+`pre-commit uninstall -t pre-push`, if you used the pre-push hooks).
 
 ## Credits
 
