@@ -1,4 +1,4 @@
-# Q-CTRL Open Controls
+# Q-CTRL Python Open Controls
 
 Q-CTRL Open Controls is an open-source Python package that makes it easy to
 create and deploy established error-robust quantum control protocols from the
