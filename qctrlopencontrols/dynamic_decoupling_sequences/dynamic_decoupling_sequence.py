@@ -95,6 +95,13 @@ class DynamicDecouplingSequence:
             {"offsets": offsets, "duration": duration},
         )
 
+        rabi_rotations = np.asarray(rabi_rotations, dtype=np.float)
+        check_arguments(
+            np.all(rabi_rotations >= 0),
+            "Rabi rotations must be non-negative.",
+            {"rabi_rotations": rabi_rotations},
+        )
+
         _offset_count = len(offsets)
 
         check_arguments(
@@ -117,7 +124,7 @@ class DynamicDecouplingSequence:
 
         self.duration = duration
         self.offsets = offsets
-        self.rabi_rotations = np.asarray(rabi_rotations, dtype=np.float)
+        self.rabi_rotations = rabi_rotations
         self.azimuthal_angles = np.asarray(azimuthal_angles, dtype=np.float)
         self.detuning_rotations = np.asarray(detuning_rotations, dtype=np.float)
         self.name = name

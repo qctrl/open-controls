@@ -126,6 +126,17 @@ def test_dynamical_decoupling_sequence():
             detuning_rotations=np.zeros((2000, 1)),
         )
 
+    with pytest.raises(ArgumentsValueError):
+
+        # rabi rotations cannot be negative
+        _ = DynamicDecouplingSequence(
+            duration=2.0,
+            offsets=np.ones((2, 1)),
+            rabi_rotations=np.asarray([1, -1]),
+            azimuthal_angles=np.ones((2, 1)),
+            detuning_rotations=np.zeros((2, 1)),
+        )
+
 
 def test_sequence_plot():
     """
