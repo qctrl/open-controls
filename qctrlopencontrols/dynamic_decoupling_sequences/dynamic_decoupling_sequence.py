@@ -98,7 +98,7 @@ class DynamicDecouplingSequence:
         rabi_rotations = np.asarray(rabi_rotations, dtype=np.float)
         check_arguments(
             np.all(rabi_rotations >= 0),
-            "rabi rotations must be non-negative. ",
+            "Rabi rotations must be non-negative.",
             {"rabi_rotations": rabi_rotations},
         )
 
