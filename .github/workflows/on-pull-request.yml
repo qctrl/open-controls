@@ -13,7 +13,6 @@ on:
 jobs:
   pytest:
     # Filter out Draft Pull Requests
-    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
