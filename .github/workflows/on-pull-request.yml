@@ -11,6 +11,17 @@ on:
       - '*.*'
 
 jobs:
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install Python dependencies
+      run: |
+        source <(curl -sL http://ci.q-ctrl.com)
+        ./ci docker run qctrl/ci-images:python-3.7-ci /scripts/install-python-dependencies.sh
+    - name: Run Pre-Commit
+      run: |
+        ./ci docker run qctrl/ci-images:python-3.7-ci poetry run pre-commit run -- -a
   pytest:
     # Filter out Draft Pull Requests
     runs-on: ubuntu-latest
@@ -19,5 +30,6 @@ jobs:
       - name: Ensure no development packages have been set
         run: |
           source <(curl -sL http://ci.q-ctrl.com)
+          cat $GITHUB_EVENT_PATH
           ./ci docker run qctrl/python-build:3.7 /scripts/check-for-internal-versions.sh
 #################### Maintained by repositories-manager - do not edit directly ####################
