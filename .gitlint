@@ -1,0 +1,9 @@
+[general]
+contrib=contrib-title-conventional-commits
+
+# In the CI workflow, gitlint only checks the title of the commits, so errors
+# for missing the body of the commits are ignored.
+ignore=body-is-missing
+
+[contrib-title-conventional-commits]
+types=feat,fix,misc
