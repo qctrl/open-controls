@@ -973,6 +973,111 @@ def new_wamf1_control(
     )
 
 
+def new_gaussian_control(
+    rabi_rotation: float,
+    segment_count: int,
+    duration: float,
+    width: float,
+    name: Optional[str] = None,
+) -> DrivenControl:
+    r"""
+    Generates a Gaussian driven control sequence.
+
+    Gaussian driven controls mitigate leakage out of the qubit subspace.
+
+    Parameters
+    ----------
+    rabi_rotation : float
+        Total Rabi rotation :math:`\theta` to be performed by the driven control.
+    segment_count : int
+        Number of segments in the control sequence.
+    duration : float
+        Total duration :math:`t_g` of the control sequence.
+    width : float
+        Width (standard deviation) :math:`\sigma` of the ideal Gaussian pulse.
+    name : str, optional
+        An optional string to name the control. Defaults to ``None``.
+
+    Returns
+    -------
+    DrivenControl
+        A control sequence as an instance of DrivenControl.
+
+    See Also
+    --------
+    new_modulated_gaussian_control
+
+    Notes
+    -----
+    A Gaussian driven control [#]_ consists of a piecewise constant approximation
+    to an ideal Gaussian pulse:
+
+    .. math::
+        \mathcal{E}_G (t) = A \exp \left[- \frac{(t - t_g/2)^2}{2\sigma^2}\right] - B
+
+    where the two additional parameters :math:`A, B` chosen such that
+    :math:`\int_{0}^{t_g} \mathcal{E}_G \,dt = \theta` and :math:`\mathcal{E}_G(0) = 0`.
+
+    Relative values of segments are determined by sampling the ideal Gaussian at the midpoints
+    of the segments.
+
+    References
+    ----------
+    .. [#] `Motzoi, F. et al. Physical Review Letters 103, 110501 (2009)
+        <https://doi.org/10.1103/PhysRevLett.103.110501>`_
+    """
+
+    check_arguments(
+        duration > 0.0,
+        "Pulse duration must be greater than zero.",
+        {"duration": duration},
+    )
+
+    check_arguments(
+        segment_count > 0,
+        "Segment count must be greater than zero.",
+        {"segment_count": segment_count},
+    )
+
+    check_arguments(
+        width > 0.0,
+        "Width of ideal Gaussian pulse must be greater than zero.",
+        {"width": width},
+    )
+
+    # default mean of the gaussian shaped pulse as a fraction of its duration
+    _pulse_mean = 0.5
+
+    # work out exact segment duration
+    segment_duration = duration / segment_count
+    segment_start_times = np.arange(segment_count) * segment_duration
+    segment_midpoints = segment_start_times + segment_duration / 2
+
+    # prepare a base (un-normalized) gaussian shaped pulse
+    gaussian_mean = _pulse_mean * duration
+    base_gaussian_segments = np.exp(
+        -0.5 * ((segment_midpoints - gaussian_mean) / width) ** 2
+    )
+
+    # translate pulse by B/A (from Motzoi paper) to ensure output is 0 at t=0
+    y_translation = -np.exp(-0.5 * ((0 - gaussian_mean) / width) ** 2)
+    base_gaussian_segments += y_translation
+
+    # scale segments such that their net effect matches the desired rotation
+    base_gaussian_total_rotation = np.sum(base_gaussian_segments) * segment_duration
+    gaussian_segments = (
+        base_gaussian_segments / base_gaussian_total_rotation
+    ) * rabi_rotation
+
+    return DrivenControl(
+        rabi_rates=gaussian_segments,
+        azimuthal_angles=np.zeros(segment_count),
+        detunings=np.zeros(segment_count),
+        durations=np.array([segment_duration] * segment_count),
+        name=name,
+    )
+
+
 def new_modulated_gaussian_control(
     maximum_rabi_rate: float,
     minimum_segment_duration: float,
@@ -1003,6 +1108,10 @@ def new_modulated_gaussian_control(
     -------
     DrivenControl
         A control sequence as an instance of DrivenControl.
+
+    See Also
+    --------
+    new_gaussian_control
     """
 
     check_arguments(
