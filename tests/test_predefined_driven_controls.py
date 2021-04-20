@@ -575,8 +575,8 @@ def test_gaussian_control():
         _segment_width / 2, _duration - _segment_width / 2, _segment_count
     )
 
-    def gauss(t):
-        return np.exp(-0.5 * ((t - _duration / 2) / _width) ** 2)
+    def gauss(time):
+        return np.exp(-0.5 * ((time - _duration / 2) / _width) ** 2)
 
     expected_normalized_pulse = (gauss(midpoints) - gauss(0)) / max(
         gauss(midpoints) - gauss(0)
