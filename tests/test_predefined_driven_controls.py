@@ -570,6 +570,25 @@ def test_gaussian_control():
     # compute total rotation of generated pulse
     rabi_rotation = np.dot(gaussian_control.rabi_rates, gaussian_control.durations)
 
+    _segment_width = _duration / _segment_count
+    midpoints = np.linspace(
+        _segment_width / 2, _duration - _segment_width / 2, _segment_count
+    )
+
+    def gauss(t):
+        return np.exp(-0.5 * ((t - _duration / 2) / _width) ** 2)
+
+    expected_normalized_pulse = (gauss(midpoints) - gauss(0)) / max(
+        gauss(midpoints) - gauss(0)
+    )
+    normalized_pulse = gaussian_control.rabi_rates / max(gaussian_control.rabi_rates)
+
+    # check pulse is Gaussian-shaped
+    assert np.allclose(expected_normalized_pulse, normalized_pulse)
+
+    # compute total rotation of generated pulse
+    rabi_rotation = np.dot(gaussian_control.rabi_rates, gaussian_control.durations)
+
     # check number and duration of pulses
     assert len(gaussian_control.rabi_rates) == _segment_count
     assert np.allclose(gaussian_control.durations, _duration / _segment_count)
