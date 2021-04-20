@@ -26,6 +26,7 @@ from qctrlopencontrols.driven_controls.predefined import (
     new_corpse_in_bb1_control,
     new_corpse_in_scrofulous_control,
     new_corpse_in_sk1_control,
+    new_gaussian_control,
     new_modulated_gaussian_control,
     new_primitive_control,
     new_scrofulous_control,
@@ -548,6 +549,52 @@ def test_walsh_control():
     )
 
     assert np.allclose(pi_on_4_segments, _pi_on_4_segments)
+
+
+def test_gaussian_control():
+    """
+    Tests Gaussian control.
+    """
+    _rabi_rotation = np.pi
+    _segment_count = 10
+    _duration = 0.01
+    _width = 0.002
+
+    gaussian_control = new_gaussian_control(
+        rabi_rotation=_rabi_rotation,
+        segment_count=_segment_count,
+        duration=_duration,
+        width=_width,
+    )
+
+    # compute total rotation of generated pulse
+    rabi_rotation = np.dot(gaussian_control.rabi_rates, gaussian_control.durations)
+
+    _segment_width = _duration / _segment_count
+    midpoints = np.linspace(
+        _segment_width / 2, _duration - _segment_width / 2, _segment_count
+    )
+
+    def gauss(time):
+        return np.exp(-0.5 * ((time - _duration / 2) / _width) ** 2)
+
+    expected_normalized_pulse = (gauss(midpoints) - gauss(0)) / max(
+        gauss(midpoints) - gauss(0)
+    )
+    normalized_pulse = gaussian_control.rabi_rates / max(gaussian_control.rabi_rates)
+
+    # check pulse is Gaussian-shaped
+    assert np.allclose(expected_normalized_pulse, normalized_pulse)
+
+    # compute total rotation of generated pulse
+    rabi_rotation = np.dot(gaussian_control.rabi_rates, gaussian_control.durations)
+
+    # check number and duration of pulses
+    assert len(gaussian_control.rabi_rates) == _segment_count
+    assert np.allclose(gaussian_control.durations, _duration / _segment_count)
+
+    # check total rotation of pulse
+    assert np.isclose(rabi_rotation, _rabi_rotation)
 
 
 def test_modulated_gaussian_control():
