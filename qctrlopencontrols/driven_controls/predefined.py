@@ -1045,16 +1045,13 @@ def new_gaussian_control(
         {"width": width},
     )
 
-    # default mean of the gaussian shaped pulse as a fraction of its duration
-    _pulse_mean = 0.5
-
     # work out exact segment duration
     segment_duration = duration / segment_count
     segment_start_times = np.arange(segment_count) * segment_duration
     segment_midpoints = segment_start_times + segment_duration / 2
 
     # prepare a base (un-normalized) gaussian shaped pulse
-    gaussian_mean = _pulse_mean * duration
+    gaussian_mean = duration / 2
     base_gaussian_segments = np.exp(
         -0.5 * ((segment_midpoints - gaussian_mean) / width) ** 2
     )
