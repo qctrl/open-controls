@@ -1312,7 +1312,7 @@ def new_drag_control(
     y_quadrature_segments = (
         beta
         * (gaussian_mean - segment_midpoints)
-        / width**2
+        / width ** 2
         * (
             x_quadrature_segments
             - y_translation * normalization_factor  # = B (from Motzoi '09 paper)
