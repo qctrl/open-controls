@@ -737,7 +737,7 @@ def test_drag_control():
         return np.exp(-0.5 * ((time - _duration / 2) / _width) ** 2)
 
     def d_gauss(time):
-        return -(time - _duration / 2) / _width**2 * gauss(time)
+        return -(time - _duration / 2) / _width ** 2 * gauss(time)
 
     expected_normalized_x_pulse = (gauss(midpoints) - gauss(0)) / max(
         gauss(midpoints) - gauss(0)
