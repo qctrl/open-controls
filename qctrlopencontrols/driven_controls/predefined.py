@@ -1266,6 +1266,8 @@ def new_drag_control(
 
     References
     ----------
+    .. [#] `Motzoi, F. et al. Physical Review Letters 103, 110501 (2009).
+        <https://doi.org/10.1103/PhysRevLett.103.110501>`_
     .. [#] `J. M. Gambetta, F. Motzoi, S. T. Merkel, and F. K. Wilhelm,
         Physical Review A 83, 012308 (2011).
         <https://doi.org/10.1103/PhysRevA.83.012308>`_
