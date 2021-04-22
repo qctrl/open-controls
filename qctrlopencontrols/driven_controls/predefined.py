@@ -1260,7 +1260,8 @@ def new_drag_control(
     where :math:`\Omega_G(t)` is simply given by :doc:`new_gaussian_control`. Optimally,
     :math:`\beta = -\frac{\lambda_1^2}{4\Delta_2}` where :math:`\Delta_2` is the
     anharmonicity of the system and :math:`\lambda_1` is the relative strength required
-    to drive a transition in the qubit subspace vs. in the next highest level. Note
+    to drive a transition :math:`\lvert 1 \rangle \rightarrow \lvert 2 \rangle` vs.
+    :math:`\lvert 0 \rangle \rightarrow \lvert 1 \rangle`. Note
     that this choice of :math:`\beta`, sometimes called "simple drag" or "half derivative",
     is a first-order version of DRAG, and it excludes an additional detuning corrective term.
 
