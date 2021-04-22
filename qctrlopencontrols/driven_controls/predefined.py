@@ -1234,7 +1234,7 @@ def new_drag_control(
     width : float
         Width (standard deviation) :math:`\sigma` of the ideal Gaussian pulse.
     beta : float
-        Scaling :math:`\beta` of the amplitude of the corrective derivative term.
+        Amplitude scaling :math:`\beta` of the Gaussian derivative.
     name : str, optional
         An optional string to name the control. Defaults to ``None``.
 
