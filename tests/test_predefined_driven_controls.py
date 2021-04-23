@@ -727,7 +727,7 @@ def test_drag_control():
         duration=_duration,
         width=_width,
         beta=_beta,
-        azimuthal_angle=_azimuthal_angle
+        azimuthal_angle=_azimuthal_angle,
     )
 
     _segment_width = _duration / _segment_count
