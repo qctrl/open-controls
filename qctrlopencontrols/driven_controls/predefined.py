@@ -1215,6 +1215,7 @@ def new_drag_control(
     duration: float,
     width: float,
     beta: float,
+    azimuthal_angle: float = 0.0,
     name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
@@ -1236,6 +1237,8 @@ def new_drag_control(
         Width (standard deviation) :math:`\sigma` of the ideal Gaussian pulse.
     beta : float
         Amplitude scaling :math:`\beta` of the Gaussian derivative.
+    azimuthal_angle : float, optional
+         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     name : str, optional
         An optional string to name the control. Defaults to ``None``.
 
@@ -1324,7 +1327,7 @@ def new_drag_control(
     )
 
     rabi_rates = np.sqrt(x_quadrature_segments ** 2 + y_quadrature_segments ** 2)
-    azimuthal_angles = np.arcsin(y_quadrature_segments / rabi_rates)
+    azimuthal_angles = np.arcsin(y_quadrature_segments / rabi_rates) + azimuthal_angle
 
     return DrivenControl(
         rabi_rates=rabi_rates,

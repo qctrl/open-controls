@@ -719,13 +719,14 @@ def test_drag_control():
     _duration = 0.002
     _width = 0.001
     _beta = 0.5
-
+    _azimuthal_angle = np.pi / 8
     drag_control = new_drag_control(
         rabi_rotation=_rabi_rotation,
         segment_count=_segment_count,
         duration=_duration,
         width=_width,
         beta=_beta,
+        azimuthal_angle=_azimuthal_angle
     )
 
     _segment_width = _duration / _segment_count
@@ -739,6 +740,8 @@ def test_drag_control():
     def d_gauss(time):
         return -(time - _duration / 2) / _width ** 2 * gauss(time)
 
+    # note: 'x' and 'y' here refer to x and y in the frame rotated by _azimuthal_angle
+
     expected_normalized_x_pulse = (gauss(midpoints) - gauss(0)) / max(
         gauss(midpoints) - gauss(0)
     )
@@ -746,12 +749,21 @@ def test_drag_control():
         _beta * d_gauss(midpoints) / max(abs(_beta * d_gauss(midpoints)))
     )
 
-    normalized_x_pulse = drag_control.amplitude_x / max(drag_control.amplitude_x)
-    normalized_y_pulse = drag_control.amplitude_y / max(abs(drag_control.amplitude_y))
+    # compute x and y pulses in the rotated frame
+    x_pulse = (
+        np.cos(_azimuthal_angle) * drag_control.amplitude_x
+        + np.sin(_azimuthal_angle) * drag_control.amplitude_y
+    )
+    y_pulse = (
+        np.cos(-_azimuthal_angle) * drag_control.amplitude_y
+        + np.sin(-_azimuthal_angle) * drag_control.amplitude_x
+    )
+    normalized_x_pulse = x_pulse / max(abs(x_pulse))
+    normalized_y_pulse = y_pulse / max(abs(y_pulse))
 
     # compute total rotation of generated pulses
-    total_x_rotation = np.dot(drag_control.amplitude_x, drag_control.durations)
-    total_y_rotation = np.dot(drag_control.amplitude_y, drag_control.durations)
+    total_x_rotation = np.dot(x_pulse, drag_control.durations)
+    total_y_rotation = np.dot(y_pulse, drag_control.durations)
 
     # check pulses are correctly shaped
     assert np.allclose(expected_normalized_x_pulse, normalized_x_pulse)
