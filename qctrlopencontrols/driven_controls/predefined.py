@@ -1249,7 +1249,7 @@ def new_drag_control(
 
     Notes
     -----
-    A DRAG-corrected (Derivative Removal by Adiabatic Gate) Gaussian driven control [#]_
+    A DRAG-corrected Gaussian driven control [#]_
     applies a Hamiltonian consisting of a piecewise constant approximation to an ideal
     Gaussian pulse controlling :math:`\sigma_x` while its derivative controls the
     application of the :math:`\sigma_y` operator:
