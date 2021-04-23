@@ -1218,7 +1218,8 @@ def new_drag_control(
     name: Optional[str] = None,
 ) -> DrivenControl:
     r"""
-    Generates a Gaussian driven control sequence with DRAG correction applied.
+    Generates a Gaussian driven control sequence with a first-order DRAG
+    (Derivative Removal by Adiabatic Gate) correction applied.
 
     The addition of DRAG further reduces leakage out of the qubit subspace via an additional
     off-quadrature corrective driving term proportional to the derivative of the Gaussian pulse.
