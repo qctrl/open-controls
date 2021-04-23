@@ -1336,3 +1336,4 @@ def new_drag_control(
         durations=np.array([segment_duration] * segment_count),
         name=name,
     )
+    
