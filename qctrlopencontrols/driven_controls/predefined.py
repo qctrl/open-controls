@@ -1238,7 +1238,7 @@ def new_drag_control(
     beta : float
         Amplitude scaling :math:`\beta` of the Gaussian derivative.
     azimuthal_angle : float, optional
-         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
+        The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     name : str, optional
         An optional string to name the control. Defaults to ``None``.
 
@@ -1336,4 +1336,3 @@ def new_drag_control(
         durations=np.array([segment_duration] * segment_count),
         name=name,
     )
-    

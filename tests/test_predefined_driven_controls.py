@@ -777,4 +777,3 @@ def test_drag_control():
     # check total rotation of pulses
     assert np.isclose(total_x_rotation, _rabi_rotation)
     assert np.isclose(total_y_rotation, 0)
-    
