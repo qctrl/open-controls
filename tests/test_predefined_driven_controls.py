@@ -720,6 +720,7 @@ def test_drag_control():
     _width = 0.001
     _beta = 0.5
     _azimuthal_angle = np.pi / 8
+
     drag_control = new_drag_control(
         rabi_rotation=_rabi_rotation,
         segment_count=_segment_count,
@@ -776,3 +777,4 @@ def test_drag_control():
     # check total rotation of pulses
     assert np.isclose(total_x_rotation, _rabi_rotation)
     assert np.isclose(total_y_rotation, 0)
+    
