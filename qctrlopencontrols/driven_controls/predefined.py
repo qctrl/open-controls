@@ -1006,6 +1006,7 @@ def new_gaussian_control(
     See Also
     --------
     new_modulated_gaussian_control
+    new_drag_control
 
     Notes
     -----
@@ -1205,4 +1206,133 @@ def new_modulated_gaussian_control(
         azimuthal_angles=azimuthal_angles,
         detunings=np.zeros(segment_count),
         durations=np.array([segment_duration] * segment_count),
+    )
+
+
+def new_drag_control(
+    rabi_rotation: float,
+    segment_count: int,
+    duration: float,
+    width: float,
+    beta: float,
+    azimuthal_angle: float = 0.0,
+    name: Optional[str] = None,
+) -> DrivenControl:
+    r"""
+    Generates a Gaussian driven control sequence with a first-order DRAG
+    (Derivative Removal by Adiabatic Gate) correction applied.
+
+    The addition of DRAG further reduces leakage out of the qubit subspace via an additional
+    off-quadrature corrective driving term proportional to the derivative of the Gaussian pulse.
+
+    Parameters
+    ----------
+    rabi_rotation : float
+        Total Rabi rotation :math:`\theta` to be performed by the driven control.
+    segment_count : int
+        Number of segments in the control sequence.
+    duration : float
+        Total duration :math:`t_g` of the control sequence.
+    width : float
+        Width (standard deviation) :math:`\sigma` of the ideal Gaussian pulse.
+    beta : float
+        Amplitude scaling :math:`\beta` of the Gaussian derivative.
+    azimuthal_angle : float, optional
+        The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
+    name : str, optional
+        An optional string to name the control. Defaults to ``None``.
+
+    Returns
+    -------
+    DrivenControl
+        A control sequence as an instance of DrivenControl.
+
+    See Also
+    --------
+    new_gaussian_control
+
+    Notes
+    -----
+    A DRAG-corrected Gaussian driven control [#]_
+    applies a Hamiltonian consisting of a piecewise constant approximation to an ideal
+    Gaussian pulse controlling :math:`\sigma_x` while its derivative controls the
+    application of the :math:`\sigma_y` operator:
+
+    .. math::
+        H(t) = \frac{1}{2}(\Omega_G(t) \sigma_x + \beta \dot{\Omega}_G(t) \sigma_y)
+
+    where :math:`\Omega_G(t)` is simply given by :doc:`new_gaussian_control`. Optimally,
+    :math:`\beta = -\frac{\lambda_1^2}{4\Delta_2}` where :math:`\Delta_2` is the
+    anharmonicity of the system and :math:`\lambda_1` is the relative strength required
+    to drive a transition :math:`\lvert 1 \rangle \rightarrow \lvert 2 \rangle` vs.
+    :math:`\lvert 0 \rangle \rightarrow \lvert 1 \rangle`. Note
+    that this choice of :math:`\beta`, sometimes called "simple drag" or "half derivative",
+    is a first-order version of DRAG, and it excludes an additional detuning corrective term.
+
+    References
+    ----------
+    .. [#] `Motzoi, F. et al. Physical Review Letters 103, 110501 (2009).
+        <https://doi.org/10.1103/PhysRevLett.103.110501>`_
+    .. [#] `J. M. Gambetta, F. Motzoi, S. T. Merkel, and F. K. Wilhelm,
+        Physical Review A 83, 012308 (2011).
+        <https://doi.org/10.1103/PhysRevA.83.012308>`_
+    """
+
+    check_arguments(
+        duration > 0.0,
+        "Pulse duration must be greater than zero.",
+        {"duration": duration},
+    )
+
+    check_arguments(
+        segment_count > 0,
+        "Segment count must be greater than zero.",
+        {"segment_count": segment_count},
+    )
+
+    check_arguments(
+        width > 0.0,
+        "Width of ideal Gaussian pulse must be greater than zero.",
+        {"width": width},
+    )
+
+    # compute sampling parameters
+    segment_duration = duration / segment_count
+    segment_start_times = np.arange(segment_count) * segment_duration
+    segment_midpoints = segment_start_times + segment_duration / 2
+
+    # prepare a base (un-normalized) gaussian shaped pulse
+    gaussian_mean = duration / 2
+    base_gaussian_segments = np.exp(
+        -0.5 * ((segment_midpoints - gaussian_mean) / width) ** 2
+    )
+
+    # translate pulse by B/A (from Motzoi '09 paper) to ensure output is 0 at t=0
+    y_translation = -np.exp(-0.5 * ((0 - gaussian_mean) / width) ** 2)
+    base_gaussian_segments += y_translation
+
+    # compute A (from Motzoi '09 paper)
+    base_gaussian_total_rotation = np.sum(base_gaussian_segments) * segment_duration
+    normalization_factor = rabi_rotation / base_gaussian_total_rotation
+
+    x_quadrature_segments = base_gaussian_segments * normalization_factor
+    y_quadrature_segments = (
+        beta
+        * (gaussian_mean - segment_midpoints)
+        / width ** 2
+        * (
+            x_quadrature_segments
+            - y_translation * normalization_factor  # = B (from Motzoi '09 paper)
+        )
+    )
+
+    rabi_rates = np.sqrt(x_quadrature_segments ** 2 + y_quadrature_segments ** 2)
+    azimuthal_angles = np.arcsin(y_quadrature_segments / rabi_rates) + azimuthal_angle
+
+    return DrivenControl(
+        rabi_rates=rabi_rates,
+        azimuthal_angles=azimuthal_angles,
+        detunings=np.zeros(segment_count),
+        durations=np.array([segment_duration] * segment_count),
+        name=name,
     )

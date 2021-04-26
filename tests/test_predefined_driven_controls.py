@@ -26,6 +26,7 @@ from qctrlopencontrols.driven_controls.predefined import (
     new_corpse_in_bb1_control,
     new_corpse_in_scrofulous_control,
     new_corpse_in_sk1_control,
+    new_drag_control,
     new_gaussian_control,
     new_modulated_gaussian_control,
     new_primitive_control,
@@ -586,9 +587,6 @@ def test_gaussian_control():
     # check pulse is Gaussian-shaped
     assert np.allclose(expected_normalized_pulse, normalized_pulse)
 
-    # compute total rotation of generated pulse
-    rabi_rotation = np.dot(gaussian_control.rabi_rates, gaussian_control.durations)
-
     # check number and duration of pulses
     assert len(gaussian_control.rabi_rates) == _segment_count
     assert np.allclose(gaussian_control.durations, _duration / _segment_count)
@@ -710,3 +708,72 @@ def test_modulated_gaussian_control_give_identity_gate():
 
     for _u in unitaries:
         assert np.allclose(_u, np.eye(2))
+
+
+def test_drag_control():
+    """
+    Tests DRAG control.
+    """
+    _rabi_rotation = 0.5 * np.pi
+    _segment_count = 25
+    _duration = 0.002
+    _width = 0.001
+    _beta = 0.5
+    _azimuthal_angle = np.pi / 8
+
+    drag_control = new_drag_control(
+        rabi_rotation=_rabi_rotation,
+        segment_count=_segment_count,
+        duration=_duration,
+        width=_width,
+        beta=_beta,
+        azimuthal_angle=_azimuthal_angle,
+    )
+
+    _segment_width = _duration / _segment_count
+    midpoints = np.linspace(
+        _segment_width / 2, _duration - _segment_width / 2, _segment_count
+    )
+
+    def gauss(time):
+        return np.exp(-0.5 * ((time - _duration / 2) / _width) ** 2)
+
+    def d_gauss(time):
+        return -(time - _duration / 2) / _width ** 2 * gauss(time)
+
+    # note: 'x' and 'y' here refer to x and y in the frame rotated by _azimuthal_angle
+
+    expected_normalized_x_pulse = (gauss(midpoints) - gauss(0)) / max(
+        gauss(midpoints) - gauss(0)
+    )
+    expected_normalized_y_pulse = (
+        _beta * d_gauss(midpoints) / max(abs(_beta * d_gauss(midpoints)))
+    )
+
+    # compute x and y pulses in the rotated frame
+    x_pulse = (
+        np.cos(_azimuthal_angle) * drag_control.amplitude_x
+        + np.sin(_azimuthal_angle) * drag_control.amplitude_y
+    )
+    y_pulse = (
+        np.cos(-_azimuthal_angle) * drag_control.amplitude_y
+        + np.sin(-_azimuthal_angle) * drag_control.amplitude_x
+    )
+    normalized_x_pulse = x_pulse / max(abs(x_pulse))
+    normalized_y_pulse = y_pulse / max(abs(y_pulse))
+
+    # compute total rotation of generated pulses
+    total_x_rotation = np.dot(x_pulse, drag_control.durations)
+    total_y_rotation = np.dot(y_pulse, drag_control.durations)
+
+    # check pulses are correctly shaped
+    assert np.allclose(expected_normalized_x_pulse, normalized_x_pulse)
+    assert np.allclose(expected_normalized_y_pulse, normalized_y_pulse)
+
+    # check number and duration of pulses
+    assert len(drag_control.rabi_rates) == _segment_count
+    assert np.allclose(drag_control.durations, _duration / _segment_count)
+
+    # check total rotation of pulses
+    assert np.isclose(total_x_rotation, _rabi_rotation)
+    assert np.isclose(total_y_rotation, 0)
