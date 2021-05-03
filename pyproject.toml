@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "qctrl-open-controls"
 version = "8.1.0"
-description = "Q-CTRL Open Controls"
+description = "Q-CTRL Python Open Controls"
 license = "Apache-2.0"
 authors = ["Q-CTRL <support@q-ctrl.com>"]
 maintainers = ["Q-CTRL <support@q-ctrl.com>"]
