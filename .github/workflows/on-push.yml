@@ -38,17 +38,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: [3.6, 3.7, 3.8]
+        python: [3.6, 3.7, 3.8, 3.9]
     steps:
     - uses: actions/checkout@v1
     - name: Install Python dependencies
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
         ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci docker run qctrl/python-build:${{ matrix.python }} /scripts/install-python-dependencies.sh
+        ./ci docker run qctrl/ci-images:python-${{ matrix.python }}-ci /scripts/install-python-dependencies.sh
     - name: Run Pytest
       run: |
-        ./ci docker run qctrl/python-build:${{ matrix.python }} /scripts/pytest.sh
+        ./ci docker run qctrl/ci-images:python-${{ matrix.python }}-ci /scripts/pytest.sh
 
   publish_internally:
     runs-on: ubuntu-latest

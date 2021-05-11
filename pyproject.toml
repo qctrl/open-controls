@@ -36,7 +36,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]  # https://poetry.eustace.io/docs/versions
-python = ">=3.6.4,<3.9"
+python = ">=3.6.4,<3.10"
 numpy = "^1.16"
 toml = "^0.10.0"
 
