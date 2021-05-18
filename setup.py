@@ -15,7 +15,7 @@ import os.path
 
 readme = ''
 here = os.path.abspath(os.path.dirname(__file__))
-readme_path = os.path.join(here, 'DESCRIPTION.rst')
+readme_path = os.path.join(here, 'README.rst')
 if os.path.exists(readme_path):
     with open(readme_path, 'rb') as stream:
         readme = stream.read().decode('utf8')
