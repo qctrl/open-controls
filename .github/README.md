@@ -12,14 +12,6 @@ with easy to use export functions allowing users to deploy these controls on:
 
 Anyone interested in quantum control is welcome to contribute to this project.
 
-## Table of Contents
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [Credits](#credits)
-- [License](#license)
-
 ## Installation
 
 Q-CTRL Open Controls can be installed through `pip` or from source. We recommend
