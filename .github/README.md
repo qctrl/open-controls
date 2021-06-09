@@ -22,8 +22,8 @@ latest features then install from source.
 
 To use Q-CTRL Open Controls you will need an installation of Python. We
 recommend using the [Anaconda](https://www.anaconda.com/) distribution of
-Python. Anaconda includes standard numerical and scientific Python packages
-which are optimally compiled for your machine. Follow the [Anaconda
+Python (>=3.6.4, <3.10). Anaconda includes standard numerical and scientific Python
+packages which are optimally compiled for your machine. Follow the [Anaconda
 Installation](https://docs.anaconda.com/anaconda/install/) instructions and
 consult the [Anaconda User
 guide](https://docs.anaconda.com/anaconda/user-guide/) to get started.
