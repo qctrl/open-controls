@@ -85,7 +85,7 @@ pytest
 
 ## Usage
 
-See the [Jupyter notebooks](examples).
+See the [Jupyter notebooks](../examples).
 
 ## Contributing
 
