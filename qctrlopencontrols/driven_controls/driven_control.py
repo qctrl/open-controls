@@ -24,7 +24,6 @@ from typing import (
 
 import numpy as np
 
-from ..exceptions import ArgumentsValueError
 from ..utils import (
     Coordinate,
     FileFormat,
@@ -331,13 +330,13 @@ class DrivenControl:
 
         return np.sum(self.durations)
 
-    def resample(self, dt: float, name: Optional[str] = None) -> "DrivenControl":
+    def resample(self, time_step: float, name: Optional[str] = None) -> "DrivenControl":
         r"""
         Returns a new driven control obtained by resampling this control.
 
         Parameters
         ----------
-        dt : float
+        time_step : float
             The time step to use for resampling, :math:`\delta t`.
         name : str, optional
             The name for the new control. Defaults to ``None``.
@@ -351,20 +350,20 @@ class DrivenControl:
             original duration.
         """
         check_arguments(
-            dt > 0,
+            time_step > 0,
             "Time step must be positive.",
-            {"dt": dt},
+            {"time_step": time_step},
         )
         check_arguments(
-            dt <= self.duration,
+            time_step <= self.duration,
             "Time step must be less than or equal to the original duration.",
-            {"dt": dt},
+            {"time_step": time_step},
             {"duration": self.duration},
         )
 
-        count = int(np.ceil(self.duration / dt))
-        durations = [dt] * count
-        times = np.arange(count) * dt
+        count = int(np.ceil(self.duration / time_step))
+        durations = [time_step] * count
+        times = np.arange(count) * time_step
 
         indices = np.digitize(times, bins=np.cumsum(self.durations))
 
