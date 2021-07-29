@@ -377,14 +377,6 @@ class DrivenControl:
             {"sample_times": sample_times},
         )
 
-        coordinate_systems = [v.value for v in Coordinate]
-        check_arguments(
-            coordinates in coordinate_systems,
-            "Requested coordinate type is not supported. Please use "
-            "one of {}".format(coordinate_systems),
-            {"coordinates": coordinates},
-        )
-
         indices = np.digitize(times, bins=np.cumsum(self.durations), right=True)
 
         if coordinates == Coordinate.CARTESIAN.value:
