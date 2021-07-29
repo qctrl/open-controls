@@ -20,10 +20,13 @@ import json
 from typing import (
     Dict,
     Optional,
+    Tuple,
+    Union,
 )
 
 import numpy as np
 
+from ..exceptions import ArgumentsValueError
 from ..utils import (
     Coordinate,
     FileFormat,
@@ -329,6 +332,80 @@ class DrivenControl:
         """
 
         return np.sum(self.durations)
+
+    def sample(
+        self,
+        sample_times: Union[np.ndarray, float],
+        coordinates: str = Coordinate.CYLINDRICAL.value,
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        r"""
+        Returns samples from the control.
+
+        Parameters
+        ----------
+        sample_times : np.ndarray or float
+            The times at which to sample, :math:`\{t_n\}`. You can pass either an array of times or
+            a single number :math:`dt`. In the latter case, the sample times are taken as
+            :math:`0, dt, 2dt, \dots`.
+        coordinates : str, optional
+            The coordinate system in which to return the sampled control. Must be 'cylindrical' or
+            'cartesian'. Defaults to 'cylindrical'.
+
+        Returns
+        -------
+        np.ndarray
+            For cylindrical coordinates, the sampled Rabi rates :math:`\{\Omega(t_n)\}`. For
+            Cartesian coordinates, the sampled x-amplitudes, :math:`\{\Omega(t_n) \cos \phi(t_n)\}`.
+        np.ndarray
+            For cylindrical coordinates, the sampled azimuthal angles :math:\{\phi(t_n)\}`. For
+            Cartesian coordinates, The sampled y-amplitudes, :math:`\{\Omega(t_n) \sin \phi(t_n)\}`.
+        np.ndarray
+            The sampled detunings, :math:`\{\Delta(t_n)\}`.
+
+        Raises
+        ------
+        ArgumentsValueError
+            If the inputs are invalid.
+        """
+        times = np.asarray(sample_times)
+        if times.shape == ():
+            times = np.arange(0, self.duration, times)
+
+        check_arguments(
+            len(times.shape) == 1,
+            "Sample times must be a 1D array or a single number.",
+            {"sample_times": sample_times},
+        )
+
+        coordinate_systems = [v.value for v in Coordinate]
+        check_arguments(
+            coordinates in coordinate_systems,
+            "Requested coordinate type is not supported. Please use "
+            "one of {}".format(coordinate_systems),
+            {"coordinates": coordinates},
+        )
+
+        indices = np.digitize(times, bins=np.cumsum(self.durations), right=True)
+
+        if coordinates == Coordinate.CARTESIAN.value:
+            return (
+                self.amplitude_x[indices],
+                self.amplitude_y[indices],
+                self.detunings[indices],
+            )
+
+        if coordinates == Coordinate.CYLINDRICAL.value:
+            return (
+                self.rabi_rates[indices],
+                self.azimuthal_angles[indices],
+                self.detunings[indices],
+            )
+
+        raise ArgumentsValueError(
+            "Requested coordinate type is not supported. Please use "
+            f"one of {Coordinate.CARTESIAN.value!r} and {Coordinate.CYLINDRICAL.value!r}",
+            {"coordinates": coordinates},
+        )
 
     def _qctrl_expanded_export_content(self, coordinates: str) -> Dict:
         """
