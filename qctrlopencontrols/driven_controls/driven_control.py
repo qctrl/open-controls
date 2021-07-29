@@ -20,8 +20,6 @@ import json
 from typing import (
     Dict,
     Optional,
-    Tuple,
-    Union,
 )
 
 import numpy as np
@@ -333,70 +331,49 @@ class DrivenControl:
 
         return np.sum(self.durations)
 
-    def sample(
-        self,
-        sample_times: Union[np.ndarray, float],
-        coordinates: str = Coordinate.CYLINDRICAL.value,
-    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def resample(self, dt: float, name: Optional[str] = None) -> "DrivenControl":
         r"""
-        Returns samples from the control.
+        Returns a new driven control obtained by resampling this control.
 
         Parameters
         ----------
-        sample_times : np.ndarray or float
-            The times at which to sample, :math:`\{t_n\}`. You can pass either an array of times or
-            a single number :math:`dt`. In the latter case, the sample times are taken as
-            :math:`0, dt, 2dt, \dots`.
-        coordinates : str, optional
-            The coordinate system in which to return the sampled control. Must be 'cylindrical' or
-            'cartesian'. Defaults to 'cylindrical'.
+        dt : float
+            The time step to use for resampling, :math:`\delta t`.
+        name : str, optional
+            The name for the new control. Defaults to ``None``.
 
         Returns
         -------
-        np.ndarray
-            For cylindrical coordinates, the sampled Rabi rates :math:`\{\Omega(t_n)\}`. For
-            Cartesian coordinates, the sampled x-amplitudes, :math:`\{\Omega(t_n) \cos \phi(t_n)\}`.
-        np.ndarray
-            For cylindrical coordinates, the sampled azimuthal angles :math:\{\phi(t_n)\}`. For
-            Cartesian coordinates, The sampled y-amplitudes, :math:`\{\Omega(t_n) \sin \phi(t_n)\}`.
-        np.ndarray
-            The sampled detunings, :math:`\{\Delta(t_n)\}`.
-
-        Raises
-        ------
-        ArgumentsValueError
-            If the inputs are invalid.
+        DrivenControl
+            A new driven control, sampled at the specified rate. The durations of the new control
+            are all equal to :math:`\delta t`. The total duration of the new control might be
+            slightly larger than the original duration, if the time step doesn't exactly divide the
+            original duration.
         """
-        times = np.asarray(sample_times)
-        if times.shape == ():
-            times = np.arange(0, self.duration, times)
-
         check_arguments(
-            len(times.shape) == 1,
-            "Sample times must be a 1D array or a single number.",
-            {"sample_times": sample_times},
+            dt > 0,
+            "Time step must be positive.",
+            {"dt": dt},
+        )
+        check_arguments(
+            dt <= self.duration,
+            "Time step must be less than or equal to the original duration.",
+            {"dt": dt},
+            {"duration": self.duration},
         )
 
-        indices = np.digitize(times, bins=np.cumsum(self.durations), right=True)
+        count = int(np.ceil(self.duration / dt))
+        durations = [dt] * count
+        times = np.arange(count) * dt
 
-        if coordinates == Coordinate.CARTESIAN.value:
-            return (
-                self.amplitude_x[indices],
-                self.amplitude_y[indices],
-                self.detunings[indices],
-            )
+        indices = np.digitize(times, bins=np.cumsum(self.durations))
 
-        if coordinates == Coordinate.CYLINDRICAL.value:
-            return (
-                self.rabi_rates[indices],
-                self.azimuthal_angles[indices],
-                self.detunings[indices],
-            )
-
-        raise ArgumentsValueError(
-            "Requested coordinate type is not supported. Please use "
-            f"one of {Coordinate.CARTESIAN.value!r} and {Coordinate.CYLINDRICAL.value!r}",
-            {"coordinates": coordinates},
+        return DrivenControl(
+            durations,
+            self.rabi_rates[indices],
+            self.azimuthal_angles[indices],
+            self.detunings[indices],
+            name,
         )
 
     def _qctrl_expanded_export_content(self, coordinates: str) -> Dict:

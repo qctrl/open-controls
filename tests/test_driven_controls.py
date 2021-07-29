@@ -408,7 +408,7 @@ def test_pretty_print():
     assert str(driven_control) == expected_string
 
 
-def test_sample_dt_cylindrical():
+def test_resample_exact():
     driven_control = DrivenControl(
         rabi_rates=[0, 2],
         azimuthal_angles=[1.5, 0.5],
@@ -417,38 +417,17 @@ def test_sample_dt_cylindrical():
         name="control",
     )
 
-    rabi_rates, azimuthal_angles, detunings = driven_control.sample(0.3)
+    new_driven_control = driven_control.resample(0.5)
 
-    assert len(rabi_rates) == 7
-    assert len(azimuthal_angles) == 7
-    assert len(detunings) == 7
+    assert len(new_driven_control.durations) == 4
 
-    assert np.allclose(rabi_rates, [0, 0, 0, 0, 2, 2, 2])
-    assert np.allclose(azimuthal_angles, [1.5, 1.5, 1.5, 1.5, 0.5, 0.5, 0.5])
-    assert np.allclose(detunings, [1.3, 1.3, 1.3, 1.3, 2.3, 2.3, 2.3])
-
-
-def test_sample_dt_cartesian():
-    driven_control = DrivenControl(
-        rabi_rates=[3, 2],
-        azimuthal_angles=[0, np.pi / 2],
-        detunings=[1.3, 2.3],
-        durations=[1, 1],
-        name="control",
-    )
-
-    x_amplitudes, y_amplitudes, detunings = driven_control.sample(0.3, "cartesian")
-
-    assert len(x_amplitudes) == 7
-    assert len(y_amplitudes) == 7
-    assert len(detunings) == 7
-
-    assert np.allclose(x_amplitudes, [3, 3, 3, 3, 0, 0, 0])
-    assert np.allclose(y_amplitudes, [0, 0, 0, 0, 2, 2, 2])
-    assert np.allclose(detunings, [1.3, 1.3, 1.3, 1.3, 2.3, 2.3, 2.3])
+    assert np.allclose(new_driven_control.durations, 0.5)
+    assert np.allclose(new_driven_control.rabi_rates, [0, 0, 2, 2])
+    assert np.allclose(new_driven_control.azimuthal_angles, [1.5, 1.5, 0.5, 0.5])
+    assert np.allclose(new_driven_control.detunings, [1.3, 1.3, 2.3, 2.3])
 
 
-def test_sample_cylindrical():
+def test_resample_inexact():
     driven_control = DrivenControl(
         rabi_rates=[0, 2],
         azimuthal_angles=[1.5, 0.5],
@@ -457,36 +436,15 @@ def test_sample_cylindrical():
         name="control",
     )
 
-    rabi_rates, azimuthal_angles, detunings = driven_control.sample(
-        np.array([0.5, 0.8, 1.5])
+    new_driven_control = driven_control.resample(0.3)
+
+    assert len(new_driven_control.durations) == 7
+
+    assert np.allclose(new_driven_control.durations, 0.3)
+    assert np.allclose(new_driven_control.rabi_rates, [0, 0, 0, 0, 2, 2, 2])
+    assert np.allclose(
+        new_driven_control.azimuthal_angles, [1.5, 1.5, 1.5, 1.5, 0.5, 0.5, 0.5]
     )
-
-    assert len(rabi_rates) == 3
-    assert len(azimuthal_angles) == 3
-    assert len(detunings) == 3
-
-    assert np.allclose(rabi_rates, [0, 0, 2])
-    assert np.allclose(azimuthal_angles, [1.5, 1.5, 0.5])
-    assert np.allclose(detunings, [1.3, 1.3, 2.3])
-
-
-def test_sample_cartesian():
-    driven_control = DrivenControl(
-        rabi_rates=[3, 2],
-        azimuthal_angles=[0, np.pi / 2],
-        detunings=[1.3, 2.3],
-        durations=[1, 1],
-        name="control",
+    assert np.allclose(
+        new_driven_control.detunings, [1.3, 1.3, 1.3, 1.3, 2.3, 2.3, 2.3]
     )
-
-    x_amplitudes, y_amplitudes, detunings = driven_control.sample(
-        np.array([0.5, 0.8, 1.5]), "cartesian"
-    )
-
-    assert len(x_amplitudes) == 3
-    assert len(y_amplitudes) == 3
-    assert len(detunings) == 3
-
-    assert np.allclose(x_amplitudes, [3, 3, 0])
-    assert np.allclose(y_amplitudes, [0, 0, 2])
-    assert np.allclose(detunings, [1.3, 1.3, 2.3])
