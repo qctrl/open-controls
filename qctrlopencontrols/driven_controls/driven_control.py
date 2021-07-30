@@ -353,13 +353,13 @@ class DrivenControl:
 
         Returns
         -------
-        np.ndarray
+        amplitude_x or rabi_rates : np.ndarray
             For cylindrical coordinates, the sampled Rabi rates :math:`\{\Omega(t_n)\}`. For
             Cartesian coordinates, the sampled x-amplitudes, :math:`\{\Omega(t_n) \cos \phi(t_n)\}`.
-        np.ndarray
+        amplitude_y or azimuthal_angles : np.ndarray
             For cylindrical coordinates, the sampled azimuthal angles :math:\{\phi(t_n)\}`. For
             Cartesian coordinates, The sampled y-amplitudes, :math:`\{\Omega(t_n) \sin \phi(t_n)\}`.
-        np.ndarray
+        detunings : np.ndarray
             The sampled detunings, :math:`\{\Delta(t_n)\}`.
 
         Raises
