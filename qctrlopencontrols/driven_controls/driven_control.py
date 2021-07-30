@@ -330,6 +330,51 @@ class DrivenControl:
 
         return np.sum(self.durations)
 
+    def resample(self, time_step: float, name: Optional[str] = None) -> "DrivenControl":
+        r"""
+        Returns a new driven control obtained by resampling this control.
+
+        Parameters
+        ----------
+        time_step : float
+            The time step to use for resampling, :math:`\delta t`.
+        name : str, optional
+            The name for the new control. Defaults to ``None``.
+
+        Returns
+        -------
+        DrivenControl
+            A new driven control, sampled at the specified rate. The durations of the new control
+            are all equal to :math:`\delta t`. The total duration of the new control might be
+            slightly larger than the original duration, if the time step doesn't exactly divide the
+            original duration.
+        """
+        check_arguments(
+            time_step > 0,
+            "Time step must be positive.",
+            {"time_step": time_step},
+        )
+        check_arguments(
+            time_step <= self.duration,
+            "Time step must be less than or equal to the original duration.",
+            {"time_step": time_step},
+            {"duration": self.duration},
+        )
+
+        count = int(np.ceil(self.duration / time_step))
+        durations = [time_step] * count
+        times = np.arange(count) * time_step
+
+        indices = np.digitize(times, bins=np.cumsum(self.durations))
+
+        return DrivenControl(
+            durations,
+            self.rabi_rates[indices],
+            self.azimuthal_angles[indices],
+            self.detunings[indices],
+            name,
+        )
+
     def _qctrl_expanded_export_content(self, coordinates: str) -> Dict:
         """
         Prepare the content to be saved in Q-CTRL expanded format.
