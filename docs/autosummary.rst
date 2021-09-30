@@ -6,4 +6,3 @@
     :recursive:
 
     qctrlopencontrols
-

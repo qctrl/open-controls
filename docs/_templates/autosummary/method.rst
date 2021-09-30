@@ -1,9 +1,8 @@
-.. _{{fullname}}:                                   
-                                                    
-{{ name }}                                          
-{{ underline }}                                     
-                                                    
-.. currentmodule:: {{ module }}                     
-                                                    
-.. automethod:: {{ module}}.{{ objname }}                     
+.. _{{fullname}}:
 
+{{ name }}
+{{ underline }}
+
+.. currentmodule:: {{ module }}
+
+.. automethod:: {{ module}}.{{ objname }}

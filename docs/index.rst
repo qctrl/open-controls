@@ -15,7 +15,3 @@ The Q-CTRL Open Controls Python package provides a comprehensive library of publ
   :maxdepth: 1
 
   API Reference <qctrlopencontrols.rst>
-
-
-
-
