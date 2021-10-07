@@ -43,7 +43,7 @@ cloned using
 Once the clone is complete, you have two options:
 
 
-#. 
+#.
    Using setup.py
 
    .. code-block:: shell
@@ -54,7 +54,7 @@ Once the clone is complete, you have two options:
    **Note:** We recommend installing using ``develop`` to point your installation
    at the source code in the directory where you cloned the repository.
 
-#. 
+#.
    Using Poetry
 
    Follow the instructions from the
