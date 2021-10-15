@@ -37,7 +37,7 @@ def _remove_file(filename):
     if os.path.exists(filename):
         os.remove(filename)
     else:
-        raise IOError("Could not find file {}".format(filename))
+        raise IOError(f"Could not find file {filename}")
 
 
 def test_dynamical_decoupling_sequence():
@@ -68,7 +68,7 @@ def test_dynamical_decoupling_sequence():
     assert np.allclose(sequence.detuning_rotations, _detuning_rotations)
     assert sequence.name == _name
 
-    _repr_string = "{0.__class__.__name__!s}(".format(sequence)
+    _repr_string = f"{sequence.__class__.__name__!s}("
 
     attributes = {
         "duration": sequence.duration,
@@ -80,8 +80,7 @@ def test_dynamical_decoupling_sequence():
     }
 
     attributes_string = ",".join(
-        "{0}={1}".format(attribute, repr(getattr(sequence, attribute)))
-        for attribute in attributes
+        f"{attribute}={repr(getattr(sequence, attribute))}" for attribute in attributes
     )
     _repr_string += attributes_string
     _repr_string += ")"
@@ -225,32 +224,21 @@ def test_pretty_string_format():
     )
 
     _pretty_string = ["test_sequence:"]
-    _pretty_string.append("Duration = {}".format(_duration))
+    _pretty_string.append(f"Duration = {_duration}")
     _pretty_string.append(
-        "Offsets = [{}, {}, {}] x {}".format(
-            _offsets[0], _offsets[1], _offsets[2], _duration
-        )
+        f"Offsets = [{_offsets[0]}, {_offsets[1]}, {_offsets[2]}] x {_duration}"
     )
     _pretty_string.append(
-        "Rabi Rotations = [{}, {}, {}] x pi".format(
-            _rabi_rotations[0] / np.pi,
-            _rabi_rotations[1] / np.pi,
-            _rabi_rotations[2] / np.pi,
-        )
+        f"Rabi Rotations = [{_rabi_rotations[0] / np.pi},"
+        f" {_rabi_rotations[1] / np.pi}, {_rabi_rotations[2]/ np.pi}] x pi"
     )
     _pretty_string.append(
-        "Azimuthal Angles = [{}, {}, {}] x pi".format(
-            _azimuthal_angles[0] / np.pi,
-            _azimuthal_angles[1] / np.pi,
-            _azimuthal_angles[2] / np.pi,
-        )
+        f"Azimuthal Angles = [{_azimuthal_angles[0] / np.pi},"
+        f" {_azimuthal_angles[1] / np.pi}, {_azimuthal_angles[2] / np.pi}] x pi"
     )
     _pretty_string.append(
-        "Detuning Rotations = [{}, {}, {}] x pi".format(
-            _detuning_rotations[0] / np.pi,
-            _detuning_rotations[1] / np.pi,
-            _detuning_rotations[2] / np.pi,
-        )
+        f"Detuning Rotations = [{_detuning_rotations[0] / np.pi},"
+        f" {_detuning_rotations[1] / np.pi}, {_detuning_rotations[2] / np.pi}] x pi"
     )
 
     expected_string = "\n".join(_pretty_string)
@@ -265,33 +253,22 @@ def test_pretty_string_format():
         detuning_rotations=_detuning_rotations,
     )
 
-    _pretty_string = list()
-    _pretty_string.append("Duration = {}".format(_duration))
+    _pretty_string = []
+    _pretty_string.append(f"Duration = {_duration}")
     _pretty_string.append(
-        "Offsets = [{}, {}, {}] x {}".format(
-            _offsets[0], _offsets[1], _offsets[2], _duration
-        )
+        f"Offsets = [{_offsets[0]}, {_offsets[1]}, {_offsets[2]}] x {_duration}"
     )
     _pretty_string.append(
-        "Rabi Rotations = [{}, {}, {}] x pi".format(
-            _rabi_rotations[0] / np.pi,
-            _rabi_rotations[1] / np.pi,
-            _rabi_rotations[2] / np.pi,
-        )
+        f"Rabi Rotations = [{_rabi_rotations[0] / np.pi},"
+        f" {_rabi_rotations[1] / np.pi}, {_rabi_rotations[2]/ np.pi}] x pi"
     )
     _pretty_string.append(
-        "Azimuthal Angles = [{}, {}, {}] x pi".format(
-            _azimuthal_angles[0] / np.pi,
-            _azimuthal_angles[1] / np.pi,
-            _azimuthal_angles[2] / np.pi,
-        )
+        f"Azimuthal Angles = [{_azimuthal_angles[0] / np.pi},"
+        f" {_azimuthal_angles[1] / np.pi}, {_azimuthal_angles[2]/ np.pi}] x pi"
     )
     _pretty_string.append(
-        "Detuning Rotations = [{}, {}, {}] x pi".format(
-            _detuning_rotations[0] / np.pi,
-            _detuning_rotations[1] / np.pi,
-            _detuning_rotations[2] / np.pi,
-        )
+        f"Detuning Rotations = [{_detuning_rotations[0] / np.pi},"
+        f" {_detuning_rotations[1] / np.pi}, {_detuning_rotations[2] / np.pi}] x pi"
     )
     expected_string = "\n".join(_pretty_string)
 

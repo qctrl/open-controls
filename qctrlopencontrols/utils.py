@@ -52,7 +52,7 @@ def create_repr_from_attributes(class_instance=None, attributes=None):
             "Class instance must be a valid object.", {"class_instance": class_instance}
         )
 
-    class_name = "{0.__class__.__name__}".format(class_instance)
+    class_name = f"{class_instance.__class__.__name__}("
 
     if attributes is None:
         raise ArgumentsValueError(
@@ -60,19 +60,19 @@ def create_repr_from_attributes(class_instance=None, attributes=None):
         )
 
     if not attributes:
-        return "No attributes provided for object of class {0}".format(class_name)
+        return f"No attributes provided for object of class {class_name}"
 
     for attribute in attributes:
         if not isinstance(attribute, str):
             raise ArgumentsValueError(
                 "Each attribute name must be a string. Found "
-                "{0} type.".format(type(attribute)),
+                f"{type(attribute)} type.",
                 {"attribute": attribute, "type(attribute)": type(attribute)},
             )
 
-    repr_string = "{0}(".format(class_name)
+    repr_string = f"{class_name}"
     attributes_string = ",".join(
-        "{0}={1}".format(attribute, repr(getattr(class_instance, attribute)))
+        f"{attribute}={repr(getattr(class_instance, attribute))}"
         for attribute in attributes
     )
     repr_string += attributes_string

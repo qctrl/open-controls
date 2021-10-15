@@ -443,7 +443,7 @@ class DrivenControl:
 
             # note that the newline parameter here is necessary
             # see details at https://docs.python.org/3/library/csv.html#id3
-            with open(filename, "w", newline="") as file:
+            with open(filename, "w", encoding="utf-8", newline="") as file:
                 writer = csv.DictWriter(file, fieldnames=field_names)
                 writer.writeheader()
                 for index in range(self.number_of_segments):
@@ -451,7 +451,7 @@ class DrivenControl:
                         {name: control_info[name][index] for name in field_names}
                     )
         else:
-            with open(filename, "wt") as handle:
+            with open(filename, "wt", encoding="utf-8") as handle:
                 json.dump(control_info, handle, sort_keys=True, indent=4)
 
     def export_to_file(
@@ -528,21 +528,20 @@ class DrivenControl:
         check_arguments(
             file_format in _file_formats,
             "Requested file format is not supported. Please use "
-            "one of {}".format(_file_formats),
+            f"one of {_file_formats}",
             {"file_format": file_format},
         )
 
         check_arguments(
             file_type in _file_types,
-            "Requested file type is not supported. Please use "
-            "one of {}".format(_file_types),
+            "Requested file type is not supported. Please use " f"one of {_file_types}",
             {"file_type": file_type},
         )
 
         check_arguments(
             coordinates in _coordinate_systems,
             "Requested coordinate type is not supported. Please use "
-            "one of {}".format(_coordinate_systems),
+            f"one of {_coordinate_systems}",
             {"coordinates": coordinates},
         )
 
@@ -620,10 +619,10 @@ class DrivenControl:
         """
         Prepares a friendly string format for a Driven Control.
         """
-        driven_control = list()
+        driven_control = []
 
         if self.name is not None:
-            driven_control.append("{}:".format(self.name))
+            driven_control.append(f"{self.name}:")
 
         pretty_rabi_rates = ",".join(
             [
@@ -652,17 +651,13 @@ class DrivenControl:
         )
 
         driven_control.append(
-            "Rabi Rates = [{}] x {}".format(pretty_rabi_rates, self.maximum_rabi_rate)
+            f"Rabi Rates = [{pretty_rabi_rates}] x {self.maximum_rabi_rate}"
         )
+        driven_control.append(f"Azimuthal Angles = [{pretty_azimuthal_angles}] x pi")
         driven_control.append(
-            "Azimuthal Angles = [{}] x pi".format(pretty_azimuthal_angles)
+            f"Detunings = [{pretty_detuning}] x {self.maximum_detuning}"
         )
-        driven_control.append(
-            "Detunings = [{}] x {}".format(pretty_detuning, self.maximum_detuning)
-        )
-        driven_control.append(
-            "Durations = [{}] x {}".format(pretty_durations, self.duration)
-        )
+        driven_control.append(f"Durations = [{pretty_durations}] x {self.duration}")
         driven_control_string = "\n".join(driven_control)
 
         return driven_control_string
