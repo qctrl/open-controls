@@ -8,7 +8,7 @@ maintainers = ["Q-CTRL <support@q-ctrl.com>"]
 readme = "README.md"
 homepage = "https://q-ctrl.com"
 repository = "https://github.com/qctrl/python-open-controls"
-documentation = "https://docs.q-ctrl.com/references/python/qctrl-open-controls/"
+documentation = "https://docs.q-ctrl.com/open-controls/references/qctrl-open-controls/"
 keywords = [
     "q-ctrl",
     "qctrl",
