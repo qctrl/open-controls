@@ -32,7 +32,7 @@ setup(
     author_email='support@q-ctrl.com',
     license='Apache-2.0',
     keywords='q-ctrl qctrl quantum control',
-    classifiers=['Development Status :: 5 - Production/Stable', 'Environment :: Console', 'Intended Audience :: Developers', 'Intended Audience :: Education', 'Intended Audience :: Science/Research', 'Natural Language :: English', 'Operating System :: OS Independent', 'Programming Language :: Python :: 3.6', 'Programming Language :: Python :: 3.7', 'Programming Language :: Python :: 3.8', 'Topic :: Internet :: WWW/HTTP', 'Topic :: Scientific/Engineering :: Physics', 'Topic :: Scientific/Engineering :: Visualization', 'Topic :: Software Development :: Embedded Systems', 'Topic :: System :: Distributed Computing'],
+    classifiers=['Development Status :: 5 - Production/Stable', 'Environment :: Console', 'Intended Audience :: Developers', 'Intended Audience :: Education', 'Intended Audience :: Science/Research', 'Natural Language :: English', 'Operating System :: OS Independent', 'Programming Language :: Python :: 3.7', 'Programming Language :: Python :: 3.8', 'Programming Language :: Python :: 3.9', 'Topic :: Internet :: WWW/HTTP', 'Topic :: Scientific/Engineering :: Physics', 'Topic :: Scientific/Engineering :: Visualization', 'Topic :: Software Development :: Embedded Systems', 'Topic :: System :: Distributed Computing'],
     packages=['qctrlopencontrols', 'qctrlopencontrols.driven_controls', 'qctrlopencontrols.dynamic_decoupling_sequences'],
     package_dir={"": "."},
     package_data={},
