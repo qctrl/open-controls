@@ -50,7 +50,7 @@ pylint_runner = "^0.5.4"
 sphinx = "^3.2.1"
 sphinx-rtd-theme = "^0.4.3"
 nbval = "^0.9.5"
-qctrl-visualizer = "^2.3.0"
+qctrl-visualizer = "^2.12.2"
 isort = "^5.7.0"
 pre-commit = "^2.9.3"
 
