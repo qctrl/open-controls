@@ -479,7 +479,7 @@ def new_corpse_control(
 
         \theta_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
 
-        \theta_3 &= \frac{\theta}{2} - \left[ \frac{\sin(\theta/2)}{2}\right].
+        \theta_3 &= \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right].
 
     References
     ----------
@@ -570,7 +570,7 @@ def new_corpse_in_bb1_control(
 
         \theta_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
 
-        \theta_3 &= \frac{\theta}{2} - \left[ \frac{\sin(\theta/2)}{2}\right]
+        \theta_3 &= \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
 
         \phi_* &= \cos^{-1} \left( -\frac{\theta}{4\pi} \right).
 
@@ -674,7 +674,7 @@ def new_corpse_in_sk1_control(
 
         \theta_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
 
-        \theta_3 &= \frac{\theta}{2} - \left[ \frac{\sin(\theta/2)}{2}\right]
+        \theta_3 &= \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
 
         \phi_* &= \cos^{-1} \left( -\frac{\theta}{4\pi} \right).
 
@@ -803,7 +803,7 @@ def new_corpse_in_scrofulous_control(
 
         \Gamma^{\theta'}_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right]
 
-        \Gamma^{\theta'}_3 &= \frac{\theta'}{2} - \left[ \frac{\sin(\theta'/2)}{2}\right]
+        \Gamma^{\theta'}_3 &= \frac{\theta'}{2} - \sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right]
 
     are the CORPSE angles corresponding to each SCROFULOUS angle
     :math:`\theta'\in\{\theta_1,\theta_2,\theta_3\}`.
