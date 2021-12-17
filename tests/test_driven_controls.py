@@ -16,7 +16,6 @@
 Tests for driven controls.
 """
 
-
 import os
 
 import numpy as np
