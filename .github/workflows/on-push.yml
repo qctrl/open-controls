@@ -19,7 +19,7 @@ jobs:
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
         ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci docker run qctrl/python-build:3.7 /scripts/housekeeping.sh
+        ./ci docker run qctrl/ci-images:python-3.7-ci /scripts/housekeeping.sh
 
   linting:
     runs-on: ubuntu-latest
@@ -60,7 +60,7 @@ jobs:
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
         ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci docker run qctrl/python-build:3.7 /scripts/publish-dev-version.sh
+        ./ci docker run qctrl/ci-images:python-3.7-ci /scripts/publish-dev-version.sh
 
   sphinx_documentation:
     runs-on: ubuntu-latest

@@ -20,7 +20,7 @@ jobs:
       - name: Ensure no development packages have been set
         run: |
           source <(curl -sL http://ci.q-ctrl.com)
-          ./ci docker run qctrl/python-build:3.7 /scripts/check-for-internal-versions.sh
+          ./ci docker run qctrl/ci-images:python-3.7-ci /scripts/check-for-internal-versions.sh
   linting:
     # Filter out PRs originating from this repository (triggers on-push.yml instead)
     if: github.event.pull_request.head.repo.fork == true
@@ -46,10 +46,10 @@ jobs:
     - name: Install Python dependencies
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
-        ./ci docker run qctrl/python-build:${{ matrix.python }} /scripts/install-python-dependencies.sh
+        ./ci docker run qctrl/ci-images:python-${{ matrix.python }}-ci /scripts/install-python-dependencies.sh
     - name: Run Pytest
       run: |
-        ./ci docker run qctrl/python-build:${{ matrix.python }} /scripts/pytest.sh
+        ./ci docker run qctrl/ci-images:python-${{ matrix.python }}-ci /scripts/pytest.sh
   sphinx_documentation:
     # Filter out PRs originating from this repository (triggers on-push.yml instead)
     if: github.event.pull_request.head.repo.fork == true
