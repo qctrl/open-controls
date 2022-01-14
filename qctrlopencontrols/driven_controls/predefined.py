@@ -150,10 +150,10 @@ def new_primitive_control(
     )
 
     return DrivenControl(
-        rabi_rates=[maximum_rabi_rate],
-        azimuthal_angles=[azimuthal_angle],
-        detunings=[0],
-        durations=[rabi_rotation / maximum_rabi_rate],
+        rabi_rates=np.array([maximum_rabi_rate]),
+        azimuthal_angles=np.array([azimuthal_angle]),
+        detunings=np.array([0]),
+        durations=np.array([rabi_rotation / maximum_rabi_rate]),
         name=name,
     )
 
@@ -216,15 +216,19 @@ def new_bb1_control(
     phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
     rabi_rotations = [rabi_rotation, np.pi, 2 * np.pi, np.pi]
 
-    rabi_rates = [maximum_rabi_rate] * 4
-    azimuthal_angles = [
-        azimuthal_angle,
-        azimuthal_angle + phi_p,
-        azimuthal_angle + 3 * phi_p,
-        azimuthal_angle + phi_p,
-    ]
-    detunings = [0] * 4
-    durations = [rabi_rotation / maximum_rabi_rate for rabi_rotation in rabi_rotations]
+    rabi_rates = np.repeat(maximum_rabi_rate, 4)
+    azimuthal_angles = np.asarray(
+        [
+            azimuthal_angle,
+            azimuthal_angle + phi_p,
+            azimuthal_angle + 3 * phi_p,
+            azimuthal_angle + phi_p,
+        ]
+    )
+    detunings = np.repeat(0, 4)
+    durations = np.asarray(
+        [rabi_rotation / maximum_rabi_rate for rabi_rotation in rabi_rotations]
+    )
 
     return DrivenControl(
         rabi_rates=rabi_rates,
@@ -294,16 +298,18 @@ def new_sk1_control(
     phi_p = _get_transformed_rabi_rotation_wimperis(rabi_rotation)
     rabi_rotations = [rabi_rotation, 2 * np.pi, 2 * np.pi]
 
-    rabi_rates = [maximum_rabi_rate] * 3
-    azimuthal_angles = [
-        azimuthal_angle,
-        azimuthal_angle - phi_p,
-        azimuthal_angle + phi_p,
-    ]
-    detunings = [0] * 3
-    durations = [
-        rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rotations
-    ]
+    rabi_rates = np.repeat(maximum_rabi_rate, 3)
+    azimuthal_angles = np.asarray(
+        [
+            azimuthal_angle,
+            azimuthal_angle - phi_p,
+            azimuthal_angle + phi_p,
+        ]
+    )
+    detunings = np.repeat(0, 3)
+    durations = np.asarray(
+        [rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rotations]
+    )
 
     return DrivenControl(
         rabi_rates=rabi_rates,
@@ -414,16 +420,18 @@ def new_scrofulous_control(
 
     rabi_rotations = [theta_1, theta_2, theta_3]
 
-    rabi_rates = [maximum_rabi_rate] * 3
-    azimuthal_angles = [
-        azimuthal_angle + phi_1,
-        azimuthal_angle + phi_2,
-        azimuthal_angle + phi_3,
-    ]
-    detunings = [0] * 3
-    durations = [
-        rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rotations
-    ]
+    rabi_rates = np.repeat(maximum_rabi_rate, 3)
+    azimuthal_angles = np.asarray(
+        [
+            azimuthal_angle + phi_1,
+            azimuthal_angle + phi_2,
+            azimuthal_angle + phi_3,
+        ]
+    )
+    detunings = np.repeat(0, 3)
+    durations = np.asarray(
+        [rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rotations]
+    )
 
     return DrivenControl(
         rabi_rates=rabi_rates,
@@ -500,12 +508,14 @@ def new_corpse_control(
         rabi_rotation / 2.0 - k,
     ]
 
-    rabi_rates = [maximum_rabi_rate] * 3
-    azimuthal_angles = [azimuthal_angle, azimuthal_angle + np.pi, azimuthal_angle]
-    detunings = [0] * 3
-    durations = [
-        rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rotations
-    ]
+    rabi_rates = np.repeat(maximum_rabi_rate, 3)
+    azimuthal_angles = np.asarray(
+        [azimuthal_angle, azimuthal_angle + np.pi, azimuthal_angle]
+    )
+    detunings = np.repeat(0, 3)
+    durations = np.asarray(
+        [rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rotations]
+    )
 
     return DrivenControl(
         rabi_rates=rabi_rates,
@@ -598,19 +608,21 @@ def new_corpse_in_bb1_control(
         np.pi,
     ]
 
-    rabi_rates = [maximum_rabi_rate] * 6
-    azimuthal_angles = [
-        azimuthal_angle,
-        azimuthal_angle + np.pi,
-        azimuthal_angle,
-        azimuthal_angle + phi_p,
-        azimuthal_angle + 3 * phi_p,
-        azimuthal_angle + phi_p,
-    ]
-    detunings = [0] * 6
-    durations = [
-        rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rotations
-    ]
+    rabi_rates = np.repeat(maximum_rabi_rate, 6)
+    azimuthal_angles = np.asarray(
+        [
+            azimuthal_angle,
+            azimuthal_angle + np.pi,
+            azimuthal_angle,
+            azimuthal_angle + phi_p,
+            azimuthal_angle + 3 * phi_p,
+            azimuthal_angle + phi_p,
+        ]
+    )
+    detunings = np.repeat(0, 6)
+    durations = np.asarray(
+        [rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rotations]
+    )
 
     return DrivenControl(
         rabi_rates=rabi_rates,
@@ -701,18 +713,20 @@ def new_corpse_in_sk1_control(
         2 * np.pi,
     ]
 
-    rabi_rates = [maximum_rabi_rate] * 5
-    azimuthal_angles = [
-        azimuthal_angle,
-        azimuthal_angle + np.pi,
-        azimuthal_angle,
-        azimuthal_angle - phi_p,
-        azimuthal_angle + phi_p,
-    ]
-    detunings = [0] * 5
-    durations = [
-        rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rotations
-    ]
+    rabi_rates = np.repeat(maximum_rabi_rate, 5)
+    azimuthal_angles = np.asarray(
+        [
+            azimuthal_angle,
+            azimuthal_angle + np.pi,
+            azimuthal_angle,
+            azimuthal_angle - phi_p,
+            azimuthal_angle + phi_p,
+        ]
+    )
+    detunings = np.repeat(0, 5)
+    durations = np.asarray(
+        [rabi_rotation_ / maximum_rabi_rate for rabi_rotation_ in rabi_rotations]
+    )
 
     return DrivenControl(
         rabi_rates=rabi_rates,
@@ -867,10 +881,12 @@ def new_corpse_in_scrofulous_control(
     total_angles = np.vstack(_total_angles)
     rabi_rotations = total_angles[:, 0]
 
-    rabi_rates = [maximum_rabi_rate] * 9
+    rabi_rates = np.repeat(maximum_rabi_rate, 9)
     azimuthal_angles = total_angles[:, 1]
-    detunings = [0] * 9
-    durations = [rabi_rotation / maximum_rabi_rate for rabi_rotation in rabi_rotations]
+    detunings = np.repeat(0, 9)
+    durations = np.asarray(
+        [rabi_rotation / maximum_rabi_rate for rabi_rotation in rabi_rotations]
+    )
 
     return DrivenControl(
         rabi_rates=rabi_rates,
@@ -959,10 +975,12 @@ def new_wamf1_control(
     rabi_rotations = [theta_plus, theta_minus, theta_minus, theta_plus]
     segment_duration = theta_plus / maximum_rabi_rate
 
-    rabi_rates = [rabi_rotation / segment_duration for rabi_rotation in rabi_rotations]
-    azimuthal_angles = [azimuthal_angle] * 4
-    detunings = [0] * 4
-    durations = [segment_duration] * 4
+    rabi_rates = np.asarray(
+        [rabi_rotation / segment_duration for rabi_rotation in rabi_rotations]
+    )
+    azimuthal_angles = np.repeat(azimuthal_angle, 4)
+    detunings = np.repeat(0, 4)
+    durations = np.repeat(segment_duration, 4)
 
     return DrivenControl(
         rabi_rates=rabi_rates,
@@ -1199,7 +1217,9 @@ def new_modulated_gaussian_control(
             * (maximum_full_rotation_angle / maximum_rotation_angle)
         )
 
-    azimuthal_angles = [0 if v >= 0 else np.pi for v in modulated_gaussian_segments]
+    azimuthal_angles = np.asarray(
+        [0 if v >= 0 else np.pi for v in modulated_gaussian_segments]
+    )
 
     return DrivenControl(
         rabi_rates=np.abs(modulated_gaussian_segments),
