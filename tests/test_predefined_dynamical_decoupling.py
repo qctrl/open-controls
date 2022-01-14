@@ -395,12 +395,12 @@ def test_quadratic_sequence():
     _offsets = np.zeros((outer_offset_count + 1, inner_offset_count + 1))
 
     constant = 0.5 / (outer_offset_count + 1)
-    _delta_positions = [
-        duration * (np.sin(np.pi * (k + 1) * constant)) ** 2
-        for k in range(outer_offset_count)
-    ]
-
-    _outer_offsets = np.array(_delta_positions)
+    _outer_offsets = np.array(
+        [
+            duration * (np.sin(np.pi * (k + 1) * constant)) ** 2
+            for k in range(outer_offset_count)
+        ]
+    )
     _offsets[0:outer_offset_count, -1] = _outer_offsets
 
     _outer_offsets = np.insert(
@@ -411,10 +411,9 @@ def test_quadratic_sequence():
     _inner_durations = _outer_offsets[1:] - _outer_offsets[0:-1]
 
     constant = 0.5 / (inner_offset_count + 1)
-    _delta_positions = [
-        (np.sin(np.pi * (k + 1) * constant)) ** 2 for k in range(inner_offset_count)
-    ]
-    _delta_positions = np.array(_delta_positions)
+    _delta_positions = np.array(
+        [(np.sin(np.pi * (k + 1) * constant)) ** 2 for k in range(inner_offset_count)]
+    )
     for inner_sequence_idx in range(_inner_durations.shape[0]):
         _inner_deltas = _inner_durations[inner_sequence_idx] * _delta_positions
         _inner_deltas = _outer_offsets[inner_sequence_idx] + _inner_deltas

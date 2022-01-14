@@ -103,9 +103,9 @@ def _add_pre_post_rotations(
 
     # parameters for pre-post pulses
     rabi_value = np.pi / 2
-    detuning_value = 0
-    initial_azimuthal = 0  # for pre-pulse
-    final_azimuthal = 0  # for post-pulse
+    detuning_value = 0.0
+    initial_azimuthal = 0.0  # for pre-pulse
+    final_azimuthal = 0.0  # for post-pulse
 
     # The sequence will preserve the state |0> is it has an even number
     # of X and Y pi-pulses
@@ -183,16 +183,16 @@ def new_ramsey_sequence(duration, pre_post_rotation=False, name=None):
         {"duration": duration},
     )
 
-    offsets = []
-    rabi_rotations = []
-    azimuthal_angles = []
-    detuning_rotations = []
-
     if pre_post_rotation:
         offsets = duration * np.array([0.0, 1.0])
         rabi_rotations = np.array([np.pi / 2, np.pi / 2])
         azimuthal_angles = np.array([0.0, np.pi])
         detuning_rotations = np.zeros((2,))
+    else:
+        offsets = np.array([])
+        rabi_rotations = np.array([])
+        azimuthal_angles = np.array([])
+        detuning_rotations = np.array([])
 
     return DynamicDecouplingSequence(
         duration=duration,
@@ -682,11 +682,11 @@ def new_walsh_sequence(duration, paley_order, pre_post_rotation=False, name=None
             ** binary_order[hamming_weight - 1 - i]
         )
 
-    walsh_relative_offsets = []
+    _walsh_relative_offsets = []
     for i in range(samples - 1):
         if walsh_array[i] != walsh_array[i + 1]:
-            walsh_relative_offsets.append((i + 1) * (1.0 / samples))
-    walsh_relative_offsets = np.array(walsh_relative_offsets, dtype=np.float)
+            _walsh_relative_offsets.append((i + 1) * (1.0 / samples))
+    walsh_relative_offsets = np.array(_walsh_relative_offsets, dtype=float)
 
     offsets = duration * walsh_relative_offsets
     rabi_rotations = np.full(offsets.shape, np.pi)

@@ -42,10 +42,10 @@ def test_driven_controls():
     """
     Tests the construction of driven controls.
     """
-    _rabi_rates = [np.pi, np.pi, 0]
-    _azimuthal_angles = [np.pi / 2, 0, -np.pi]
-    _detunings = [0, 0, 0]
-    _durations = [1, 2, 3]
+    _rabi_rates = np.array([np.pi, np.pi, 0])
+    _azimuthal_angles = np.array([np.pi / 2, 0, -np.pi])
+    _detunings = np.array([0, 0, 0])
+    _durations = np.array([1, 2, 3])
 
     _name = "driven_control"
 
@@ -68,10 +68,10 @@ def test_driven_control_default_values():
     """
     Tests driven control with default values and invalid input.
     """
-    _rabi_rates = [np.pi, np.pi, 0]
-    _azimuthal_angles = [np.pi / 2, 0, -np.pi]
-    _detunings = [0, 0, 0]
-    _durations = [1, 2, 3]
+    _rabi_rates = np.array([np.pi, np.pi, 0])
+    _azimuthal_angles = np.array([np.pi / 2, 0, -np.pi])
+    _detunings = np.array([0, 0, 0])
+    _durations = np.array([1, 2, 3])
 
     _name = "driven_control"
 
@@ -114,23 +114,23 @@ def test_driven_control_default_values():
     assert np.allclose(driven_control.detunings, np.array([0.0, 0.0, 0.0]))
     assert np.allclose(driven_control.azimuthal_angles, _azimuthal_angles)
 
-    driven_control = DrivenControl(durations=[1])
+    driven_control = DrivenControl(durations=np.array([1]))
     assert np.allclose(driven_control.rabi_rates, np.array([0.0]))
     assert np.allclose(driven_control.durations, np.array([1.0]))
     assert np.allclose(driven_control.detunings, np.array([0.0]))
     assert np.allclose(driven_control.azimuthal_angles, np.array([0.0]))
 
     with pytest.raises(ArgumentsValueError):
-        _ = DrivenControl(durations=[1], rabi_rates=[-1])
+        _ = DrivenControl(durations=np.array([1]), rabi_rates=np.array([-1]))
 
     with pytest.raises(ArgumentsValueError):
-        _ = DrivenControl(durations=[0])
+        _ = DrivenControl(durations=np.array([0]))
 
     with pytest.raises(ArgumentsValueError):
         _ = DrivenControl(
-            durations=[1],
-            rabi_rates=[1, 2],
-            azimuthal_angles=[1, 2, 3],
+            durations=np.array([1]),
+            rabi_rates=np.array([1, 2]),
+            azimuthal_angles=np.array([1, 2, 3]),
         )
 
 
@@ -138,14 +138,14 @@ def test_control_directions():
     """
     Tests if the directions method works properly.
     """
-    rabi_rates = [1, 0, 1, 0]
-    azimuthal_angles = [0, 0, np.pi / 2, 0]
-    detunings = [0, 0, 0, 1]
-    durations = [1, 1, 1, 1]
+    rabi_rates = np.array([1, 0, 1, 0])
+    azimuthal_angles = np.array([0, 0, np.pi / 2, 0])
+    detunings = np.array([0, 0, 0, 1])
+    durations = np.array([1, 1, 1, 1])
 
     name = "driven_control"
 
-    expected_directions = [[1, 0, 0], [0, 0, 0], [0, 1, 0], [0, 0, 1]]
+    expected_directions = np.array([[1, 0, 0], [0, 0, 0], [0, 1, 0], [0, 0, 1]])
 
     driven_control = DrivenControl(
         rabi_rates=rabi_rates,
@@ -162,14 +162,14 @@ def test_control_directions_with_small_amplitudes():
     """
     Tests if the directions method works with very small amplitudes.
     """
-    rabi_rates = [1e-100, 0.0, 1e-100, 0.0]
-    azimuthal_angles = [0, 0, np.pi / 2, 0]
-    detunings = [0, 0, 0, 1e-100]
-    durations = [1, 1, 1, 1]
+    rabi_rates = np.array([1e-100, 0.0, 1e-100, 0.0])
+    azimuthal_angles = np.array([0, 0, np.pi / 2, 0])
+    detunings = np.array([0, 0, 0, 1e-100])
+    durations = np.array([1, 1, 1, 1])
 
     name = "driven_control"
 
-    expected_directions = [[1, 0, 0], [0, 0, 0], [0, 1, 0], [0, 0, 1]]
+    expected_directions = np.array([[1, 0, 0], [0, 0, 0], [0, 1, 0], [0, 0, 1]])
 
     driven_control = DrivenControl(
         rabi_rates=rabi_rates,
@@ -195,10 +195,10 @@ def test_control_export():
     _name = "driven_control"
 
     driven_control = DrivenControl(
-        rabi_rates=_rabi_rates,
-        azimuthal_angles=_azimuthal_angles,
-        detunings=_detunings,
-        durations=_durations,
+        rabi_rates=np.asarray(_rabi_rates),
+        azimuthal_angles=np.asarray(_azimuthal_angles),
+        detunings=np.asarray(_detunings),
+        durations=np.asarray(_durations),
         name=_name,
     )
 
@@ -250,10 +250,10 @@ def test_plot_data():
     _durations = [1, 1.25, 1.5]
 
     driven_control = DrivenControl(
-        rabi_rates=_rabi_rates,
-        azimuthal_angles=_azimuthal_angles,
-        detunings=_detunings,
-        durations=_durations,
+        rabi_rates=np.asarray(_rabi_rates),
+        azimuthal_angles=np.asarray(_azimuthal_angles),
+        detunings=np.asarray(_detunings),
+        durations=np.asarray(_durations),
     )
 
     x_amplitude = [np.pi, 0.0, 0.0]
@@ -296,10 +296,10 @@ def test_pretty_print():
     _durations = [1.0, 1.0, 1.0]
 
     driven_control = DrivenControl(
-        rabi_rates=_rabi_rates,
-        azimuthal_angles=_azimuthal_angles,
-        detunings=_detunings,
-        durations=_durations,
+        rabi_rates=np.asarray(_rabi_rates),
+        azimuthal_angles=np.asarray(_azimuthal_angles),
+        detunings=np.asarray(_detunings),
+        durations=np.asarray(_durations),
     )
 
     _pretty_rabi_rates = ",".join(
@@ -337,10 +337,10 @@ def test_pretty_print():
     _durations = [1.0, 1.0, 1.0]
 
     driven_control = DrivenControl(
-        rabi_rates=_rabi_rates,
-        azimuthal_angles=_azimuthal_angles,
-        detunings=_detunings,
-        durations=_durations,
+        rabi_rates=np.asarray(_rabi_rates),
+        azimuthal_angles=np.asarray(_azimuthal_angles),
+        detunings=np.asarray(_detunings),
+        durations=np.asarray(_durations),
     )
 
     _pretty_rabi_rates = ",".join(["0", "0", "0"])
@@ -376,10 +376,10 @@ def test_pretty_print():
     _durations = [1.0, 1.0, 1.0]
 
     driven_control = DrivenControl(
-        rabi_rates=_rabi_rates,
-        azimuthal_angles=_azimuthal_angles,
-        detunings=_detunings,
-        durations=_durations,
+        rabi_rates=np.asarray(_rabi_rates),
+        azimuthal_angles=np.asarray(_azimuthal_angles),
+        detunings=np.asarray(_detunings),
+        durations=np.asarray(_durations),
     )
 
     _pretty_rabi_rates = ",".join(
@@ -410,10 +410,10 @@ def test_pretty_print():
 
 def test_resample_exact():
     driven_control = DrivenControl(
-        rabi_rates=[0, 2],
-        azimuthal_angles=[1.5, 0.5],
-        detunings=[1.3, 2.3],
-        durations=[1, 1],
+        rabi_rates=np.array([0, 2]),
+        azimuthal_angles=np.array([1.5, 0.5]),
+        detunings=np.array([1.3, 2.3]),
+        durations=np.array([1, 1]),
         name="control",
     )
 
@@ -429,10 +429,10 @@ def test_resample_exact():
 
 def test_resample_inexact():
     driven_control = DrivenControl(
-        rabi_rates=[0, 2],
-        azimuthal_angles=[1.5, 0.5],
-        detunings=[1.3, 2.3],
-        durations=[1, 1],
+        rabi_rates=np.array([0, 2]),
+        azimuthal_angles=np.array([1.5, 0.5]),
+        detunings=np.array([1.3, 2.3]),
+        durations=np.array([1, 1]),
         name="control",
     )
 
