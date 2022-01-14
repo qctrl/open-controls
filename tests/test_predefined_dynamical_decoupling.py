@@ -131,9 +131,7 @@ def test_carr_purcell_sequence():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
     sequence = new_carr_purcell_sequence(
-        duration=duration,
-        offset_count=offset_count,
-        pre_post_rotation=True,
+        duration=duration, offset_count=offset_count, pre_post_rotation=True
     )
 
     _offsets = np.array(
@@ -164,10 +162,7 @@ def test_cpmg_sequence():
     duration = 10.0
     offset_count = 4
 
-    sequence = new_cpmg_sequence(
-        duration=duration,
-        offset_count=offset_count,
-    )
+    sequence = new_cpmg_sequence(duration=duration, offset_count=offset_count)
 
     _spacing = duration / offset_count
     _offsets = np.array(
@@ -188,9 +183,7 @@ def test_cpmg_sequence():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
     sequence = new_cpmg_sequence(
-        duration=duration,
-        offset_count=offset_count,
-        pre_post_rotation=True,
+        duration=duration, offset_count=offset_count, pre_post_rotation=True
     )
 
     _offsets = np.array(
@@ -240,17 +233,11 @@ def test_uhrig_sequence():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
     sequence = new_uhrig_sequence(
-        duration=duration,
-        offset_count=offset_count,
-        pre_post_rotation=True,
+        duration=duration, offset_count=offset_count, pre_post_rotation=True
     )
 
     _offsets = np.array(_delta_positions)
-    _offsets = np.insert(
-        _offsets,
-        [0, _offsets.shape[0]],
-        [0, duration],
-    )
+    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
 
     _rabi_rotations = np.array([np.pi / 2, np.pi, np.pi, np.pi, np.pi, np.pi / 2])
     _azimuthal_angles = np.array(
@@ -272,10 +259,7 @@ def test_periodic_sequence():
     duration = 10.0
     offset_count = 4
 
-    sequence = new_periodic_sequence(
-        duration=duration,
-        offset_count=offset_count,
-    )
+    sequence = new_periodic_sequence(duration=duration, offset_count=offset_count)
 
     constant = 1 / (offset_count + 1)
     # prepare the offsets for delta comb
@@ -291,17 +275,11 @@ def test_periodic_sequence():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
     sequence = new_periodic_sequence(
-        duration=duration,
-        offset_count=offset_count,
-        pre_post_rotation=True,
+        duration=duration, offset_count=offset_count, pre_post_rotation=True
     )
 
     _offsets = np.array(_delta_positions)
-    _offsets = np.insert(
-        _offsets,
-        [0, _offsets.shape[0]],
-        [0, duration],
-    )
+    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
 
     _rabi_rotations = np.array([np.pi / 2, np.pi, np.pi, np.pi, np.pi, np.pi / 2])
     _azimuthal_angles = np.array([0, 0, 0, 0, 0, np.pi])
@@ -354,16 +332,10 @@ def test_walsh_sequence():
     assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
 
     sequence = new_walsh_sequence(
-        duration=duration,
-        paley_order=paley_order,
-        pre_post_rotation=True,
+        duration=duration, paley_order=paley_order, pre_post_rotation=True
     )
 
-    _offsets = np.insert(
-        _offsets,
-        [0, _offsets.shape[0]],
-        [0, duration],
-    )
+    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
     _rabi_rotations = np.insert(
         _rabi_rotations, [0, _rabi_rotations.shape[0]], [np.pi / 2, np.pi / 2]
     )
@@ -404,9 +376,7 @@ def test_quadratic_sequence():
     _offsets[0:outer_offset_count, -1] = _outer_offsets
 
     _outer_offsets = np.insert(
-        _outer_offsets,
-        [0, _outer_offsets.shape[0]],
-        [0, duration],
+        _outer_offsets, [0, _outer_offsets.shape[0]], [0, duration]
     )
     _inner_durations = _outer_offsets[1:] - _outer_offsets[0:-1]
 
@@ -472,8 +442,7 @@ def test_x_concatenated_sequence():
     concatenation_order = 3
 
     sequence = new_x_concatenated_sequence(
-        duration=duration,
-        concatenation_order=concatenation_order,
+        duration=duration, concatenation_order=concatenation_order
     )
 
     _spacing = duration / (2 ** concatenation_order)
@@ -496,15 +465,9 @@ def test_x_concatenated_sequence():
         pre_post_rotation=True,
     )
 
-    _offsets = np.insert(
-        _offsets,
-        [0, _offsets.shape[0]],
-        [0, duration],
-    )
+    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
     _rabi_rotations = np.insert(
-        _rabi_rotations,
-        [0, _rabi_rotations.shape[0]],
-        [np.pi / 2, np.pi / 2],
+        _rabi_rotations, [0, _rabi_rotations.shape[0]], [np.pi / 2, np.pi / 2]
     )
     _azimuthal_angles = np.zeros(_offsets.shape)
     _detuning_rotations = np.zeros(_offsets.shape)
@@ -524,8 +487,7 @@ def test_xy_concatenated_sequence():
     concatenation_order = 2
 
     sequence = new_xy_concatenated_sequence(
-        duration=duration,
-        concatenation_order=concatenation_order,
+        duration=duration, concatenation_order=concatenation_order
     )
 
     _spacing = duration / (2 ** (concatenation_order * 2))
@@ -566,22 +528,7 @@ def test_xy_concatenated_sequence():
         ]
     )
     _azimuthal_angles = np.array(
-        [
-            0,
-            np.pi / 2,
-            0,
-            0,
-            0,
-            np.pi / 2,
-            0,
-            0,
-            np.pi / 2,
-            0,
-            0,
-            0,
-            np.pi / 2,
-            0,
-        ]
+        [0, np.pi / 2, 0, 0, 0, np.pi / 2, 0, 0, np.pi / 2, 0, 0, 0, np.pi / 2, 0]
     )
     _detuning_rotations = np.array([0, 0, 0, np.pi, 0, 0, 0, 0, 0, 0, np.pi, 0, 0, 0])
 
@@ -596,25 +543,15 @@ def test_xy_concatenated_sequence():
         pre_post_rotation=True,
     )
 
-    _offsets = np.insert(
-        _offsets,
-        [0, _offsets.shape[0]],
-        [0, duration],
-    )
+    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
     _rabi_rotations = np.insert(
-        _rabi_rotations,
-        [0, _rabi_rotations.shape[0]],
-        [np.pi / 2, np.pi / 2],
+        _rabi_rotations, [0, _rabi_rotations.shape[0]], [np.pi / 2, np.pi / 2]
     )
     _azimuthal_angles = np.insert(
-        _azimuthal_angles,
-        [0, _azimuthal_angles.shape[0]],
-        [0, np.pi],
+        _azimuthal_angles, [0, _azimuthal_angles.shape[0]], [0, np.pi]
     )
     _detuning_rotations = np.insert(
-        _detuning_rotations,
-        [0, _detuning_rotations.shape[0]],
-        [0, 0],
+        _detuning_rotations, [0, _detuning_rotations.shape[0]], [0, 0]
     )
 
     assert np.allclose(_offsets, sequence.offsets)
@@ -713,9 +650,7 @@ def test_if_cpmg_sequence_with_odd_pulses_is_identity():
     pi/2-pulses and an extra Z rotation is an identity, when the number of pulses is odd.
     """
     odd_cpmg_sequence = new_cpmg_sequence(
-        duration=10.0,
-        offset_count=7,
-        pre_post_rotation=True,
+        duration=10.0, offset_count=7, pre_post_rotation=True
     )
 
     assert _pulses_produce_identity(odd_cpmg_sequence)
@@ -727,9 +662,7 @@ def test_if_cpmg_sequence_with_even_pulses_is_identity():
     pi/2-pulses is an identity, when the number of pulses is even.
     """
     even_cpmg_sequence = new_cpmg_sequence(
-        duration=10.0,
-        offset_count=8,
-        pre_post_rotation=True,
+        duration=10.0, offset_count=8, pre_post_rotation=True
     )
 
     assert _pulses_produce_identity(even_cpmg_sequence)
@@ -741,9 +674,7 @@ def test_if_uhrig_sequence_with_odd_pulses_is_identity():
     pi/2-pulses and an extra Z rotation is an identity, when the number of pulses is odd.
     """
     odd_uhrig_sequence = new_uhrig_sequence(
-        duration=10.0,
-        offset_count=7,
-        pre_post_rotation=True,
+        duration=10.0, offset_count=7, pre_post_rotation=True
     )
 
     assert _pulses_produce_identity(odd_uhrig_sequence)
@@ -755,9 +686,7 @@ def test_if_uhrig_sequence_with_even_pulses_is_identity():
     pi/2-pulses is an identity, when the number of pulses is even.
     """
     even_uhrig_sequence = new_uhrig_sequence(
-        duration=10.0,
-        offset_count=8,
-        pre_post_rotation=True,
+        duration=10.0, offset_count=8, pre_post_rotation=True
     )
 
     assert _pulses_produce_identity(even_uhrig_sequence)
@@ -769,9 +698,7 @@ def test_if_periodic_sequence_with_odd_pulses_is_identity():
     pi/2-pulses is an identity, when the number of pulses is odd.
     """
     odd_periodic_sequence = new_periodic_sequence(
-        duration=10.0,
-        offset_count=7,
-        pre_post_rotation=True,
+        duration=10.0, offset_count=7, pre_post_rotation=True
     )
 
     assert _pulses_produce_identity(odd_periodic_sequence)
@@ -783,9 +710,7 @@ def test_if_periodic_sequence_with_even_pulses_is_identity():
     pi/2-pulses is an identity, when the number of pulses is even.
     """
     even_periodic_sequence = new_periodic_sequence(
-        duration=10.0,
-        offset_count=8,
-        pre_post_rotation=True,
+        duration=10.0, offset_count=8, pre_post_rotation=True
     )
 
     assert _pulses_produce_identity(even_periodic_sequence)
@@ -906,9 +831,7 @@ def test_if_x_concatenated_sequence_is_identity():
     pi/2-pulses is an identity.
     """
     x_concat_sequence = new_x_concatenated_sequence(
-        duration=10.0,
-        concatenation_order=4,
-        pre_post_rotation=True,
+        duration=10.0, concatenation_order=4, pre_post_rotation=True
     )
 
     assert _pulses_produce_identity(x_concat_sequence)
@@ -920,9 +843,7 @@ def test_if_xy_concatenated_sequence_is_identity():
     pi/2-pulses is an identity.
     """
     xy_concat_sequence = new_xy_concatenated_sequence(
-        duration=10.0,
-        concatenation_order=4,
-        pre_post_rotation=True,
+        duration=10.0, concatenation_order=4, pre_post_rotation=True
     )
 
     assert _pulses_produce_identity(xy_concat_sequence)
