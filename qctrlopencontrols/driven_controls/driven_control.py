@@ -351,9 +351,7 @@ class DrivenControl:
             original duration.
         """
         check_arguments(
-            time_step > 0,
-            "Time step must be positive.",
-            {"time_step": time_step},
+            time_step > 0, "Time step must be positive.", {"time_step": time_step}
         )
         check_arguments(
             time_step <= self.duration,

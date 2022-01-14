@@ -300,11 +300,7 @@ def new_sk1_control(
 
     rabi_rates = np.repeat(maximum_rabi_rate, 3)
     azimuthal_angles = np.asarray(
-        [
-            azimuthal_angle,
-            azimuthal_angle - phi_p,
-            azimuthal_angle + phi_p,
-        ]
+        [azimuthal_angle, azimuthal_angle - phi_p, azimuthal_angle + phi_p]
     )
     detunings = np.repeat(0, 3)
     durations = np.asarray(
@@ -422,11 +418,7 @@ def new_scrofulous_control(
 
     rabi_rates = np.repeat(maximum_rabi_rate, 3)
     azimuthal_angles = np.asarray(
-        [
-            azimuthal_angle + phi_1,
-            azimuthal_angle + phi_2,
-            azimuthal_angle + phi_3,
-        ]
+        [azimuthal_angle + phi_1, azimuthal_angle + phi_2, azimuthal_angle + phi_3]
     )
     detunings = np.repeat(0, 3)
     durations = np.asarray(
@@ -1145,10 +1137,7 @@ def new_modulated_gaussian_control(
     check_arguments(
         duration > minimum_segment_duration,
         "Total duration must be greater than minimum segment duration.",
-        {
-            "duration": duration,
-            "minimum_segment_duration": minimum_segment_duration,
-        },
+        {"duration": duration, "minimum_segment_duration": minimum_segment_duration},
     )
 
     # default spread of the gaussian shaped pulse as a fraction of its duration
