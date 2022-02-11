@@ -26,7 +26,7 @@ setup(
     name='qctrl-open-controls',
     version='9.0.0',
     description='Q-CTRL Python Open Controls',
-    python_requires='<3.10,>=3.7',
+    python_requires='<3.11,>=3.7',
     project_urls={"documentation": "https://docs.q-ctrl.com/open-controls/references/qctrl-open-controls/", "homepage": "https://q-ctrl.com", "repository": "https://github.com/qctrl/python-open-controls"},
     author='Q-CTRL',
     author_email='support@q-ctrl.com',
@@ -37,5 +37,5 @@ setup(
     package_dir={"": "."},
     package_data={},
     install_requires=['numpy==1.*,>=1.20.0', 'toml==0.*,>=0.10.0'],
-    extras_require={"dev": ["black==20.*,>=20.8.0.b1", "isort==5.*,>=5.7.0", "mypy==0.*,>=0.800.0", "nbval==0.*,>=0.9.5", "pre-commit==2.*,>=2.9.3", "pylint==2.*,>=2.6.0", "pylint-runner==0.*,>=0.5.4", "pytest==5.*,>=5.0.0", "qctrl-visualizer==2.*,>=2.12.2", "sphinx==3.*,>=3.2.1", "sphinx-rtd-theme==0.*,>=0.4.3"]},
+    extras_require={"dev": ["black==20.*,>=20.8.0.b1", "isort==5.*,>=5.7.0", "mypy==0.*,>=0.800.0", "nbval==0.*,>=0.9.5", "pre-commit==2.*,>=2.9.3", "pylint==2.*,>=2.6.0", "pylint-runner==0.*,>=0.5.4", "pytest==6.*,>=6.0.0", "qctrl-visualizer==2.*,>=2.12.2", "sphinx==3.*,>=3.2.1", "sphinx-rtd-theme==0.*,>=0.4.3"]},
 )

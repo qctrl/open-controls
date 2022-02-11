@@ -190,12 +190,12 @@ class DynamicDecouplingSequence:
             """
             return ", ".join(arr.astype(str))
 
-        sequence_string = list()
+        sequence_string = []
 
         if self.name is not None:
-            sequence_string.append("{}:".format(self.name))
+            sequence_string.append(f"{self.name}:")
 
-        sequence_string.append("Duration = {}".format(self.duration))
+        sequence_string.append(f"Duration = {self.duration}")
 
         sequence_string.append(
             f"Offsets = [{_array_to_str(self.offsets / self.duration)}] x {self.duration}"
