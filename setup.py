@@ -25,7 +25,11 @@ setup(
     long_description=readme,
     name='qctrl-open-controls',
 <<<<<<< HEAD
+<<<<<<< HEAD
     version='8.4.0',
+=======
+    version='9.0.0',
+>>>>>>> aae24414a30c65809a0e437fd73c67c357e9cd9e
     description='Q-CTRL Python Open Controls',
     python_requires='<3.11,>=3.6.4',
     project_urls={"documentation": "https://docs.q-ctrl.com/references/python/qctrl-open-controls/", "homepage": "https://q-ctrl.com", "repository": "https://github.com/qctrl/python-open-controls"},
