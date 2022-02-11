@@ -1,4 +1,4 @@
-# Copyright 2021 Q-CTRL
+# Copyright 2022 Q-CTRL
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 Top-level package for Q-CTRL Open Controls.
 """
 
-__version__ = "8.4.0"
+__version__ = "9.0.0"
 
 from .driven_controls.driven_control import DrivenControl
 from .driven_controls.predefined import (

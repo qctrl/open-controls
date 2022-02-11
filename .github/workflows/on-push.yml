@@ -12,19 +12,19 @@ jobs:
   housekeeping:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Perform housekeeping checks
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
         ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci docker run qctrl/python-build:3.7 /scripts/housekeeping.sh
+        ./ci docker run qctrl/ci-images:python-3.7-ci /scripts/housekeeping.sh
 
   linting:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Install Python dependencies
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
@@ -38,9 +38,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        python: [3.7, 3.8, 3.9, 3.10]
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Install Python dependencies
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
@@ -53,14 +53,14 @@ jobs:
   publish_internally:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Publish development version
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
         ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci docker run qctrl/python-build:3.7 /scripts/publish-dev-version.sh
+        ./ci docker run qctrl/ci-images:python-3.7-ci /scripts/publish-dev-version.sh
 
   sphinx_documentation:
     runs-on: ubuntu-latest

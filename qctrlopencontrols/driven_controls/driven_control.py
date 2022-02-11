@@ -1,4 +1,4 @@
-# Copyright 2021 Q-CTRL
+# Copyright 2022 Q-CTRL
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -102,7 +102,7 @@ class DrivenControl:
 
         self.name = name
 
-        durations = np.asarray(durations, dtype=np.float)
+        durations = np.asarray(durations, dtype=float)
 
         # check if all the durations are greater than zero
         check_arguments(
@@ -139,9 +139,10 @@ class DrivenControl:
         if detunings is None:
             detunings = np.zeros(duration_count)
 
-        rabi_rates = np.asarray(rabi_rates, dtype=np.float64)
-        azimuthal_angles = np.asarray(azimuthal_angles, dtype=np.float64)
-        detunings = np.asarray(detunings, dtype=np.float64)
+        # for backward compatibility as these variable could be list
+        rabi_rates = np.asarray(rabi_rates, dtype=float)
+        azimuthal_angles = np.asarray(azimuthal_angles, dtype=float)
+        detunings = np.asarray(detunings, dtype=float)
 
         # check if all the rabi_rates are greater than zero
         check_arguments(
@@ -350,9 +351,7 @@ class DrivenControl:
             original duration.
         """
         check_arguments(
-            time_step > 0,
-            "Time step must be positive.",
-            {"time_step": time_step},
+            time_step > 0, "Time step must be positive.", {"time_step": time_step}
         )
         check_arguments(
             time_step <= self.duration,
@@ -362,7 +361,7 @@ class DrivenControl:
         )
 
         count = int(np.ceil(self.duration / time_step))
-        durations = [time_step] * count
+        durations = np.repeat(time_step, count)
         times = np.arange(count) * time_step
 
         indices = np.digitize(times, bins=np.cumsum(self.durations))

@@ -1,4 +1,4 @@
-# Copyright 2021 Q-CTRL
+# Copyright 2022 Q-CTRL
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -570,10 +570,10 @@ def test_conversion_of_pulses_with_arbitrary_rabi_rotations():
     Y pulses with rabi rotations that assume arbitrary values between 0 and pi.
     """
     _duration = 3.0
-    _offsets = [0.5, 1.5, 2.5]
-    _rabi_rotations = [1.0, 2.0, 3.0]
-    _azimuthal_angles = [np.pi / 2, np.pi / 2, np.pi / 2]
-    _detuning_rotations = [0.0, 0.0, 0.0]
+    _offsets = np.array([0.5, 1.5, 2.5])
+    _rabi_rotations = np.array([1.0, 2.0, 3.0])
+    _azimuthal_angles = np.array([np.pi / 2, np.pi / 2, np.pi / 2])
+    _detuning_rotations = np.array([0.0, 0.0, 0.0])
     _name = "arbitrary_rabi_rotation_sequence"
 
     dd_sequence = DynamicDecouplingSequence(
@@ -625,10 +625,10 @@ def test_conversion_of_pulses_with_arbitrary_azimuthal_angles():
     pi-pulses with azimuthal angles that assume arbitrary values between 0 and pi/2.
     """
     _duration = 3.0
-    _offsets = [0.5, 1.5, 2.5]
-    _rabi_rotations = [np.pi, np.pi, np.pi]
-    _azimuthal_angles = [0.5, 1.0, 1.5]
-    _detuning_rotations = [0.0, 0.0, 0.0]
+    _offsets = np.array([0.5, 1.5, 2.5])
+    _rabi_rotations = np.array([np.pi, np.pi, np.pi])
+    _azimuthal_angles = np.array([0.5, 1.0, 1.5])
+    _detuning_rotations = np.array([0.0, 0.0, 0.0])
     _name = "arbitrary_azimuthal_angle_sequence"
 
     dd_sequence = DynamicDecouplingSequence(
@@ -680,10 +680,10 @@ def test_conversion_of_pulses_with_arbitrary_detuning_rotations():
     Z pulses with detuning rotations that assume arbitrary values between 0 and pi.
     """
     _duration = 3.0
-    _offsets = [0.5, 1.5, 2.5]
-    _rabi_rotations = [0.0, 0.0, 0.0]
-    _azimuthal_angles = [0.0, 0.0, 0.0]
-    _detuning_rotations = [1.0, 2.0, 3.0]
+    _offsets = np.array([0.5, 1.5, 2.5])
+    _rabi_rotations = np.array([0.0, 0.0, 0.0])
+    _azimuthal_angles = np.array([0.0, 0.0, 0.0])
+    _detuning_rotations = np.array([1.0, 2.0, 3.0])
     _name = "arbitrary_detuning_rotation_sequence"
 
     dd_sequence = DynamicDecouplingSequence(
@@ -770,10 +770,10 @@ def test_free_evolution_conversion():
 
     dd_sequence = DynamicDecouplingSequence(
         duration=_duration,
-        offsets=[],
-        rabi_rotations=[],
-        azimuthal_angles=[],
-        detuning_rotations=[],
+        offsets=np.array([]),
+        rabi_rotations=np.array([]),
+        azimuthal_angles=np.array([]),
+        detuning_rotations=np.array([]),
         name=_name,
     )
 
@@ -797,10 +797,10 @@ def test_free_evolution_conversion():
 
     _duration = 10.0
     _name = "test_sequence"
-    _offsets = [0, _duration]
-    _rabi_rotations = [np.pi / 2, np.pi / 2]
-    _azimuthal_angles = [0, 0]
-    _detuning_rotations = [0, 0]
+    _offsets = np.array([0, _duration])
+    _rabi_rotations = np.array([np.pi / 2, np.pi / 2])
+    _azimuthal_angles = np.array([0, 0])
+    _detuning_rotations = np.array([0, 0])
 
     dd_sequence = DynamicDecouplingSequence(
         duration=_duration,

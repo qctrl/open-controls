@@ -1,4 +1,4 @@
-# Copyright 2021 Q-CTRL
+# Copyright 2022 Q-CTRL
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ class DynamicDecouplingSequence:
             {"offsets": offsets, "duration": duration},
         )
 
-        rabi_rotations = np.asarray(rabi_rotations, dtype=np.float)
+        rabi_rotations = np.asarray(rabi_rotations, dtype=float)
         check_arguments(
             np.all(rabi_rotations >= 0),
             "Rabi rotations must be non-negative.",
@@ -125,8 +125,8 @@ class DynamicDecouplingSequence:
         self.duration = duration
         self.offsets = offsets
         self.rabi_rotations = rabi_rotations
-        self.azimuthal_angles = np.asarray(azimuthal_angles, dtype=np.float)
-        self.detuning_rotations = np.asarray(detuning_rotations, dtype=np.float)
+        self.azimuthal_angles = np.asarray(azimuthal_angles, dtype=float)
+        self.detuning_rotations = np.asarray(detuning_rotations, dtype=float)
         self.name = name
 
     def export(self) -> Dict:
@@ -474,10 +474,10 @@ def convert_dds_to_driven_control(
     if np.allclose(pulse_start_ends, 0.0):
         # the original sequence should be a free evolution
         return DrivenControl(
-            rabi_rates=[0.0],
-            azimuthal_angles=[0.0],
-            detunings=[0.0],
-            durations=[sequence_duration],
+            rabi_rates=np.array([0.0]),
+            azimuthal_angles=np.array([0.0]),
+            detunings=np.array([0.0]),
+            durations=np.array([sequence_duration]),
             name=name,
         )
 

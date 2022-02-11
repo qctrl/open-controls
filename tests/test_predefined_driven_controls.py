@@ -1,4 +1,4 @@
-# Copyright 2021 Q-CTRL
+# Copyright 2022 Q-CTRL
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -167,9 +167,7 @@ def test_scofulous_control():
 
     # Construct SCROFULOUS controls for target rotations pi/4, pi/2 and pi
     scrofulous_pi = new_scrofulous_control(
-        rabi_rotation=np.pi,
-        azimuthal_angle=0.5,
-        maximum_rabi_rate=2 * np.pi,
+        rabi_rotation=np.pi, azimuthal_angle=0.5, maximum_rabi_rate=2 * np.pi
     )
 
     pi_segments = np.vstack(
@@ -192,9 +190,7 @@ def test_scofulous_control():
     assert np.allclose(pi_segments, _pi_segments)
 
     scrofulous_pi2 = new_scrofulous_control(
-        rabi_rotation=np.pi / 2,
-        azimuthal_angle=-0.5,
-        maximum_rabi_rate=2 * np.pi,
+        rabi_rotation=np.pi / 2, azimuthal_angle=-0.5, maximum_rabi_rate=2 * np.pi
     )
 
     pi_on_2_segments = np.vstack(
@@ -217,9 +213,7 @@ def test_scofulous_control():
     assert np.allclose(pi_on_2_segments, _pi_on_2_segments)
 
     scrofulous_pi4 = new_scrofulous_control(
-        rabi_rotation=np.pi / 4,
-        azimuthal_angle=0,
-        maximum_rabi_rate=2 * np.pi,
+        rabi_rotation=np.pi / 4, azimuthal_angle=0, maximum_rabi_rate=2 * np.pi
     )
 
     pi_on_4_segments = np.vstack(
@@ -251,9 +245,7 @@ def test_corpse_in_scrofulous_control():
     """
     # Test pi and pi/2 rotations
     cs_pi = new_corpse_in_scrofulous_control(
-        rabi_rotation=np.pi,
-        azimuthal_angle=0.5,
-        maximum_rabi_rate=2 * np.pi,
+        rabi_rotation=np.pi, azimuthal_angle=0.5, maximum_rabi_rate=2 * np.pi
     )
 
     pi_segments = np.vstack(
@@ -277,9 +269,7 @@ def test_corpse_in_scrofulous_control():
     assert np.allclose(pi_segments, _pi_segments)
 
     cs_pi_on_2 = new_corpse_in_scrofulous_control(
-        rabi_rotation=np.pi / 2,
-        azimuthal_angle=0.25,
-        maximum_rabi_rate=np.pi,
+        rabi_rotation=np.pi / 2, azimuthal_angle=0.25, maximum_rabi_rate=np.pi
     )
 
     pi_on_2_segments = np.vstack(
@@ -367,9 +357,7 @@ def test_cinbb_control():
     Tests the segments of the CinBB (BB1 made up of CORPSEs) driven control.
     """
     cinbb = new_corpse_in_bb1_control(
-        rabi_rotation=np.pi / 3,
-        azimuthal_angle=0.25,
-        maximum_rabi_rate=np.pi,
+        rabi_rotation=np.pi / 3, azimuthal_angle=0.25, maximum_rabi_rate=np.pi
     )
 
     segments = np.vstack(
@@ -390,9 +378,7 @@ def test_cinbb_control():
     assert np.allclose(segments, _segments)
 
     cinbb = new_corpse_in_bb1_control(
-        rabi_rotation=np.pi / 5,
-        azimuthal_angle=-0.25,
-        maximum_rabi_rate=np.pi,
+        rabi_rotation=np.pi / 5, azimuthal_angle=-0.25, maximum_rabi_rate=np.pi
     )
 
     segments = np.vstack(
@@ -418,9 +404,7 @@ def test_cinsk1_control():
     Tests the segments of the CinSK1 (SK1 made up of CORPSEs) driven control.
     """
     cinsk = new_corpse_in_sk1_control(
-        rabi_rotation=np.pi / 2,
-        azimuthal_angle=0.5,
-        maximum_rabi_rate=2 * np.pi,
+        rabi_rotation=np.pi / 2, azimuthal_angle=0.5, maximum_rabi_rate=2 * np.pi
     )
 
     segments = np.vstack(
@@ -440,9 +424,7 @@ def test_cinsk1_control():
     assert np.allclose(segments, _segments)
 
     cinsk = new_corpse_in_sk1_control(
-        rabi_rotation=2 * np.pi,
-        azimuthal_angle=-0.5,
-        maximum_rabi_rate=2 * np.pi,
+        rabi_rotation=2 * np.pi, azimuthal_angle=-0.5, maximum_rabi_rate=2 * np.pi
     )
 
     segments = np.vstack(
@@ -473,9 +455,7 @@ def test_walsh_control():
 
     # test pi rotation
     walsh_pi = new_wamf1_control(
-        rabi_rotation=np.pi,
-        azimuthal_angle=-0.35,
-        maximum_rabi_rate=2 * np.pi,
+        rabi_rotation=np.pi, azimuthal_angle=-0.35, maximum_rabi_rate=2 * np.pi
     )
 
     pi_segments = np.vstack(
@@ -500,9 +480,7 @@ def test_walsh_control():
 
     # test pi/2 rotation
     walsh_pi_on_2 = new_wamf1_control(
-        rabi_rotation=np.pi / 2.0,
-        azimuthal_angle=0.57,
-        maximum_rabi_rate=2 * np.pi,
+        rabi_rotation=np.pi / 2.0, azimuthal_angle=0.57, maximum_rabi_rate=2 * np.pi
     )
 
     pi_on_2_segments = np.vstack(
@@ -527,9 +505,7 @@ def test_walsh_control():
 
     # test pi/4 rotation
     walsh_pi_on_4 = new_wamf1_control(
-        rabi_rotation=np.pi / 4.0,
-        azimuthal_angle=-0.273,
-        maximum_rabi_rate=2 * np.pi,
+        rabi_rotation=np.pi / 4.0, azimuthal_angle=-0.273, maximum_rabi_rate=2 * np.pi
     )
     pi_on_4_segments = np.vstack(
         (
@@ -698,8 +674,7 @@ def test_modulated_gaussian_control_give_identity_gate():
             [
                 np.cos(d * v) * np.eye(2) + 1j * np.sin(d * v) * SIGMA_X
                 for d, v in zip(
-                    p.durations,
-                    p.rabi_rates * np.exp(1j * p.azimuthal_angles),
+                    p.durations, p.rabi_rates * np.exp(1j * p.azimuthal_angles)
                 )
             ]
         )

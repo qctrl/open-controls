@@ -1,4 +1,4 @@
-# Copyright 2021 Q-CTRL
+# Copyright 2022 Q-CTRL
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ Defines commonly used constants.
 
 import numpy as np
 
-SIGMA_X = np.array([[0.0, 1.0], [1.0, 0.0]], dtype=np.complex)
-SIGMA_Y = np.array([[0.0, -1.0j], [1.0j, 0.0]], dtype=np.complex)
-SIGMA_Z = np.array([[1.0, 0.0], [0.0, -1.0]], dtype=np.complex)
-SIGMA_M = np.array([[0.0, 1.0], [0.0, 0.0]], dtype=np.complex)
-SIGMA_P = np.array([[0.0, 0.0], [1.0, 0.0]], dtype=np.complex)
+SIGMA_X = np.array([[0.0, 1.0], [1.0, 0.0]], dtype=complex)
+SIGMA_Y = np.array([[0.0, -1.0j], [1.0j, 0.0]], dtype=complex)
+SIGMA_Z = np.array([[1.0, 0.0], [0.0, -1.0]], dtype=complex)
+SIGMA_M = np.array([[0.0, 1.0], [0.0, 0.0]], dtype=complex)
+SIGMA_P = np.array([[0.0, 0.0], [1.0, 0.0]], dtype=complex)
 
 # Matplotlib format of data for plotting
 MATPLOTLIB = "matplotlib"

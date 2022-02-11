@@ -24,18 +24,25 @@ if os.path.exists(readme_path):
 setup(
     long_description=readme,
     name='qctrl-open-controls',
+<<<<<<< HEAD
     version='8.4.0',
     description='Q-CTRL Python Open Controls',
     python_requires='<3.11,>=3.6.4',
     project_urls={"documentation": "https://docs.q-ctrl.com/references/python/qctrl-open-controls/", "homepage": "https://q-ctrl.com", "repository": "https://github.com/qctrl/python-open-controls"},
+=======
+    version='9.0.0',
+    description='Q-CTRL Python Open Controls',
+    python_requires='<3.10,>=3.7',
+    project_urls={"documentation": "https://docs.q-ctrl.com/open-controls/references/qctrl-open-controls/", "homepage": "https://q-ctrl.com", "repository": "https://github.com/qctrl/python-open-controls"},
+>>>>>>> master
     author='Q-CTRL',
     author_email='support@q-ctrl.com',
     license='Apache-2.0',
     keywords='q-ctrl qctrl quantum control',
-    classifiers=['Development Status :: 5 - Production/Stable', 'Environment :: Console', 'Intended Audience :: Developers', 'Intended Audience :: Education', 'Intended Audience :: Science/Research', 'Natural Language :: English', 'Operating System :: OS Independent', 'Programming Language :: Python :: 3.6', 'Programming Language :: Python :: 3.7', 'Programming Language :: Python :: 3.8', 'Topic :: Internet :: WWW/HTTP', 'Topic :: Scientific/Engineering :: Physics', 'Topic :: Scientific/Engineering :: Visualization', 'Topic :: Software Development :: Embedded Systems', 'Topic :: System :: Distributed Computing'],
+    classifiers=['Development Status :: 5 - Production/Stable', 'Environment :: Console', 'Intended Audience :: Developers', 'Intended Audience :: Education', 'Intended Audience :: Science/Research', 'Natural Language :: English', 'Operating System :: OS Independent', 'Programming Language :: Python :: 3.7', 'Programming Language :: Python :: 3.8', 'Programming Language :: Python :: 3.9', 'Topic :: Internet :: WWW/HTTP', 'Topic :: Scientific/Engineering :: Physics', 'Topic :: Scientific/Engineering :: Visualization', 'Topic :: Software Development :: Embedded Systems', 'Topic :: System :: Distributed Computing'],
     packages=['qctrlopencontrols', 'qctrlopencontrols.driven_controls', 'qctrlopencontrols.dynamic_decoupling_sequences'],
     package_dir={"": "."},
     package_data={},
-    install_requires=['numpy==1.*,>=1.16.0', 'toml==0.*,>=0.10.0'],
-    extras_require={"dev": ["black==20.*,>=20.8.0.b1", "isort==5.*,>=5.7.0", "mypy==0.*,>=0.800.0", "nbval==0.*,>=0.9.5", "pre-commit==2.*,>=2.9.3", "pylint==2.*,>=2.6.0", "pylint-runner==0.*,>=0.5.4", "pytest==5.*,>=5.0.0", "qctrl-visualizer==2.*,>=2.3.0", "sphinx==3.*,>=3.2.1", "sphinx-rtd-theme==0.*,>=0.4.3"]},
+    install_requires=['numpy==1.*,>=1.20.0', 'toml==0.*,>=0.10.0'],
+    extras_require={"dev": ["black==20.*,>=20.8.0.b1", "isort==5.*,>=5.7.0", "mypy==0.*,>=0.800.0", "nbval==0.*,>=0.9.5", "pre-commit==2.*,>=2.9.3", "pylint==2.*,>=2.6.0", "pylint-runner==0.*,>=0.5.4", "pytest==5.*,>=5.0.0", "qctrl-visualizer==2.*,>=2.12.2", "sphinx==3.*,>=3.2.1", "sphinx-rtd-theme==0.*,>=0.4.3"]},
 )
