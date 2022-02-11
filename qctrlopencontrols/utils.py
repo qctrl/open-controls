@@ -52,7 +52,7 @@ def create_repr_from_attributes(class_instance=None, attributes=None):
             "Class instance must be a valid object.", {"class_instance": class_instance}
         )
 
-    class_name = f"{class_instance.__class__.__name__}"
+    class_name = f"{class_instance.__class__.__name__}("
 
     if attributes is None:
         raise ArgumentsValueError(
