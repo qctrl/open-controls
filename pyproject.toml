@@ -44,7 +44,7 @@ toml = "^0.10.0"
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
 mypy = "^0.800"
-pytest = "^5.0"
+pytest = "^6.0"
 pylint = "^2.6"
 pylint_runner = "^0.5.4"
 sphinx = "^3.2.1"
