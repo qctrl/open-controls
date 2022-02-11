@@ -24,7 +24,7 @@ if os.path.exists(readme_path):
 setup(
     long_description=readme,
     name='qctrl-open-controls',
-    version='8.4.0',
+    version='9.0.0',
     description='Q-CTRL Python Open Controls',
     python_requires='<3.11,>=3.6.4',
     project_urls={"documentation": "https://docs.q-ctrl.com/references/python/qctrl-open-controls/", "homepage": "https://q-ctrl.com", "repository": "https://github.com/qctrl/python-open-controls"},
