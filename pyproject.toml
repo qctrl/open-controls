@@ -64,7 +64,6 @@ exclude = '''
      /(
          docs
      )/
-     | setup.py
 )
 '''
 
@@ -73,22 +72,15 @@ profile = "black"
 force_grid_wrap = "2"
 known_first_party = "qctrlopencontrols"
 
-[tool.dephell.main]
-from = {format="poetry", path="pyproject.toml"}
-
-to = {format = "setuppy", path = "setup.py"}
-versioning = "pep"
-prereleases = true
 
 [build-system]
-requires = ["poetry>=1.0.0", "setuptools>=41.0.0"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core>=1.0.8"]
+build-backend = "poetry.core.masonry.api"
 
 #  _______________________________________
 # / If you update this file, please run   \
 # | `poetry update --lock` to update the  |
-# | file "poetry.lock". The CI will then  |
-# \ automatically update "setup.py".      /
+# \ file "poetry.lock".                   /
 #  ---------------------------------------
 #        \   ^__^
 #         \  (oo)\_______
