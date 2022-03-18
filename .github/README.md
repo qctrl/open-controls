@@ -52,16 +52,6 @@ git clone git@github.com:qctrl/python-open-controls.git
 
 Once the clone is complete, you have two options:
 
-1. Using setup.py
-
-   ```shell
-   cd python-open-controls
-   python setup.py develop
-   ```
-
-   **Note:** We recommend installing using `develop` to point your installation
-   at the source code in the directory where you cloned the repository.
-
 1. Using Poetry
 
    Follow the instructions from the
@@ -73,6 +63,17 @@ Once the clone is complete, you have two options:
    ```bash
    cd python-open-controls
    poetry install
+   ```
+
+1. Using pip
+
+   ```shell
+   cd python-open-controls
+   python setup.py develop
+   poetry export --dev -f requirements.txt --output requirements.txt --without-hashes
+   pip install -r requirements.txt
+   pip install -e .
+   rm requirements.txt
    ```
 
 Once installed via one of the above methods, test your installation by running
