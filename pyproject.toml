@@ -64,7 +64,6 @@ exclude = '''
      /(
          docs
      )/
-     | setup.py
 )
 '''
 
