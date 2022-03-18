@@ -44,17 +44,6 @@ Once the clone is complete, you have two options:
 
 
 #.
-   Using setup.py
-
-   .. code-block:: shell
-
-      cd python-open-controls
-      python setup.py develop
-
-   **Note:** We recommend installing using ``develop`` to point your installation
-   at the source code in the directory where you cloned the repository.
-
-#.
    Using Poetry
 
    Follow the instructions from the
@@ -67,6 +56,17 @@ Once the clone is complete, you have two options:
 
       cd python-open-controls
       poetry install
+
+#. 
+   Using pip
+
+   .. code-block:: shell
+
+      cd python-open-controls
+      poetry export --dev -f requirements.txt --output requirements.txt --without-hashes
+      pip install -r requirements.txt
+      pip install -e .
+      rm requirements.txt
 
 Once installed via one of the above methods, test your installation by running
 ``pytest``

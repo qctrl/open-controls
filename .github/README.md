@@ -69,7 +69,6 @@ Once the clone is complete, you have two options:
 
    ```shell
    cd python-open-controls
-   python setup.py develop
    poetry export --dev -f requirements.txt --output requirements.txt --without-hashes
    pip install -r requirements.txt
    pip install -e .
