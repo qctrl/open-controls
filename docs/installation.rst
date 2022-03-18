@@ -57,7 +57,7 @@ Once the clone is complete, you have two options:
       cd python-open-controls
       poetry install
 
-#. 
+#.
    Using pip
 
    .. code-block:: shell
