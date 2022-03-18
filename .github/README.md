@@ -52,7 +52,7 @@ git clone git@github.com:qctrl/python-open-controls.git
 
 Once the clone is complete, you have two options:
 
-#. Using Poetry
+1. Using Poetry
 
    Follow the instructions from the
    [Poetry documentation](https://python-poetry.org/docs/#installation) to
@@ -65,7 +65,7 @@ Once the clone is complete, you have two options:
    poetry install
    ```
 
-#. Using pip
+1. Using pip
 
    ```shell
    cd python-open-controls
