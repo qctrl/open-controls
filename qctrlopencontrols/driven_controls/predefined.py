@@ -1328,14 +1328,14 @@ def new_drag_control(
     y_quadrature_segments = (
         beta
         * (gaussian_mean - segment_midpoints)
-        / width ** 2
+        / width**2
         * (
             x_quadrature_segments
             - y_translation * normalization_factor  # = B (from Motzoi '09 paper)
         )
     )
 
-    rabi_rates = np.sqrt(x_quadrature_segments ** 2 + y_quadrature_segments ** 2)
+    rabi_rates = np.sqrt(x_quadrature_segments**2 + y_quadrature_segments**2)
     azimuthal_angles = np.arcsin(y_quadrature_segments / rabi_rates) + azimuthal_angle
 
     return DrivenControl(

@@ -233,7 +233,7 @@ class DrivenControl:
         """
 
         amplitudes = np.sqrt(
-            self.amplitude_x ** 2 + self.amplitude_y ** 2 + self.detunings ** 2
+            self.amplitude_x**2 + self.amplitude_y**2 + self.detunings**2
         )
         angles = amplitudes * self.durations
 
@@ -252,7 +252,7 @@ class DrivenControl:
             :math:`\mathbf v_n=(\Omega_n\cos\phi_n, \Omega_n\sin\phi_n, \Delta_n)`.
         """
         amplitudes = np.sqrt(
-            self.amplitude_x ** 2 + self.amplitude_y ** 2 + self.detunings ** 2
+            self.amplitude_x**2 + self.amplitude_y**2 + self.detunings**2
         )
 
         # Reduces tolerance of the comparison to zero in case the units chosen
