@@ -30,7 +30,7 @@ repos:
         require_serial: true
         language: system
         types: [python]
-        exclude: docs/conf.py 
+        exclude: docs/conf.py
       - id: pylint
         entry: poetry run pylint --rcfile=.pylintrc
         name: pylint
