@@ -714,7 +714,7 @@ def test_drag_control():
         return np.exp(-0.5 * ((time - _duration / 2) / _width) ** 2)
 
     def d_gauss(time):
-        return -(time - _duration / 2) / _width ** 2 * gauss(time)
+        return -(time - _duration / 2) / _width**2 * gauss(time)
 
     # note: 'x' and 'y' here refer to x and y in the frame rotated by _azimuthal_angle
 

@@ -663,7 +663,7 @@ def new_walsh_sequence(duration, paley_order, pre_post_rotation=False, name=None
 
     hamming_weight = int(np.floor(np.log2(paley_order))) + 1
 
-    samples = 2 ** hamming_weight
+    samples = 2**hamming_weight
 
     relative_offset = np.arange(1.0 / (2 * samples), 1.0, 1.0 / samples)
 
@@ -903,7 +903,7 @@ def new_x_concatenated_sequence(
     )
 
     concatenation_order = int(concatenation_order)
-    unit_spacing = duration / (2 ** concatenation_order)
+    unit_spacing = duration / (2**concatenation_order)
     cumulations = _concatenation_x(concatenation_order)
 
     pos_cum = cumulations * unit_spacing

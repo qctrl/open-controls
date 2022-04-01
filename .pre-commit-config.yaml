@@ -17,7 +17,6 @@ repos:
         language: system
         require_serial: true
         types: [python]
-        exclude: setup.py # https://github.com/psf/black/issues/395
       - id: isort
         name: isort
         entry: poetry run isort
@@ -25,14 +24,13 @@ repos:
         language: system
         types: [python]
         args: ['--filter-files']
-        exclude: setup.py
       - id: mypy
         name: mypy
         entry: poetry run mypy
         require_serial: true
         language: system
         types: [python]
-        exclude: setup.py
+        exclude: docs/conf.py 
       - id: pylint
         entry: poetry run pylint --rcfile=.pylintrc
         name: pylint
@@ -40,4 +38,4 @@ repos:
         types: [file, python]
         # when passing in a single file as argument the ignore entry in the .pylintrc does
         # not seem to be considered.
-        exclude: .*(venv|setup\.py|\.conf\.py)
+        exclude: .*(venv|\.conf\.py)

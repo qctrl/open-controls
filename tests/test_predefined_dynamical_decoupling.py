@@ -302,7 +302,7 @@ def test_walsh_sequence():
     sequence = new_walsh_sequence(duration=duration, paley_order=paley_order)
 
     hamming_weight = 5
-    samples = 2 ** hamming_weight
+    samples = 2**hamming_weight
     relative_offset = np.arange(1.0 / (2 * samples), 1.0, 1.0 / samples)
     binary_string = np.binary_repr(paley_order)
     binary_order = [int(binary_string[i]) for i in range(hamming_weight)]
@@ -445,7 +445,7 @@ def test_x_concatenated_sequence():
         duration=duration, concatenation_order=concatenation_order
     )
 
-    _spacing = duration / (2 ** concatenation_order)
+    _spacing = duration / (2**concatenation_order)
     _offsets = np.array(
         [_spacing, 3 * _spacing, 4 * _spacing, 5 * _spacing, 7 * _spacing]
     )
@@ -581,7 +581,7 @@ def _pulses_produce_identity(sequence):
         n_x = rabi * np.cos(azimuth) / 2.0
         n_y = rabi * np.sin(azimuth) / 2.0
         n_z = detuning / 2.0
-        mod_n = np.sqrt(n_x ** 2 + n_y ** 2 + n_z ** 2)
+        mod_n = np.sqrt(n_x**2 + n_y**2 + n_z**2)
         unitary = (
             np.cos(mod_n) * np.identity(2)
             - 1.0j * (np.sin(mod_n) * n_x / mod_n) * SIGMA_X
