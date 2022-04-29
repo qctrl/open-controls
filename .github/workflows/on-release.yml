@@ -10,10 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - name: Update version in code
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        git fetch --tags --force
         source <(curl -sL http://ci.q-ctrl.com)
         ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
         ./ci docker run qctrl/ci-images:python-3.7-ci /scripts/housekeeping.sh
