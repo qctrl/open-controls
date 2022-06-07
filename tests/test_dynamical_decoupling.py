@@ -226,19 +226,19 @@ def test_pretty_string_format():
     _pretty_string = ["test_sequence:"]
     _pretty_string.append(f"Duration = {_duration}")
     _pretty_string.append(
-        f"Offsets = [{_offsets[0]}, {_offsets[1]}, {_offsets[2]}] x {_duration}"
+        f"Offsets = [{_offsets[0]}, {_offsets[1]}, {_offsets[2]}] × {_duration}"
     )
     _pretty_string.append(
         f"Rabi Rotations = [{_rabi_rotations[0] / np.pi},"
-        f" {_rabi_rotations[1] / np.pi}, {_rabi_rotations[2]/ np.pi}] x pi"
+        f" {_rabi_rotations[1] / np.pi}, {_rabi_rotations[2]/ np.pi}] × pi"
     )
     _pretty_string.append(
         f"Azimuthal Angles = [{_azimuthal_angles[0] / np.pi},"
-        f" {_azimuthal_angles[1] / np.pi}, {_azimuthal_angles[2] / np.pi}] x pi"
+        f" {_azimuthal_angles[1] / np.pi}, {_azimuthal_angles[2] / np.pi}] × pi"
     )
     _pretty_string.append(
         f"Detuning Rotations = [{_detuning_rotations[0] / np.pi},"
-        f" {_detuning_rotations[1] / np.pi}, {_detuning_rotations[2] / np.pi}] x pi"
+        f" {_detuning_rotations[1] / np.pi}, {_detuning_rotations[2] / np.pi}] × pi"
     )
 
     expected_string = "\n".join(_pretty_string)
@@ -256,19 +256,19 @@ def test_pretty_string_format():
     _pretty_string = []
     _pretty_string.append(f"Duration = {_duration}")
     _pretty_string.append(
-        f"Offsets = [{_offsets[0]}, {_offsets[1]}, {_offsets[2]}] x {_duration}"
+        f"Offsets = [{_offsets[0]}, {_offsets[1]}, {_offsets[2]}] × {_duration}"
     )
     _pretty_string.append(
         f"Rabi Rotations = [{_rabi_rotations[0] / np.pi},"
-        f" {_rabi_rotations[1] / np.pi}, {_rabi_rotations[2]/ np.pi}] x pi"
+        f" {_rabi_rotations[1] / np.pi}, {_rabi_rotations[2]/ np.pi}] × pi"
     )
     _pretty_string.append(
         f"Azimuthal Angles = [{_azimuthal_angles[0] / np.pi},"
-        f" {_azimuthal_angles[1] / np.pi}, {_azimuthal_angles[2]/ np.pi}] x pi"
+        f" {_azimuthal_angles[1] / np.pi}, {_azimuthal_angles[2]/ np.pi}] × pi"
     )
     _pretty_string.append(
         f"Detuning Rotations = [{_detuning_rotations[0] / np.pi},"
-        f" {_detuning_rotations[1] / np.pi}, {_detuning_rotations[2] / np.pi}] x pi"
+        f" {_detuning_rotations[1] / np.pi}, {_detuning_rotations[2] / np.pi}] × pi"
     )
     expected_string = "\n".join(_pretty_string)
 

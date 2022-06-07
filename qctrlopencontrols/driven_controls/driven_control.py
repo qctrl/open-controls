@@ -650,13 +650,13 @@ class DrivenControl:
         )
 
         driven_control.append(
-            f"Rabi Rates = [{pretty_rabi_rates}] x {self.maximum_rabi_rate}"
+            f"Rabi Rates = [{pretty_rabi_rates}] × {self.maximum_rabi_rate}"
         )
         driven_control.append(f"Azimuthal Angles = [{pretty_azimuthal_angles}] x pi")
         driven_control.append(
-            f"Detunings = [{pretty_detuning}] x {self.maximum_detuning}"
+            f"Detunings = [{pretty_detuning}] × {self.maximum_detuning}"
         )
-        driven_control.append(f"Durations = [{pretty_durations}] x {self.duration}")
+        driven_control.append(f"Durations = [{pretty_durations}] × {self.duration}")
         driven_control_string = "\n".join(driven_control)
 
         return driven_control_string

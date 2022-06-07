@@ -198,19 +198,19 @@ class DynamicDecouplingSequence:
         sequence_string.append(f"Duration = {self.duration}")
 
         sequence_string.append(
-            f"Offsets = [{_array_to_str(self.offsets / self.duration)}] x {self.duration}"
+            f"Offsets = [{_array_to_str(self.offsets / self.duration)}] × {self.duration}"
         )
 
         sequence_string.append(
-            f"Rabi Rotations = [{_array_to_str(self.rabi_rotations / np.pi)}] x pi"
+            f"Rabi Rotations = [{_array_to_str(self.rabi_rotations / np.pi)}] × pi"
         )
 
         sequence_string.append(
-            f"Azimuthal Angles = [{_array_to_str(self.azimuthal_angles / np.pi)}] x pi"
+            f"Azimuthal Angles = [{_array_to_str(self.azimuthal_angles / np.pi)}] × pi"
         )
 
         sequence_string.append(
-            f"Detuning Rotations = [{_array_to_str(self.detuning_rotations / np.pi)}] x pi"
+            f"Detuning Rotations = [{_array_to_str(self.detuning_rotations / np.pi)}] × pi"
         )
 
         return "\n".join(sequence_string)

@@ -314,10 +314,10 @@ def test_pretty_print():
     _pretty_durations = ",".join([str(duration / 3.0) for duration in _durations])
 
     _pretty_string = []
-    _pretty_string.append(f"Rabi Rates = [{_pretty_rabi_rates}] x {_maximum_rabi_rate}")
-    _pretty_string.append(f"Azimuthal Angles = [{_pretty_azimuthal_angles}] x pi")
-    _pretty_string.append(f"Detunings = [{_pretty_detunings}] x {_maximum_detuning}")
-    _pretty_string.append(f"Durations = [{_pretty_durations}] x 3.0")
+    _pretty_string.append(f"Rabi Rates = [{_pretty_rabi_rates}] × {_maximum_rabi_rate}")
+    _pretty_string.append(f"Azimuthal Angles = [{_pretty_azimuthal_angles}] × pi")
+    _pretty_string.append(f"Detunings = [{_pretty_detunings}] × {_maximum_detuning}")
+    _pretty_string.append(f"Durations = [{_pretty_durations}] × 3.0")
 
     expected_string = "\n".join(_pretty_string)
 
@@ -347,10 +347,10 @@ def test_pretty_print():
     _pretty_durations = ",".join([str(duration / 3.0) for duration in _durations])
 
     _pretty_string = []
-    _pretty_string.append(f"Rabi Rates = [{_pretty_rabi_rates}] x {_maximum_rabi_rate}")
-    _pretty_string.append(f"Azimuthal Angles = [{_pretty_azimuthal_angles}] x pi")
-    _pretty_string.append(f"Detunings = [{_pretty_detunings}] x {_maximum_detuning}")
-    _pretty_string.append(f"Durations = [{_pretty_durations}] x 3.0")
+    _pretty_string.append(f"Rabi Rates = [{_pretty_rabi_rates}] × {_maximum_rabi_rate}")
+    _pretty_string.append(f"Azimuthal Angles = [{_pretty_azimuthal_angles}] × pi")
+    _pretty_string.append(f"Detunings = [{_pretty_detunings}] × {_maximum_detuning}")
+    _pretty_string.append(f"Durations = [{_pretty_durations}] × 3.0")
 
     expected_string = "\n".join(_pretty_string)
 
@@ -380,10 +380,10 @@ def test_pretty_print():
     _pretty_durations = ",".join([str(duration / 3.0) for duration in _durations])
 
     _pretty_string = []
-    _pretty_string.append(f"Rabi Rates = [{_pretty_rabi_rates}] x {_maximum_rabi_rate}")
-    _pretty_string.append(f"Azimuthal Angles = [{_pretty_azimuthal_angles}] x pi")
-    _pretty_string.append(f"Detunings = [{_pretty_detunings}] x {_maximum_detuning}")
-    _pretty_string.append(f"Durations = [{_pretty_durations}] x 3.0")
+    _pretty_string.append(f"Rabi Rates = [{_pretty_rabi_rates}] × {_maximum_rabi_rate}")
+    _pretty_string.append(f"Azimuthal Angles = [{_pretty_azimuthal_angles}] × pi")
+    _pretty_string.append(f"Detunings = [{_pretty_detunings}] × {_maximum_detuning}")
+    _pretty_string.append(f"Durations = [{_pretty_durations}] × 3.0")
 
     expected_string = "\n".join(_pretty_string)
 
