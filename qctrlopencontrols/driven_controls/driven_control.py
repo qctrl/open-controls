@@ -652,7 +652,7 @@ class DrivenControl:
         driven_control.append(
             f"Rabi Rates = [{pretty_rabi_rates}] × {self.maximum_rabi_rate}"
         )
-        driven_control.append(f"Azimuthal Angles = [{pretty_azimuthal_angles}] x pi")
+        driven_control.append(f"Azimuthal Angles = [{pretty_azimuthal_angles}] × pi")
         driven_control.append(
             f"Detunings = [{pretty_detuning}] × {self.maximum_detuning}"
         )
