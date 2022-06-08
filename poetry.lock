@@ -896,15 +896,15 @@ py = {version = "*", markers = "implementation_name == \"pypy\""}
 
 [[package]]
 name = "qctrl-visualizer"
-version = "2.12.2"
+version = "3.2.1"
 description = "Q-CTRL Python Visualizer"
 category = "dev"
 optional = false
-python-versions = ">=3.6.4,<4.0.0"
+python-versions = ">=3.7,<3.11"
 
 [package.dependencies]
 matplotlib = ">=2.1"
-numpy = ">=1.16,<2.0"
+numpy = ">=1.21.5,<2.0.0"
 toml = ">=0.10.0,<0.11.0"
 
 [[package]]
@@ -1184,7 +1184,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<3.11"
-content-hash = "bdeaccb1a994ff66507d2f85344a3133f15cec8f7c6c644d5ef69c9c7be80367"
+content-hash = "b034445d38629fe9c3af944e692f9d9a300964ab0b8f2fe51e616ae95d34e8a3"
 
 [metadata.files]
 alabaster = [
@@ -1980,8 +1980,8 @@ pyzmq = [
     {file = "pyzmq-22.3.0.tar.gz", hash = "sha256:8eddc033e716f8c91c6a2112f0a8ebc5e00532b4a6ae1eb0ccc48e027f9c671c"},
 ]
 qctrl-visualizer = [
-    {file = "qctrl-visualizer-2.12.2.tar.gz", hash = "sha256:0f8109878b43789ac04465da1e39ebe6684b391eddca0f9eb809a14c7bddb809"},
-    {file = "qctrl_visualizer-2.12.2-py3-none-any.whl", hash = "sha256:7cf6141b83eaf1ca2888d7356c9223598ec9afaa933d14f256774e089eb8a83f"},
+    {file = "qctrl-visualizer-3.2.1.tar.gz", hash = "sha256:2d7f27873e8c33f0be8109cae6a8a06c0b09f40c9c4d3a83c1f898329373ada8"},
+    {file = "qctrl_visualizer-3.2.1-py3-none-any.whl", hash = "sha256:e3ad3240f338f83f838249ab22496e5f7cdad6f0411b8246e45c514ea67e9825"},
 ]
 requests = [
     {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},
