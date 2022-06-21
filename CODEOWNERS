@@ -1,12 +1,8 @@
-##### This file is generated automatically. DO NOT EDIT #####
+##### This file is managed automatically. To update visit: https://github.com/qctrl/repositories-manager. #####
 * @qctrl/quantum-product-engineering
 
 .dockerignore @qctrl/devops-engineering
-.github/ @qctrl/devops-engineering
-app.*.yaml @qctrl/devops-engineering
-CODEOWNERS @qctrl/devops-engineering
-deployment/ @qctrl/devops-engineering
+.github/*.y*ml @qctrl/devops-engineering
+.github/workflows @qctrl/devops-engineering
 docker* @qctrl/devops-engineering
 Docker* @qctrl/devops-engineering
-
-.github/README.md @qctrl/quantum-product-engineering
