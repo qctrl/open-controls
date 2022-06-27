@@ -1,5 +1,5 @@
 ##### This file is managed automatically. To update visit: https://github.com/qctrl/repositories-manager. #####
-* @qctrl/quantum-product-engineering
+* @qctrl/quantum-product-engineering-au
 
 .dockerignore @qctrl/devops-engineering
 .github/*.y*ml @qctrl/devops-engineering
