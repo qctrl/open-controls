@@ -42,13 +42,13 @@ def _validate_rabi_parameters(rabi_rotation: float, maximum_rabi_rate: float) ->
 
     check_arguments(
         maximum_rabi_rate > 0,
-        "Maximum rabi angular frequency should be greater than zero.",
+        "Maximum Rabi angular frequency should be greater than zero.",
         {"maximum_rabi_rate": maximum_rabi_rate},
     )
 
     check_arguments(
         rabi_rotation != 0,
-        "The rabi rotation must be non-zero.",
+        "The Rabi rotation must be non-zero.",
         {"rabi_rotation": rabi_rotation},
     )
 
@@ -380,7 +380,7 @@ def new_scrofulous_control(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
 
-    # Create a lookup table for rabi rotation and phase angles, taken from the official paper.
+    # Create a lookup table for Rabi rotation and phase angles, taken from the official paper.
     # Note: values in the paper are in degrees.
     def degrees_to_radians(angle_in_degrees):
         return angle_in_degrees / 180 * np.pi

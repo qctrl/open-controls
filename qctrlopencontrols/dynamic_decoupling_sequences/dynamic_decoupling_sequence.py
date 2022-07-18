@@ -289,7 +289,7 @@ def convert_dds_to_driven_control(
     dynamic_decoupling_sequence : DynamicDecouplingSequence
         The base DDS. Its offsets should be sorted in ascending order in time.
     maximum_rabi_rate : float
-        Maximum rabi rate.
+        Maximum Rabi rate.
     maximum_detuning_rate : float
         Maximum detuning rate.
     minimum_segment_duration : float, optional
@@ -309,7 +309,7 @@ def convert_dds_to_driven_control(
     ------
     ArgumentsValueError
         Raised when an argument is invalid or a valid driven control cannot be
-        created from the sequence parameters, maximum rabi rate and maximum detuning
+        created from the sequence parameters, maximum Rabi rate and maximum detuning
         rate provided.
 
     Notes
@@ -342,7 +342,7 @@ def convert_dds_to_driven_control(
     )
     check_arguments(
         maximum_rabi_rate > 0,
-        "Maximum rabi rate must be positive.",
+        "Maximum Rabi rate must be positive.",
         {"maximum_rabi_rate": maximum_rabi_rate},
     )
 
@@ -370,7 +370,7 @@ def convert_dds_to_driven_control(
         _check_valid_operation(
             rabi_rotations=rabi_rotations, detuning_rotations=detuning_rotations
         ),
-        "Sequence operation includes rabi rotation and "
+        "Sequence operation includes Rabi rotation and "
         "detuning rotation at the same instance.",
         {"dynamic_decoupling_sequence": dynamic_decoupling_sequence},
         extras={
