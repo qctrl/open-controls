@@ -120,7 +120,7 @@ class DrivenControl:
 
         check_arguments(
             len(input_lengths) == 1,
-            "If set, rabi rates, azimuthal angles, detunings and durations "
+            "If set, Rabi rates, azimuthal angles, detunings and durations "
             "must be of same length",
             {
                 "rabi_rates": rabi_rates,
@@ -147,7 +147,7 @@ class DrivenControl:
         # check if all the rabi_rates are greater than zero
         check_arguments(
             all(rabi_rates >= 0.0),
-            "All rabi rates must be greater than zero.",
+            "All Rabi rates must be greater than zero.",
             {"rabi_rates": rabi_rates},
         )
 
