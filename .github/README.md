@@ -85,7 +85,8 @@ pytest
 
 ## Usage
 
-See the [Jupyter notebooks](../examples).
+See the [Jupyter notebooks examples](../examples) and the
+[Q-CTRL Open Controls reference documentation](https://docs.q-ctrl.com/open-controls/references/qctrl-open-controls/).
 
 ## Contributing
 
@@ -93,9 +94,12 @@ For general guidelines, see [Contributing](https://github.com/qctrl/.github/blob
 
 ### Building documentation
 
-Documentation generation relies on [Sphinx](http://www.sphinx-doc.org). Automated builds are done on each merge to master.
+Documentation generation relies on [Sphinx](http://www.sphinx-doc.org).
+The reference documentation for the latest released version of
+Q-CTRL Open Controls is hosted online in the
+[Q-CTRL documentation website](https://docs.q-ctrl.com/open-controls/references/qctrl-open-controls/).
 
-To build locally:
+To build it locally:
 
 1. Ensure you have used one of the install options above.
 1. Execute the make file from the docs directory:
@@ -107,7 +111,7 @@ To build locally:
     poetry run make html
     ```
 
-    If using setuptools:
+    If using pip:
 
     ```bash
     cd docs
