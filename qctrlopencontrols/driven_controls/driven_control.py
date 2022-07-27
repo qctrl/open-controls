@@ -45,7 +45,7 @@ class DrivenControl:
         of segments.
     rabi_rates : np.ndarray, optional
         The Rabi rates :math:`\{\Omega_n\}` for each segment, in units of radians per second. Every
-        element must be non-negative. Represented as a 1D array of length :math:`N`, where :math:`N`
+        element must be nonnegative. Represented as a 1D array of length :math:`N`, where :math:`N`
         is number of segments. You can omit this field if the Rabi rate is zero on all segments.
     azimuthal_angles : np.ndarray, optional
         The azimuthal angles :math:`\{\phi_n\}` for each segment. Represented as a 1D array of
@@ -144,10 +144,10 @@ class DrivenControl:
         azimuthal_angles = np.asarray(azimuthal_angles, dtype=float)
         detunings = np.asarray(detunings, dtype=float)
 
-        # check if all the rabi_rates are non-negative
+        # check if all the rabi_rates are nonnegative
         check_arguments(
             all(rabi_rates >= 0.0),
-            "All Rabi rates must be non-negative.",
+            "All Rabi rates must be nonnegative.",
             {"rabi_rates": rabi_rates},
         )
 

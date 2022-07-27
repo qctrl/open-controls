@@ -310,7 +310,7 @@ def new_carr_purcell_sequence(
     )
     check_arguments(
         offset_count >= 1,
-        "Number of offsets must be non-negativei.",
+        "Number of offsets must be positive.",
         {"offset_count": offset_count},
     )
 
@@ -393,7 +393,7 @@ def new_cpmg_sequence(duration, offset_count, pre_post_rotation=False, name=None
     )
     check_arguments(
         offset_count >= 1,
-        "Number of offsets must be non-negative.",
+        "Number of offsets must be positive.",
         {"offset_count": offset_count},
     )
 
@@ -472,7 +472,7 @@ def new_uhrig_sequence(duration, offset_count, pre_post_rotation=False, name=Non
     )
     check_arguments(
         offset_count >= 1,
-        "Number of offsets must be non-negative.",
+        "Number of offsets must be positive.",
         {"offset_count": offset_count},
     )
 
@@ -551,7 +551,7 @@ def new_periodic_sequence(duration, offset_count, pre_post_rotation=False, name=
     )
     check_arguments(
         offset_count >= 1,
-        "Number of offsets must be non-negative.",
+        "Number of offsets must be positive.",
         {"offset_count": offset_count},
     )
 
@@ -776,12 +776,12 @@ def new_quadratic_sequence(
     )
     check_arguments(
         inner_offset_count >= 1,
-        "Number of offsets of inner pulses must be non-negative.",
+        "Number of offsets of inner pulses must be positive.",
         {"inner_offset_count": inner_offset_count},
     )
     check_arguments(
         outer_offset_count >= 1,
-        "Number of offsets of outer pulses must be non-negative.",
+        "Number of offsets of outer pulses must be positive.",
         {"outer_offset_count": outer_offset_count},
     )
 
@@ -898,7 +898,7 @@ def new_x_concatenated_sequence(
     )
     check_arguments(
         concatenation_order >= 1,
-        "Concatenation oder must be non-negative.",
+        "Concatenation oder must be positive.",
         {"concatenation_order": concatenation_order},
     )
 
@@ -1003,7 +1003,7 @@ def new_xy_concatenated_sequence(
     )
     check_arguments(
         concatenation_order >= 1,
-        "Concatenation oder must be non-negative.",
+        "Concatenation oder must be positive.",
         {"concatenation_order": concatenation_order},
     )
 
