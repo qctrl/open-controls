@@ -107,7 +107,7 @@ class DrivenControl:
         # check if all the durations are greater than zero
         check_arguments(
             all(durations > 0),
-            "Duration of driven control segments must all be greater than zero.",
+            "Duration of driven control segments must all be positive.",
             {"durations": durations},
         )
 
@@ -144,10 +144,10 @@ class DrivenControl:
         azimuthal_angles = np.asarray(azimuthal_angles, dtype=float)
         detunings = np.asarray(detunings, dtype=float)
 
-        # check if all the rabi_rates are greater than zero
+        # check if all the rabi_rates are non-negative
         check_arguments(
             all(rabi_rates >= 0.0),
-            "All Rabi rates must be greater than zero.",
+            "All Rabi rates must be non-negative.",
             {"rabi_rates": rabi_rates},
         )
 

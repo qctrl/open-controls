@@ -42,7 +42,7 @@ def _validate_rabi_parameters(rabi_rotation: float, maximum_rabi_rate: float) ->
 
     check_arguments(
         maximum_rabi_rate > 0,
-        "Maximum Rabi angular frequency should be greater than zero.",
+        "Maximum Rabi angular frequency must be positive.",
         {"maximum_rabi_rate": maximum_rabi_rate},
     )
 
@@ -1040,19 +1040,19 @@ def new_gaussian_control(
 
     check_arguments(
         duration > 0.0,
-        "Pulse duration must be greater than zero.",
+        "Pulse duration must be positive.",
         {"duration": duration},
     )
 
     check_arguments(
         segment_count > 0,
-        "Segment count must be greater than zero.",
+        "Segment count must be positive.",
         {"segment_count": segment_count},
     )
 
     check_arguments(
         width > 0.0,
-        "Width of ideal Gaussian pulse must be greater than zero.",
+        "Width of ideal Gaussian pulse must be positive.",
         {"width": width},
     )
 
@@ -1124,13 +1124,13 @@ def new_modulated_gaussian_control(
 
     check_arguments(
         maximum_rabi_rate > 0.0,
-        "Maximum Rabi rate must be greater than zero.",
+        "Maximum Rabi rate must be positive.",
         {"maximum_rabi_rate": maximum_rabi_rate},
     )
 
     check_arguments(
         minimum_segment_duration > 0.0,
-        "Minimum segment duration must be greater than zero.",
+        "Minimum segment duration must be positive.",
         {"minimum_segment_duration": minimum_segment_duration},
     )
 
@@ -1289,19 +1289,19 @@ def new_drag_control(
 
     check_arguments(
         duration > 0.0,
-        "Pulse duration must be greater than zero.",
+        "Pulse duration must be positive.",
         {"duration": duration},
     )
 
     check_arguments(
         segment_count > 0,
-        "Segment count must be greater than zero.",
+        "Segment count must be positive.",
         {"segment_count": segment_count},
     )
 
     check_arguments(
         width > 0.0,
-        "Width of ideal Gaussian pulse must be greater than zero.",
+        "Width of ideal Gaussian pulse must be positive.",
         {"width": width},
     )
 
