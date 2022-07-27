@@ -1003,7 +1003,7 @@ def new_xy_concatenated_sequence(
     )
     check_arguments(
         concatenation_order >= 1,
-        "Concatenation oder must be positive.",
+        "Concatenation order must be positive.",
         {"concatenation_order": concatenation_order},
     )
 
