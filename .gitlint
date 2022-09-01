@@ -6,4 +6,4 @@ contrib=contrib-title-conventional-commits
 ignore=body-is-missing
 
 [contrib-title-conventional-commits]
-types=feat,fix,misc
+types=feat,fix,refactor,dep,remove,misc
