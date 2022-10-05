@@ -1,0 +1,18 @@
+##### This file is managed automatically. To update visit: https://github.com/qctrl/repositories-manager. #####
+name: Check PR format
+
+on:
+  pull_request:
+    types: [opened, reopened, edited]
+    branches: [master]
+
+jobs:
+  check_pr_format:
+    name: 'Check PR format'
+    runs-on: ubuntu-latest
+    container: qctrl/ci-images:python-3.10-ci
+    steps:
+    - uses: actions/checkout@v3
+    - name: Check PR format
+      shell: bash
+      run: /scripts/check-pr-format.sh
