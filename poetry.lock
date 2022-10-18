@@ -979,7 +979,7 @@ py = {version = "*", markers = "implementation_name == \"pypy\""}
 
 [[package]]
 name = "qctrl-commons"
-version = "17.1.1"
+version = "17.3.0"
 description = "Q-CTRL Python Commons"
 category = "dev"
 optional = false
@@ -997,7 +997,7 @@ toml = ">=0.10.0,<0.11.0"
 
 [[package]]
 name = "qctrl-visualizer"
-version = "3.4.0"
+version = "4.0.0"
 description = "Q-CTRL Python Visualizer"
 category = "dev"
 optional = false
@@ -1006,7 +1006,7 @@ python-versions = ">=3.7.2,<3.11"
 [package.dependencies]
 matplotlib = ">=2.1"
 numpy = ">=1.21.5,<2.0.0"
-qctrl-commons = ">=17.1.1,<18.0.0"
+qctrl-commons = ">=17.1.4,<18.0.0"
 toml = ">=0.10.0,<0.11.0"
 
 [[package]]
@@ -1180,8 +1180,8 @@ optional = false
 python-versions = ">=3.5"
 
 [package.extras]
+lint = ["flake8", "mypy", "docutils-stubs"]
 test = ["pytest"]
-lint = ["docutils-stubs", "mypy", "flake8"]
 
 [[package]]
 name = "toml"
@@ -1318,7 +1318,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.2,<3.11"
-content-hash = "d643ab0654d8cf0f0aa615a51c3c78346f593d4f87a5e10fe850233813805303"
+content-hash = "d8496dc2294a07a01210a04f708da3941fb033363b727151eba81e126c9e2e10"
 
 [metadata.files]
 aiohttp = [
@@ -2252,6 +2252,13 @@ pyyaml = [
     {file = "PyYAML-6.0-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:f84fbc98b019fef2ee9a1cb3ce93e3187a6df0b2538a651bfb890254ba9f90b5"},
     {file = "PyYAML-6.0-cp310-cp310-win32.whl", hash = "sha256:2cd5df3de48857ed0544b34e2d40e9fac445930039f3cfe4bcc592a1f836d513"},
     {file = "PyYAML-6.0-cp310-cp310-win_amd64.whl", hash = "sha256:daf496c58a8c52083df09b80c860005194014c3698698d1a57cbcfa182142a3a"},
+    {file = "PyYAML-6.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:d4b0ba9512519522b118090257be113b9468d804b19d63c71dbcf4a48fa32358"},
+    {file = "PyYAML-6.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:81957921f441d50af23654aa6c5e5eaf9b06aba7f0a19c18a538dc7ef291c5a1"},
+    {file = "PyYAML-6.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:afa17f5bc4d1b10afd4466fd3a44dc0e245382deca5b3c353d8b757f9e3ecb8d"},
+    {file = "PyYAML-6.0-cp311-cp311-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:dbad0e9d368bb989f4515da330b88a057617d16b6a8245084f1b05400f24609f"},
+    {file = "PyYAML-6.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:432557aa2c09802be39460360ddffd48156e30721f5e8d917f01d31694216782"},
+    {file = "PyYAML-6.0-cp311-cp311-win32.whl", hash = "sha256:bfaef573a63ba8923503d27530362590ff4f576c626d86a9fed95822a8255fd7"},
+    {file = "PyYAML-6.0-cp311-cp311-win_amd64.whl", hash = "sha256:01b45c0191e6d66c470b6cf1b9531a771a83c1c4208272ead47a3ae4f2f603bf"},
     {file = "PyYAML-6.0-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:897b80890765f037df3403d22bab41627ca8811ae55e9a722fd0392850ec4d86"},
     {file = "PyYAML-6.0-cp36-cp36m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:50602afada6d6cbfad699b0c7bb50d5ccffa7e46a3d738092afddc1f9758427f"},
     {file = "PyYAML-6.0-cp36-cp36m-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:48c346915c114f5fdb3ead70312bd042a953a8ce5c7106d5bfb1a5254e47da92"},
@@ -2329,12 +2336,12 @@ pyzmq = [
     {file = "pyzmq-22.3.0.tar.gz", hash = "sha256:8eddc033e716f8c91c6a2112f0a8ebc5e00532b4a6ae1eb0ccc48e027f9c671c"},
 ]
 qctrl-commons = [
-    {file = "qctrl-commons-17.1.1.tar.gz", hash = "sha256:4048e66670c2f33da879f46551e2fedd9279d27ae3ed69cb791f6acf83ee3e82"},
-    {file = "qctrl_commons-17.1.1-py3-none-any.whl", hash = "sha256:b5b3a23cf896be9b6206996940ec57fbfadf638cd211240cf3e52433133da6f7"},
+    {file = "qctrl-commons-17.3.0.tar.gz", hash = "sha256:63825ca9ea44e50175e6d9be1aa1efbb8421227ab515fc9d0143a8dfeefd4952"},
+    {file = "qctrl_commons-17.3.0-py3-none-any.whl", hash = "sha256:6ed02cd42920a79be7d8b76e65db04eee1817c0760f98799683594f86bcc4668"},
 ]
 qctrl-visualizer = [
-    {file = "qctrl-visualizer-3.4.0.tar.gz", hash = "sha256:374306b5667cad6f0deebc585d423a059a089a2572646d29a94c1f087fe73169"},
-    {file = "qctrl_visualizer-3.4.0-py3-none-any.whl", hash = "sha256:2d2ec928df80f21718414e370a2056be7d70b69d16ebc5ce7924d251262fdd97"},
+    {file = "qctrl-visualizer-4.0.0.tar.gz", hash = "sha256:b985f1d8ada02005a9d24146716e39151e30052334fc6938c1c8f7ceae40c686"},
+    {file = "qctrl_visualizer-4.0.0-py3-none-any.whl", hash = "sha256:81a67846842a6cfe1138f275a1bcdbdc17c639b8f3baeaf1e1d168af37537fd1"},
 ]
 requests = [
     {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},
