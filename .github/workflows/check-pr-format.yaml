@@ -10,7 +10,7 @@ jobs:
   check_pr_format:
     name: 'Check PR format'
     runs-on: ubuntu-latest
-    container: qctrl/ci-images:python-3.10-ci
+    container: qctrl/ci-images:python-3.11-ci
     steps:
     - uses: actions/checkout@v3
     - name: Check PR format
