@@ -44,15 +44,15 @@ def _add_pre_post_rotations(
 
     Parameters
     ----------
-    duration: float
+    duration : float
         The duration of the sequence
     offsets : np.ndarray
         Offsets of the sequence.
-    rabi_rotations: np.ndarray
+    rabi_rotations : np.ndarray
         Rabi rotations at each of the offsets.
     azimuthal_angles : np.ndarray
         Azimuthal angles at each of the offsets.
-    detuning_rotations: np.ndarray
+    detuning_rotations : np.ndarray
         Detuning rotations at each of the offsets
 
     Returns
