@@ -16,10 +16,9 @@
 Module for defining commonly used driven controls.
 """
 
-from typing import (
-    List,
-    Optional,
-)
+from __future__ import annotations
+
+from typing import Optional
 
 import numpy as np
 
@@ -81,14 +80,14 @@ def _get_transformed_rabi_rotation_wimperis(rabi_rotation: float) -> float:
 
 def _derive_segments(
     angles: np.ndarray, amplitude: float = 2.0 * np.pi
-) -> List[List[float]]:
+) -> list[list[float]]:
     """
     Derive the driven control segments from a set of rabi_rotations defined in terms of the
     spherical polar angles.
 
     Parameters
     ----------
-    angles : numpy.array
+    angles : np.ndarray
         angles is made of a list polar angle 2-lists formatted
         as [polar_angle, azimuthal_angle].
         All angles should be greater or equal to 0, and the polar_angles

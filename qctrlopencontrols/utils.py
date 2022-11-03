@@ -15,12 +15,18 @@
 """
 Miscellaneous functions and dataclasses.
 """
+from __future__ import annotations
+
 from enum import Enum
+from typing import (
+    Any,
+    Optional,
+)
 
 from .exceptions import ArgumentsValueError
 
 
-def create_repr_from_attributes(class_instance=None, attributes=None):
+def create_repr_from_attributes(class_instance=None, attributes=None) -> str:
 
     """
     Returns a string representation of an object.
@@ -81,7 +87,12 @@ def create_repr_from_attributes(class_instance=None, attributes=None):
     return repr_string
 
 
-def check_arguments(condition, description, arguments, extras=None):
+def check_arguments(
+    condition: Any,
+    description: str,
+    arguments: dict[str, Any],
+    extras: Optional[dict[str, Any]] = None,
+):
     """
     Raises an ArgumentsValueError with the specified parameters if the given condition is false,
     otherwise does nothing.
@@ -89,22 +100,25 @@ def check_arguments(condition, description, arguments, extras=None):
     For example, a use case may look like::
 
         def log(x):
-            check_arguments(x > 0,
-                            "x must be positive.",
-                            {"x": x})
-            return numpy.log(x)
+            check_arguments(
+                x > 0,
+                "x must be positive.",
+                {"x": x}
+            )
+            return np.log(x)
 
     Parameters
     ----------
-    condition: Any
+    condition : Any
         The condition to be checked. Evaluated result of the condition must be bool.
-    description: str
+    description : str
         Error information to explain why condition fails.
-    arguments: dict
+    arguments : dict
         arguments that fail the condition. Keys should be the names of the arguments and arguments
         are the values.
-    extras: dict, optional
+    extras : dict, optional
         Any extra information to explain why condition fails. Defaults to None.
+
     Raises
     ------
     ArgumentsValueError

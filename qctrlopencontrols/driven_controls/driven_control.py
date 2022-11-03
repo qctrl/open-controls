@@ -15,10 +15,12 @@
 """
 Driven control module.
 """
+from __future__ import annotations
+
 import csv
 import json
 from typing import (
-    Dict,
+    Any,
     Optional,
 )
 
@@ -374,7 +376,7 @@ class DrivenControl:
             name,
         )
 
-    def _qctrl_expanded_export_content(self, coordinates: str) -> Dict:
+    def _qctrl_expanded_export_content(self, coordinates: str) -> dict[str, Any]:
         """
         Prepare the content to be saved in Q-CTRL expanded format.
 
@@ -386,7 +388,7 @@ class DrivenControl:
 
         Returns
         -------
-        Dict
+        dict
             A dictionary containing the information of the control.
         """
 
@@ -551,7 +553,7 @@ class DrivenControl:
 
     def export(
         self, coordinates=Coordinate.CYLINDRICAL.value, dimensionless_rabi_rate=True
-    ):
+    ) -> dict[str, Any]:
 
         """
         Returns a dictionary formatted for plotting using the ``qctrl-visualizer`` package.
