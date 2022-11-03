@@ -101,9 +101,7 @@ def check_arguments(
 
         def log(x):
             check_arguments(
-                x > 0,
-                "x must be positive.",
-                {"x": x}
+                x > 0, "x must be positive.", {"x": x}
             )
             return np.log(x)
 
