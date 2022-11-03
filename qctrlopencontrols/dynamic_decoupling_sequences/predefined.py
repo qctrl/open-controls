@@ -16,7 +16,7 @@
 Module for defining commonly used dynamical decoupling sequences.
 """
 
-from typing import Tuple
+from __future__ import annotations
 
 import numpy as np
 
@@ -30,7 +30,7 @@ def _add_pre_post_rotations(
     rabi_rotations: np.ndarray,
     azimuthal_angles: np.ndarray,
     detuning_rotations: np.ndarray,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
     Adds a pre and post X rotation at the start and end of the sequence.
 
@@ -44,15 +44,15 @@ def _add_pre_post_rotations(
 
     Parameters
     ----------
-    duration: float
+    duration : float
         The duration of the sequence
-    offsets : numpy.ndarray
+    offsets : np.ndarray
         Offsets of the sequence.
-    rabi_rotations: numpy.ndarray
+    rabi_rotations : np.ndarray
         Rabi rotations at each of the offsets.
-    azimuthal_angles : numpy.ndarray
+    azimuthal_angles : np.ndarray
         Azimuthal angles at each of the offsets.
-    detuning_rotations: numpy.ndarray
+    detuning_rotations : np.ndarray
         Detuning rotations at each of the offsets
 
     Returns
@@ -140,7 +140,9 @@ def _add_pre_post_rotations(
     return offsets, rabi_rotations, azimuthal_angles, detuning_rotations
 
 
-def new_ramsey_sequence(duration, pre_post_rotation=False, name=None):
+def new_ramsey_sequence(
+    duration, pre_post_rotation=False, name=None
+) -> DynamicDecouplingSequence:
     r"""
     Creates the Ramsey sequence.
 
@@ -198,7 +200,9 @@ def new_ramsey_sequence(duration, pre_post_rotation=False, name=None):
     )
 
 
-def new_spin_echo_sequence(duration, pre_post_rotation=False, name=None):
+def new_spin_echo_sequence(
+    duration, pre_post_rotation=False, name=None
+) -> DynamicDecouplingSequence:
     r"""
     Creates the spin echo sequence.
 
@@ -261,7 +265,7 @@ def new_spin_echo_sequence(duration, pre_post_rotation=False, name=None):
 
 def new_carr_purcell_sequence(
     duration, offset_count, pre_post_rotation=False, name=None
-):
+) -> DynamicDecouplingSequence:
     r"""
     Creates the Carr-Purcell sequence.
 
@@ -344,7 +348,9 @@ def new_carr_purcell_sequence(
     )
 
 
-def new_cpmg_sequence(duration, offset_count, pre_post_rotation=False, name=None):
+def new_cpmg_sequence(
+    duration, offset_count, pre_post_rotation=False, name=None
+) -> DynamicDecouplingSequence:
     r"""
     Creates the Carr-Purcell-Meiboom-Gill sequence.
 
@@ -428,7 +434,9 @@ def new_cpmg_sequence(duration, offset_count, pre_post_rotation=False, name=None
     )
 
 
-def new_uhrig_sequence(duration, offset_count, pre_post_rotation=False, name=None):
+def new_uhrig_sequence(
+    duration, offset_count, pre_post_rotation=False, name=None
+) -> DynamicDecouplingSequence:
     r"""
     Creates the Uhrig sequence.
 
@@ -507,7 +515,9 @@ def new_uhrig_sequence(duration, offset_count, pre_post_rotation=False, name=Non
     )
 
 
-def new_periodic_sequence(duration, offset_count, pre_post_rotation=False, name=None):
+def new_periodic_sequence(
+    duration, offset_count, pre_post_rotation=False, name=None
+) -> DynamicDecouplingSequence:
     r"""
     Creates the periodic sequence.
 
@@ -586,7 +596,9 @@ def new_periodic_sequence(duration, offset_count, pre_post_rotation=False, name=
     )
 
 
-def new_walsh_sequence(duration, paley_order, pre_post_rotation=False, name=None):
+def new_walsh_sequence(
+    duration, paley_order, pre_post_rotation=False, name=None
+) -> DynamicDecouplingSequence:
     r"""
     Creates the Walsh sequence.
 
@@ -709,7 +721,7 @@ def new_walsh_sequence(duration, paley_order, pre_post_rotation=False, name=None
 
 def new_quadratic_sequence(
     duration, inner_offset_count, outer_offset_count, pre_post_rotation=False, name=None
-):
+) -> DynamicDecouplingSequence:
     r"""
     Creates the quadratic sequence.
 
@@ -842,7 +854,7 @@ def new_quadratic_sequence(
 
 def new_x_concatenated_sequence(
     duration, concatenation_order, pre_post_rotation=False, name=None
-):
+) -> DynamicDecouplingSequence:
     r"""
     Creates the :math:`X`-concatenated sequence.
 
@@ -945,7 +957,7 @@ def new_x_concatenated_sequence(
 
 def new_xy_concatenated_sequence(
     duration, concatenation_order, pre_post_rotation=False, name=None
-):
+) -> DynamicDecouplingSequence:
     r"""
     Creates the :math:`XY`-concatenated sequence.
 
@@ -1138,7 +1150,7 @@ def _carr_purcell_meiboom_gill_offsets(
 
     Returns
     -------
-    numpy.ndarray
+    np.ndarray
         The offset values.
     """
 
@@ -1166,7 +1178,7 @@ def _uhrig_single_axis_offsets(duration: float, offset_count: int) -> np.ndarray
 
     Returns
     -------
-    numpy.ndarray
+    np.ndarray
         The offset values.
     """
 
@@ -1192,7 +1204,7 @@ def _concatenation_x(concatenation_sequence: int) -> np.ndarray:
 
     Returns
     -------
-    numpy.ndarray
+    np.ndarray
         The offset values.
     """
 
@@ -1222,7 +1234,7 @@ def _concatenation_xy(concatenation_sequence) -> np.ndarray:
 
     Returns
     -------
-    numpy.ndarray
+    np.ndarray
         The offset values.
     """
 

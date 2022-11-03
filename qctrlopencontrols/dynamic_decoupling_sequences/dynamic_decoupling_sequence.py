@@ -16,8 +16,10 @@
 Dynamical decoupling module.
 """
 
+from __future__ import annotations
+
 from typing import (
-    Dict,
+    Any,
     Optional,
 )
 
@@ -129,7 +131,7 @@ class DynamicDecouplingSequence:
         self.detuning_rotations = np.asarray(detuning_rotations, dtype=float)
         self.name = name
 
-    def export(self) -> Dict:
+    def export(self) -> dict[str, Any]:
         """
         Returns a dictionary for plotting using the qctrl-visualizer package.
 
