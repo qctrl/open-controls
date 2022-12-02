@@ -1,4 +1,4 @@
-FROM qctrl/python-build:3.7 AS builder
+FROM qctrl/ci-images:python-3.10-ci AS builder
 
 COPY . .
 
