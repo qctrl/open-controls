@@ -54,8 +54,7 @@ html_context = {
     "var_url": "https://docs.q-ctrl.com",
     "var_title": "Open Controls Python package | Q-CTRL",
     "var_description": (
-        "Module, class and method reference for the "
-        "Q-CTRL Open Controls Python package"
+        "Module, class, and method reference for the Q-CTRL Open Controls Python package"
     ),
     "var_image": (
         "https://images.ctfassets.net/l5sdcktfe9p6/6XwDBOS4cWBv2Lo"
