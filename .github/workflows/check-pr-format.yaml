@@ -8,11 +8,11 @@ on:
 
 jobs:
   check_pr_format:
-    name: 'Check PR format'
+    name: "Check PR format"
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
     steps:
-    - uses: actions/checkout@v3
-    - name: Check PR format
-      shell: bash
-      run: /scripts/check-pr-format.sh
+      - uses: actions/checkout@v3
+      - name: Check PR format
+        shell: bash
+        run: /scripts/check-pr-format.sh
