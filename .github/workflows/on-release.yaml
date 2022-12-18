@@ -47,7 +47,6 @@ jobs:
             --suffix -docs
       - name: Update Sphinx deployment in Kubernetes (Production)
         run: |
-          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
           ./ci vault awsKey -t $(cat .token) -r deploy-eks-prod -o ./.aws-credentials
           ./ci docker run qctrl/ci-images:google-cloud-sdk-ci sh -- -c '
             . ./.aws-credentials;
