@@ -61,7 +61,7 @@ packages = [
     { include = "qctrlopencontrols" },
 ]
 
-[tool.poetry.dependencies]  # https://poetry.eustace.io/docs/versions
+[tool.poetry.dependencies]
 python = ">=3.7.2,<3.12"
 numpy = [
     {version = "^1.21.6", python = ">=3.7,<3.8"},
