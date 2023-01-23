@@ -74,7 +74,6 @@ extensions = [
     "sphinx.ext.coverage",
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
-    "sphinx_rtd_theme",
     "sphinx.ext.viewcode",
 ]
 
@@ -94,7 +93,7 @@ exclude_patterns: List[str] = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "sphinx_rtd_theme"
+html_theme = "qctrl_sphinx_theme"
 
 html_title = html_context["var_title"]
 
@@ -103,23 +102,15 @@ html_theme_options = {
     # Toc options
     "collapse_navigation": False,
     "includehidden": False,
+    # Q-CTRL Sphinx Theme options.
+    "docsearch_api_key": "08c69ce3179bc7b1674919d9aba36fae",
+    "docsearch_app_id": "21BIPDHNCR",
+    "docsearch_index_name": "dev.docs.q-ctrl.com",
+    "segment_write_key": "1U3lCPScREFDrSg6648L978jF9lB0LAM",
 }
 
 # Option to automatically generate summaries.
 autosummary_generate = True
-
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
-html_css_files = [
-    "https://docs.q-ctrl.com/assets/css/readthedocs.css",
-]
-html_js_files = [
-    "https://docs.q-ctrl.com/assets/js/readthedocs.js",
-]
-html_logo = "_static/logo.svg"
-
 
 public_apis = qctrlopencontrols.__all__
 

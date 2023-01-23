@@ -76,13 +76,10 @@ mypy = "^0.982"
 pytest = "^7.0"
 pylint = "^2.14"
 pylint_runner = "^0.5.4"
-sphinx = "~3.2.1"
-sphinx-rtd-theme = "~0.4.3"
+sphinx = "^5.0.0"
+qctrl-sphinx-theme = "~0.1.1"
 isort = "^5.7.0"
 pre-commit = "^2.9.3"
-docutils = "^0.17.1"
-# see https://github.com/sphinx-doc/sphinx/issues/10291
-jinja2 = "<3.1"
 
 [tool.poetry.urls]
 GitHub = "https://github.com/qctrl"
