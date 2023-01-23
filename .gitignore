@@ -68,6 +68,10 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+# Sphinx generated autosummary rst files
+docs/qctrlopencontrols/
+docs/qctrlopencontrols.rst
+
 # PyBuilder
 target/
 
