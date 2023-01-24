@@ -47,7 +47,7 @@ class DynamicDecouplingSequence:
     offsets : np.ndarray
         The times offsets :math:`\{t_j\}` in seconds for the center of pulses.
     rabi_rotations : np.ndarray
-        The rabi rotation :math:`\omega_j` at each time offset :math:`t_j`.
+        The Rabi rotation :math:`\omega_j` at each time offset :math:`t_j`.
     azimuthal_angles : np.ndarray
         The azimuthal angle :math:`\phi_j` at each time offset :math:`t_j`.
     detuning_rotations : np.ndarray
@@ -235,18 +235,18 @@ class DynamicDecouplingSequence:
             Name and path of the file to save the control into.
         file_format : str
             Specified file format for saving the control. Defaults to
-            'Q-CTRL expanded'; Currently it does not support any other format.
+            'Q-CTRL expanded'. Currently it does not support any other format.
             For detail of the `Q-CTRL Expanded Format` consult
             :py:meth:`DrivenControl.export_to_file`.
         file_type : str, optional
             One of 'CSV' or 'JSON'. Defaults to 'CSV'.
         coordinates : str, optional
-            Indicates the co-ordinate system requested. Must be one of
-            'cylindrical', 'cartesian'; defaults to 'cylindrical'
+            Indicates the coordinate system requested. Must be one of
+            'cylindrical' or 'cartesian'. Defaults to 'cylindrical'.
         maximum_rabi_rate : float, optional
-            Maximum Rabi Rate; Defaults to :math:`2\pi`.
+            Maximum Rabi rate. Defaults to :math:`2\pi`.
         maximum_detuning_rate : float, optional
-            Maximum Detuning Rate; Defaults to :math:`2\pi`.
+            Maximum detuning rate. Defaults to :math:`2\pi`.
 
         Raises
         ------
@@ -255,9 +255,8 @@ class DynamicDecouplingSequence:
 
         Notes
         -----
-        The sequence is converted to a driven control using the maximum rabi and detuning
-        rate. The driven control is then exported. This is done to facilitate a coherent
-        integration with Q-CTRL BLACK OPAL's 1-Qubit workspace.
+        The sequence is converted to a driven control using the maximum Rabi and detuning
+        rate. The driven control is then exported.
         """
 
         convert_dds_to_driven_control(

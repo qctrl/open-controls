@@ -383,7 +383,7 @@ class DrivenControl:
         Parameters
         ----------
         coordinates : str, optional
-            Indicates the co-ordinate system requested. Must be
+            Indicates the coordinate system requested. Must be
             'cylindrical'or 'cartesian'. Defaults to 'cylindrical'.
 
         Returns
@@ -428,10 +428,10 @@ class DrivenControl:
         filename : str
             Name and path of the file to save the control into.
         file_type : str, optional
-            One of 'CSV' or 'JSON'; defaults to 'CSV'.
+            One of 'CSV' or 'JSON'. Defaults to 'CSV'.
         coordinates : str, optional
-            Indicates the co-ordinate system requested. Must be one of
-            'cylindrical', 'cartesian'; defaults to 'cylindrical'
+            Indicates the coordinate system requested. Must be one of
+            'cylindrical' or 'cartesian'. Defaults to 'cylindrical'.
         """
 
         control_info = self._qctrl_expanded_export_content(coordinates=coordinates)
