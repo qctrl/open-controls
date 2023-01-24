@@ -36,7 +36,7 @@ def _validate_rabi_parameters(rabi_rotation: float, maximum_rabi_rate: float) ->
         The total polar angle to be performed by the pulse.
         Defined in polar coordinates.
     maximum_rabi_rate : float
-        The maximum rabi frequency for the pulse.
+        The maximum Rabi frequency for the pulse.
     """
 
     check_arguments(

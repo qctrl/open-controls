@@ -567,7 +567,7 @@ def test_conversion_of_z_pi_2_pulses_at_extremities():
 def test_conversion_of_pulses_with_arbitrary_rabi_rotations():
     """
     Tests if the method to convert a DDS to driven controls handles properly
-    Y pulses with rabi rotations that assume arbitrary values between 0 and pi.
+    Y pulses with Rabi rotations that assume arbitrary values between 0 and pi.
     """
     _duration = 3.0
     _offsets = np.array([0.5, 1.5, 2.5])
