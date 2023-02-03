@@ -99,7 +99,7 @@ persistent=yes
 
 # Minimum Python version to use for version dependent checks. Will default to
 # the version used to run pylint.
-## Minimum supported python version 
+## Minimum supported python version
 py-version=3.7.2
 
 # Discover python modules and packages in the file system subtree.
