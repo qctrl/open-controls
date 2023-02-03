@@ -133,12 +133,17 @@ These checks are run on all code merged to master, and may also be run locally f
 directory:
 
 ```shell
-pip install black pylint_runner isort mypy
+pip install black isort mypy pylint
 mypy
-isort --check
+isort --check .
 black --check .
-pylint_runner
+pylint .
 ```
+
+Note that you can speed up the execution of Pylint by running it in the parallel mode with the `-j`
+option: `pylint -j 0 .`.
+See the [official documentation](https://pylint.readthedocs.io/en/latest/user_guide/usage/run.html#parallel-execution)
+for details.
 
 Black and isort, in addition to checking code, can also automatically apply fixes. To fix all code
 in the python-open-controls tree, run:
