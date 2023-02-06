@@ -67,12 +67,12 @@ numpy = [
     {version = "^1.21.6", python = ">=3.7,<3.8"},
     {version = "^1.23.0", python = ">=3.8"}
 ]
-toml = "^0.10.0"
+toml = "^0.10.2"
 
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
-mypy = "^0.982"
+mypy = "^0.991"
 pytest = "^7.0"
 pylint = "^2.16.1"
 sphinx = "^5.0.0"
