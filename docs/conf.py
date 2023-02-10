@@ -112,6 +112,9 @@ html_theme_options = {
 # Option to automatically generate summaries.
 autosummary_generate = True
 
+# Hide type hints in signatures.
+autodoc_typehints = "none"
+
 public_apis = qctrlopencontrols.__all__
 
 # the key of autosummary_context can be used
