@@ -389,7 +389,7 @@ def new_cpmg_sequence(
     References
     ----------
     .. [#] `S. Meiboom and D. Gill, Review of Scientific Instruments 29:8, 688 (1958).
-        <https://link.aps.org/doi/10.1063/1.1716296>`_
+        <https://doi.org/10.1063/1.1716296>`_
     """
 
     check_arguments(
