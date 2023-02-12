@@ -103,9 +103,10 @@ html_theme_options = {
     "collapse_navigation": False,
     "includehidden": False,
     # Q-CTRL Sphinx Theme options.
-    "docsearch_api_key": "08c69ce3179bc7b1674919d9aba36fae",
+    # Overrides default search credentials to use the prod search index.
+    "docsearch_api_key": "ed4ee1863f66bb3eba9583582f8d63fb",
     "docsearch_app_id": "21BIPDHNCR",
-    "docsearch_index_name": "dev.docs.q-ctrl.com",
+    "docsearch_index_name": "docs.q-ctrl.com",
     "segment_write_key": "1U3lCPScREFDrSg6648L978jF9lB0LAM",
 }
 
