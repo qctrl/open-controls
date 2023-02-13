@@ -78,7 +78,7 @@ jobs:
           -p $(cat .hub_pass) \
           --suffix -docs
     - name: Update Sphinx deployment in Kubernetes (Development)
-      if: github.ref == 'refs/heads/master'
+      # if: github.ref == 'refs/heads/master'
       run: |
         ./ci vault awsKey -t $(cat .token) -r deploy-eks-dev -o ./.aws-credentials
         ./ci docker run qctrl/ci-images:google-cloud-sdk-ci sh -- -c '

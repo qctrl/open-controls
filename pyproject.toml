@@ -76,7 +76,7 @@ mypy = "^0.991"
 pytest = "^7.0"
 pylint = "^2.16.1"
 sphinx = "^5.0.0"
-qctrl-sphinx-theme = "~0.1.1"
+qctrl-sphinx-theme = "~0.1.2"
 isort = "^5.7.0"
 pre-commit = "^2.9.3"
 

@@ -102,11 +102,6 @@ html_theme_options = {
     # Toc options
     "collapse_navigation": False,
     "includehidden": False,
-    # Q-CTRL Sphinx Theme options.
-    "docsearch_api_key": "08c69ce3179bc7b1674919d9aba36fae",
-    "docsearch_app_id": "21BIPDHNCR",
-    "docsearch_index_name": "dev.docs.q-ctrl.com",
-    "segment_write_key": "1U3lCPScREFDrSg6648L978jF9lB0LAM",
 }
 
 # Option to automatically generate summaries.
