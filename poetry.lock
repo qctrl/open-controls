@@ -463,7 +463,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "qctrl-sphinx-theme"
-version = "0.1.1"
+version = "0.1.2"
 description = "Q-CTRL Sphinx Theme"
 category = "dev"
 optional = false
@@ -725,7 +725,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.2,<3.12"
-content-hash = "3fb6c1230c028e5c376db3efed8e79c8b02db6435cb2f3b063c1ee40a4a688ff"
+content-hash = "88a8e2b34bc46aa83c65a79810523ea96cb9a303aa842208cbe75681623fb3f3"
 
 [metadata.files]
 alabaster = [
@@ -1186,8 +1186,8 @@ pyyaml = [
     {file = "PyYAML-6.0.tar.gz", hash = "sha256:68fb519c14306fec9720a2a5b45bc9f0c8d1b9c72adf45c37baedfcd949c35a2"},
 ]
 qctrl-sphinx-theme = [
-    {file = "qctrl_sphinx_theme-0.1.1-py3-none-any.whl", hash = "sha256:dfad46c4b3ec178856a3975cf3415e56804d9b7842c282e9f9a7c74a2af840cb"},
-    {file = "qctrl_sphinx_theme-0.1.1.tar.gz", hash = "sha256:b61037f86d58b70e2d228a2f2f4b14341736a5a77c891b8b4e3eba2c638b75f7"},
+    {file = "qctrl_sphinx_theme-0.1.2-py3-none-any.whl", hash = "sha256:0a23da9e2fc77c15825c386670e3530cc4b79ea5a4b1fcd78c073da470f1ff6d"},
+    {file = "qctrl_sphinx_theme-0.1.2.tar.gz", hash = "sha256:bbe440da114a2719dcd8846e7af0970548cb2309a8aa3ab3df08632ad4615b95"},
 ]
 requests = [
     {file = "requests-2.28.2-py3-none-any.whl", hash = "sha256:64299f4909223da747622c030b781c0d7811e359c37124b4bd368fb8c6518baa"},
