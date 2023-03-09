@@ -102,6 +102,8 @@ html_theme_options = {
     # Toc options
     "collapse_navigation": False,
     "includehidden": False,
+    # Update to prod key, so Intercom will use the prod environment.
+    "segment_write_key": "XOb2NWg1wZZsUZtkwJWvP60VEVdAHA4k",
 }
 
 # Option to automatically generate summaries.
