@@ -90,7 +90,7 @@ See the [Jupyter notebooks examples](../examples) and the
 
 ## Contributing
 
-For general guidelines, see [Contributing](https://github.com/qctrl/.github/blob/master/CONTRIBUTING.md).
+For general guidelines, see [Contributing](https://code.q-ctrl.com/contributing).
 
 ### Building documentation
 
