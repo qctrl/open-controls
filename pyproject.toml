@@ -46,7 +46,6 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Natural Language :: English",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -62,11 +61,8 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.7.2,<3.12"
-numpy = [
-    {version = "^1.21.6", python = ">=3.7,<3.8"},
-    {version = "^1.23.0", python = ">=3.8"}
-]
+python = ">=3.8,<3.12"
+numpy = ">=1.24.0"
 toml = "^0.10.2"
 
 
@@ -100,7 +96,7 @@ known_first_party = "qctrlopencontrols"
 
 
 [build-system]
-requires = ["poetry-core>=1.0.8"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 #  _______________________________________
