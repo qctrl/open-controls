@@ -9,7 +9,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - name: Update version in code
@@ -19,21 +19,21 @@ jobs:
         git fetch --tags --force
         source <(curl -sL http://ci.q-ctrl.com)
         ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci docker run qctrl/ci-images:python-3.7-ci /scripts/housekeeping.sh
+        ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/housekeeping.sh
     - name: Publish publicly
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
-        ./ci docker run qctrl/ci-images:python-3.7-ci /scripts/publish-release-publicly.sh
+        ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-release-publicly.sh
     - name: Publish internally
       run: |
-        ./ci docker run qctrl/ci-images:python-3.7-ci /scripts/publish-release-internally.sh
+        ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-release-internally.sh
 
   sphinx_documentation:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Build Sphinx Image and Push to DockerHub
         run: |
           source <(curl -sL http://ci.q-ctrl.com)

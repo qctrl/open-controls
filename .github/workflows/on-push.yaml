@@ -12,7 +12,7 @@ jobs:
   housekeeping:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Perform housekeeping checks
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -24,7 +24,7 @@ jobs:
   linting:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install Python dependencies
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
@@ -38,9 +38,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        python: ["3.8", "3.9", "3.10", "3.11"]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install Python dependencies
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
@@ -53,7 +53,7 @@ jobs:
   publish_internally:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Publish development version
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -65,7 +65,7 @@ jobs:
   sphinx_documentation:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Build Sphinx Image and Push to DockerHub
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
