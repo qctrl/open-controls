@@ -82,7 +82,6 @@ class DynamicDecouplingSequence:
         detuning_rotations: np.ndarray,
         name: Optional[str] = None,
     ):
-
         check_arguments(
             duration > 0,
             "Sequence duration must be above zero.",
