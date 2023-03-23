@@ -1038,9 +1038,7 @@ def new_gaussian_control(
     """
 
     check_arguments(
-        duration > 0.0,
-        "Pulse duration must be positive.",
-        {"duration": duration},
+        duration > 0.0, "Pulse duration must be positive.", {"duration": duration}
     )
 
     check_arguments(
@@ -1050,9 +1048,7 @@ def new_gaussian_control(
     )
 
     check_arguments(
-        width > 0.0,
-        "Width of ideal Gaussian pulse must be positive.",
-        {"width": width},
+        width > 0.0, "Width of ideal Gaussian pulse must be positive.", {"width": width}
     )
 
     # work out exact segment duration
@@ -1287,9 +1283,7 @@ def new_drag_control(
     """
 
     check_arguments(
-        duration > 0.0,
-        "Pulse duration must be positive.",
-        {"duration": duration},
+        duration > 0.0, "Pulse duration must be positive.", {"duration": duration}
     )
 
     check_arguments(
@@ -1299,9 +1293,7 @@ def new_drag_control(
     )
 
     check_arguments(
-        width > 0.0,
-        "Width of ideal Gaussian pulse must be positive.",
-        {"width": width},
+        width > 0.0, "Width of ideal Gaussian pulse must be positive.", {"width": width}
     )
 
     # compute sampling parameters

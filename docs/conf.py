@@ -32,7 +32,7 @@ import os
 import sys
 from typing import List
 
-import toml
+import tomli
 
 import qctrlopencontrols
 
@@ -40,7 +40,8 @@ import qctrlopencontrols
 sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
-parsed = toml.load("../pyproject.toml")
+with open("../pyproject.toml", "rb") as f:
+    parsed = tomli.load(f)
 package_info = parsed["tool"]["poetry"]
 project = package_info["description"]
 author = ", ".join(package_info["authors"])

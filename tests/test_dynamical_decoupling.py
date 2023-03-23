@@ -115,7 +115,6 @@ def test_dynamical_decoupling_sequence():
     assert sequence.name == _name
 
     with pytest.raises(ArgumentsValueError):
-
         # duration cannot be negative
         _ = DynamicDecouplingSequence(
             duration=-2.0,
@@ -126,7 +125,6 @@ def test_dynamical_decoupling_sequence():
         )
 
     with pytest.raises(ArgumentsValueError):
-
         # rabi rotations cannot be negative
         _ = DynamicDecouplingSequence(
             duration=2.0,
@@ -202,7 +200,6 @@ def test_sequence_plot():
 
 
 def test_pretty_string_format():
-
     """
     Tests `__str__` of the dynamic decoupling sequence.
     """
@@ -276,7 +273,6 @@ def test_pretty_string_format():
 
 
 def test_conversion_to_driven_controls():
-
     """
     Tests the method to convert a DDS to Driven Control.
     """
@@ -761,7 +757,6 @@ def test_conversion_of_tightly_packed_sequence():
 
 
 def test_free_evolution_conversion():
-
     """
     Tests the conversion of free evolution.
     """
@@ -831,7 +826,6 @@ def test_free_evolution_conversion():
 
 
 def test_export_to_file():
-
     """
     Tests exporting to file.
     """

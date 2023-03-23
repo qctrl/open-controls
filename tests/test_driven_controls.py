@@ -38,7 +38,6 @@ def _remove_file(filename):
 
 
 def test_driven_controls():
-
     """
     Tests the construction of driven controls.
     """
@@ -183,7 +182,6 @@ def test_control_directions_with_small_amplitudes():
 
 
 def test_control_export():
-
     """
     Tests exporting the control to a file.
     """
@@ -283,7 +281,6 @@ def test_plot_data():
 
 
 def test_pretty_print():
-
     """
     Tests pretty output of driven control.
     """

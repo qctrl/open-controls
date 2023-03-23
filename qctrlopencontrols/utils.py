@@ -27,7 +27,6 @@ from .exceptions import ArgumentsValueError
 
 
 def create_repr_from_attributes(class_instance=None, attributes=None) -> str:
-
     """
     Returns a string representation of an object.
 

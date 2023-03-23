@@ -39,7 +39,6 @@ from qctrlopencontrols.constants import (
 
 
 def test_ramsey_sequence():
-
     """
     Tests the Ramsey sequence.
     """
@@ -70,7 +69,6 @@ def test_ramsey_sequence():
 
 
 def test_spin_echo_sequence():
-
     """
     Test the spin echo sequence.
     """

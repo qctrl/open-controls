@@ -174,9 +174,7 @@ def new_ramsey_sequence(
         <https://link.aps.org/doi/10.1103/PhysRev.78.695>`_
     """
     check_arguments(
-        duration > 0,
-        "Sequence duration must be positive.",
-        {"duration": duration},
+        duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
 
     if pre_post_rotation:
@@ -233,9 +231,7 @@ def new_spin_echo_sequence(
     """
 
     check_arguments(
-        duration > 0,
-        "Sequence duration must be positive.",
-        {"duration": duration},
+        duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
 
     offsets = np.array([duration / 2.0])
@@ -308,9 +304,7 @@ def new_carr_purcell_sequence(
     """
 
     check_arguments(
-        duration > 0,
-        "Sequence duration must be positive.",
-        {"duration": duration},
+        duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
     check_arguments(
         offset_count >= 1,
@@ -393,9 +387,7 @@ def new_cpmg_sequence(
     """
 
     check_arguments(
-        duration > 0,
-        "Sequence duration must be positive.",
-        {"duration": duration},
+        duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
     check_arguments(
         offset_count >= 1,
@@ -474,9 +466,7 @@ def new_uhrig_sequence(
     """
 
     check_arguments(
-        duration > 0,
-        "Sequence duration must be positive.",
-        {"duration": duration},
+        duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
     check_arguments(
         offset_count >= 1,
@@ -555,9 +545,7 @@ def new_periodic_sequence(
     """
 
     check_arguments(
-        duration > 0,
-        "Sequence duration must be positve.",
-        {"duration": duration},
+        duration > 0, "Sequence duration must be positve.", {"duration": duration}
     )
     check_arguments(
         offset_count >= 1,
@@ -660,9 +648,7 @@ def new_walsh_sequence(
     """
 
     check_arguments(
-        duration > 0,
-        "Sequence duration must be positive.",
-        {"duration": duration},
+        duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
     check_arguments(
         1 <= paley_order <= 2000,
@@ -782,9 +768,7 @@ def new_quadratic_sequence(
     """
 
     check_arguments(
-        duration > 0,
-        "Sequence duration must be positive.",
-        {"duration": duration},
+        duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
     check_arguments(
         inner_offset_count >= 1,
@@ -904,9 +888,7 @@ def new_x_concatenated_sequence(
     """
 
     check_arguments(
-        duration > 0,
-        "Sequence duration must be positive.",
-        {"duration": duration},
+        duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
     check_arguments(
         concatenation_order >= 1,
@@ -1009,9 +991,7 @@ def new_xy_concatenated_sequence(
     """
 
     check_arguments(
-        duration > 0,
-        "Sequence duration must be positive.",
-        {"duration": duration},
+        duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
     check_arguments(
         concatenation_order >= 1,
@@ -1072,7 +1052,6 @@ def new_xy_concatenated_sequence(
 
     carr_idx = 0
     while rabi_idx < len(rabi_offsets) and azimuthal_idx < len(azimuthal_offsets):
-
         if rabi_offsets[rabi_idx] < azimuthal_offsets[azimuthal_idx]:
             rabi_rotations[carr_idx] = np.pi
             offsets[carr_idx] = rabi_offsets[rabi_idx]
@@ -1085,7 +1064,6 @@ def new_xy_concatenated_sequence(
         carr_idx += 1
 
     if rabi_idx < len(rabi_offsets):
-
         while rabi_idx < len(rabi_offsets):
             rabi_rotations[carr_idx] = np.pi
             offsets[carr_idx] = rabi_offsets[rabi_idx]

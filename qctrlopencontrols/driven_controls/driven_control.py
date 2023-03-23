@@ -101,7 +101,6 @@ class DrivenControl:
         detunings: Optional[np.ndarray] = None,
         name: Optional[str] = None,
     ):
-
         self.name = name
 
         durations = np.asarray(durations, dtype=float)
@@ -554,7 +553,6 @@ class DrivenControl:
     def export(
         self, coordinates=Coordinate.CYLINDRICAL.value, dimensionless_rabi_rate=True
     ) -> dict[str, Any]:
-
         """
         Returns a dictionary formatted for plotting using the ``qctrl-visualizer`` package.
 
