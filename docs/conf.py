@@ -53,7 +53,7 @@ copyright = f"{datetime.datetime.now().year} Q-CTRL. All rights reserved."  # py
 # Taken from qctrl/docs, see head.html in the repo
 html_context = {
     "var_url": "https://docs.q-ctrl.com",
-    "var_title": "Open Controls Python",
+    "var_title": "Open Controls",
     "var_description": (
         "Module, class, and method reference for the Open Controls package"
     ),
