@@ -34,7 +34,7 @@ from typing import List
 
 import tomli
 
-import qctrlopencontrols
+import opencontrols
 
 # pylint:disable=invalid-name
 sys.path.insert(0, os.path.abspath(".."))
@@ -53,9 +53,9 @@ copyright = f"{datetime.datetime.now().year} Q-CTRL. All rights reserved."  # py
 # Taken from qctrl/docs, see head.html in the repo
 html_context = {
     "var_url": "https://docs.q-ctrl.com",
-    "var_title": "Open Controls Python package | Q-CTRL",
+    "var_title": "Open Controls Python",
     "var_description": (
-        "Module, class, and method reference for the Q-CTRL Open Controls Python package"
+        "Module, class, and method reference for the Open Controls package"
     ),
     "var_image": (
         "https://images.ctfassets.net/l5sdcktfe9p6/6XwDBOS4cWBv2Lo"
@@ -113,14 +113,14 @@ autosummary_generate = True
 # Hide type hints in signatures.
 autodoc_typehints = "none"
 
-public_apis = qctrlopencontrols.__all__
+public_apis = opencontrols.__all__
 
 # the key of autosummary_context can be used
 # as variable in the template
-# here `qctrlopencontrols` is used in the template for
+# here `opencontrols` is used in the template for
 # providing a list of all public APIs
 autosummary_context = {
-    "qctrlopencontrols": public_apis,
+    "opencontrols": public_apis,
 }
 
 # Builds filename/url mappings for the objects
@@ -131,16 +131,16 @@ autosummary_context = {
 
 # update file name class and function
 autosummary_filename_map = {
-    qctrlopencontrols.__name__ + "." + api: api for api in public_apis
+    opencontrols.__name__ + "." + api: api for api in public_apis
 }
 
 # update file name for class methods and attributes
 for _class in [
-    value for name, value in inspect.getmembers(qctrlopencontrols, inspect.isclass)
+    value for name, value in inspect.getmembers(opencontrols, inspect.isclass)
 ]:
     autosummary_filename_map.update(
         {
-            qctrlopencontrols.__name__
+            opencontrols.__name__
             + "."
             + _class.__name__
             + "."
