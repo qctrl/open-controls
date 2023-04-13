@@ -19,8 +19,8 @@ Tests for Predefined Driven Controls.
 import numpy as np
 import pytest
 
-from qctrlopencontrols.constants import SIGMA_X
-from qctrlopencontrols.driven_controls.predefined import (
+from opencontrols.constants import SIGMA_X
+from opencontrols.driven_controls.predefined import (
     new_bb1_control,
     new_corpse_control,
     new_corpse_in_bb1_control,
@@ -34,7 +34,7 @@ from qctrlopencontrols.driven_controls.predefined import (
     new_sk1_control,
     new_wamf1_control,
 )
-from qctrlopencontrols.exceptions import ArgumentsValueError
+from opencontrols.exceptions import ArgumentsValueError
 
 
 def test_primitive_control_segments():

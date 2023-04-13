@@ -2,7 +2,7 @@
 
 .. autosummary::
     :toctree: .
-    :template: qctrlopencontrols/qctrlopencontrols.rst
+    :template: opencontrols/opencontrols.rst
     :recursive:
 
-    qctrlopencontrols
+    opencontrols

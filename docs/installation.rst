@@ -27,7 +27,7 @@ Use ``pip`` to install the latest version of the Q-CTRL Open Controls Python pac
 
 .. code-block:: shell
 
-   pip install qctrl-open-controls
+   pip install open-controls
 
 From Source
 -----------

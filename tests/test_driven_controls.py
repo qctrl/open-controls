@@ -22,8 +22,8 @@ import os
 import numpy as np
 import pytest
 
-from qctrlopencontrols import DrivenControl
-from qctrlopencontrols.exceptions import ArgumentsValueError
+from opencontrols import DrivenControl
+from opencontrols.exceptions import ArgumentsValueError
 
 
 def _remove_file(filename):

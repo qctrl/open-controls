@@ -19,7 +19,7 @@ Tests for Predefined DDS.
 
 import numpy as np
 
-from qctrlopencontrols import (
+from opencontrols import (
     new_carr_purcell_sequence,
     new_cpmg_sequence,
     new_periodic_sequence,
@@ -31,7 +31,7 @@ from qctrlopencontrols import (
     new_x_concatenated_sequence,
     new_xy_concatenated_sequence,
 )
-from qctrlopencontrols.constants import (
+from opencontrols.constants import (
     SIGMA_X,
     SIGMA_Y,
     SIGMA_Z,

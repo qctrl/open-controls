@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "qctrl-open-controls"
+name = "open-controls"
 version = "10.0.0"
 description = "Q-CTRL Python Open Controls"
 license = "Apache-2.0"
@@ -57,7 +57,7 @@ classifiers = [
     "Topic :: System :: Distributed Computing"
 ]
 packages = [
-    { include = "qctrlopencontrols" },
+    { include = "opencontrols" },
 ]
 
 [tool.poetry.dependencies]
@@ -91,7 +91,7 @@ exclude = '''
 [tool.isort]
 profile = "black"
 force_grid_wrap = "2"
-known_first_party = "qctrlopencontrols"
+known_first_party = "opencontrols"
 
 
 [build-system]

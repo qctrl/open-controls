@@ -22,11 +22,11 @@ import os
 import numpy as np
 import pytest
 
-from qctrlopencontrols import (
+from opencontrols import (
     DynamicDecouplingSequence,
     convert_dds_to_driven_control,
 )
-from qctrlopencontrols.exceptions import ArgumentsValueError
+from opencontrols.exceptions import ArgumentsValueError
 
 
 def _remove_file(filename):
