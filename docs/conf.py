@@ -103,9 +103,11 @@ html_theme_options = {
     # Toc options
     "collapse_navigation": False,
     "includehidden": False,
-    # Update to prod key, so Intercom will use the prod environment.
-    "segment_write_key": "XOb2NWg1wZZsUZtkwJWvP60VEVdAHA4k",
 }
+
+segment_write_key = os.getenv("SEGMENT_WRITE_KEY", "")
+if segment_write_key != "":
+    html_theme_options["segment_write_key"] = segment_write_key
 
 # Option to automatically generate summaries.
 autosummary_generate = True
