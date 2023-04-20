@@ -1,14 +1,14 @@
 Installation
 ============
 
-Q-CTRL Open Controls can be installed through ``pip`` or from source. We recommend
+Open Controls can be installed through ``pip`` or from source. We recommend
 the ``pip`` distribution to get the most recent stable release. If you want the
 latest features then install from source.
 
 Requirements
 ------------
 
-To use Q-CTRL Open Controls you will need an installation of Python. We
+To use Open Controls you will need an installation of Python. We
 recommend using the `Anaconda <https://www.anaconda.com/>`_ distribution of
 Python. Anaconda includes standard numerical and scientific Python packages
 which are optimally compiled for your machine. Follow the `Anaconda
@@ -23,7 +23,7 @@ jupyter notebook editor <https://jupyter.org/install>`_ on its own.
 From PyPi
 ---------
 
-Use ``pip`` to install the latest version of the Q-CTRL Open Controls Python package.
+Use ``pip`` to install the latest version of Open Controls.
 
 .. code-block:: shell
 
