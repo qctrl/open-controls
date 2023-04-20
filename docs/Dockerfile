@@ -8,7 +8,8 @@ RUN /scripts/install-python-dependencies.sh
 
 WORKDIR /docs
 
-RUN poetry run make html
+RUN SEGMENT_WRITE_KEY=$([ -f SEGMENT_WRITE_KEY ] && cat SEGMENT_WRITE_KEY) \
+    poetry run make html
 
 FROM nginx:1.19-alpine
 
