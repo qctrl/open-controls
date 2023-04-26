@@ -1,4 +1,4 @@
- ##### This file is managed automatically. To update visit: https://github.com/qctrl/repositories-manager. ##### 
+ ##### This file is managed automatically. To update visit: https://github.com/qctrl/repositories-manager. #####
 name: "Close stale issues and PRs"
 on:
   schedule:
