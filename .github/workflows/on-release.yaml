@@ -33,10 +33,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Build Sphinx Image and Push to DockerHub
+      - name: Retrieve segment write key (Production)
         run: |
           source <(curl -sL http://ci.q-ctrl.com)
           ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+          ./ci vault get -k SEGMENT_WRITE_KEY -t $(cat .token) -p secret/data/python/prod -o ./docs/SEGMENT_WRITE_KEY
+      - name: Build Sphinx Image and Push to DockerHub
+        run: |
           ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_user -o .hub_user
           ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_pass -o .hub_pass
           ./ci docker buildPush \
