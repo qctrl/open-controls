@@ -2,7 +2,7 @@
 
 .. _{{fullname}}:
 
-Open Controls
+Q-CTRL Open Controls
 {{ underline }}{{ underline }}
 
 .. autosummary::
