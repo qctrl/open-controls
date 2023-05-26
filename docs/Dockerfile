@@ -1,4 +1,4 @@
-FROM qctrl/ci-images:python-3.10-ci AS builder
+FROM qctrl/ci-images:python-3.11-ci AS builder
 
 COPY . .
 
@@ -11,6 +11,6 @@ WORKDIR /docs
 RUN SEGMENT_WRITE_KEY=$([ -f SEGMENT_WRITE_KEY ] && cat SEGMENT_WRITE_KEY) \
     poetry run make html
 
-FROM nginx:1.19-alpine
+FROM qctrl/ci-images:nginx-base
 
 COPY --from=builder /docs/_build/html /usr/share/nginx/html
