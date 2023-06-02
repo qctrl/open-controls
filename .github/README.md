@@ -43,11 +43,11 @@ pip install qctrl-open-controls
 ### From Source
 
 The source code is hosted on
-[Github](https://github.com/qctrl/python-open-controls). The repository can be
+[Github](https://github.com/qctrl/open-controls). The repository can be
 cloned using
 
 ```shell
-git clone git@github.com:qctrl/python-open-controls.git
+git clone git@github.com:qctrl/open-controls.git
 ```
 
 Once the clone is complete, you have two options:
@@ -61,14 +61,14 @@ Once the clone is complete, you have two options:
    After you have installed Poetry, use:
 
    ```bash
-   cd python-open-controls
+   cd open-controls
    poetry install
    ```
 
 1. Using pip
 
    ```shell
-   cd python-open-controls
+   cd open-controls
    poetry export --dev -f requirements.txt --output requirements.txt --without-hashes
    pip install -r requirements.txt
    pip install -e .
@@ -76,8 +76,7 @@ Once the clone is complete, you have two options:
    ```
 
 Once installed via one of the above methods, test your installation by running
-`pytest`
-in the `python-open-controls` directory.
+`pytest` in the `open-controls` directory.
 
 ```shell
 pytest
@@ -129,7 +128,7 @@ Code is formatted, linted and checked using the following tools:
 - [isort](https://github.com/timothycrosley/isort)
 - [mypy](http://mypy-lang.org/)
 
-These checks are run on all code merged to master, and may also be run locally from the python-open-controls
+These checks are run on all code merged to master, and may also be run locally from the open-controls
 directory:
 
 ```shell
@@ -146,7 +145,7 @@ See the [official documentation](https://pylint.readthedocs.io/en/latest/user_gu
 for details.
 
 Black and isort, in addition to checking code, can also automatically apply fixes. To fix all code
-in the python-open-controls tree, run:
+in the open-controls tree, run:
 
 ```shell
 isort
@@ -166,13 +165,13 @@ With this, the checks will run every time that you commit code with
 instead of when you commit changes, use `pre-commit install -t pre-push`.
 
 If you no longer wish to use `pre-commit`, you can uninstall it by running
-`pre-commit uninstall` in the `python-open-controls` directory (or by running
+`pre-commit uninstall` in the `open-controls` directory (or by running
 `pre-commit uninstall -t pre-push`, if you used the pre-push hooks).
 
 ## Credits
 
 See
-[Contributors](https://github.com/qctrl/python-open-controls/graphs/contributors).
+[Contributors](https://github.com/qctrl/open-controls/graphs/contributors).
 
 ## License
 
