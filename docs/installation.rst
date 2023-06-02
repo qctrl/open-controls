@@ -33,7 +33,7 @@ From Source
 -----------
 
 The source code is hosted on
-`Github <https://github.com/qctrl/open-controls>`_. The repository can be
+`GitHub <https://github.com/qctrl/open-controls>`_. The repository can be
 cloned using
 
 .. code-block:: shell
