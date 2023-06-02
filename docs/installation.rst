@@ -33,12 +33,12 @@ From Source
 -----------
 
 The source code is hosted on
-`Github <https://github.com/qctrl/python-open-controls>`_. The repository can be
+`GitHub <https://github.com/qctrl/open-controls>`_. The repository can be
 cloned using
 
 .. code-block:: shell
 
-   git clone git@github.com:qctrl/python-open-controls.git
+   git clone git@github.com:qctrl/open-controls.git
 
 Once the clone is complete, you have two options:
 
@@ -54,7 +54,7 @@ Once the clone is complete, you have two options:
 
    .. code-block:: shell
 
-      cd python-open-controls
+      cd open-controls
       poetry install
 
 #.
@@ -62,15 +62,14 @@ Once the clone is complete, you have two options:
 
    .. code-block:: shell
 
-      cd python-open-controls
+      cd open-controls
       poetry export --dev -f requirements.txt --output requirements.txt --without-hashes
       pip install -r requirements.txt
       pip install -e .
       rm requirements.txt
 
 Once installed via one of the above methods, test your installation by running
-``pytest``
-in the ``python-open-controls`` directory.
+``pytest`` in the ``open-controls`` directory.
 
 .. code-block:: shell
 
