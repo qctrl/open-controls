@@ -84,5 +84,5 @@ jobs:
         ./ci docker run qctrl/ci-images:google-cloud-sdk-ci sh -- -c '
           . ./.aws-credentials;
           aws eks update-kubeconfig --alias hidden --name platform-dev2 --region us-east-1;
-          kubectl -n qctrl-platform set image deployment/python-open-controls-docs python-open-controls-docs=qctrl/python-open-controls-docs:$COMMIT && kubectl -n qctrl-platform rollout status deployment/python-open-controls-docs;
+          kubectl -n qctrl-platform set image deployment/python-open-controls-docs python-open-controls-docs=qctrl/open-controls-docs:$COMMIT && kubectl -n qctrl-platform rollout status deployment/python-open-controls-docs;
         '
