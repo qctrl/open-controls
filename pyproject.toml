@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "qctrl-open-controls"
 version = "10.0.1"
-description = "Q-CTRL Python Open Controls"
+description = "Q-CTRL Open Controls"
 license = "Apache-2.0"
 authors = ["Q-CTRL <support@q-ctrl.com>"]
 maintainers = ["Q-CTRL <support@q-ctrl.com>"]
 readme = "README.md"
 homepage = "https://q-ctrl.com"
-repository = "https://github.com/qctrl/python-open-controls"
+repository = "https://github.com/qctrl/open-controls"
 documentation = "https://docs.q-ctrl.com/open-controls/references/qctrl-open-controls/"
 keywords = [
     "black opal",
