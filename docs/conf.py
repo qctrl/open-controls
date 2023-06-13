@@ -48,22 +48,6 @@ author = ", ".join(package_info["authors"])
 release = package_info["version"]
 copyright = f"{datetime.datetime.now().year} Q-CTRL. All rights reserved."  # pylint: disable=redefined-builtin
 
-# -- HTML Variables ----------------------------------------------------------
-# Variables to insert into _templates/layout.html
-# Taken from qctrl/docs, see head.html in the repo
-html_context = {
-    "var_url": "https://docs.q-ctrl.com",
-    "var_title": "Open Controls Python package | Q-CTRL",
-    "var_description": (
-        "Module, class, and method reference for the Q-CTRL Open Controls Python package"
-    ),
-    "var_image": (
-        "https://images.ctfassets.net/l5sdcktfe9p6/6XwDBOS4cWBv2Lo"
-        "SimZwKj/1fb29e7c1e2941114d5eda81797e84ac/q-ctrl.jpg"
-    ),
-    "var_twitter_username": "qctrlHQ",
-}
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -95,8 +79,6 @@ exclude_patterns: List[str] = []
 # a list of builtin themes.
 #
 html_theme = "qctrl_sphinx_theme"
-
-html_title = html_context["var_title"]
 
 # Theme options
 html_theme_options = {
