@@ -39,8 +39,8 @@ repos:
         # when passing in a single file as argument the ignore entry in the .pylintrc does
         # not seem to be considered.
         exclude: .*(venv|\.conf\.py)
-- repo: https://github.com/pre-commit/mirrors-prettier
-  rev: v3.0.0
-  hooks:
-    - id: prettier
-      files: .*(\.js|\.graphql|\.json|\.md)$
+-   repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.0.0
+    hooks:
+      - id: prettier
+        files: .*(\.js|\.graphql|\.json|\.md)$
