@@ -26,7 +26,7 @@ Use `pip` to install the latest version of Q-CTRL Open Controls.
 pip install qctrl-open-controls
 ```
 
-### From Source
+### From source
 
 The source code is hosted on [GitHub](https://github.com/qctrl/open-controls). The repository can be cloned using
 
