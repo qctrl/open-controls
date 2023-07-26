@@ -103,9 +103,7 @@ public_apis = qctrlopencontrols.__all__
 # as variable in the template
 # here `qctrlopencontrols` is used in the template for
 # providing a list of all public APIs
-autosummary_context = {
-    "qctrlopencontrols": public_apis,
-}
+autosummary_context = {"qctrlopencontrols": public_apis}
 
 # Builds filename/url mappings for the objects
 
