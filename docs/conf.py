@@ -33,6 +33,7 @@ import sys
 from typing import List
 
 import tomli
+from qctrlsphinxtheme import get_environment_options
 
 import qctrlopencontrols
 
@@ -81,15 +82,7 @@ exclude_patterns: List[str] = []
 html_theme = "qctrl_sphinx_theme"
 
 # Theme options
-html_theme_options = {
-    # Toc options
-    "collapse_navigation": False,
-    "includehidden": False,
-}
-
-segment_write_key = os.getenv("SEGMENT_WRITE_KEY", "")
-if segment_write_key != "":
-    html_theme_options["segment_write_key"] = segment_write_key
+html_theme_options = get_environment_options()
 
 # Option to automatically generate summaries.
 autosummary_generate = True
