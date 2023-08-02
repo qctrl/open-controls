@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Retrieve segment write key (Production)
+      - name: Retrieve build-time environment variables (Production)
         run: |
           source <(curl -sL http://ci.q-ctrl.com)
           ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}

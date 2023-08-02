@@ -33,7 +33,7 @@ import sys
 from typing import List
 
 import tomli
-from qctrlsphinxtheme import get_environment_options
+from qctrlsphinxtheme import get_html_theme_options
 
 import qctrlopencontrols
 
@@ -82,7 +82,7 @@ exclude_patterns: List[str] = []
 html_theme = "qctrl_sphinx_theme"
 
 # Theme options
-html_theme_options = get_environment_options()
+html_theme_options = get_html_theme_options()
 
 # Option to automatically generate summaries.
 autosummary_generate = True
