@@ -844,14 +844,14 @@ files = [
 
 [[package]]
 name = "qctrl-sphinx-theme"
-version = "0.2.0"
+version = "1.0.1"
 description = "Q-CTRL Sphinx Theme"
 category = "dev"
 optional = false
 python-versions = ">=3.8,<3.12"
 files = [
-    {file = "qctrl_sphinx_theme-0.2.0-py3-none-any.whl", hash = "sha256:3481a78a21007c0e7b4224044cbd1e9c26e4be3296d0f5cb76779c7618b1f7cf"},
-    {file = "qctrl_sphinx_theme-0.2.0.tar.gz", hash = "sha256:e454a0f605c1940c43eb9c996edaa90c3e07795d19ab8dbdab969e37b7708113"},
+    {file = "qctrl_sphinx_theme-1.0.1-py3-none-any.whl", hash = "sha256:27dea8532769b087d6722f35564043e69744f30308f5039ba961ad244115e2f5"},
+    {file = "qctrl_sphinx_theme-1.0.1.tar.gz", hash = "sha256:2930894aa3bf89d7b3224614d1064623e8439380b93bb2a592a875b924c2fbba"},
 ]
 
 [package.dependencies]
@@ -1254,4 +1254,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.12"
-content-hash = "8d233bedb74a6543063d3b39afbc3cc26ec5aa9b400dc53eb9e31f3e5e5bd6e1"
+content-hash = "f85ddb20b478a2012b9aa41f75ab108b6ef2ace922ece80f908557339b2f30fb"
