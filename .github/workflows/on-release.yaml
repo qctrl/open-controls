@@ -52,9 +52,7 @@ jobs:
             --suffix -docs
       - name: Update Sphinx deployment in Kubernetes (Production)
         run: |
-          ./ci vault awsKey -t $(cat .token) -r deploy-eks-prod -o ./.aws-credentials
           ./ci docker run qctrl/ci-images:google-cloud-sdk-ci sh -- -c '
-            . ./.aws-credentials;
-            aws eks update-kubeconfig --alias hidden --name platform-prod --region us-west-2;
+            . /scripts/connect-to-prod-cluster.sh
             kubectl -n qctrl-platform rollout restart deployment/open-controls-docs && kubectl -n qctrl-platform rollout status deployment/open-controls-docs;
           '
