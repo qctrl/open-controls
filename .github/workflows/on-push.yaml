@@ -80,9 +80,7 @@ jobs:
     - name: Update Sphinx deployment in Kubernetes (Development)
       if: github.ref == 'refs/heads/master'
       run: |
-        ./ci vault awsKey -t $(cat .token) -r deploy-eks-dev -o ./.aws-credentials
         ./ci docker run qctrl/ci-images:google-cloud-sdk-ci sh -- -c '
-          . ./.aws-credentials;
-          aws eks update-kubeconfig --alias hidden --name platform-dev --region us-west-2;
+          . /scripts/connect-to-dev-cluster.sh;
           kubectl -n qctrl-platform set image deployment/open-controls-docs open-controls-docs=qctrl/open-controls-docs:$COMMIT && kubectl -n qctrl-platform rollout status deployment/open-controls-docs;
         '
