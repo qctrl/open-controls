@@ -6,3 +6,5 @@
 .github/workflows @qctrl/devops-engineering
 docker* @qctrl/devops-engineering
 Docker* @qctrl/devops-engineering
+
+.github/dependabot.y*ml @qctrl/engineering
