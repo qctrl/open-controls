@@ -261,23 +261,13 @@ def test_plot_data():
         dimensionless_rabi_rate=False, coordinates="cartesian"
     )
 
-    assert np.allclose(
-        [point["duration"] for point in plot_data["X amplitude"]], _durations
-    )
-    assert np.allclose(
-        [point["duration"] for point in plot_data["Y amplitude"]], _durations
-    )
-    assert np.allclose(
-        [point["duration"] for point in plot_data["Detuning"]], _durations
-    )
+    assert np.allclose(plot_data["X amplitude"]["durations"], _durations)
+    assert np.allclose(plot_data["Y amplitude"]["durations"], _durations)
+    assert np.allclose(plot_data["Detuning"]["durations"], _durations)
 
-    assert np.allclose(
-        [point["value"] for point in plot_data["X amplitude"]], x_amplitude
-    )
-    assert np.allclose(
-        [point["value"] for point in plot_data["Y amplitude"]], y_amplitude
-    )
-    assert np.allclose([point["value"] for point in plot_data["Detuning"]], _detunings)
+    assert np.allclose(plot_data["X amplitude"]["values"], x_amplitude)
+    assert np.allclose(plot_data["Y amplitude"]["values"], y_amplitude)
+    assert np.allclose(plot_data["Detuning"]["values"], _detunings)
 
 
 def test_pretty_print():

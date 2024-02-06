@@ -554,7 +554,7 @@ class DrivenControl:
         self, coordinates=Coordinate.CYLINDRICAL.value, dimensionless_rabi_rate=True
     ) -> dict[str, Any]:
         """
-        Returns a dictionary formatted for plotting using the ``qctrl-visualizer`` package.
+        Returns a dictionary formatted for plotting using the Q-CTRL Visualizer package.
 
         Parameters
         ----------
@@ -569,7 +569,7 @@ class DrivenControl:
         -------
         dict
             Dictionary with plot data that can be used by the `plot_controls`
-            method of the ``qctrl-visualizer`` package. It has keywords 'Rabi rate'
+            method of the Q-CTRL Visualizer package. It has keywords 'Rabi rate'
             and 'Detuning' for 'cylindrical' coordinates and 'X amplitude', 'Y amplitude',
             and 'Detuning' for 'cartesian' coordinates.
         """
@@ -587,30 +587,29 @@ class DrivenControl:
 
         plot_dictionary = {}
 
-        plot_x = self.amplitude_x / normalizer
-        plot_y = self.amplitude_y / normalizer
-        plot_r = self.rabi_rates / normalizer
-        plot_theta = self.azimuthal_angles
-        plot_durations = self.durations
-        plot_detunings = self.detunings
-
         if coordinates == Coordinate.CARTESIAN.value:
-            plot_dictionary["X amplitude"] = [
-                {"value": v, "duration": t} for v, t in zip(plot_x, plot_durations)
-            ]
-            plot_dictionary["Y amplitude"] = [
-                {"value": v, "duration": t} for v, t in zip(plot_y, plot_durations)
-            ]
+            plot_dictionary["X amplitude"] = {
+                "values": self.amplitude_x / normalizer,
+                "durations": self.durations,
+            }
+            plot_dictionary["Y amplitude"] = {
+                "values": self.amplitude_y / normalizer,
+                "durations": self.durations,
+            }
 
         if coordinates == Coordinate.CYLINDRICAL.value:
-            plot_dictionary["Rabi rate"] = [
-                {"value": r * np.exp(1.0j * theta), "duration": t}
-                for r, theta, t in zip(plot_r, plot_theta, plot_durations)
-            ]
+            values = (self.rabi_rates / normalizer) * np.exp(
+                1.0j * self.azimuthal_angles
+            )
+            plot_dictionary["Rabi rate"] = {
+                "values": values,
+                "durations": self.durations,
+            }
 
-        plot_dictionary["Detuning"] = [
-            {"value": v, "duration": t} for v, t in zip(plot_detunings, plot_durations)
-        ]
+        plot_dictionary["Detuning"] = {
+            "values": self.detunings,
+            "durations": self.durations,
+        }
 
         return plot_dictionary
 

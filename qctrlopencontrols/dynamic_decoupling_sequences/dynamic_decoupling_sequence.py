@@ -132,27 +132,22 @@ class DynamicDecouplingSequence:
 
     def export(self) -> dict[str, Any]:
         """
-        Returns a dictionary for plotting using the qctrl-visualizer package.
+        Returns a dictionary for plotting using the Q-CTRL Visualizer package.
 
         Returns
         -------
         dict
-            Dictionary with plot data that can be used by the plot_sequences
-            method of the qctrl-visualizer package. It has keywords 'Rabi'
+            Dictionary with plot data that can be used by the `plot_sequences`
+            method of the Q-CTRL Visualizer package. It has keywords 'Rabi'
             and 'Detuning'.
         """
 
         return {
-            "Rabi": [
-                {"rotation": rabi * np.exp(1.0j * theta), "offset": offset}
-                for rabi, theta, offset in zip(
-                    self.rabi_rotations, self.azimuthal_angles, self.offsets
-                )
-            ],
-            "Detuning": [
-                {"rotation": rotation, "offset": offset}
-                for rotation, offset in zip(self.detuning_rotations, self.offsets)
-            ],
+            "Rabi": {
+                "rotations": self.rabi_rotations * np.exp(1.0j * self.azimuthal_angles),
+                "offsets": self.offsets,
+            },
+            "Detuning": {"rotations": self.detuning_rotations, "offsets": self.offsets},
         }
 
     def __repr__(self):
