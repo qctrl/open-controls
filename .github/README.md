@@ -1,5 +1,7 @@
 # Q-CTRL Open Controls
 
+![Python](htttps://img.shields.io/badge/python-3.9+-blue.svg)
+
 Q-CTRL Open Controls is an open-source Python package that makes it easy to create and deploy established error-robust quantum control protocols from the open literature. The aim of the package is to be the most comprehensive library of published and tested quantum control techniques developed by the community, with easy to use export functions allowing users to deploy these controls on:
 
 - Custom quantum hardware
@@ -14,7 +16,7 @@ Q-CTRL Open Controls can be installed through `pip` or from source. We recommend
 
 ### Requirements
 
-To use Q-CTRL Open Controls you will need an installation of Python (>=3.9, <3.12). We recommend using the [Anaconda](https://www.anaconda.com/) distribution of Python. Anaconda includes standard numerical and scientific Python packages which are optimally compiled for your machine. Follow the [Anaconda Installation](https://docs.anaconda.com/anaconda/install/) instructions and consult the [Anaconda User guide](https://docs.anaconda.com/anaconda/user-guide/) to get started.
+To use Q-CTRL Open Controls you will need an installation of Python. We recommend using the [Anaconda](https://www.anaconda.com/) distribution of Python. Anaconda includes standard numerical and scientific Python packages which are optimally compiled for your machine. Follow the [Anaconda Installation](https://docs.anaconda.com/anaconda/install/) instructions and consult the [Anaconda User guide](https://docs.anaconda.com/anaconda/user-guide/) to get started.
 
 We use interactive jupyter notebooks for our usage examples. The Anaconda python distribution comes with editors for these files, or you can [install the jupyter notebook editor](https://jupyter.org/install) on its own.
 
