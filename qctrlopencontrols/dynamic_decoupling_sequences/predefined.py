@@ -240,13 +240,10 @@ def new_spin_echo_sequence(
     detuning_rotations = np.zeros(1)
 
     if pre_post_rotation:
-        (
-            offsets,
-            rabi_rotations,
-            azimuthal_angles,
-            detuning_rotations,
-        ) = _add_pre_post_rotations(
-            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        (offsets, rabi_rotations, azimuthal_angles, detuning_rotations) = (
+            _add_pre_post_rotations(
+                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+            )
         )
 
     return DynamicDecouplingSequence(
@@ -323,13 +320,10 @@ def new_carr_purcell_sequence(
     detuning_rotations = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        (
-            offsets,
-            rabi_rotations,
-            azimuthal_angles,
-            detuning_rotations,
-        ) = _add_pre_post_rotations(
-            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        (offsets, rabi_rotations, azimuthal_angles, detuning_rotations) = (
+            _add_pre_post_rotations(
+                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+            )
         )
 
     return DynamicDecouplingSequence(
@@ -407,13 +401,10 @@ def new_cpmg_sequence(
     detuning_rotations = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        (
-            offsets,
-            rabi_rotations,
-            azimuthal_angles,
-            detuning_rotations,
-        ) = _add_pre_post_rotations(
-            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        (offsets, rabi_rotations, azimuthal_angles, detuning_rotations) = (
+            _add_pre_post_rotations(
+                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+            )
         )
 
     return DynamicDecouplingSequence(
@@ -486,13 +477,10 @@ def new_uhrig_sequence(
     detuning_rotations = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        (
-            offsets,
-            rabi_rotations,
-            azimuthal_angles,
-            detuning_rotations,
-        ) = _add_pre_post_rotations(
-            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        (offsets, rabi_rotations, azimuthal_angles, detuning_rotations) = (
+            _add_pre_post_rotations(
+                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+            )
         )
 
     return DynamicDecouplingSequence(
@@ -565,13 +553,10 @@ def new_periodic_sequence(
     detuning_rotations = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        (
-            offsets,
-            rabi_rotations,
-            azimuthal_angles,
-            detuning_rotations,
-        ) = _add_pre_post_rotations(
-            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        (offsets, rabi_rotations, azimuthal_angles, detuning_rotations) = (
+            _add_pre_post_rotations(
+                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+            )
         )
 
     return DynamicDecouplingSequence(
@@ -686,13 +671,10 @@ def new_walsh_sequence(
     detuning_rotations = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        (
-            offsets,
-            rabi_rotations,
-            azimuthal_angles,
-            detuning_rotations,
-        ) = _add_pre_post_rotations(
-            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        (offsets, rabi_rotations, azimuthal_angles, detuning_rotations) = (
+            _add_pre_post_rotations(
+                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+            )
         )
 
     return DynamicDecouplingSequence(
@@ -817,13 +799,10 @@ def new_quadratic_sequence(
     azimuthal_angles = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        (
-            offsets,
-            rabi_rotations,
-            azimuthal_angles,
-            detuning_rotations,
-        ) = _add_pre_post_rotations(
-            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        (offsets, rabi_rotations, azimuthal_angles, detuning_rotations) = (
+            _add_pre_post_rotations(
+                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+            )
         )
 
     return DynamicDecouplingSequence(
@@ -918,13 +897,10 @@ def new_x_concatenated_sequence(
     detuning_rotations = np.zeros(offsets.shape)
 
     if pre_post_rotation:
-        (
-            offsets,
-            rabi_rotations,
-            azimuthal_angles,
-            detuning_rotations,
-        ) = _add_pre_post_rotations(
-            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        (offsets, rabi_rotations, azimuthal_angles, detuning_rotations) = (
+            _add_pre_post_rotations(
+                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+            )
         )
 
     return DynamicDecouplingSequence(
@@ -1094,13 +1070,10 @@ def new_xy_concatenated_sequence(
                 break
 
     if pre_post_rotation:
-        (
-            offsets,
-            rabi_rotations,
-            azimuthal_angles,
-            detuning_rotations,
-        ) = _add_pre_post_rotations(
-            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+        (offsets, rabi_rotations, azimuthal_angles, detuning_rotations) = (
+            _add_pre_post_rotations(
+                duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+            )
         )
 
     return DynamicDecouplingSequence(

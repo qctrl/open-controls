@@ -624,9 +624,11 @@ class DrivenControl:
 
         pretty_rabi_rates = ",".join(
             [
-                str(rabi_rate / self.maximum_rabi_rate)
-                if self.maximum_rabi_rate != 0
-                else "0"
+                (
+                    str(rabi_rate / self.maximum_rabi_rate)
+                    if self.maximum_rabi_rate != 0
+                    else "0"
+                )
                 for rabi_rate in self.rabi_rates
             ]
         )
@@ -637,9 +639,11 @@ class DrivenControl:
 
         pretty_detuning = ",".join(
             [
-                str(detuning / self.maximum_detuning)
-                if self.maximum_detuning != 0
-                else "0"
+                (
+                    str(detuning / self.maximum_detuning)
+                    if self.maximum_detuning != 0
+                    else "0"
+                )
                 for detuning in self.detunings
             ]
         )
