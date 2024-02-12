@@ -1,10 +1,10 @@
 ##### This file is managed automatically. To update visit: https://github.com/qctrl/repositories-manager. #####
 * @qctrl/quantum-engineering
 
-.dockerignore @qctrl/devops-engineering
-.github/*.y*ml @qctrl/devops-engineering
-.github/workflows @qctrl/devops-engineering
-docker* @qctrl/devops-engineering
-Docker* @qctrl/devops-engineering
+.dockerignore @qctrl/infrastructure
+.github/*.y*ml @qctrl/infrastructure
+.github/workflows @qctrl/infrastructure
+docker* @qctrl/infrastructure
+Docker* @qctrl/infrastructure
 
 .github/dependabot.y*ml @qctrl/engineering
