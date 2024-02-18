@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Check PR format
         shell: bash
         run: /scripts/check-pr-format.sh
