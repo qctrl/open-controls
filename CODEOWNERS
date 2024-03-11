@@ -1,5 +1,5 @@
 ##### This file is managed automatically. To update visit: https://github.com/qctrl/repositories-manager. #####
-* @qctrl/boulder-opal
+* @qctrl/boulder-opal-engineering
 
 .dockerignore @qctrl/infrastructure
 .github/*.y*ml @qctrl/infrastructure
