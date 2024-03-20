@@ -64,7 +64,7 @@ python = ">=3.9,<3.12"
 numpy = ">=1.25.2"
 
 [tool.poetry.dev-dependencies]
-black = "^24.1.1"
+black = "^24.3.0"
 isort = "^5.13.2"
 mypy = "^1.8.0"
 pre-commit = "^3.6.0"
