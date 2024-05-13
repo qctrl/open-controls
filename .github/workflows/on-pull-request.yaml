@@ -16,7 +16,7 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Ensure no development packages have been set
         run: |
           source <(curl -sL http://ci.q-ctrl.com)
@@ -26,7 +26,7 @@ jobs:
     if: github.event.pull_request.head.repo.fork == true
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install Python dependencies
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
@@ -42,7 +42,7 @@ jobs:
       matrix:
         python: ["3.9", "3.10", "3.11"]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install Python dependencies
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
@@ -55,7 +55,7 @@ jobs:
     if: github.event.pull_request.head.repo.fork == true
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Build Sphinx Image
       run: |
         source <(curl -sL http://ci.q-ctrl.com)
