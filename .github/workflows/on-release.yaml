@@ -9,7 +9,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - name: Update version in code
@@ -32,7 +32,7 @@ jobs:
   sphinx_documentation:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Retrieve build-time environment variables (Production)
         run: |
           source <(curl -sL http://ci.q-ctrl.com)
