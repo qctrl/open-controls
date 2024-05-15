@@ -60,6 +60,7 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
+    "sphinx_markdown_builder",
 ]
 
 master_doc = "index"

@@ -29,6 +29,19 @@ jobs:
       run: |
         ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-release-internally.sh
 
+  update_documentation:
+    if: false # This job is disabled until https://qctrl.atlassian.net/browse/ACC-386 is resolved
+    runs-on: ubuntu-latest
+    container: qctrl/ci-images:python-3.11-ci
+    steps:
+      - name: Update docs repo
+        uses: qctrl/reusable-workflows/.github/actions/docs/update-docs@master
+        with:
+          source_branch: master
+          target_branch: master
+          vault-role-id: ${{ secrets.VAULT_ROLE_ID }}
+          vault-secret-id: ${{ secrets.VAULT_SECRET_ID }}
+
   sphinx_documentation:
     runs-on: ubuntu-latest
     steps:
