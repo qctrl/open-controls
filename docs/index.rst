@@ -7,7 +7,7 @@ The Q-CTRL Open Controls Python package provides a comprehensive library of publ
 .. toctree::
   :maxdepth: 1
 
-   Installation <installation.rst>
+  Installation <installation.rst>
 
 
 
