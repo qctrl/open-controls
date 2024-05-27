@@ -60,19 +60,3 @@ jobs:
           source <(curl -sL http://ci.q-ctrl.com)
           ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
           ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-dev-version.sh
-
-  sphinx_documentation:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build Sphinx Image and Push to DockerHub
-        run: |
-          source <(curl -sL http://ci.q-ctrl.com)
-          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-          ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_user -o .hub_user
-          ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_pass -o .hub_pass
-          ./ci docker buildPush \
-            -f ./docs/Dockerfile \
-            -u $(cat .hub_user) \
-            -p $(cat .hub_pass) \
-            --suffix -docs

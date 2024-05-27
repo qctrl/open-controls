@@ -40,25 +40,3 @@ jobs:
           target_branch: master
           vault-role-id: ${{ secrets.VAULT_ROLE_ID }}
           vault-secret-id: ${{ secrets.VAULT_SECRET_ID }}
-
-  sphinx_documentation:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Retrieve build-time environment variables (Production)
-        run: |
-          source <(curl -sL http://ci.q-ctrl.com)
-          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-          ./ci vault get -k SEGMENT_WRITE_KEY -t $(cat .token) -p secret/data/python/prod -o ./docs/SEGMENT_WRITE_KEY
-          ./ci vault get -k DOCSEARCH_APP_ID -t $(cat .token) -p secret/data/python/prod -o ./docs/DOCSEARCH_APP_ID
-          ./ci vault get -k DOCSEARCH_API_KEY -t $(cat .token) -p secret/data/python/prod -o ./docs/DOCSEARCH_API_KEY
-          ./ci vault get -k DOCSEARCH_INDEX_NAME -t $(cat .token) -p secret/data/python/prod -o ./docs/DOCSEARCH_INDEX_NAME
-      - name: Build Sphinx Image and Push to DockerHub
-        run: |
-          ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_user -o .hub_user
-          ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_pass -o .hub_pass
-          ./ci docker buildPush \
-            -f ./docs/Dockerfile \
-            -u $(cat .hub_user) \
-            -p $(cat .hub_pass) \
-            --suffix -docs
