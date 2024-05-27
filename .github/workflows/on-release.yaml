@@ -5,29 +5,28 @@ on:
     types: [published]
 
 jobs:
-
   release:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: Update version in code
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        source <(curl -sL http://ci.q-ctrl.com)
-        ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/housekeeping.sh
-    - name: Publish publicly
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        source <(curl -sL http://ci.q-ctrl.com)
-        ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-release-publicly.sh
-    - name: Publish internally
-      run: |
-        ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-release-internally.sh
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Update version in code
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          source <(curl -sL http://ci.q-ctrl.com)
+          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/housekeeping.sh
+      - name: Publish publicly
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          source <(curl -sL http://ci.q-ctrl.com)
+          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-release-publicly.sh
+      - name: Publish internally
+        run: |
+          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-release-internally.sh
 
   update_documentation:
     if: false # This job is disabled until https://qctrl.atlassian.net/browse/ACC-386 is resolved
@@ -63,9 +62,3 @@ jobs:
             -u $(cat .hub_user) \
             -p $(cat .hub_pass) \
             --suffix -docs
-      - name: Update Sphinx deployment in Kubernetes (Production)
-        run: |
-          ./ci docker run qctrl/ci-images:google-cloud-sdk-ci sh -- -c '
-            . /scripts/connect-to-prod-cluster.sh
-            kubectl -n qctrl-platform rollout restart deployment/open-controls-docs && kubectl -n qctrl-platform rollout status deployment/open-controls-docs;
-          '

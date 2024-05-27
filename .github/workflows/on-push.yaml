@@ -3,36 +3,35 @@ name: Push workflow
 on:
   push:
     branches:
-      - '**'
+      - "**"
     tags-ignore:
-      - '*.*'
+      - "*.*"
 
 jobs:
-
   housekeeping:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Perform housekeeping checks
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        source <(curl -sL http://ci.q-ctrl.com)
-        ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/housekeeping.sh
+      - uses: actions/checkout@v4
+      - name: Perform housekeeping checks
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          source <(curl -sL http://ci.q-ctrl.com)
+          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/housekeeping.sh
 
   linting:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Install Python dependencies
-      run: |
-        source <(curl -sL http://ci.q-ctrl.com)
-        ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/install-python-dependencies.sh
-    - name: Run Pre-Commit
-      run: |
-        ./ci docker run qctrl/ci-images:python-3.11-ci poetry run pre-commit run -- -a
+      - uses: actions/checkout@v4
+      - name: Install Python dependencies
+        run: |
+          source <(curl -sL http://ci.q-ctrl.com)
+          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/install-python-dependencies.sh
+      - name: Run Pre-Commit
+        run: |
+          ./ci docker run qctrl/ci-images:python-3.11-ci poetry run pre-commit run -- -a
 
   pytest:
     runs-on: ubuntu-latest
@@ -40,47 +39,40 @@ jobs:
       matrix:
         python: ["3.9", "3.10", "3.11"]
     steps:
-    - uses: actions/checkout@v4
-    - name: Install Python dependencies
-      run: |
-        source <(curl -sL http://ci.q-ctrl.com)
-        ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci docker run qctrl/ci-images:python-${{ matrix.python }}-ci /scripts/install-python-dependencies.sh
-    - name: Run Pytest
-      run: |
-        ./ci docker run qctrl/ci-images:python-${{ matrix.python }}-ci /scripts/pytest.sh
+      - uses: actions/checkout@v4
+      - name: Install Python dependencies
+        run: |
+          source <(curl -sL http://ci.q-ctrl.com)
+          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+          ./ci docker run qctrl/ci-images:python-${{ matrix.python }}-ci /scripts/install-python-dependencies.sh
+      - name: Run Pytest
+        run: |
+          ./ci docker run qctrl/ci-images:python-${{ matrix.python }}-ci /scripts/pytest.sh
 
   publish_internally:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Publish development version
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        source <(curl -sL http://ci.q-ctrl.com)
-        ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-dev-version.sh
+      - uses: actions/checkout@v4
+      - name: Publish development version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          source <(curl -sL http://ci.q-ctrl.com)
+          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-dev-version.sh
 
   sphinx_documentation:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Build Sphinx Image and Push to DockerHub
-      run: |
-        source <(curl -sL http://ci.q-ctrl.com)
-        ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-        ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_user -o .hub_user
-        ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_pass -o .hub_pass
-        ./ci docker buildPush \
-          -f ./docs/Dockerfile \
-          -u $(cat .hub_user) \
-          -p $(cat .hub_pass) \
-          --suffix -docs
-    - name: Update Sphinx deployment in Kubernetes (Development)
-      if: github.ref == 'refs/heads/master'
-      run: |
-        ./ci docker run qctrl/ci-images:google-cloud-sdk-ci sh -- -c '
-          . /scripts/connect-to-dev-cluster.sh;
-          kubectl -n qctrl-platform set image deployment/open-controls-docs open-controls-docs=qctrl/open-controls-docs:$COMMIT && kubectl -n qctrl-platform rollout status deployment/open-controls-docs;
-        '
+      - uses: actions/checkout@v4
+      - name: Build Sphinx Image and Push to DockerHub
+        run: |
+          source <(curl -sL http://ci.q-ctrl.com)
+          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+          ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_user -o .hub_user
+          ./ci vault get -t $(cat .token) -p secret/data/dockerhub -k hub_pass -o .hub_pass
+          ./ci docker buildPush \
+            -f ./docs/Dockerfile \
+            -u $(cat .hub_user) \
+            -p $(cat .hub_pass) \
+            --suffix -docs
