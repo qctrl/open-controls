@@ -75,8 +75,11 @@ tomli = "^2.0.1"
 sphinx-markdown-builder = "^0.6.6"
 
 [tool.poetry.urls]
-GitHub = "https://github.com/qctrl"
+LinkedIn = "https://www.linkedin.com/company/q-ctrl/"
+Facebook = "https://www.facebook.com/qctrl"
 Twitter = "https://twitter.com/qctrlHQ"
+YouTube = "https://www.youtube.com/qctrl"
+GitHub = "https://github.com/qctrl"
 
 [tool.isort]
 profile = "black"
