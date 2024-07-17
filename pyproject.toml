@@ -77,7 +77,7 @@ sphinx-markdown-builder = "^0.6.6"
 [tool.poetry.urls]
 LinkedIn = "https://www.linkedin.com/company/q-ctrl/"
 Facebook = "https://www.facebook.com/qctrl"
-Twitter = "https://twitter.com/qctrlHQ"
+X = "https://x.com/qctrlHQ"
 YouTube = "https://www.youtube.com/qctrl"
 GitHub = "https://github.com/qctrl"
 
