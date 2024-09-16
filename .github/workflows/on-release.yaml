@@ -27,3 +27,15 @@ jobs:
       - name: Publish internally
         run: |
           ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-release-internally.sh
+
+  update_documentation:
+    runs-on: ubuntu-latest
+    container: qctrl/ci-images:python-3.11-ci
+    steps:
+      - name: Update docs repo
+        uses: qctrl/reusable-workflows/.github/actions/docs/update-docs@master
+        with:
+          source_branch: master
+          target_branch: master
+          vault-role-id: ${{ secrets.VAULT_ROLE_ID }}
+          vault-secret-id: ${{ secrets.VAULT_SECRET_ID }}

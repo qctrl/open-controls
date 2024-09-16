@@ -72,7 +72,7 @@ pylint = "^3.0.3"
 pytest = "^8.0.0"
 sphinx = "^5.0.0"
 tomli = "^2.0.1"
-sphinx-markdown-builder = "^0.6.6"
+sphinx-markdown-builder = "^0.6.7"
 
 [tool.poetry.urls]
 LinkedIn = "https://www.linkedin.com/company/q-ctrl/"
