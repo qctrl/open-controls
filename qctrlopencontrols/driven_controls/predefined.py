@@ -829,8 +829,10 @@ def new_corpse_in_scrofulous_control(
 
     .. math::
         \begin{align}
-        \Gamma^{\theta'}_1 &= 2\pi + \frac{\theta'}{2} - \sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right] \\
-        \Gamma^{\theta'}_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right] \\
+        \Gamma^{\theta'}_1 &=
+        2\pi + \frac{\theta'}{2} - \sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right] \\
+        \Gamma^{\theta'}_2 &=
+        2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right] \\
         \Gamma^{\theta'}_3 &= \frac{\theta'}{2} - \sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right]
         \end{align}
 
