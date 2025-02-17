@@ -206,7 +206,7 @@ def new_bb1_control(
     ----------
     .. [#] `S. Wimperis, Journal of Magnetic Resonance, Series A 109, 2 (1994).
         <https://doi.org/10.1006/jmra.1994.1159>`_
-    """
+    """  # pylint: disable=line-too-long
 
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
