@@ -192,10 +192,14 @@ def new_bb1_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\theta/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
-       :math:`\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_*`, :math:`0`
-       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+3\phi_*`,:math:`0`
-       :math:`\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_*`, :math:`0`
+       :math:`\theta/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi`, :math:`0`
+       :math:`\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi+\phi_*`, :math:`0`
+       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi+3\phi_*`,:math:`0`
+       :math:`\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi+\phi_*`, :math:`0`
 
     where
 
@@ -273,9 +277,12 @@ def new_sk1_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\theta/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
-       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi-\phi_*`, :math:`0`
-       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_*`, :math:`0`
+       :math:`\theta/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi`, :math:`0`
+       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi-\phi_*`, :math:`0`
+       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi+\phi_*`, :math:`0`
 
     where
 
@@ -352,17 +359,22 @@ def new_scrofulous_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\theta_1/\Omega_{\mathrm max}`, :math:`\Omega_\mathrm{max}`, :math:`\phi+\phi_1`, :math:`0`
-       :math:`\theta_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_2`, :math:`0`
-       :math:`\theta_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_3`, :math:`0`
+       :math:`\theta_1/\Omega_{\mathrm max}`, :math:`\Omega_\mathrm{max}`,
+       :math:`\phi+\phi_1`, :math:`0`
+       :math:`\theta_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi+\phi_2`, :math:`0`
+       :math:`\theta_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi+\phi_3`, :math:`0`
 
     where
 
     .. math::
         \begin{align}
-        \theta_1 &= \theta_3 = \mathrm{sinc}^{-1} \left[\frac{2\cos (\theta/2)}{\pi}\right] \\
+        \theta_1 &=
+        \theta_3 = \mathrm{sinc}^{-1} \left[\frac{2\cos (\theta/2)}{\pi}\right] \\
         \theta_2 &= \pi \\
-        \phi_1 &= \phi_3 = \cos^{-1}\left[ \frac{-\pi\cos(\theta_1)}{2\theta_1\sin(\theta/2)}\right] \\
+        \phi_1 &=
+        \phi_3 = \cos^{-1}\left[ \frac{-\pi\cos(\theta_1)}{2\theta_1\sin(\theta/2)}\right] \\
         \phi_2 &= \phi_1 - \cos^{-1} \left(-\frac{\pi}{2\theta_1}\right)
         \end{align}
 
@@ -466,9 +478,12 @@ def new_corpse_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\theta_1/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
-       :math:`\theta_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\pi`, :math:`0`
-       :math:`\theta_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
+       :math:`\theta_1/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi`, :math:`0`
+       :math:`\theta_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi+\pi`, :math:`0`
+       :math:`\theta_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi`, :math:`0`
 
     where
 
@@ -557,12 +572,18 @@ def new_corpse_in_bb1_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\theta_1/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
-       :math:`\theta_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\pi`, :math:`0`
-       :math:`\theta_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
-       :math:`\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_*`, :math:`0`
-       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+3\phi_*`, :math:`0`
-       :math:`\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_*`, :math:`0`
+       :math:`\theta_1/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi`, :math:`0`
+       :math:`\theta_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi+\pi`, :math:`0`
+       :math:`\theta_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi`, :math:`0`
+       :math:`\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi+\phi_*`, :math:`0`
+       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi+3\phi_*`, :math:`0`
+       :math:`\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi+\phi_*`, :math:`0`
 
     where
 
@@ -663,11 +684,16 @@ def new_corpse_in_sk1_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\theta_1/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
-       :math:`\theta_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\pi`, :math:`0`
-       :math:`\theta_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
-       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi-\phi_*`, :math:`0`
-       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_*`, :math:`0`
+       :math:`\theta_1/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi`, :math:`0`
+       :math:`\theta_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi+\pi`, :math:`0`
+       :math:`\theta_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi`, :math:`0`
+       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi-\phi_*`, :math:`0`
+       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`,
+       :math:`\phi+\phi_*`, :math:`0`
 
     where
 

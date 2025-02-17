@@ -614,7 +614,8 @@ def new_walsh_sequence(
     function [#]_, which is defined as
 
     .. math::
-        R_j(x) := {\mathrm sgn}\left[\sin(2^j \pi x)\right] \;, \quad\; x \in [0, 1]\;, \; j \geq 0 \;.
+        R_j(x) := {\mathrm sgn}\left[\sin(2^j \pi x)\right] \;,
+        \quad\; x \in [0, 1]\;, \; j \geq 0 \;.
 
     The :math:`j`-th Rademacher function :math:`R_j(x)` is thus a periodic square wave switching
     :math:`2^{j-1}` times between :math:`\pm 1` over the interval :math:`[0, 1]`. The Walsh
