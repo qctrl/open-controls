@@ -614,14 +614,14 @@ def new_walsh_sequence(
     function [#]_, which is defined as
 
     .. math::
-        R_j(x) := {\rm sgn}\left[\sin(2^j \pi x)\right] \;, \quad\; x \in [0, 1]\;, \; j \geq 0 \;.
+        R_j(x) := {\mathrm sgn}\left[\sin(2^j \pi x)\right] \;, \quad\; x \in [0, 1]\;, \; j \geq 0 \;.
 
     The :math:`j`-th Rademacher function :math:`R_j(x)` is thus a periodic square wave switching
     :math:`2^{j-1}` times between :math:`\pm 1` over the interval :math:`[0, 1]`. The Walsh
-    function of Paley order :math:`k` is denoted :math:`{\rm PAL}_k(x)` and defined as
+    function of Paley order :math:`k` is denoted :math:`{\mathrm PAL}_k(x)` and defined as
 
     .. math::
-        {\rm PAL}_k(x) = \Pi_{j = 1}^m R_j(x)^{b_j} \;, \quad\; x \in [0, 1] \;.
+        {\mathrm PAL}_k(x) = \Pi_{j = 1}^m R_j(x)^{b_j} \;, \quad\; x \in [0, 1] \;.
 
     where :math:`(b_m, b_{m-1}, \cdots, b_1)` is the binary representation of :math:`k`.
     That is
@@ -634,7 +634,7 @@ def new_walsh_sequence(
     The :math:`k`-th order Walsh sequence [#]_ is then defined by
 
     .. math::
-        y(t) = {\rm PAL}_k(t / \tau) \;
+        y(t) = {\mathrm PAL}_k(t / \tau) \;
 
     with offset times :math:`\{t_j / \tau\}` defined at the switching times of the Walsh function.
 
