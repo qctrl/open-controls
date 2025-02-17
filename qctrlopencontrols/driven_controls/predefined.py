@@ -288,7 +288,7 @@ def new_sk1_control(
         <https://doi.org/10.1103/PhysRevA.70.052318>`_
     .. [#] `K. R. Brown, A. W. Harrow, and I. L. Chuang, Physical Review A 72, 039905 (2005).
         <https://doi.org/10.1103/PhysRevA.72.039905>`_
-    """
+    """  # pylint: disable=line-too-long
 
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
@@ -374,7 +374,7 @@ def new_scrofulous_control(
     ----------
     .. [#] `H. K. Cummins, G. Llewellyn, and J. A. Jones, Physical Review A 67, 042308 (2003).
         <https://doi.org/10.1103/PhysRevA.67.042308>`_
-    """
+    """  # pylint: disable=line-too-long
 
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
@@ -488,7 +488,7 @@ def new_corpse_control(
         <https://doi.org/10.1088/1367-2630/2/1/006>`_
     .. [#] `H. K. Cummins, G. Llewellyn, and J. A. Jones, Physical Review A 67, 042308 (2003).
         <https://doi.org/10.1103/PhysRevA.67.042308>`_
-    """
+    """  # pylint: disable=line-too-long
 
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
@@ -582,7 +582,7 @@ def new_corpse_in_bb1_control(
         Japan 82, 1 (2012). <https://doi.org/10.7566/JPSJ.82.014004>`_
     .. [#] `C. Kabytayev, T. J. Green, K. Khodjasteh, M. J. Biercuk, L. Viola, and K. R. Brown,
         Physical Review A 90, 012316 (2014). <https://doi.org/10.1103/PhysRevA.90.012316>`_
-    """
+    """  # pylint: disable=line-too-long
 
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
@@ -687,7 +687,7 @@ def new_corpse_in_sk1_control(
         Japan 82, 1 (2012). <https://doi.org/10.7566/JPSJ.82.014004>`_
     .. [#] `C. Kabytayev, T. J. Green, K. Khodjasteh, M. J. Biercuk, L. Viola, and K. R. Brown,
         Physical Review A 90, 012316 (2014). <https://doi.org/10.1103/PhysRevA.90.012316>`_
-    """
+    """  # pylint: disable=line-too-long
 
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
