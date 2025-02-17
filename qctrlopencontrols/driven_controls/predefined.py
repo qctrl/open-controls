@@ -816,9 +816,11 @@ def new_corpse_in_scrofulous_control(
 
     .. math::
         \begin{align}
-        \theta_1 &= \theta_3 = \mathrm{sinc}^{-1} \left[\frac{2\cos (\theta/2)}{\pi}\right] \\
+        \theta_1 &=
+        \theta_3 = \mathrm{sinc}^{-1} \left[\frac{2\cos (\theta/2)}{\pi}\right] \\
         \theta_2 &= \pi \\
-        \phi_1 &= \phi_3 = \cos^{-1}\left[ \frac{-\pi\cos(\theta_1)}{2\theta_1\sin(\theta/2)}\right] \\
+        \phi_1 &= \phi_3 =
+        \cos^{-1}\left[ \frac{-\pi\cos(\theta_1)}{2\theta_1\sin(\theta/2)}\right] \\
         \phi_2 &= \phi_1 - \cos^{-1} \left(-\frac{\pi}{2\theta_1}\right)
         \end{align}
 
