@@ -123,7 +123,7 @@ def new_primitive_control(
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control.
     maximum_rabi_rate : float
-        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        The maximum Rabi frequency :math:`\Omega_{\mathrm max}` for the driven control.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     name : str, optional
@@ -141,7 +141,7 @@ def new_primitive_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\theta/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
+       :math:`\theta/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
     """
 
     _validate_rabi_parameters(
@@ -174,7 +174,7 @@ def new_bb1_control(
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control.
     maximum_rabi_rate : float
-        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        The maximum Rabi frequency :math:`\Omega_{\mathrm max}` for the driven control.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     name : str, optional
@@ -192,10 +192,10 @@ def new_bb1_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\theta/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
-       :math:`\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_*`, :math:`0`
-       :math:`2\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+3\phi_*`,:math:`0`
-       :math:`\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_*`, :math:`0`
+       :math:`\theta/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
+       :math:`\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_*`, :math:`0`
+       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+3\phi_*`,:math:`0`
+       :math:`\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_*`, :math:`0`
 
     where
 
@@ -206,7 +206,7 @@ def new_bb1_control(
     ----------
     .. [#] `S. Wimperis, Journal of Magnetic Resonance, Series A 109, 2 (1994).
         <https://doi.org/10.1006/jmra.1994.1159>`_
-    """
+    """  # pylint: disable=line-too-long
 
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
@@ -255,7 +255,7 @@ def new_sk1_control(
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control.
     maximum_rabi_rate : float
-        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        The maximum Rabi frequency :math:`\Omega_{\mathrm max}` for the driven control.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     name : str, optional
@@ -273,9 +273,9 @@ def new_sk1_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\theta/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
-       :math:`2\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi-\phi_*`, :math:`0`
-       :math:`2\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_*`, :math:`0`
+       :math:`\theta/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
+       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi-\phi_*`, :math:`0`
+       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_*`, :math:`0`
 
     where
 
@@ -288,7 +288,7 @@ def new_sk1_control(
         <https://doi.org/10.1103/PhysRevA.70.052318>`_
     .. [#] `K. R. Brown, A. W. Harrow, and I. L. Chuang, Physical Review A 72, 039905 (2005).
         <https://doi.org/10.1103/PhysRevA.72.039905>`_
-    """
+    """  # pylint: disable=line-too-long
 
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
@@ -334,7 +334,7 @@ def new_scrofulous_control(
         The total Rabi rotation :math:`\theta` to be performed by the driven control. Must be either
         :math:`\pi/4`, :math:`\pi/2`, or :math:`\pi`.
     maximum_rabi_rate : float
-        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        The maximum Rabi frequency :math:`\Omega_{\mathrm max}` for the driven control.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     name : str, optional
@@ -352,20 +352,21 @@ def new_scrofulous_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\theta_1/\Omega_{\rm max}`, :math:`\Omega_\rm{max}`, :math:`\phi+\phi_1`, :math:`0`
-       :math:`\theta_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_2`, :math:`0`
-       :math:`\theta_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_3`, :math:`0`
+       :math:`\theta_1/\Omega_{\mathrm max}`, :math:`\Omega_\mathrm{max}`, :math:`\phi+\phi_1`, :math:`0`
+       :math:`\theta_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_2`, :math:`0`
+       :math:`\theta_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_3`, :math:`0`
 
     where
 
     .. math::
-        \theta_1 &= \theta_3 = \mathrm{sinc}^{-1} \left[\frac{2\cos (\theta/2)}{\pi}\right]
-
-        \theta_2 &= \pi
-
-        \phi_1 &= \phi_3 = \cos^{-1}\left[ \frac{-\pi\cos(\theta_1)}{2\theta_1\sin(\theta/2)}\right]
-
-        \phi_2 &= \phi_1 - \cos^{-1} (-\pi/2\theta_1),
+        \begin{align}
+        \theta_1 &=
+        \theta_3 = \mathrm{sinc}^{-1} \left[\frac{2\cos (\theta/2)}{\pi}\right] \\
+        \theta_2 &= \pi \\
+        \phi_1 &=
+        \phi_3 = \cos^{-1}\left[ \frac{-\pi\cos(\theta_1)}{2\theta_1\sin(\theta/2)}\right] \\
+        \phi_2 &= \phi_1 - \cos^{-1} \left(-\frac{\pi}{2\theta_1}\right)
+        \end{align}
 
     and :math:`\mathrm{sinc}(x)=\sin(x)/x` is the unnormalized sinc function.
 
@@ -373,7 +374,7 @@ def new_scrofulous_control(
     ----------
     .. [#] `H. K. Cummins, G. Llewellyn, and J. A. Jones, Physical Review A 67, 042308 (2003).
         <https://doi.org/10.1103/PhysRevA.67.042308>`_
-    """
+    """  # pylint: disable=line-too-long
 
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
@@ -449,7 +450,7 @@ def new_corpse_control(
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control.
     maximum_rabi_rate : float
-        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        The maximum Rabi frequency :math:`\Omega_{\mathrm max}` for the driven control.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     name : str, optional
@@ -467,18 +468,19 @@ def new_corpse_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\theta_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
-       :math:`\theta_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\pi`, :math:`0`
-       :math:`\theta_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
+       :math:`\theta_1/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
+       :math:`\theta_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\pi`, :math:`0`
+       :math:`\theta_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
 
     where
 
     .. math::
-        \theta_1 &= 2\pi + \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
+        \begin{align}
+        \theta_1 &= 2\pi + \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right] \\
+        \theta_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right] \\
+        \theta_3 &= \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
+        \end{align}
 
-        \theta_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
-
-        \theta_3 &= \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right].
 
     References
     ----------
@@ -486,7 +488,7 @@ def new_corpse_control(
         <https://doi.org/10.1088/1367-2630/2/1/006>`_
     .. [#] `H. K. Cummins, G. Llewellyn, and J. A. Jones, Physical Review A 67, 042308 (2003).
         <https://doi.org/10.1103/PhysRevA.67.042308>`_
-    """
+    """  # pylint: disable=line-too-long
 
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
@@ -534,7 +536,7 @@ def new_corpse_in_bb1_control(
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control.
     maximum_rabi_rate : float
-        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        The maximum Rabi frequency :math:`\Omega_{\mathrm max}` for the driven control.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     name : str, optional
@@ -557,23 +559,22 @@ def new_corpse_in_bb1_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\theta_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
-       :math:`\theta_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\pi`, :math:`0`
-       :math:`\theta_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
-       :math:`\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_*`, :math:`0`
-       :math:`2\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+3\phi_*`, :math:`0`
-       :math:`\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_*`, :math:`0`
+       :math:`\theta_1/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
+       :math:`\theta_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\pi`, :math:`0`
+       :math:`\theta_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
+       :math:`\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_*`, :math:`0`
+       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+3\phi_*`, :math:`0`
+       :math:`\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_*`, :math:`0`
 
     where
 
     .. math::
-        \theta_1 &= 2\pi + \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
-
-        \theta_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
-
-        \theta_3 &= \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
-
-        \phi_* &= \cos^{-1} \left( -\frac{\theta}{4\pi} \right).
+        \begin{align}
+        \theta_1 &= 2\pi + \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right] \\
+        \theta_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right] \\
+        \theta_3 &= \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right] \\
+        \phi_* &= \cos^{-1} \left( -\frac{\theta}{4\pi} \right)
+        \end{align}
 
     References
     ----------
@@ -581,7 +582,7 @@ def new_corpse_in_bb1_control(
         Japan 82, 1 (2012). <https://doi.org/10.7566/JPSJ.82.014004>`_
     .. [#] `C. Kabytayev, T. J. Green, K. Khodjasteh, M. J. Biercuk, L. Viola, and K. R. Brown,
         Physical Review A 90, 012316 (2014). <https://doi.org/10.1103/PhysRevA.90.012316>`_
-    """
+    """  # pylint: disable=line-too-long
 
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
@@ -641,7 +642,7 @@ def new_corpse_in_sk1_control(
     rabi_rotation : float
         The total Rabi rotation :math:`\theta` to be performed by the driven control.
     maximum_rabi_rate : float
-        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        The maximum Rabi frequency :math:`\Omega_{\mathrm max}` for the driven control.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     name : str, optional
@@ -664,22 +665,21 @@ def new_corpse_in_sk1_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\theta_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
-       :math:`\theta_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\pi`, :math:`0`
-       :math:`\theta_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
-       :math:`2\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi-\phi_*`, :math:`0`
-       :math:`2\pi/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi+\phi_*`, :math:`0`
+       :math:`\theta_1/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
+       :math:`\theta_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\pi`, :math:`0`
+       :math:`\theta_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
+       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi-\phi_*`, :math:`0`
+       :math:`2\pi/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi+\phi_*`, :math:`0`
 
     where
 
     .. math::
-        \theta_1 &= 2\pi + \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
-
-        \theta_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
-
-        \theta_3 &= \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right]
-
-        \phi_* &= \cos^{-1} \left( -\frac{\theta}{4\pi} \right).
+        \begin{align}
+        \theta_1 &= 2\pi + \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right] \\
+        \theta_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right] \\
+        \theta_3 &= \frac{\theta}{2} - \sin^{-1} \left[ \frac{\sin(\theta/2)}{2}\right] \\
+        \phi_* &= \cos^{-1} \left( -\frac{\theta}{4\pi} \right)
+        \end{align}
 
     References
     ----------
@@ -687,7 +687,7 @@ def new_corpse_in_sk1_control(
         Japan 82, 1 (2012). <https://doi.org/10.7566/JPSJ.82.014004>`_
     .. [#] `C. Kabytayev, T. J. Green, K. Khodjasteh, M. J. Biercuk, L. Viola, and K. R. Brown,
         Physical Review A 90, 012316 (2014). <https://doi.org/10.1103/PhysRevA.90.012316>`_
-    """
+    """  # pylint: disable=line-too-long
 
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
@@ -746,7 +746,7 @@ def new_corpse_in_scrofulous_control(
         The total Rabi rotation :math:`\theta` to be performed by the driven control. Must be either
         :math:`\pi/4`, :math:`\pi/2`, or :math:`\pi`.
     maximum_rabi_rate : float
-        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        The maximum Rabi frequency :math:`\Omega_{\mathrm max}` for the driven control.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     name : str, optional
@@ -769,46 +769,48 @@ def new_corpse_in_scrofulous_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\Gamma^{\theta_1}_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\Gamma^{\theta_1}_1/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, "
        :math:`\phi+\phi_1`", :math:`0`
-       :math:`\Gamma^{\theta_1}_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\Gamma^{\theta_1}_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, "
        :math:`\phi+\phi_1+\pi`", :math:`0`
-       :math:`\Gamma^{\theta_1}_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\Gamma^{\theta_1}_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, "
        :math:`\phi+\phi_1`", :math:`0`
-       :math:`\Gamma^{\theta_2}_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\Gamma^{\theta_2}_1/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, "
        :math:`\phi+\phi_2`", :math:`0`
-       :math:`\Gamma^{\theta_2}_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\Gamma^{\theta_2}_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, "
        :math:`\phi+\phi_2+\pi`", :math:`0`
-       :math:`\Gamma^{\theta_2}_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\Gamma^{\theta_2}_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, "
        :math:`\phi+\phi_2`", :math:`0`
-       :math:`\Gamma^{\theta_3}_1/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\Gamma^{\theta_3}_1/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, "
        :math:`\phi+\phi_3`", :math:`0`
-       :math:`\Gamma^{\theta_3}_2/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\Gamma^{\theta_3}_2/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, "
        :math:`\phi+\phi_3+\pi`", :math:`0`
-       :math:`\Gamma^{\theta_3}_3/\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, "
+       :math:`\Gamma^{\theta_3}_3/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, "
        :math:`\phi+\phi_3`", :math:`0`
 
     where
 
     .. math::
-        \theta_1 &= \theta_3 = \mathrm{sinc}^{-1} \left[\frac{2\cos (\theta/2)}{\pi}\right]
-
-        \theta_2 &= \pi
-
-        \phi_1 &= \phi_3 = \cos^{-1}\left[ \frac{-\pi\cos(\theta_1)}{2\theta_1\sin(\theta/2)}\right]
-
-        \phi_2 &= \phi_1 - \cos^{-1} (-\pi/2\theta_1)
+        \begin{align}
+        \theta_1 &=
+        \theta_3 = \mathrm{sinc}^{-1} \left[\frac{2\cos (\theta/2)}{\pi}\right] \\
+        \theta_2 &= \pi \\
+        \phi_1 &= \phi_3 =
+        \cos^{-1}\left[ \frac{-\pi\cos(\theta_1)}{2\theta_1\sin(\theta/2)}\right] \\
+        \phi_2 &= \phi_1 - \cos^{-1} \left(-\frac{\pi}{2\theta_1}\right)
+        \end{align}
 
     (with :math:`\mathrm{sinc}(x)=\sin(x)/x` the unnormalized sinc function) are the SCROFULOUS
     angles, and
 
     .. math::
-        \Gamma^{\theta'}_1 &= 2\pi + \frac{\theta'}{2}
-            - \sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right]
-
-        \Gamma^{\theta'}_2 &= 2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right]
-
+        \begin{align}
+        \Gamma^{\theta'}_1 &=
+        2\pi + \frac{\theta'}{2} - \sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right] \\
+        \Gamma^{\theta'}_2 &=
+        2\pi - 2\sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right] \\
         \Gamma^{\theta'}_3 &= \frac{\theta'}{2} - \sin^{-1} \left[ \frac{\sin(\theta'/2)}{2}\right]
+        \end{align}
 
     are the CORPSE angles corresponding to each SCROFULOUS angle
     :math:`\theta'\in\{\theta_1,\theta_2,\theta_3\}`.
@@ -905,7 +907,7 @@ def new_wamf1_control(
         The total Rabi rotation :math:`\theta` to be performed by the driven control. Must be either
         :math:`\pi/4`, :math:`\pi/2`, or :math:`\pi`.
     maximum_rabi_rate : float
-        The maximum Rabi frequency :math:`\Omega_{\rm max}` for the driven control.
+        The maximum Rabi frequency :math:`\Omega_{\mathrm max}` for the driven control.
     azimuthal_angle : float, optional
         The azimuthal angle :math:`\phi` for the rotation. Defaults to 0.
     name : str, optional
@@ -923,12 +925,12 @@ def new_wamf1_control(
     .. csv-table::
        :header: :math:`\\delta t_n`, :math:`\\Omega_n`, :math:`\\phi_n` , :math:`\\Delta_n`
 
-       :math:`\theta_+/4\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
-       :math:`\theta_+/4\Omega_{\rm max}`, :math:`\Omega_{\rm max}\theta_-/\theta_+`,"
+       :math:`\theta_+/4\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
+       :math:`\theta_+/4\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}\theta_-/\theta_+`,"
        :math:`\phi`", :math:`0`
-       :math:`\theta_+/4\Omega_{\rm max}`, :math:`\Omega_{\rm max}\theta_-/\theta_+`, "
+       :math:`\theta_+/4\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}\theta_-/\theta_+`, "
        :math:`\phi`", :math:`0`
-       :math:`\theta_+/4\Omega_{\rm max}`, :math:`\Omega_{\rm max}`, :math:`\phi`, :math:`0`
+       :math:`\theta_+/4\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
 
     where :math:`\theta_\pm = \theta+2\pi k_\theta\pm \delta_\theta`, and the integer
     :math:`k_\theta` and offset :math:`\delta_\theta` are optimized numerically in order to maximize
