@@ -5,14 +5,15 @@ load-plugins=
     pylint.extensions.no_self_use
 
 disable=
-    duplicate-code,             # excessive false positives
-    fixme,                      # useful for indicating future updates
-    too-many-arguments,         # excessive false positives
-    too-many-branches,          # excessive false positives
-    too-many-lines,             # excessive false positives
-    too-many-locals,            # excessive false positives
-    too-many-statements,        # excessive false positives
-    missing-module-docstring,   # no added value
+    duplicate-code,                # excessive false positives
+    fixme,                         # useful for indicating future updates
+    too-many-arguments,            # excessive false positives
+    too-many-branches,             # excessive false positives
+    too-many-lines,                # excessive false positives
+    too-many-locals,               # excessive false positives
+    too-many-statements,           # excessive false positives
+    too-many-positional-arguments, # excessive false positives
+    missing-module-docstring,      # no added value
 
 min-public-methods=1
 

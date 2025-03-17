@@ -63,7 +63,7 @@ packages = [
 python = ">=3.9,<3.12"
 numpy = ">=1.25.2"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "^24.3.0"
 isort = "^5.13.2"
 mypy = "^1.8.0"
