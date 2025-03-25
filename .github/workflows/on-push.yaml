@@ -8,55 +8,17 @@ on:
       - "*.*"
 
 jobs:
-  housekeeping:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Perform housekeeping checks
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          source <(curl -sL http://ci.q-ctrl.com)
-          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/housekeeping.sh
 
-  linting:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Python dependencies
-        run: |
-          source <(curl -sL http://ci.q-ctrl.com)
-          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/install-python-dependencies.sh
-      - name: Run Pre-Commit
-        run: |
-          ./ci docker run qctrl/ci-images:python-3.11-ci poetry run pre-commit run -- -a
+  pre-checks:
+    uses: qctrl/reusable-workflows/.github/workflows/poetry-pre-checks.yaml@master
+    secrets: inherit
 
   pytest:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python: ["3.9", "3.10", "3.11"]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Python dependencies
-        run: |
-          source <(curl -sL http://ci.q-ctrl.com)
-          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-          ./ci docker run qctrl/ci-images:python-${{ matrix.python }}-ci /scripts/install-python-dependencies.sh
-      - name: Run Pytest
-        run: |
-          ./ci docker run qctrl/ci-images:python-${{ matrix.python }}-ci /scripts/pytest.sh
+    uses: qctrl/reusable-workflows/.github/workflows/pytest.yaml@master
+    secrets: inherit
+    with:
+      python-versions: '["3.9", "3.10", "3.11"]'
 
-  publish_internally:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Publish development version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          source <(curl -sL http://ci.q-ctrl.com)
-          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-dev-version.sh
+  publish:
+    uses: qctrl/reusable-workflows/.github/workflows/poetry-publish-development.yaml@master
+    secrets: inherit
