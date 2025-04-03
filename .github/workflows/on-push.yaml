@@ -12,6 +12,8 @@ jobs:
   pre-checks:
     uses: qctrl/reusable-workflows/.github/workflows/poetry-pre-checks.yaml@master
     secrets: inherit
+    with:
+      container: "qctrl/ci-images:python-3.11-ci"
 
   pytest:
     uses: qctrl/reusable-workflows/.github/workflows/pytest.yaml@master
@@ -22,3 +24,5 @@ jobs:
   publish:
     uses: qctrl/reusable-workflows/.github/workflows/poetry-publish-development.yaml@master
     secrets: inherit
+    with:
+      container: "qctrl/ci-images:python-3.11-ci"
