@@ -24,7 +24,7 @@ jobs:
     uses: qctrl/reusable-workflows/.github/workflows/pytest.yaml@master
     secrets: inherit
     with:
-      python-versions: '["3.9", "3.10", "3.11"]'
+      python-versions: '["3.10", "3.11", "3.12", "3.13"]'
 
   sphinx_documentation:
     # Filter out PRs originating from this repository (triggers on-push.yml instead)
