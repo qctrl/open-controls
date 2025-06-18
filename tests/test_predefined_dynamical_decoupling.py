@@ -393,20 +393,15 @@ def test_quadratic_sequence():
     _rabi_rotations[0:outer_offset_count, -1] = np.pi
     _detuning_rotations[0 : (outer_offset_count + 1), 0:inner_offset_count] = np.pi
 
-    _offsets = np.reshape(_offsets, (-1,))
-    _rabi_rotations = np.reshape(_rabi_rotations, (-1,))
-    _detuning_rotations = np.reshape(_detuning_rotations, (-1,))
+    _reshaped_offsets = np.reshape(_offsets, (-1,))[0:-1]
+    _reshaped_rabi_rotations = np.reshape(_rabi_rotations, (-1,))[0:-1]
+    _reshaped_detuning_rotations = np.reshape(_detuning_rotations, (-1,))[0:-1]
+    _azimuthal_angles = np.zeros(_reshaped_offsets.shape)
 
-    _offsets = _offsets[0:-1]
-    _rabi_rotations = _rabi_rotations[0:-1]
-    _detuning_rotations = _detuning_rotations[0:-1]
-
-    _azimuthal_angles = np.zeros(_offsets.shape)
-
-    assert np.allclose(_offsets, sequence.offsets)
-    assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
+    assert np.allclose(_reshaped_offsets, sequence.offsets)
+    assert np.allclose(_reshaped_rabi_rotations, sequence.rabi_rotations)
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
-    assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
+    assert np.allclose(_reshaped_detuning_rotations, sequence.detuning_rotations)
 
     sequence = new_quadratic_sequence(
         duration=duration,
@@ -415,21 +410,25 @@ def test_quadratic_sequence():
         pre_post_rotation=True,
     )
 
-    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
-    _rabi_rotations = np.insert(
-        _rabi_rotations, [0, _rabi_rotations.shape[0]], [np.pi / 2, np.pi / 2]
+    _reshaped_offsets = np.insert(
+        _reshaped_offsets, [0, _reshaped_offsets.shape[0]], [0, duration]
     )
-    _detuning_rotations = np.insert(
-        _detuning_rotations, [0, _detuning_rotations.shape[0]], [0, 0]
+    _reshaped_rabi_rotations = np.insert(
+        _reshaped_rabi_rotations,
+        [0, _reshaped_rabi_rotations.shape[0]],
+        [np.pi / 2, np.pi / 2],
+    )
+    _reshaped_detuning_rotations = np.insert(
+        _reshaped_detuning_rotations, [0, _reshaped_detuning_rotations.shape[0]], [0, 0]
     )
 
-    _azimuthal_angles = np.zeros(_offsets.shape)
+    _azimuthal_angles = np.zeros(_reshaped_offsets.shape)
     _azimuthal_angles[-1] = np.pi
 
-    assert np.allclose(_offsets, sequence.offsets)
-    assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
+    assert np.allclose(_reshaped_offsets, sequence.offsets)
+    assert np.allclose(_reshaped_rabi_rotations, sequence.rabi_rotations)
     assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
-    assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
+    assert np.allclose(_reshaped_detuning_rotations, sequence.detuning_rotations)
 
 
 def test_x_concatenated_sequence():
