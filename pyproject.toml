@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "qctrl-open-controls"
-version = "11.0.0"
+version = "12.0.0"
 description = "Q-CTRL Open Controls"
 license = "Apache-2.0"
 authors = ["Q-CTRL <support@q-ctrl.com>"]
