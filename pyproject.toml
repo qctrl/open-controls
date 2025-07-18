@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "qctrl-open-controls"
-version = "11.0.0"
+version = "12.0.0"
 description = "Q-CTRL Open Controls"
 license = "Apache-2.0"
 authors = ["Q-CTRL <support@q-ctrl.com>"]
@@ -46,9 +46,10 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Natural Language :: English",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Scientific/Engineering :: Physics",
     "Topic :: Scientific/Engineering :: Visualization",
@@ -60,7 +61,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.12"
+python = ">=3.10,<3.14"
 numpy = ">=1.25.2"
 
 [tool.poetry.group.dev.dependencies]
