@@ -181,7 +181,7 @@ def new_ramsey_sequence(
         offsets = duration * np.array([0.0, 1.0])
         rabi_rotations = np.array([np.pi / 2, np.pi / 2])
         azimuthal_angles = np.array([0.0, np.pi])
-        detuning_rotations = np.zeros((2,))
+        detuning_rotations = np.array([0, 0])
     else:
         offsets = np.array([])
         rabi_rotations = np.array([])
@@ -812,27 +812,27 @@ def new_quadratic_sequence(
 
     # remove the last entry corresponding to the duration
     offsets = offsets[:-1]
-    rabi_rotations = rabi_rotations[:-1]
-    detuning_rotations = detuning_rotations[:-1]
+    _rabi_rotations = rabi_rotations[:-1]
+    _detuning_rotations = detuning_rotations[:-1]
 
     azimuthal_angles = np.zeros(offsets.shape)
 
     if pre_post_rotation:
         (
             offsets,
-            rabi_rotations,
+            _rabi_rotations,
             azimuthal_angles,
-            detuning_rotations,
+            _detuning_rotations,
         ) = _add_pre_post_rotations(
-            duration, offsets, rabi_rotations, azimuthal_angles, detuning_rotations
+            duration, offsets, _rabi_rotations, azimuthal_angles, _detuning_rotations
         )
 
     return DynamicDecouplingSequence(
         duration=duration,
         offsets=offsets,
-        rabi_rotations=rabi_rotations,
+        rabi_rotations=_rabi_rotations,
         azimuthal_angles=azimuthal_angles,
-        detuning_rotations=detuning_rotations,
+        detuning_rotations=_detuning_rotations,
         name=name,
     )
 
