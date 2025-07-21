@@ -24,6 +24,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
           /scripts/housekeeping.sh
 
   linting:
@@ -40,6 +41,7 @@ jobs:
           ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
       - name: Install Python dependencies
         run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
           /scripts/install-python-dependencies.sh
       - name: Run Pre-Commit
         run: |
@@ -62,6 +64,7 @@ jobs:
           ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
       - name: Install Python dependencies
         run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
           /scripts/install-python-dependencies.sh
       - name: Run Pytest
         run: |
@@ -69,6 +72,7 @@ jobs:
 
   publish_internally:
     runs-on: ubuntu-latest
+    container: qctrl/ci-images:python-3.11-ci
     steps:
       - uses: actions/checkout@v4
       - name: Download CI tool
@@ -82,4 +86,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
           /scripts/publish-dev-version.sh

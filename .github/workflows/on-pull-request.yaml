@@ -24,6 +24,7 @@ jobs:
           curl -sSL http://ci.q-ctrl.com | bash -
       - name: Ensure no development packages have been set
         run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
           /scripts/check-for-internal-versions.sh
   linting:
     # Filter out PRs originating from this repository (triggers on-push.yml instead)
@@ -38,6 +39,7 @@ jobs:
         curl -sSL http://ci.q-ctrl.com | bash -
     - name: Install Python dependencies
       run: |
+        git config --global --add safe.directory $GITHUB_WORKSPACE
         /scripts/install-python-dependencies.sh
     - name: Run Pre-Commit
       run: |
@@ -59,6 +61,7 @@ jobs:
         curl -sSL http://ci.q-ctrl.com | bash -
     - name: Install Python dependencies
       run: |
+        git config --global --add safe.directory $GITHUB_WORKSPACE
         /scripts/install-python-dependencies.sh
     - name: Run Pytest
       run: |
