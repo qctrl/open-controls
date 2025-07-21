@@ -1,4 +1,3 @@
-#################### Maintained by repositories-manager - do not edit directly ####################
 name: Pull request workflow
 
 on:
@@ -26,6 +25,7 @@ jobs:
         run: |
           git config --global --add safe.directory $GITHUB_WORKSPACE
           /scripts/check-for-internal-versions.sh
+
   linting:
     # Filter out PRs originating from this repository (triggers on-push.yml instead)
     if: github.event.pull_request.head.repo.fork == true
@@ -76,4 +76,3 @@ jobs:
     - name: Build Sphinx Image
       run: |
         docker build -f ./docs/Dockerfile
-#################### Maintained by repositories-manager - do not edit directly ####################
