@@ -7,26 +7,31 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    container: qctrl/ci-images:python-3.11-ci
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Download CI tool
+        shell: bash
+        run: |
+          curl -sSL http://ci.q-ctrl.com | bash -
+      - name: Vault Login
+        run: |
+          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
       - name: Update version in code
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          source <(curl -sL http://ci.q-ctrl.com)
-          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/housekeeping.sh
+          /scripts/housekeeping.sh
       - name: Publish publicly
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          source <(curl -sL http://ci.q-ctrl.com)
-          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-release-publicly.sh
+          /scripts/publish-release-publicly.sh
       - name: Publish internally
         run: |
-          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-release-internally.sh
+          /scripts/publish-release-internally.sh
 
   update_documentation:
     runs-on: ubuntu-latest
