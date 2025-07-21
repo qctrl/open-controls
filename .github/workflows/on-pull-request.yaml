@@ -72,8 +72,5 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build Sphinx Image
       run: |
-        source <(curl -sL http://ci.q-ctrl.com)
-        ./ci docker build \
-          -f ./docs/Dockerfile \
-          --suffix -docs
+        docker build -f ./docs/Dockerfile
 #################### Maintained by repositories-manager - do not edit directly ####################
