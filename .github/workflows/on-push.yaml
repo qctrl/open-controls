@@ -20,6 +20,9 @@ jobs:
       - name: Vault Login
         run: |
           ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+      - name: Inject environment variables
+        run: |
+          /scripts/ci env prepareGitHub
       - name: Perform housekeeping checks
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -82,6 +85,9 @@ jobs:
       - name: Vault Login
         run: |
           ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+      - name: Inject environment variables
+        run: |
+          /scripts/ci env prepareGitHub
       - name: Publish development version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
