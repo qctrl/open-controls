@@ -11,21 +11,45 @@ on:
       - '*.*'
 
 jobs:
-  pre-checks:
-    uses: qctrl/reusable-workflows/.github/workflows/poetry-pre-checks.yaml@master
-    secrets: inherit
-    with:
-      check-internal-versions: true
-      housekeeping: false
-
+  check-dependencies:
+    # Filter out Draft Pull Requests
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure no development packages have been set
+        run: |
+          source <(curl -sL http://ci.q-ctrl.com)
+          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/check-for-internal-versions.sh
+  linting:
+    # Filter out PRs originating from this repository (triggers on-push.yml instead)
+    if: github.event.pull_request.head.repo.fork == true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Python dependencies
+      run: |
+        source <(curl -sL http://ci.q-ctrl.com)
+        ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/install-python-dependencies.sh
+    - name: Run Pre-Commit
+      run: |
+        ./ci docker run qctrl/ci-images:python-3.11-ci poetry run pre-commit run -- -a
   pytest:
     # Filter out PRs originating from this repository (triggers on-push.yml instead)
     if: github.event.pull_request.head.repo.fork == true
-    uses: qctrl/reusable-workflows/.github/workflows/pytest.yaml@master
-    secrets: inherit
-    with:
-      python-versions: '["3.10", "3.11", "3.12", "3.13"]'
-
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.9", "3.10", "3.11"]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Python dependencies
+      run: |
+        source <(curl -sL http://ci.q-ctrl.com)
+        ./ci docker run qctrl/ci-images:python-${{ matrix.python }}-ci /scripts/install-python-dependencies.sh
+    - name: Run Pytest
+      run: |
+        ./ci docker run qctrl/ci-images:python-${{ matrix.python }}-ci /scripts/pytest.sh
   sphinx_documentation:
     # Filter out PRs originating from this repository (triggers on-push.yml instead)
     if: github.event.pull_request.head.repo.fork == true
