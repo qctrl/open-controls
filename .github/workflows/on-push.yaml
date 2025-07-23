@@ -10,53 +10,87 @@ on:
 jobs:
   housekeeping:
     runs-on: ubuntu-latest
+    container: qctrl/ci-images:python-3.11-ci
     steps:
       - uses: actions/checkout@v4
+      - name: Download CI tool
+        shell: bash
+        run: |
+          curl -sSL http://ci.q-ctrl.com | bash -
+      - name: Vault Login
+        run: |
+          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+      - name: Inject environment variables
+        run: |
+          /scripts/ci env prepareGitHub
       - name: Perform housekeeping checks
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          source <(curl -sL http://ci.q-ctrl.com)
-          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/housekeeping.sh
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          /scripts/housekeeping.sh
 
   linting:
     runs-on: ubuntu-latest
+    container: qctrl/ci-images:python-3.11-ci
     steps:
       - uses: actions/checkout@v4
+      - name: Download CI tool
+        shell: bash
+        run: |
+          curl -sSL http://ci.q-ctrl.com | bash -
+      - name: Vault Login
+        run: |
+          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
       - name: Install Python dependencies
         run: |
-          source <(curl -sL http://ci.q-ctrl.com)
-          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/install-python-dependencies.sh
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          /scripts/install-python-dependencies.sh
       - name: Run Pre-Commit
         run: |
-          ./ci docker run qctrl/ci-images:python-3.11-ci poetry run pre-commit run -- -a
+          poetry run pre-commit run -- -a
 
   pytest:
     runs-on: ubuntu-latest
+    container: qctrl/ci-images:python-${{ matrix.python }}-ci
     strategy:
       matrix:
         python: ["3.10", "3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
+      - name: Download CI tool
+        shell: bash
+        run: |
+          curl -sSL http://ci.q-ctrl.com | bash -
+      - name: Vault Login
+        run: |
+          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
       - name: Install Python dependencies
         run: |
-          source <(curl -sL http://ci.q-ctrl.com)
-          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-          ./ci docker run qctrl/ci-images:python-${{ matrix.python }}-ci /scripts/install-python-dependencies.sh
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          /scripts/install-python-dependencies.sh
       - name: Run Pytest
         run: |
-          ./ci docker run qctrl/ci-images:python-${{ matrix.python }}-ci /scripts/pytest.sh
+          /scripts/pytest.sh
 
   publish_internally:
     runs-on: ubuntu-latest
+    container: qctrl/ci-images:python-3.11-ci
     steps:
       - uses: actions/checkout@v4
+      - name: Download CI tool
+        shell: bash
+        run: |
+          curl -sSL http://ci.q-ctrl.com | bash -
+      - name: Vault Login
+        run: |
+          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+      - name: Inject environment variables
+        run: |
+          /scripts/ci env prepareGitHub
       - name: Publish development version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          source <(curl -sL http://ci.q-ctrl.com)
-          ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
-          ./ci docker run qctrl/ci-images:python-3.11-ci /scripts/publish-dev-version.sh
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          /scripts/publish-dev-version.sh
