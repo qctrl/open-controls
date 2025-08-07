@@ -4,7 +4,7 @@
 .dockerignore @qctrl/infrastructure
 .github/*.y*ml @qctrl/infrastructure
 .github/workflows @qctrl/infrastructure
-docker* @qctrl/infrastructure
+docker*entrypoint*sh @qctrl/infrastructure
 Docker* @qctrl/infrastructure
 
 .github/dependabot.y*ml @qctrl/engineering
