@@ -12,17 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Module for defining commonly used driven controls.
-"""
+"""Module for defining commonly used driven controls."""
 
 from __future__ import annotations
 
-from typing import Optional
-
 import numpy as np
 
-from ..utils import check_arguments
+from qctrlopencontrols.utils import check_arguments
+
 from .driven_control import DrivenControl
 
 
@@ -111,7 +108,7 @@ def new_primitive_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a primitive (square) driven control.
@@ -158,7 +155,7 @@ def new_bb1_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a BB1 (Wimperis) driven control.
@@ -238,7 +235,7 @@ def new_sk1_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a first order Solovay-Kitaev (SK1) driven control.
@@ -314,7 +311,7 @@ def new_scrofulous_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a short composite rotation for undoing length over and under shoot (SCROFULOUS) driven
@@ -432,7 +429,7 @@ def new_corpse_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a compensating for off-resonance with a pulse sequence (CORPSE) driven control.
@@ -516,7 +513,7 @@ def new_corpse_in_bb1_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a CORPSE concatenated within BB1 (CORPSE in BB1) driven control.
@@ -621,7 +618,7 @@ def new_corpse_in_sk1_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a CORPSE concatenated within SK1 (CORPSE in SK1) driven control.
@@ -723,7 +720,7 @@ def new_corpse_in_scrofulous_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a CORPSE concatenated within SCROFULOUS (CORPSE in SCROFULOUS) driven control.
@@ -884,7 +881,7 @@ def new_wamf1_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a first-order Walsh amplitude-modulated filter (WAMF1) driven control.
@@ -978,7 +975,7 @@ def new_gaussian_control(
     segment_count: int,
     duration: float,
     width: float,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Generates a Gaussian driven control sequence.
@@ -1209,7 +1206,7 @@ def new_drag_control(
     width: float,
     beta: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Generates a Gaussian driven control sequence with a first-order DRAG

@@ -110,6 +110,29 @@ ignore = [
   # Commented code (keep for reference in scientific contexts)
   "ERA001",  # Found commented-out code
 
+  # Missing type annotations (legacy codebase)
+  "ANN001",  # Missing type annotation for function argument
+  "ANN201",  # Missing return type annotation for public function
+  "ANN202",  # Missing return type annotation for private function
+
+  # Performance/style (not critical)
+  "PERF401", # Use list comprehension instead of loop + append
+  "RET504",  # Unnecessary assignment before return statement
+  "FLY002",  # Consider string literal instead of join
+
+  # Documentation/examples (not critical for core functionality)
+  "T201",    # print found (acceptable in examples and notebooks)
+  "INP001",  # File is part of implicit namespace package (acceptable for docs)
+
+  # Time zone issues (not critical)
+  "DTZ005",  # datetime.now() called without tz argument
+
+  # Future annotations (not critical)
+  "FA100",   # Add from __future__ import annotations
+
+  # Unicode in comments (acceptable)
+  "RUF003",  # Comment contains ambiguous Unicode character
+
   # Against q-ctrl convention
   "DJ008",  # Model does not define `__str__` method
   "FIX",    # Line contains TODO

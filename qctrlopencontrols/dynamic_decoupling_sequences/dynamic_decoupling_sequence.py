@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Dynamical decoupling module.
-"""
+"""Dynamical decoupling module."""
 
 from __future__ import annotations
 

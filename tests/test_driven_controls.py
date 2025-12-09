@@ -16,7 +16,7 @@
 Tests for driven controls.
 """
 
-import os
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -30,8 +30,9 @@ def _remove_file(filename):
     Removes the file after test done.
     """
 
-    if os.path.exists(filename):
-        os.remove(filename)
+    file_path = Path(filename)
+    if file_path.exists():
+        file_path.unlink()
     else:
         raise OSError(f"Could not find file {filename}")
 
