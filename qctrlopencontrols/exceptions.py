@@ -12,15 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Exceptions raised by the qctrlopencontrol package.
-"""
+"""Exceptions raised by the qctrlopencontrol package."""
 
 
 class QctrlError(Exception):
-    """
-    Base class for exceptions raised by qctrlopencontrol package.
-    """
+    """Base class for exceptions raised by qctrlopencontrol package."""
 
 
 class ArgumentsValueError(QctrlError):

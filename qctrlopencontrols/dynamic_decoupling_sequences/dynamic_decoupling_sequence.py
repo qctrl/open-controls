@@ -20,14 +20,13 @@ from __future__ import annotations
 
 from typing import (
     Any,
-    Optional,
 )
 
 import numpy as np
 
-from ..driven_controls.driven_control import DrivenControl
-from ..exceptions import ArgumentsValueError
-from ..utils import (
+from qctrlopencontrols.driven_controls.driven_control import DrivenControl
+from qctrlopencontrols.exceptions import ArgumentsValueError
+from qctrlopencontrols.utils import (
     Coordinate,
     FileFormat,
     FileType,
@@ -80,7 +79,7 @@ class DynamicDecouplingSequence:
         rabi_rotations: np.ndarray,
         azimuthal_angles: np.ndarray,
         detuning_rotations: np.ndarray,
-        name: Optional[str] = None,
+        name: str | None = None,
     ):
         check_arguments(
             duration > 0,
@@ -141,7 +140,6 @@ class DynamicDecouplingSequence:
             method of the Q-CTRL Visualizer package. It has keywords 'Rabi'
             and 'Detuning'.
         """
-
         return {
             "Rabi": {
                 "rotations": self.rabi_rotations * np.exp(1.0j * self.azimuthal_angles),
@@ -162,7 +160,6 @@ class DynamicDecouplingSequence:
         str
             String representation of the object including the values of the arguments.
         """
-
         attributes = [
             "duration",
             "offsets",
@@ -175,9 +172,7 @@ class DynamicDecouplingSequence:
         return create_repr_from_attributes(self, attributes)
 
     def __str__(self):
-        """
-        Prepares a friendly string format for a dynamical decoupling sequence.
-        """
+        """Prepares a friendly string format for a dynamical decoupling sequence."""
 
         def _array_to_str(arr: np.ndarray) -> str:
             """
@@ -252,7 +247,6 @@ class DynamicDecouplingSequence:
         The sequence is converted to a driven control using the maximum Rabi and detuning
         rate. The driven control is then exported.
         """
-
         convert_dds_to_driven_control(
             dynamic_decoupling_sequence=self,
             maximum_rabi_rate=maximum_rabi_rate,
@@ -271,7 +265,7 @@ def convert_dds_to_driven_control(
     maximum_rabi_rate: float,
     maximum_detuning_rate: float,
     minimum_segment_duration: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a Driven Control based on the supplied DDS and other relevant information.
@@ -329,7 +323,6 @@ def convert_dds_to_driven_control(
     If appropriate control segments cannot be created, the conversion process raises
     an ArgumentsValueError.
     """
-
     check_arguments(
         maximum_detuning_rate > 0,
         "Maximum detuning rate must be positive.",
@@ -482,7 +475,7 @@ def convert_dds_to_driven_control(
     control_durations = np.zeros((operations.shape[1] * 2,))
 
     pulse_segment_idx = 0
-    for op_idx in range(0, operations.shape[1]):
+    for op_idx in range(operations.shape[1]):
         pulse_width = pulse_start_ends[op_idx, 1] - pulse_start_ends[op_idx, 0]
         control_durations[pulse_segment_idx] = pulse_width
 
@@ -529,7 +522,6 @@ def _check_valid_operation(
     Private method to check if there is a rabi_rotation and detuning rotation at the same
     offset.
     """
-
     rabi_rotation_index = set(np.where(rabi_rotations > 0.0)[0])
     detuning_rotation_index = set(np.where(detuning_rotations > 0.0)[0])
 

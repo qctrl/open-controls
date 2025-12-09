@@ -12,15 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Module for defining commonly used dynamical decoupling sequences.
-"""
+"""Module for defining commonly used dynamical decoupling sequences."""
 
 from __future__ import annotations
 
 import numpy as np
 
-from ..utils import check_arguments
+from qctrlopencontrols.utils import check_arguments
+
 from .dynamic_decoupling_sequence import DynamicDecouplingSequence
 
 
@@ -63,7 +62,7 @@ def _add_pre_post_rotations(
     """
     # Count the number of X, Y, and Z pi-pulses
     x_pi_pulses = np.count_nonzero(
-        np.logical_and.reduce(  # pylint: disable=maybe-no-member
+        np.logical_and.reduce(
             (
                 np.isclose(rabi_rotations, np.pi),
                 np.isclose(azimuthal_angles, 0.0),
@@ -72,7 +71,7 @@ def _add_pre_post_rotations(
         )
     )
     y_pi_pulses = np.count_nonzero(
-        np.logical_and.reduce(  # pylint: disable=maybe-no-member
+        np.logical_and.reduce(
             (
                 np.isclose(rabi_rotations, np.pi),
                 np.isclose(azimuthal_angles, np.pi / 2.0),
@@ -81,7 +80,7 @@ def _add_pre_post_rotations(
         )
     )
     z_pi_pulses = np.count_nonzero(
-        np.logical_and.reduce(  # pylint: disable=maybe-no-member
+        np.logical_and.reduce(
             (
                 np.isclose(rabi_rotations, 0.0),
                 np.isclose(azimuthal_angles, 0.0),
@@ -229,7 +228,6 @@ def new_spin_echo_sequence(
     .. [#] `E. L. Hahn, Physical Review 80, 580 (1950).
         <https://link.aps.org/doi/10.1103/PhysRev.80.580>`_
     """
-
     check_arguments(
         duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
@@ -302,7 +300,6 @@ def new_carr_purcell_sequence(
     .. [#] `H. Y. Carr and E. M. Purcell, Physical Review 94, 630 (1954).
         <https://link.aps.org/doi/10.1103/PhysRev.94.630>`_
     """
-
     check_arguments(
         duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
@@ -385,7 +382,6 @@ def new_cpmg_sequence(
     .. [#] `S. Meiboom and D. Gill, Review of Scientific Instruments 29:8, 688 (1958).
         <https://doi.org/10.1063/1.1716296>`_
     """
-
     check_arguments(
         duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
@@ -464,7 +460,6 @@ def new_uhrig_sequence(
     .. [#] `G. S. Uhrig, Physical Review Letters 98, 100504 (2007).
         <https://link.aps.org/doi/10.1103/PhysRevLett.98.100504>`_
     """
-
     check_arguments(
         duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
@@ -543,7 +538,6 @@ def new_periodic_sequence(
     .. [#] `L. Viola and E. Knill, Physical Review Letters 90, 037901 (2003).
         <https://link.aps.org/doi/10.1103/PhysRevLett.90.037901>`_
     """
-
     check_arguments(
         duration > 0, "Sequence duration must be positve.", {"duration": duration}
     )
@@ -647,7 +641,6 @@ def new_walsh_sequence(
     .. [#] `H. Ball and M. J Biercuk, EPJ Quantum Technol. 2, 11 (2015).
         <https://doi.org/10.1140/epjqt/s40507-015-0022-4>`_
     """
-
     check_arguments(
         duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
@@ -767,7 +760,6 @@ def new_quadratic_sequence(
         Physical Review Letters 104, 130501 (2010).
         <https://doi.org/10.1103/PhysRevLett.104.130501>`_
     """
-
     check_arguments(
         duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
@@ -887,7 +879,6 @@ def new_x_concatenated_sequence(
     .. [#] `K. Khodjasteh and D. A. Lidar, Physical Review Letters 95, 180501 (2005).
         <https://doi.org/10.1103/PhysRevLett.95.180501>`_
     """
-
     check_arguments(
         duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
@@ -990,7 +981,6 @@ def new_xy_concatenated_sequence(
         <https://doi.org/10.1103/PhysRevLett.95.180501>`_
 
     """
-
     check_arguments(
         duration > 0, "Sequence duration must be positive.", {"duration": duration}
     )
@@ -1132,7 +1122,6 @@ def _carr_purcell_meiboom_gill_offsets(
     np.ndarray
         The offset values.
     """
-
     spacing = 1.0 / offset_count
     start = spacing * 0.5
 
@@ -1160,7 +1149,6 @@ def _uhrig_single_axis_offsets(duration: float, offset_count: int) -> np.ndarray
     np.ndarray
         The offset values.
     """
-
     # prepare the offsets for delta comb
     constant = 1.0 / (2 * offset_count + 2)
     deltas = np.array(
@@ -1186,7 +1174,6 @@ def _concatenation_x(concatenation_sequence: int) -> np.ndarray:
     np.ndarray
         The offset values.
     """
-
     if concatenation_sequence == 1:
         return np.array([1, 0, 1, 0])
 
@@ -1216,7 +1203,6 @@ def _concatenation_xy(concatenation_sequence) -> np.ndarray:
     np.ndarray
         The offset values.
     """
-
     if concatenation_sequence == 1:
         return np.array([1, -1, 1, -2, 1, -1, 1, -2])
     cumulations = np.concatenate(

@@ -16,7 +16,6 @@
 Tests for Predefined DDS.
 """
 
-
 import numpy as np
 
 from qctrlopencontrols import (

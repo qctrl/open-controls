@@ -16,7 +16,6 @@
 Tests for driven controls.
 """
 
-
 import os
 
 import numpy as np
@@ -34,7 +33,7 @@ def _remove_file(filename):
     if os.path.exists(filename):
         os.remove(filename)
     else:
-        raise IOError(f"Could not find file {filename}")
+        raise OSError(f"Could not find file {filename}")
 
 
 def test_driven_controls():

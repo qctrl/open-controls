@@ -11,19 +11,19 @@ repos:
     -   id: check-toml
 -   repo: local
     hooks:
-      - id: black
-        name: black
-        entry: poetry run black
+      - id: ruff-check
+        name: ruff-check
+        entry: poetry run ruff check
         language: system
         require_serial: true
         types: [python]
-      - id: isort
-        name: isort
-        entry: poetry run isort
-        require_serial: true
+        args: [--fix]
+      - id: ruff-format
+        name: ruff-format
+        entry: poetry run ruff format
         language: system
+        require_serial: true
         types: [python]
-        args: ['--filter-files']
       - id: mypy
         name: mypy
         entry: poetry run mypy
@@ -31,14 +31,6 @@ repos:
         language: system
         types: [python]
         exclude: docs/conf.py
-      - id: pylint
-        entry: poetry run pylint --rcfile=.pylintrc
-        name: pylint
-        language: system
-        types: [file, python]
-        # when passing in a single file as argument the ignore entry in the .pylintrc does
-        # not seem to be considered.
-        exclude: .*(venv|\.conf\.py)
 -   repo: https://github.com/pre-commit/mirrors-prettier
     rev: v3.0.0
     hooks:

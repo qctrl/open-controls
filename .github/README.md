@@ -103,28 +103,23 @@ The generated HTML will appear in the `docs/_build/html` directory.
 
 Code is formatted, linted and checked using the following tools:
 
-- [Black](https://github.com/psf/black)
-- [Pylint](https://pypi.org/project/pylint/)
-- [isort](https://github.com/timothycrosley/isort)
+- [Ruff](https://github.com/astral-sh/ruff) - A fast Python linter and formatter (replaces Black, isort, and Pylint)
 - [mypy](http://mypy-lang.org/)
 
 These checks are run on all code merged to master, and may also be run locally from the open-controls directory:
 
 ```shell
-pip install black isort mypy pylint
+pip install ruff mypy
 mypy
-isort --check .
-black --check .
-pylint .
+ruff check .
+ruff format --check .
 ```
 
-Note that you can speed up the execution of Pylint by running it in the parallel mode with the `-j` option: `pylint -j 0 .`. See the [official documentation](https://pylint.readthedocs.io/en/latest/user_guide/usage/run.html#parallel-execution) for details.
-
-Black and isort, in addition to checking code, can also automatically apply fixes. To fix all code in the open-controls tree, run:
+Ruff, in addition to checking code, can also automatically apply fixes. To fix all code in the open-controls tree, run:
 
 ```shell
-isort
-black .
+ruff check --fix .
+ruff format .
 ```
 
 You can also run these checks only in the files that you changed by using the `pre-commit` tool. To use it, run:
