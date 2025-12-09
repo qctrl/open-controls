@@ -201,8 +201,8 @@ extend-select = [
   "S",       # security
   "SLF001",  # private member access
 ]
-"interfaces/keycloak/models/codegen_models.py" = ["D101"] # docstring not required for generated models
 "*pytest_plugin*" = ["ARG001"]  # unused arg
+"examples/**/*.ipynb" = ["PTH123"] # Path operations acceptable in notebook examples
 
 [tool.ruff.lint.flake8-unused-arguments]
 ignore-variadic-names = true
