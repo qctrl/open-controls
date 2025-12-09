@@ -12,21 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Driven control module.
-"""
+"""Driven control module."""
+
 from __future__ import annotations
 
 import csv
 import json
+from pathlib import Path
 from typing import (
     Any,
-    Optional,
 )
 
 import numpy as np
 
-from ..utils import (
+from qctrlopencontrols.utils import (
     Coordinate,
     FileFormat,
     FileType,
@@ -96,10 +95,10 @@ class DrivenControl:
     def __init__(
         self,
         durations: np.ndarray,
-        rabi_rates: Optional[np.ndarray] = None,
-        azimuthal_angles: Optional[np.ndarray] = None,
-        detunings: Optional[np.ndarray] = None,
-        name: Optional[str] = None,
+        rabi_rates: np.ndarray | None = None,
+        azimuthal_angles: np.ndarray | None = None,
+        detunings: np.ndarray | None = None,
+        name: str | None = None,
     ):
         self.name = name
 
@@ -167,7 +166,6 @@ class DrivenControl:
         int
             The number of segments in the driven control, :math:`N`.
         """
-
         return self.rabi_rates.shape[0]
 
     @property
@@ -180,7 +178,6 @@ class DrivenControl:
         float
             The maximum Rabi rate of the control, :math:`\max_n \Omega_n`.
         """
-
         return np.amax(self.rabi_rates)
 
     @property
@@ -205,7 +202,6 @@ class DrivenControl:
         np.ndarray
             The x-amplitude of each segment, :math:`\{\Omega_n \cos \phi_n\}`.
         """
-
         return self.rabi_rates * np.cos(self.azimuthal_angles)
 
     @property
@@ -218,7 +214,6 @@ class DrivenControl:
         np.ndarray
             The y-amplitude of each segment, :math:`\{\Omega_n \sin \phi_n\}`.
         """
-
         return self.rabi_rates * np.sin(self.azimuthal_angles)
 
     @property
@@ -232,7 +227,6 @@ class DrivenControl:
             The total Bloch sphere rotation angles on each segment,
             :math:`\left\{\sqrt{\Omega_n^2+\Delta_n^2}\delta t_n\right\}`.
         """
-
         amplitudes = np.sqrt(
             self.amplitude_x**2 + self.amplitude_y**2 + self.detunings**2
         )
@@ -285,12 +279,11 @@ class DrivenControl:
         Returns the boundary times of the control segments.
 
         Returns
-        ------
+        -------
         np.ndarray
             The boundary times of the control segments, :math:`\{t_n\}` (starting with
             :math:`t_0=0`).
         """
-
         return np.insert(np.cumsum(self.durations), 0, 0.0)
 
     @property
@@ -303,7 +296,6 @@ class DrivenControl:
         float
             The duration of the longest control segment, :math:`\max_n \delta t_n`.
         """
-
         return np.amax(self.durations)
 
     @property
@@ -316,7 +308,6 @@ class DrivenControl:
         float
             The duration of the shortest control segment, :math:`\min_n \delta t_n`.
         """
-
         return np.amin(self.durations)
 
     @property
@@ -329,10 +320,9 @@ class DrivenControl:
         float
             The total duration of the control, :math:`t_N=\sum_n \delta t_n`.
         """
-
         return np.sum(self.durations)
 
-    def resample(self, time_step: float, name: Optional[str] = None) -> "DrivenControl":
+    def resample(self, time_step: float, name: str | None = None) -> DrivenControl:
         r"""
         Returns a new driven control obtained by resampling this control.
 
@@ -390,7 +380,6 @@ class DrivenControl:
         dict
             A dictionary containing the information of the control.
         """
-
         control_info = {
             "maximum_rabi_rate": self.maximum_rabi_rate,
             "detuning": list(self.detunings),
@@ -432,7 +421,6 @@ class DrivenControl:
             Indicates the coordinate system requested. Must be one of
             'cylindrical' or 'cartesian'. Defaults to 'cylindrical'.
         """
-
         control_info = self._qctrl_expanded_export_content(coordinates=coordinates)
         if file_type == FileType.CSV.value:
             _ = control_info.pop("name")
@@ -443,7 +431,7 @@ class DrivenControl:
 
             # note that the newline parameter here is necessary
             # see details at https://docs.python.org/3/library/csv.html#id3
-            with open(filename, "w", encoding="utf-8", newline="") as file:
+            with Path(filename).open("w", encoding="utf-8", newline="") as file:
                 writer = csv.DictWriter(file, fieldnames=field_names)
                 writer.writeheader()
                 for index in range(self.number_of_segments):
@@ -451,7 +439,7 @@ class DrivenControl:
                         {name: control_info[name][index] for name in field_names}
                     )
         else:
-            with open(filename, "wt", encoding="utf-8") as handle:
+            with Path(filename).open("w", encoding="utf-8") as handle:
                 json.dump(control_info, handle, sort_keys=True, indent=4)
 
     def export_to_file(
@@ -573,7 +561,6 @@ class DrivenControl:
             and 'Detuning' for 'cylindrical' coordinates and 'X amplitude', 'Y amplitude',
             and 'Detuning' for 'cartesian' coordinates.
         """
-
         check_arguments(
             coordinates in [v.value for v in Coordinate],
             "Unsupported coordinates provided: ",
@@ -614,9 +601,7 @@ class DrivenControl:
         return plot_dictionary
 
     def __str__(self):
-        """
-        Prepares a friendly string format for a Driven Control.
-        """
+        """Prepares a friendly string format for a Driven Control."""
         driven_control = []
 
         if self.name is not None:
@@ -676,7 +661,6 @@ class DrivenControl:
         str
             String representation of the object including the values of the arguments.
         """
-
         attributes = [
             "rabi_rates",
             "azimuthal_angles",

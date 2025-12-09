@@ -12,17 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Module for defining commonly used driven controls.
-"""
+"""Module for defining commonly used driven controls."""
 
 from __future__ import annotations
 
-from typing import Optional
-
 import numpy as np
 
-from ..utils import check_arguments
+from qctrlopencontrols.utils import check_arguments
+
 from .driven_control import DrivenControl
 
 
@@ -38,7 +35,6 @@ def _validate_rabi_parameters(rabi_rotation: float, maximum_rabi_rate: float) ->
     maximum_rabi_rate : float
         The maximum Rabi frequency for the pulse.
     """
-
     check_arguments(
         maximum_rabi_rate > 0,
         "Maximum Rabi angular frequency must be positive.",
@@ -68,7 +64,6 @@ def _get_transformed_rabi_rotation_wimperis(rabi_rotation: float) -> float:
         The transformed angle as per definition for the Wimperis 1 (BB1) control.
 
     """
-
     # Raise error if the polar angle is incorrect
     check_arguments(
         -4 * np.pi <= rabi_rotation <= 4 * np.pi,
@@ -113,7 +108,7 @@ def new_primitive_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a primitive (square) driven control.
@@ -143,7 +138,6 @@ def new_primitive_control(
 
        :math:`\theta/\Omega_{\mathrm max}`, :math:`\Omega_{\mathrm max}`, :math:`\phi`, :math:`0`
     """
-
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
@@ -161,7 +155,7 @@ def new_bb1_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a BB1 (Wimperis) driven control.
@@ -206,8 +200,7 @@ def new_bb1_control(
     ----------
     .. [#] `S. Wimperis, Journal of Magnetic Resonance, Series A 109, 2 (1994).
         <https://doi.org/10.1006/jmra.1994.1159>`_
-    """  # pylint: disable=line-too-long
-
+    """
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
@@ -242,7 +235,7 @@ def new_sk1_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a first order Solovay-Kitaev (SK1) driven control.
@@ -288,8 +281,7 @@ def new_sk1_control(
         <https://doi.org/10.1103/PhysRevA.70.052318>`_
     .. [#] `K. R. Brown, A. W. Harrow, and I. L. Chuang, Physical Review A 72, 039905 (2005).
         <https://doi.org/10.1103/PhysRevA.72.039905>`_
-    """  # pylint: disable=line-too-long
-
+    """
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
@@ -319,7 +311,7 @@ def new_scrofulous_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a short composite rotation for undoing length over and under shoot (SCROFULOUS) driven
@@ -374,8 +366,7 @@ def new_scrofulous_control(
     ----------
     .. [#] `H. K. Cummins, G. Llewellyn, and J. A. Jones, Physical Review A 67, 042308 (2003).
         <https://doi.org/10.1103/PhysRevA.67.042308>`_
-    """  # pylint: disable=line-too-long
-
+    """
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
@@ -438,7 +429,7 @@ def new_corpse_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a compensating for off-resonance with a pulse sequence (CORPSE) driven control.
@@ -488,8 +479,7 @@ def new_corpse_control(
         <https://doi.org/10.1088/1367-2630/2/1/006>`_
     .. [#] `H. K. Cummins, G. Llewellyn, and J. A. Jones, Physical Review A 67, 042308 (2003).
         <https://doi.org/10.1103/PhysRevA.67.042308>`_
-    """  # pylint: disable=line-too-long
-
+    """
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
@@ -523,7 +513,7 @@ def new_corpse_in_bb1_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a CORPSE concatenated within BB1 (CORPSE in BB1) driven control.
@@ -582,8 +572,7 @@ def new_corpse_in_bb1_control(
         Japan 82, 1 (2012). <https://doi.org/10.7566/JPSJ.82.014004>`_
     .. [#] `C. Kabytayev, T. J. Green, K. Khodjasteh, M. J. Biercuk, L. Viola, and K. R. Brown,
         Physical Review A 90, 012316 (2014). <https://doi.org/10.1103/PhysRevA.90.012316>`_
-    """  # pylint: disable=line-too-long
-
+    """
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
@@ -629,7 +618,7 @@ def new_corpse_in_sk1_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a CORPSE concatenated within SK1 (CORPSE in SK1) driven control.
@@ -687,8 +676,7 @@ def new_corpse_in_sk1_control(
         Japan 82, 1 (2012). <https://doi.org/10.7566/JPSJ.82.014004>`_
     .. [#] `C. Kabytayev, T. J. Green, K. Khodjasteh, M. J. Biercuk, L. Viola, and K. R. Brown,
         Physical Review A 90, 012316 (2014). <https://doi.org/10.1103/PhysRevA.90.012316>`_
-    """  # pylint: disable=line-too-long
-
+    """
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
@@ -732,7 +720,7 @@ def new_corpse_in_scrofulous_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a CORPSE concatenated within SCROFULOUS (CORPSE in SCROFULOUS) driven control.
@@ -820,7 +808,6 @@ def new_corpse_in_scrofulous_control(
     .. [#] `T. Ichikawa, M. Bando, Y. Kondo, and M. Nakahara, Physical Review A 84, 062311 (2011).
         <https://doi.org/10.1103/PhysRevA.84.062311>`_
     """
-
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
@@ -894,7 +881,7 @@ def new_wamf1_control(
     rabi_rotation: float,
     maximum_rabi_rate: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Creates a first-order Walsh amplitude-modulated filter (WAMF1) driven control.
@@ -944,7 +931,6 @@ def new_wamf1_control(
     .. [#] `H. Ball and M. J. Biercuk, EPJ Quantum Technology 2, 11 (2015).
         <https://doi.org/10.1140/epjqt/s40507-015-0022-4>`_
     """
-
     _validate_rabi_parameters(
         rabi_rotation=rabi_rotation, maximum_rabi_rate=maximum_rabi_rate
     )
@@ -989,7 +975,7 @@ def new_gaussian_control(
     segment_count: int,
     duration: float,
     width: float,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Generates a Gaussian driven control sequence.
@@ -1038,7 +1024,6 @@ def new_gaussian_control(
     .. [#] `Motzoi, F. et al. Physical Review Letters 103, 110501 (2009)
         <https://doi.org/10.1103/PhysRevLett.103.110501>`_
     """
-
     check_arguments(
         duration > 0.0, "Pulse duration must be positive.", {"duration": duration}
     )
@@ -1118,7 +1103,6 @@ def new_modulated_gaussian_control(
     --------
     new_gaussian_control
     """
-
     check_arguments(
         maximum_rabi_rate > 0.0,
         "Maximum Rabi rate must be positive.",
@@ -1222,7 +1206,7 @@ def new_drag_control(
     width: float,
     beta: float,
     azimuthal_angle: float = 0.0,
-    name: Optional[str] = None,
+    name: str | None = None,
 ) -> DrivenControl:
     r"""
     Generates a Gaussian driven control sequence with a first-order DRAG
@@ -1283,7 +1267,6 @@ def new_drag_control(
         Physical Review A 83, 012308 (2011).
         <https://doi.org/10.1103/PhysRevA.83.012308>`_
     """
-
     check_arguments(
         duration > 0.0, "Pulse duration must be positive.", {"duration": duration}
     )

@@ -65,12 +65,10 @@ python = ">=3.10,<3.14"
 numpy = ">=1.25.2"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.3.0"
-isort = "^5.13.2"
 mypy = "^1.8.0"
 pre-commit = "^3.6.0"
-pylint = "^3.0.3"
 pytest = "^8.0.0"
+ruff = "^0.6.0"
 sphinx = "^5.0.0"
 tomli = "^2.0.1"
 sphinx-markdown-builder = "^0.6.7"
@@ -82,11 +80,135 @@ X = "https://x.com/qctrlHQ"
 YouTube = "https://www.youtube.com/qctrl"
 GitHub = "https://github.com/qctrl"
 
-[tool.isort]
-profile = "black"
-force_grid_wrap = "2"
-known_first_party = "qctrlopencontrols"
 
+[tool.ruff.format]
+exclude = [
+  ".git",
+  ".github",
+  ".pytest_cache",
+  "**/migrations/**",
+  "setup.py",
+  "manage.py"
+]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+  # Rules to add back later
+  "EM",   # Exception must not use a string literal (improves error message clarity)
+
+  # Unicode characters (intentional for display)
+  "RUF001",  # String contains ambiguous Unicode character
+  "RUF002",  # Docstring contains ambiguous Unicode character
+
+  # Code complexity (common for scientific/mathematical code)
+  "C901",    # Function is too complex
+
+  # Magic numbers (common in scientific/mathematical contexts)
+  "PLR2004", # Magic value used in comparison
+
+  # Commented code (keep for reference in scientific contexts)
+  "ERA001",  # Found commented-out code
+
+  # Missing type annotations (legacy codebase)
+  "ANN001",  # Missing type annotation for function argument
+  "ANN201",  # Missing return type annotation for public function
+  "ANN202",  # Missing return type annotation for private function
+
+  # Performance/style (not critical)
+  "PERF401", # Use list comprehension instead of loop + append
+  "RET504",  # Unnecessary assignment before return statement
+  "FLY002",  # Consider string literal instead of join
+
+  # Documentation/examples (not critical for core functionality)
+  "T201",    # print found (acceptable in examples and notebooks)
+  "INP001",  # File is part of implicit namespace package (acceptable for docs)
+
+  # Time zone issues (not critical)
+  "DTZ005",  # datetime.now() called without tz argument
+
+  # Future annotations (not critical)
+  "FA100",   # Add from __future__ import annotations
+
+  # Unicode in comments (acceptable)
+  "RUF003",  # Comment contains ambiguous Unicode character
+
+  # Against q-ctrl convention
+  "DJ008",  # Model does not define `__str__` method
+  "FIX",    # Line contains TODO
+  "TD002",  # Missing author in TODO
+
+  # Overly prescriptive
+  "ANN204",  # Missing return type annotation for magic method
+  "ANN401",  # Use of Any type
+  "CPY",     # Missing copyright notice at top of file
+  "D105",    # Missing docstring in magic method
+  "D205",    # 1 blank line required between summary line and description
+  "D400",    # First line should end with a period
+  "D401",    # First line of docstring should be in imperative mood
+  "FA102",   # Require from __future__ import annotations for compatibility with python < 3.9
+  "FBT",     # Boolean-typed positional arguments
+  "SIM108",  # Use ternary operator instead of `if`-`else`-block
+  "TRY003",  # Avoid specifying long messages outside the exception class
+
+  # Previously excluded from pylint
+  "D100",     # missing-module-docstring
+  "FIX001",   # fixme
+  "PLR0912",  # too-many-branches
+  "PLR0913",  # too-many-arguments
+  "PLR0914",  # too-many-locals
+  "PLR0915",  # too-many-statements
+
+  # conflict with other rules
+  "D203",  # 1 blank line required before class docstring
+  "D212",  # Multi-line docstring summary should start at the first line
+
+  # conflict with formatter
+  "COM812",  # Trailing comma missing
+  "E501",    # Line too long ({width} > {limit})
+  "ISC001",  # Implicitly concatenated string literals on one line
+
+  # clashes with pydantic
+  "RUF012",  # Mutable class attributes should be annotated with typing.ClassVar
+]
+exclude = [
+  "**/migrations/**",
+  "celeryconfig.py",
+  "gunicorn.conf.py",
+  "manage.py",
+  "setup.py",
+  "venv",
+]
+extend-select = [
+  "D213",  # Multi-line docstring summary should start at the second line
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["F401", "F403"] # ignore unused and * imports in __init__
+"**/commands/**" = [
+  "T20",  # print statements
+  "S101", # assert statements
+]
+"scripts/**" = [
+  "INP001",  # missing __init__.py
+  "T20",     # print statements
+]
+"{_,test_,[0123456789],Mock,Test,conftest,*pytest_plugin}*" = [ # ignore rules in test files
+  "ARG001",  # unused arg
+  "ANN",     # missing type annotation
+  "D",       # docstrings
+  "PLR2004", # magic values
+  "S",       # security
+  "SLF001",  # private member access
+]
+"*pytest_plugin*" = ["ARG001"]  # unused arg
+"examples/**/*.ipynb" = ["PTH123"] # Path operations acceptable in notebook examples
+
+[tool.ruff.lint.flake8-unused-arguments]
+ignore-variadic-names = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
 
 [build-system]
 requires = ["poetry-core"]

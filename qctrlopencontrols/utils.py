@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Miscellaneous functions and dataclasses.
-"""
+"""Miscellaneous functions and dataclasses."""
+
 from __future__ import annotations
 
 from enum import Enum
 from typing import (
     Any,
-    Optional,
 )
 
 from .exceptions import ArgumentsValueError
@@ -51,7 +49,6 @@ def create_repr_from_attributes(class_instance=None, attributes=None) -> str:
     ArgumentsValueError
         If class name is not a string or any of the attribute name is not string type
     """
-
     if class_instance is None:
         raise ArgumentsValueError(
             "Class instance must be a valid object.", {"class_instance": class_instance}
@@ -77,7 +74,7 @@ def create_repr_from_attributes(class_instance=None, attributes=None) -> str:
 
     repr_string = f"{class_name}"
     attributes_string = ",".join(
-        f"{attribute}={repr(getattr(class_instance, attribute))}"
+        f"{attribute}={getattr(class_instance, attribute)!r}"
         for attribute in attributes
     )
     repr_string += attributes_string
@@ -90,7 +87,7 @@ def check_arguments(
     condition: Any,
     description: str,
     arguments: dict[str, Any],
-    extras: Optional[dict[str, Any]] = None,
+    extras: dict[str, Any] | None = None,
 ):
     """
     Raises an ArgumentsValueError with the specified parameters if the given condition is false,
@@ -138,18 +135,14 @@ class FileFormat(Enum):
 
 
 class FileType(Enum):
-    """
-    Defines exported file type.
-    """
+    """Defines exported file type."""
 
     JSON = "JSON"
     CSV = "CSV"
 
 
 class Coordinate(Enum):
-    """
-    Defines coordinate system for data representation.
-    """
+    """Defines coordinate system for data representation."""
 
     CARTESIAN = "cartesian"
     CYLINDRICAL = "cylindrical"

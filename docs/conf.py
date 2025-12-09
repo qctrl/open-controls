@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Configuration file for the Sphinx documentation builder.
-"""
+"""Configuration file for the Sphinx documentation builder."""
 
 # This file only contains a selection of the most common options. For a full
 # list see the documentation:
@@ -28,25 +26,24 @@ Configuration file for the Sphinx documentation builder.
 
 import datetime
 import inspect
-import os
 import sys
+from pathlib import Path
 from typing import List
 
 import tomli
 
 import qctrlopencontrols
 
-# pylint:disable=invalid-name
-sys.path.insert(0, os.path.abspath(".."))
+sys.path.insert(0, str(Path("..").resolve()))
 
 # -- Project information -----------------------------------------------------
-with open("../pyproject.toml", "rb") as f:
+with Path("../pyproject.toml").open("rb") as f:
     parsed = tomli.load(f)
 package_info = parsed["tool"]["poetry"]
 project = package_info["description"]
 author = ", ".join(package_info["authors"])
 release = package_info["version"]
-copyright = f"{datetime.datetime.now().year} Q-CTRL. All rights reserved."  # pylint: disable=redefined-builtin
+copyright = f"{datetime.datetime.now().year} Q-CTRL. All rights reserved."  # noqa: A001
 
 # -- General configuration ---------------------------------------------------
 
@@ -111,9 +108,7 @@ for _class in [
             + "."
             + _class.__name__
             + "."
-            + attribute: _class.__name__
-            + "."
-            + attribute
+            + attribute: _class.__name__ + "." + attribute
             for attribute in dir(_class)
             if not attribute.startswith("_")
         }

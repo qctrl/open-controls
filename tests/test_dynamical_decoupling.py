@@ -16,8 +16,7 @@
 Tests for Dynamical Decoupling Sequences.
 """
 
-
-import os
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -34,10 +33,11 @@ def _remove_file(filename):
     Removes the file after test done.
     """
 
-    if os.path.exists(filename):
-        os.remove(filename)
+    file_path = Path(filename)
+    if file_path.exists():
+        file_path.unlink()
     else:
-        raise IOError(f"Could not find file {filename}")
+        raise OSError(f"Could not find file {filename}")
 
 
 def test_dynamical_decoupling_sequence():
@@ -80,7 +80,7 @@ def test_dynamical_decoupling_sequence():
     }
 
     attributes_string = ",".join(
-        f"{attribute}={repr(getattr(sequence, attribute))}" for attribute in attributes
+        f"{attribute}={getattr(sequence, attribute)!r}" for attribute in attributes
     )
     _repr_string += attributes_string
     _repr_string += ")"
