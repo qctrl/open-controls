@@ -16,7 +16,7 @@
 Top-level package for Q-CTRL Open Controls.
 """
 
-__version__ = "12.0.1"
+__version__ = "12.0.2"
 
 from .driven_controls.driven_control import DrivenControl
 from .driven_controls.predefined import (

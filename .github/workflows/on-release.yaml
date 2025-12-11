@@ -19,11 +19,16 @@ jobs:
       - name: Vault Login
         run: |
           ./ci vault login -r ${{ secrets.VAULT_ROLE_ID }} -s ${{ secrets.VAULT_SECRET_ID }}
+      - name: Inject environment variables
+        run: |
+          ./ci env prepareGitHub
       - name: Update version in code
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global --add safe.directory $GITHUB_WORKSPACE
+          git config --global user.email "robot@q-ctrl.com"
+          git config --global user.name "Q-CTRL Robot"
           /scripts/housekeeping.sh
       - name: Publish publicly
         env:
