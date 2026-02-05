@@ -1135,7 +1135,7 @@ def _carr_purcell_meiboom_gill_offsets(
 
 def _uhrig_single_axis_offsets(duration: float, offset_count: int) -> np.ndarray:
     """
-    Calculates oOffset values for Uhrig Single Axis Sequence.
+    Calculates offset values for Uhrig Single Axis Sequence.
 
     Parameters
     ----------
