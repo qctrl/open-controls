@@ -48,6 +48,7 @@ from .dynamic_decoupling_sequences.predefined import (
     new_walsh_sequence,
     new_x_concatenated_sequence,
     new_xy_concatenated_sequence,
+    new_platonic_sequence,
 )
 
 __all__ = [
@@ -76,4 +77,5 @@ __all__ = [
     "new_walsh_sequence",
     "new_x_concatenated_sequence",
     "new_xy_concatenated_sequence",
+    "new_platonic_sequence",
 ]

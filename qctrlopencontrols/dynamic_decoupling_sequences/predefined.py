@@ -1228,3 +1228,183 @@ def _concatenation_xy(concatenation_sequence) -> np.ndarray:
     if cumulations[-1] == -2 and cumulations[-2] == -2:
         cumulations = cumulations[0:-2]
     return cumulations
+
+
+def new_platonic_sequence(
+    duration, sequence="Octahedral", pre_post_rotation=False, name=None
+) -> DynamicDecouplingSequence:
+    r"""
+    Creates a platonic sequence.
+
+    Parameters
+    ----------
+    duration : float
+        Total duration of the sequence :math:`\tau` (in seconds).
+    sequence : string, optional.
+        Sequence to follow, one of ``"Dihedral"``, ``"Tetrahedral"``,
+        ``"Octahedral"``, ``"Icosahedral"``. Defaults to ``"Octahedral"``.
+    pre_post_rotation : bool, optional
+        If ``True``, a :math:`X_{\pi/2}` rotation is added at the
+        start and end of the sequence. Defaults to ``False``.
+    name : string, optional
+        Name of the sequence. Defaults to ``None``.
+
+    Returns
+    -------
+    DynamicDecouplingSequence
+        The platonic sequence.
+
+    Notes
+    -----
+    The platonic dynamic decoupling sequences use the symmetry of the point
+    groups associated with certain platonic solids in order to decouple spin-j
+    (:math:`j \le \frac{5}{2}`) systems from higher-order noise. The pulses are
+    equally spaced in time, and their number is set by the specific sequence as
+    illustrated below.
+
+    .. list-table::
+        :widths: 25 25
+        :header-rows: 1
+
+        * - Sequence
+          - Number of pulses
+        * - Dihedral
+          - 8
+        * - Tetrahedral
+          - 24
+        * - Octahedral
+          - 48
+        * - Icosahedral
+          - 120
+
+    For each sequence there are two generators, applied in a specific order so
+    as to traverse every edge of the associated point group which can be found
+    in [#]_ Appendix B. These generators are the rotations listed below,
+
+    .. list-table::
+        :widths: 25 25 25
+        :header-rows: 1
+
+        * - Sequence
+          - Generator :math:`a`
+          - Generator :math:`b`
+        * - Dihedral
+          - :math:`\left(\left(1,0,0\right),\pi\right)`
+          - :math:`\left(\left(0,1,0\right),\pi\right)`
+        * - Tetrahedral
+          - :math:`\left(\left(0,0,1\right),\frac{2\pi}{3}\right)`
+          - :math:`\left(\left(\frac{\sqrt{2}}{3},\sqrt{\frac{2}{3}},\frac{1}{3}\right),\frac{2\pi}{3}\right)`
+        * - Octahedral
+          - :math:`\left(\left(0,0,1\right),\frac{2\pi}{4}\right)`
+          - :math:`\left(\frac{1}{\sqrt{3}}\left(1,1,1\right),\frac{2\pi}{3}\right)`
+        * - Icosahedral
+          - :math:`\left(\frac{\left(0,-1,\phi\right)}{\sqrt{\phi+2}},\frac{2\pi}{5}\right)`
+          - :math:`\left(\frac{\left(1-\phi,0,\phi\right)}{\sqrt{3}},\frac{2\pi}{3}\right)`
+
+    where the rotations are given in axis-angle notation and
+    :math:`\phi=\frac{\sqrt{5}+1}{2}` is the golden ratio.
+
+    References
+    ----------
+    .. [#] `C. Read, E. Serrano-Ensástiga, and J. Martin, Quantum 9, 1661 (2025).
+        <https://doi.org/10.22331/q-2025-03-12-1661>`_
+    """
+    check_arguments(
+        duration > 0, "Sequence duration must be positive.", {"duration": duration}
+    )
+    check_arguments(
+        sequence in ["Dihedral", "Tetrahedral", "Octahedral", "Icosahedral"],
+        'Sequence must be one of "Dihedral", "Tetrahedral", "Octahedral", or "Icosahedral".',
+        {"sequence": sequence},
+    )
+
+    # The sequences outlined in the cited paper, each sequence is constructed
+    # from an Eulerian path on the Cayley graph associated with the relevant
+    # point group. Each sequence is constructed of 2 generating operations, in
+    # the order specified here.
+    # fmt: off
+    eulerian_paths = {
+        "Dihedral": [0, 1, 0, 1, 1, 0, 1, 0],
+        "Tetrahedral": [ 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0],
+        "Octahedral": [ 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1 ],
+        "Icosahedral": [ 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0 ]
+    }
+    # fmt: on
+
+    # The generators assocaited with each point group.
+    phi = (np.sqrt(5) + 1) / 2  # golden ratio
+    generators = {
+        "Dihedral": [
+            {"Rabi": np.pi, "Azimuthal": 0, "Detuning": 0},  # rabi, azimuthal, detuning
+            {"Rabi": np.pi, "Azimuthal": np.pi / 2, "Detuning": 0},
+        ],
+        "Tetrahedral": [
+            {"Rabi": 0, "Azimuthal": 0, "Detuning": 2 * np.pi / 3},
+            {
+                "Rabi": 4 * np.sqrt(2) * np.pi / 9,
+                "Azimuthal": np.pi / 3,
+                "Detuning": 2 * np.pi / 9,
+            },
+        ],
+        "Octahedral": [
+            {"Rabi": 0, "Azimuthal": 0, "Detuning": np.pi / 2},
+            {
+                "Rabi": 2 * np.sqrt(2 / 3) * np.pi / 3,
+                "Azimuthal": np.pi / 4,
+                "Detuning": 2 * np.pi / 3 / np.sqrt(3),
+            },
+        ],
+        "Icosahedral": [
+            {
+                "Rabi": 2 * np.pi / 5 / np.sqrt(phi + 2),
+                "Azimuthal": 3 * np.pi / 2,
+                "Detuning": 2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            },
+            {
+                "Rabi": 2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+                "Azimuthal": np.pi,
+                "Detuning": 2 * np.pi * phi / 3 / np.sqrt(3),
+            },
+        ],
+    }
+
+    # Re-use the CPMG offset function to obtain equally spaced pulses along a certain duration.
+    offsets = _carr_purcell_meiboom_gill_offsets(
+        duration, len(eulerian_paths[sequence])
+    )
+    rabi_rotations = np.array(
+        [generators[sequence][idx]["Rabi"] for idx in eulerian_paths[sequence]]
+    )
+    azimuthal_angles = np.array(
+        [generators[sequence][idx]["Azimuthal"] for idx in eulerian_paths[sequence]]
+    )
+    detuning_rotations = np.array(
+        [generators[sequence][idx]["Detuning"] for idx in eulerian_paths[sequence]]
+    )
+
+    if pre_post_rotation:
+        # Use a pi/2 followed by a -pi/2 X rotation as all the sequences
+        # correspond with an effective identity gate.
+        offsets = np.insert(offsets, [0, offsets.shape[0]], [0, duration])
+        rabi_rotations = np.insert(
+            rabi_rotations, [0, rabi_rotations.shape[0]], [np.pi / 2, np.pi / 2]
+        )
+        azimuthal_angles = np.insert(
+            azimuthal_angles,
+            [0, azimuthal_angles.shape[0]],
+            [0, np.pi],
+        )
+        detuning_rotations = np.insert(
+            detuning_rotations,
+            [0, detuning_rotations.shape[0]],
+            [0, 0],
+        )
+
+    return DynamicDecouplingSequence(
+        duration=duration,
+        offsets=offsets,
+        rabi_rotations=rabi_rotations,
+        azimuthal_angles=azimuthal_angles,
+        detuning_rotations=detuning_rotations,
+        name=name,
+    )
