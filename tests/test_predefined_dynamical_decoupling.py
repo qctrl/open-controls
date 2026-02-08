@@ -29,6 +29,7 @@ from qctrlopencontrols import (
     new_walsh_sequence,
     new_x_concatenated_sequence,
     new_xy_concatenated_sequence,
+    new_platonic_sequence,
 )
 from qctrlopencontrols.constants import (
     SIGMA_X,
@@ -843,3 +844,117 @@ def test_if_xy_concatenated_sequence_is_identity():
     )
 
     assert _pulses_produce_identity(xy_concat_sequence)
+
+
+def test_platonic_sequence():
+    """
+    Tests the platonic sequence.
+    """
+
+    duration = 10.0
+
+    for order in ["Dihedral", "Tetrahedral", "Octahedral", "Icosahedral"]:
+        sequence = new_platonic_sequence(duration=duration, sequence=order)
+
+        count = {
+            "Dihedral": 8,
+            "Tetrahedral": 24,
+            "Octahedral": 48,
+            "Icosahedral": 120,
+        }[order]
+        _spacing = duration / count
+
+        _offsets = np.array([(_spacing * 0.5 + i * _spacing) for i in range(count)])
+        # fmt: off
+        eulerian_paths = {
+            "Dihedral": [0, 1, 0, 1, 1, 0, 1, 0],
+            "Tetrahedral": [ 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0],
+            "Octahedral": [ 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1 ],
+            "Icosahedral": [ 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0 ]
+        }
+        # fmt: on
+        phi = (np.sqrt(5) + 1) / 2  # golden ratio
+
+        _rabi_rotations = {
+            "Dihedral": np.ones(_offsets.shape) * np.pi,
+            "Tetrahedral": np.array(eulerian_paths["Tetrahedral"])
+            * 4
+            * np.sqrt(2)
+            * np.pi
+            / 9,
+            "Octahedral": np.array(eulerian_paths["Octahedral"])
+            * 2
+            * np.sqrt(2 / 3)
+            * np.pi
+            / 3,
+            "Icosahedral": -(np.array(eulerian_paths["Icosahedral"]) - 1)
+            * 2
+            * np.pi
+            / 5
+            / np.sqrt(phi + 2)
+            + np.array(eulerian_paths["Icosahedral"])
+            * 2
+            * np.pi
+            * (phi - 1)
+            / 3
+            / np.sqrt(3),
+        }[order]
+
+        _azimuthal_angles = {
+            "Dihedral": np.array(eulerian_paths["Dihedral"]) * np.pi / 2,
+            "Tetrahedral": np.array(eulerian_paths["Tetrahedral"]) * np.pi / 3,
+            "Octahedral": np.array(eulerian_paths["Octahedral"]) * np.pi / 4,
+            "Icosahedral": -(np.array(eulerian_paths["Icosahedral"]) - 1)
+            * 3
+            * np.pi
+            / 2
+            + np.array(eulerian_paths["Icosahedral"]) * np.pi,
+        }[order]
+
+        _detuning_rotations = {
+            "Dihedral": np.zeros(_offsets.shape),
+            "Tetrahedral": -(np.array(eulerian_paths["Tetrahedral"]) - 1)
+            * 2
+            * np.pi
+            / 3
+            + np.array(eulerian_paths["Tetrahedral"]) * 2 * np.pi / 9,
+            "Octahedral": -(np.array(eulerian_paths["Octahedral"]) - 1) * np.pi / 2
+            + np.array(eulerian_paths["Octahedral"]) * 2 * np.pi / 3 / np.sqrt(3),
+            "Icosahedral": -(np.array(eulerian_paths["Icosahedral"]) - 1)
+            * 2
+            * np.pi
+            * phi
+            / 5
+            / np.sqrt(phi + 2)
+            + np.array(eulerian_paths["Icosahedral"])
+            * 2
+            * np.pi
+            * phi
+            / 3
+            / np.sqrt(3),
+        }[order]
+
+        assert np.allclose(_offsets, sequence.offsets)
+        assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
+        assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
+        assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
+
+        sequence = new_platonic_sequence(
+            duration=duration, sequence=order, pre_post_rotation=True
+        )
+
+        _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
+        _rabi_rotations = np.insert(
+            _rabi_rotations, [0, _rabi_rotations.shape[0]], [np.pi / 2, np.pi / 2]
+        )
+        _azimuthal_angles = np.insert(
+            _azimuthal_angles, [0, _azimuthal_angles.shape[0]], [0, np.pi]
+        )
+        _detuning_rotations = np.insert(
+            _detuning_rotations, [0, _detuning_rotations.shape[0]], [0, 0]
+        )
+
+        assert np.allclose(_offsets, sequence.offsets)
+        assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
+        assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
+        assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
