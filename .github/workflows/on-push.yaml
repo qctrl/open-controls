@@ -18,7 +18,7 @@ jobs:
           vault-role-id: ${{ secrets.VAULT_ROLE_ID }}
           vault-secret-id: ${{ secrets.VAULT_SECRET_ID }}
       - name: Update version in code
-        uses: qctrl/reusable-workflows/.github/actions/poetry/housekeeping@actions/poetry/housekeeping/v1
+        uses: qctrl/reusable-workflows/.github/actions/poetry/housekeeping@INFRA-3197
 
   linting:
     runs-on: ubuntu-latest
