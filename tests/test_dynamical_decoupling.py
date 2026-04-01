@@ -217,7 +217,7 @@ def test_pretty_string_format():
     )
     _pretty_string.append(
         f"Rabi Rotations = [{_rabi_rotations[0] / np.pi},"
-        f" {_rabi_rotations[1] / np.pi}, {_rabi_rotations[2]/ np.pi}] × pi"
+        f" {_rabi_rotations[1] / np.pi}, {_rabi_rotations[2] / np.pi}] × pi"
     )
     _pretty_string.append(
         f"Azimuthal Angles = [{_azimuthal_angles[0] / np.pi},"
@@ -247,11 +247,11 @@ def test_pretty_string_format():
     )
     _pretty_string.append(
         f"Rabi Rotations = [{_rabi_rotations[0] / np.pi},"
-        f" {_rabi_rotations[1] / np.pi}, {_rabi_rotations[2]/ np.pi}] × pi"
+        f" {_rabi_rotations[1] / np.pi}, {_rabi_rotations[2] / np.pi}] × pi"
     )
     _pretty_string.append(
         f"Azimuthal Angles = [{_azimuthal_angles[0] / np.pi},"
-        f" {_azimuthal_angles[1] / np.pi}, {_azimuthal_angles[2]/ np.pi}] × pi"
+        f" {_azimuthal_angles[1] / np.pi}, {_azimuthal_angles[2] / np.pi}] × pi"
     )
     _pretty_string.append(
         f"Detuning Rotations = [{_detuning_rotations[0] / np.pi},"
