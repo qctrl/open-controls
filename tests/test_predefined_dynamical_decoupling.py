@@ -29,6 +29,7 @@ from qctrlopencontrols import (
     new_walsh_sequence,
     new_x_concatenated_sequence,
     new_xy_concatenated_sequence,
+    new_platonic_sequence,
 )
 from qctrlopencontrols.constants import (
     SIGMA_X,
@@ -843,3 +844,999 @@ def test_if_xy_concatenated_sequence_is_identity():
     )
 
     assert _pulses_produce_identity(xy_concat_sequence)
+
+
+def test_dihedral_platonic_sequence():
+    """
+    Tests the Dihedral order of the platonic sequence.
+    """
+    duration = 10.0
+    sequence = new_platonic_sequence(duration=duration, sequence="Dihedral")
+    count = 8
+
+    _spacing = duration / count
+
+    _offsets = np.array(
+        [
+            _spacing * 0.5,
+            _spacing * 0.5 + _spacing,
+            _spacing * 0.5 + 2 * _spacing,
+            _spacing * 0.5 + 3 * _spacing,
+            _spacing * 0.5 + 4 * _spacing,
+            _spacing * 0.5 + 5 * _spacing,
+            _spacing * 0.5 + 6 * _spacing,
+            _spacing * 0.5 + 7 * _spacing,
+        ]
+    )
+
+    _rabi_rotations = np.ones(_offsets.shape) * np.pi
+
+    _azimuthal_angles = np.array(
+        [0, np.pi / 2, 0, np.pi / 2, np.pi / 2, 0, np.pi / 2, 0]
+    )
+
+    _detuning_rotations = np.zeros(_offsets.shape)
+
+    assert np.allclose(_offsets, sequence.offsets)
+    assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
+    assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
+    assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
+
+    sequence = new_platonic_sequence(
+        duration=duration, sequence="Dihedral", pre_post_rotation=True
+    )
+
+    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
+    _rabi_rotations = np.insert(
+        _rabi_rotations, [0, _rabi_rotations.shape[0]], [np.pi / 2, np.pi / 2]
+    )
+    _azimuthal_angles = np.insert(
+        _azimuthal_angles, [0, _azimuthal_angles.shape[0]], [0, np.pi]
+    )
+    _detuning_rotations = np.insert(
+        _detuning_rotations, [0, _detuning_rotations.shape[0]], [0, 0]
+    )
+
+    assert np.allclose(_offsets, sequence.offsets)
+    assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
+    assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
+    assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
+
+
+def test_tetrahedral_platonic_sequence():
+    """
+    Tests the Tetrahedral order of the platonic sequence.
+    """
+    duration = 10.0
+    sequence = new_platonic_sequence(duration=duration, sequence="Tetrahedral")
+
+    count = 24
+    _spacing = duration / count
+
+    _offsets = np.array(
+        [
+            _spacing * 0.5,
+            _spacing * 0.5 + _spacing,
+            _spacing * 0.5 + 2 * _spacing,
+            _spacing * 0.5 + 3 * _spacing,
+            _spacing * 0.5 + 4 * _spacing,
+            _spacing * 0.5 + 5 * _spacing,
+            _spacing * 0.5 + 6 * _spacing,
+            _spacing * 0.5 + 7 * _spacing,
+            _spacing * 0.5 + 8 * _spacing,
+            _spacing * 0.5 + 9 * _spacing,
+            _spacing * 0.5 + 10 * _spacing,
+            _spacing * 0.5 + 11 * _spacing,
+            _spacing * 0.5 + 12 * _spacing,
+            _spacing * 0.5 + 13 * _spacing,
+            _spacing * 0.5 + 14 * _spacing,
+            _spacing * 0.5 + 15 * _spacing,
+            _spacing * 0.5 + 16 * _spacing,
+            _spacing * 0.5 + 17 * _spacing,
+            _spacing * 0.5 + 18 * _spacing,
+            _spacing * 0.5 + 19 * _spacing,
+            _spacing * 0.5 + 20 * _spacing,
+            _spacing * 0.5 + 21 * _spacing,
+            _spacing * 0.5 + 22 * _spacing,
+            _spacing * 0.5 + 23 * _spacing,
+        ]
+    )
+
+    _rabi_rotations = np.array(
+        [
+            0,
+            4 * np.sqrt(2) * np.pi / 9,
+            0,
+            0,
+            4 * np.sqrt(2) * np.pi / 9,
+            0,
+            4 * np.sqrt(2) * np.pi / 9,
+            4 * np.sqrt(2) * np.pi / 9,
+            4 * np.sqrt(2) * np.pi / 9,
+            0,
+            0,
+            4 * np.sqrt(2) * np.pi / 9,
+            0,
+            4 * np.sqrt(2) * np.pi / 9,
+            4 * np.sqrt(2) * np.pi / 9,
+            4 * np.sqrt(2) * np.pi / 9,
+            0,
+            0,
+            4 * np.sqrt(2) * np.pi / 9,
+            0,
+            4 * np.sqrt(2) * np.pi / 9,
+            4 * np.sqrt(2) * np.pi / 9,
+            0,
+            0,
+        ]
+    )
+
+    _azimuthal_angles = np.array(
+        [
+            0,
+            np.pi / 3,
+            0,
+            0,
+            np.pi / 3,
+            0,
+            np.pi / 3,
+            np.pi / 3,
+            np.pi / 3,
+            0,
+            0,
+            np.pi / 3,
+            0,
+            np.pi / 3,
+            np.pi / 3,
+            np.pi / 3,
+            0,
+            0,
+            np.pi / 3,
+            0,
+            np.pi / 3,
+            np.pi / 3,
+            0,
+            0,
+        ]
+    )
+
+    _detuning_rotations = np.array(
+        [
+            2 * np.pi / 3,
+            2 * np.pi / 9,
+            2 * np.pi / 3,
+            2 * np.pi / 3,
+            2 * np.pi / 9,
+            2 * np.pi / 3,
+            2 * np.pi / 9,
+            2 * np.pi / 9,
+            2 * np.pi / 9,
+            2 * np.pi / 3,
+            2 * np.pi / 3,
+            2 * np.pi / 9,
+            2 * np.pi / 3,
+            2 * np.pi / 9,
+            2 * np.pi / 9,
+            2 * np.pi / 9,
+            2 * np.pi / 3,
+            2 * np.pi / 3,
+            2 * np.pi / 9,
+            2 * np.pi / 3,
+            2 * np.pi / 9,
+            2 * np.pi / 9,
+            2 * np.pi / 3,
+            2 * np.pi / 3,
+        ]
+    )
+
+    assert np.allclose(_offsets, sequence.offsets)
+    assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
+    assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
+    assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
+
+    sequence = new_platonic_sequence(
+        duration=duration, sequence="Tetrahedral", pre_post_rotation=True
+    )
+
+    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
+    _rabi_rotations = np.insert(
+        _rabi_rotations, [0, _rabi_rotations.shape[0]], [np.pi / 2, np.pi / 2]
+    )
+    _azimuthal_angles = np.insert(
+        _azimuthal_angles, [0, _azimuthal_angles.shape[0]], [0, np.pi]
+    )
+    _detuning_rotations = np.insert(
+        _detuning_rotations, [0, _detuning_rotations.shape[0]], [0, 0]
+    )
+
+    assert np.allclose(_offsets, sequence.offsets)
+    assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
+    assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
+    assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
+
+
+def test_octahedral_platonic_sequence():
+    """
+    Tests the Octahedral order of the platonic sequence.
+    """
+    duration = 10.0
+    sequence = new_platonic_sequence(duration=duration, sequence="Octahedral")
+
+    count = 48
+    _spacing = duration / count
+
+    _offsets = np.array(
+        [
+            _spacing * 0.5,
+            _spacing * 0.5 + _spacing,
+            _spacing * 0.5 + 2 * _spacing,
+            _spacing * 0.5 + 3 * _spacing,
+            _spacing * 0.5 + 4 * _spacing,
+            _spacing * 0.5 + 5 * _spacing,
+            _spacing * 0.5 + 6 * _spacing,
+            _spacing * 0.5 + 7 * _spacing,
+            _spacing * 0.5 + 8 * _spacing,
+            _spacing * 0.5 + 9 * _spacing,
+            _spacing * 0.5 + 10 * _spacing,
+            _spacing * 0.5 + 11 * _spacing,
+            _spacing * 0.5 + 12 * _spacing,
+            _spacing * 0.5 + 13 * _spacing,
+            _spacing * 0.5 + 14 * _spacing,
+            _spacing * 0.5 + 15 * _spacing,
+            _spacing * 0.5 + 16 * _spacing,
+            _spacing * 0.5 + 17 * _spacing,
+            _spacing * 0.5 + 18 * _spacing,
+            _spacing * 0.5 + 19 * _spacing,
+            _spacing * 0.5 + 20 * _spacing,
+            _spacing * 0.5 + 21 * _spacing,
+            _spacing * 0.5 + 22 * _spacing,
+            _spacing * 0.5 + 23 * _spacing,
+            _spacing * 0.5 + 24 * _spacing,
+            _spacing * 0.5 + 25 * _spacing,
+            _spacing * 0.5 + 26 * _spacing,
+            _spacing * 0.5 + 27 * _spacing,
+            _spacing * 0.5 + 28 * _spacing,
+            _spacing * 0.5 + 29 * _spacing,
+            _spacing * 0.5 + 30 * _spacing,
+            _spacing * 0.5 + 31 * _spacing,
+            _spacing * 0.5 + 32 * _spacing,
+            _spacing * 0.5 + 33 * _spacing,
+            _spacing * 0.5 + 34 * _spacing,
+            _spacing * 0.5 + 35 * _spacing,
+            _spacing * 0.5 + 36 * _spacing,
+            _spacing * 0.5 + 37 * _spacing,
+            _spacing * 0.5 + 38 * _spacing,
+            _spacing * 0.5 + 39 * _spacing,
+            _spacing * 0.5 + 40 * _spacing,
+            _spacing * 0.5 + 41 * _spacing,
+            _spacing * 0.5 + 42 * _spacing,
+            _spacing * 0.5 + 43 * _spacing,
+            _spacing * 0.5 + 44 * _spacing,
+            _spacing * 0.5 + 45 * _spacing,
+            _spacing * 0.5 + 46 * _spacing,
+            _spacing * 0.5 + 47 * _spacing,
+        ]
+    )
+
+    _rabi_rotations = np.array(
+        [
+            0,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            0,
+            0,
+            0,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            0,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            0,
+            0,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            0,
+            0,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            0,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            0,
+            0,
+            0,
+            0,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            0,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            0,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            0,
+            0,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            0,
+            0,
+            0,
+            0,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            0,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            0,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+            2 * np.sqrt(2 / 3) * np.pi / 3,
+        ]
+    )
+
+    _azimuthal_angles = np.array(
+        [
+            0,
+            np.pi / 4,
+            0,
+            0,
+            0,
+            np.pi / 4,
+            np.pi / 4,
+            np.pi / 4,
+            0,
+            np.pi / 4,
+            0,
+            0,
+            np.pi / 4,
+            np.pi / 4,
+            np.pi / 4,
+            0,
+            0,
+            np.pi / 4,
+            0,
+            np.pi / 4,
+            np.pi / 4,
+            0,
+            0,
+            0,
+            0,
+            np.pi / 4,
+            0,
+            np.pi / 4,
+            np.pi / 4,
+            np.pi / 4,
+            0,
+            np.pi / 4,
+            0,
+            0,
+            np.pi / 4,
+            np.pi / 4,
+            0,
+            0,
+            0,
+            0,
+            np.pi / 4,
+            0,
+            np.pi / 4,
+            np.pi / 4,
+            np.pi / 4,
+            0,
+            np.pi / 4,
+            np.pi / 4,
+        ]
+    )
+
+    _detuning_rotations = np.array(
+        [
+            np.pi / 2,
+            2 * np.pi / 3 / np.sqrt(3),
+            np.pi / 2,
+            np.pi / 2,
+            np.pi / 2,
+            2 * np.pi / 3 / np.sqrt(3),
+            2 * np.pi / 3 / np.sqrt(3),
+            2 * np.pi / 3 / np.sqrt(3),
+            np.pi / 2,
+            2 * np.pi / 3 / np.sqrt(3),
+            np.pi / 2,
+            np.pi / 2,
+            2 * np.pi / 3 / np.sqrt(3),
+            2 * np.pi / 3 / np.sqrt(3),
+            2 * np.pi / 3 / np.sqrt(3),
+            np.pi / 2,
+            np.pi / 2,
+            2 * np.pi / 3 / np.sqrt(3),
+            np.pi / 2,
+            2 * np.pi / 3 / np.sqrt(3),
+            2 * np.pi / 3 / np.sqrt(3),
+            np.pi / 2,
+            np.pi / 2,
+            np.pi / 2,
+            np.pi / 2,
+            2 * np.pi / 3 / np.sqrt(3),
+            np.pi / 2,
+            2 * np.pi / 3 / np.sqrt(3),
+            2 * np.pi / 3 / np.sqrt(3),
+            2 * np.pi / 3 / np.sqrt(3),
+            np.pi / 2,
+            2 * np.pi / 3 / np.sqrt(3),
+            np.pi / 2,
+            np.pi / 2,
+            2 * np.pi / 3 / np.sqrt(3),
+            2 * np.pi / 3 / np.sqrt(3),
+            np.pi / 2,
+            np.pi / 2,
+            np.pi / 2,
+            np.pi / 2,
+            2 * np.pi / 3 / np.sqrt(3),
+            np.pi / 2,
+            2 * np.pi / 3 / np.sqrt(3),
+            2 * np.pi / 3 / np.sqrt(3),
+            2 * np.pi / 3 / np.sqrt(3),
+            np.pi / 2,
+            2 * np.pi / 3 / np.sqrt(3),
+            2 * np.pi / 3 / np.sqrt(3),
+        ]
+    )
+
+    assert np.allclose(_offsets, sequence.offsets)
+    assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
+    assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
+    assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
+
+    sequence = new_platonic_sequence(
+        duration=duration, sequence="Octahedral", pre_post_rotation=True
+    )
+
+    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
+    _rabi_rotations = np.insert(
+        _rabi_rotations, [0, _rabi_rotations.shape[0]], [np.pi / 2, np.pi / 2]
+    )
+    _azimuthal_angles = np.insert(
+        _azimuthal_angles, [0, _azimuthal_angles.shape[0]], [0, np.pi]
+    )
+    _detuning_rotations = np.insert(
+        _detuning_rotations, [0, _detuning_rotations.shape[0]], [0, 0]
+    )
+
+    assert np.allclose(_offsets, sequence.offsets)
+    assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
+    assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
+    assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
+
+
+def test_icosahedral_platonic_sequence():
+    """
+    Tests the Icosahedral order of the platonic sequence.
+    """
+    duration = 10.0
+
+    sequence = new_platonic_sequence(duration=duration, sequence="Icosahedral")
+
+    count = 120
+    _spacing = duration / count
+
+    _offsets = np.array(
+        [
+            _spacing * 0.5,
+            _spacing * 0.5 + _spacing,
+            _spacing * 0.5 + 2 * _spacing,
+            _spacing * 0.5 + 3 * _spacing,
+            _spacing * 0.5 + 4 * _spacing,
+            _spacing * 0.5 + 5 * _spacing,
+            _spacing * 0.5 + 6 * _spacing,
+            _spacing * 0.5 + 7 * _spacing,
+            _spacing * 0.5 + 8 * _spacing,
+            _spacing * 0.5 + 9 * _spacing,
+            _spacing * 0.5 + 10 * _spacing,
+            _spacing * 0.5 + 11 * _spacing,
+            _spacing * 0.5 + 12 * _spacing,
+            _spacing * 0.5 + 13 * _spacing,
+            _spacing * 0.5 + 14 * _spacing,
+            _spacing * 0.5 + 15 * _spacing,
+            _spacing * 0.5 + 16 * _spacing,
+            _spacing * 0.5 + 17 * _spacing,
+            _spacing * 0.5 + 18 * _spacing,
+            _spacing * 0.5 + 19 * _spacing,
+            _spacing * 0.5 + 20 * _spacing,
+            _spacing * 0.5 + 21 * _spacing,
+            _spacing * 0.5 + 22 * _spacing,
+            _spacing * 0.5 + 23 * _spacing,
+            _spacing * 0.5 + 24 * _spacing,
+            _spacing * 0.5 + 25 * _spacing,
+            _spacing * 0.5 + 26 * _spacing,
+            _spacing * 0.5 + 27 * _spacing,
+            _spacing * 0.5 + 28 * _spacing,
+            _spacing * 0.5 + 29 * _spacing,
+            _spacing * 0.5 + 30 * _spacing,
+            _spacing * 0.5 + 31 * _spacing,
+            _spacing * 0.5 + 32 * _spacing,
+            _spacing * 0.5 + 33 * _spacing,
+            _spacing * 0.5 + 34 * _spacing,
+            _spacing * 0.5 + 35 * _spacing,
+            _spacing * 0.5 + 36 * _spacing,
+            _spacing * 0.5 + 37 * _spacing,
+            _spacing * 0.5 + 38 * _spacing,
+            _spacing * 0.5 + 39 * _spacing,
+            _spacing * 0.5 + 40 * _spacing,
+            _spacing * 0.5 + 41 * _spacing,
+            _spacing * 0.5 + 42 * _spacing,
+            _spacing * 0.5 + 43 * _spacing,
+            _spacing * 0.5 + 44 * _spacing,
+            _spacing * 0.5 + 45 * _spacing,
+            _spacing * 0.5 + 46 * _spacing,
+            _spacing * 0.5 + 47 * _spacing,
+            _spacing * 0.5 + 48 * _spacing,
+            _spacing * 0.5 + 49 * _spacing,
+            _spacing * 0.5 + 50 * _spacing,
+            _spacing * 0.5 + 51 * _spacing,
+            _spacing * 0.5 + 52 * _spacing,
+            _spacing * 0.5 + 53 * _spacing,
+            _spacing * 0.5 + 54 * _spacing,
+            _spacing * 0.5 + 55 * _spacing,
+            _spacing * 0.5 + 56 * _spacing,
+            _spacing * 0.5 + 57 * _spacing,
+            _spacing * 0.5 + 58 * _spacing,
+            _spacing * 0.5 + 59 * _spacing,
+            _spacing * 0.5 + 60 * _spacing,
+            _spacing * 0.5 + 61 * _spacing,
+            _spacing * 0.5 + 62 * _spacing,
+            _spacing * 0.5 + 63 * _spacing,
+            _spacing * 0.5 + 64 * _spacing,
+            _spacing * 0.5 + 65 * _spacing,
+            _spacing * 0.5 + 66 * _spacing,
+            _spacing * 0.5 + 67 * _spacing,
+            _spacing * 0.5 + 68 * _spacing,
+            _spacing * 0.5 + 69 * _spacing,
+            _spacing * 0.5 + 70 * _spacing,
+            _spacing * 0.5 + 71 * _spacing,
+            _spacing * 0.5 + 72 * _spacing,
+            _spacing * 0.5 + 73 * _spacing,
+            _spacing * 0.5 + 74 * _spacing,
+            _spacing * 0.5 + 75 * _spacing,
+            _spacing * 0.5 + 76 * _spacing,
+            _spacing * 0.5 + 77 * _spacing,
+            _spacing * 0.5 + 78 * _spacing,
+            _spacing * 0.5 + 79 * _spacing,
+            _spacing * 0.5 + 80 * _spacing,
+            _spacing * 0.5 + 81 * _spacing,
+            _spacing * 0.5 + 82 * _spacing,
+            _spacing * 0.5 + 83 * _spacing,
+            _spacing * 0.5 + 84 * _spacing,
+            _spacing * 0.5 + 85 * _spacing,
+            _spacing * 0.5 + 86 * _spacing,
+            _spacing * 0.5 + 87 * _spacing,
+            _spacing * 0.5 + 88 * _spacing,
+            _spacing * 0.5 + 89 * _spacing,
+            _spacing * 0.5 + 90 * _spacing,
+            _spacing * 0.5 + 91 * _spacing,
+            _spacing * 0.5 + 92 * _spacing,
+            _spacing * 0.5 + 93 * _spacing,
+            _spacing * 0.5 + 94 * _spacing,
+            _spacing * 0.5 + 95 * _spacing,
+            _spacing * 0.5 + 96 * _spacing,
+            _spacing * 0.5 + 97 * _spacing,
+            _spacing * 0.5 + 98 * _spacing,
+            _spacing * 0.5 + 99 * _spacing,
+            _spacing * 0.5 + 100 * _spacing,
+            _spacing * 0.5 + 101 * _spacing,
+            _spacing * 0.5 + 102 * _spacing,
+            _spacing * 0.5 + 103 * _spacing,
+            _spacing * 0.5 + 104 * _spacing,
+            _spacing * 0.5 + 105 * _spacing,
+            _spacing * 0.5 + 106 * _spacing,
+            _spacing * 0.5 + 107 * _spacing,
+            _spacing * 0.5 + 108 * _spacing,
+            _spacing * 0.5 + 109 * _spacing,
+            _spacing * 0.5 + 110 * _spacing,
+            _spacing * 0.5 + 111 * _spacing,
+            _spacing * 0.5 + 112 * _spacing,
+            _spacing * 0.5 + 113 * _spacing,
+            _spacing * 0.5 + 114 * _spacing,
+            _spacing * 0.5 + 115 * _spacing,
+            _spacing * 0.5 + 116 * _spacing,
+            _spacing * 0.5 + 117 * _spacing,
+            _spacing * 0.5 + 118 * _spacing,
+            _spacing * 0.5 + 119 * _spacing,
+        ]
+    )
+
+    phi = (np.sqrt(5) + 1) / 2  # golden ratio
+
+    _rabi_rotations = np.array(
+        [
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+            2 * np.pi / 5 / np.sqrt(phi + 2),
+        ]
+    )
+
+    _azimuthal_angles = np.array(
+        [
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            np.pi,
+            3 * np.pi / 2,
+            np.pi,
+            np.pi,
+            np.pi,
+            3 * np.pi / 2,
+            np.pi,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+            3 * np.pi / 2,
+        ]
+    )
+
+    _detuning_rotations = np.array(
+        [
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 3 / np.sqrt(3),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+            2 * np.pi * phi / 5 / np.sqrt(phi + 2),
+        ]
+    )
+
+    assert np.allclose(_offsets, sequence.offsets)
+    assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
+    assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
+    assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
+
+    sequence = new_platonic_sequence(
+        duration=duration, sequence="Icosahedral", pre_post_rotation=True
+    )
+
+    _offsets = np.insert(_offsets, [0, _offsets.shape[0]], [0, duration])
+    _rabi_rotations = np.insert(
+        _rabi_rotations, [0, _rabi_rotations.shape[0]], [np.pi / 2, np.pi / 2]
+    )
+    _azimuthal_angles = np.insert(
+        _azimuthal_angles, [0, _azimuthal_angles.shape[0]], [0, np.pi]
+    )
+    _detuning_rotations = np.insert(
+        _detuning_rotations, [0, _detuning_rotations.shape[0]], [0, 0]
+    )
+
+    assert np.allclose(_offsets, sequence.offsets)
+    assert np.allclose(_rabi_rotations, sequence.rabi_rotations)
+    assert np.allclose(_azimuthal_angles, sequence.azimuthal_angles)
+    assert np.allclose(_detuning_rotations, sequence.detuning_rotations)
