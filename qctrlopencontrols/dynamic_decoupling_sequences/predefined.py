@@ -1318,69 +1318,54 @@ def new_platonic_sequence(
         {"sequence": sequence},
     )
 
-    # The sequences outlined in the cited paper, each sequence is constructed
-    # from an Eulerian path on the Cayley graph associated with the relevant
-    # point group. Each sequence is constructed of 2 generating operations, in
-    # the order specified here.
-    # fmt: off
-    eulerian_paths = {
-        "Dihedral": [0, 1, 0, 1, 1, 0, 1, 0],
-        "Tetrahedral": [ 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0],
-        "Octahedral": [ 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1 ],
-        "Icosahedral": [ 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0 ]
-    }
-    # fmt: on
+    rabi_rotations, azimuthal_angles, detuning_rotations = None, None, None
 
-    # The generators assocaited with each point group.
-    phi = (np.sqrt(5) + 1) / 2  # golden ratio
-    generators = {
-        "Dihedral": [
-            {"Rabi": np.pi, "Azimuthal": 0, "Detuning": 0},  # rabi, azimuthal, detuning
-            {"Rabi": np.pi, "Azimuthal": np.pi / 2, "Detuning": 0},
-        ],
-        "Tetrahedral": [
-            {"Rabi": 0, "Azimuthal": 0, "Detuning": 2 * np.pi / 3},
-            {
-                "Rabi": 4 * np.sqrt(2) * np.pi / 9,
-                "Azimuthal": np.pi / 3,
-                "Detuning": 2 * np.pi / 9,
-            },
-        ],
-        "Octahedral": [
-            {"Rabi": 0, "Azimuthal": 0, "Detuning": np.pi / 2},
-            {
-                "Rabi": 2 * np.sqrt(2 / 3) * np.pi / 3,
-                "Azimuthal": np.pi / 4,
-                "Detuning": 2 * np.pi / 3 / np.sqrt(3),
-            },
-        ],
-        "Icosahedral": [
-            {
-                "Rabi": 2 * np.pi / 5 / np.sqrt(phi + 2),
-                "Azimuthal": 3 * np.pi / 2,
-                "Detuning": 2 * np.pi * phi / 5 / np.sqrt(phi + 2),
-            },
-            {
-                "Rabi": 2 * np.pi * (phi - 1) / 3 / np.sqrt(3),
-                "Azimuthal": np.pi,
-                "Detuning": 2 * np.pi * phi / 3 / np.sqrt(3),
-            },
-        ],
-    }
+    if sequence == "Dihedral":
+        eulerian_path = np.array([0, 1, 0, 1, 1, 0, 1, 0])
+
+        rabi_rotations = np.ones(eulerian_path.shape[0]) * np.pi
+        azimuthal_angles = eulerian_path * np.pi / 2
+        detuning_rotations = np.zeros(eulerian_path.shape[0])
+    elif sequence == "Tetrahedral":
+        eulerian_path = np.array(
+            [0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0]
+        )
+
+        rabi_rotations = eulerian_path * 4 * np.sqrt(2) * np.pi / 9
+        azimuthal_angles = eulerian_path * np.pi / 3
+        detuning_rotations = (
+            1 ^ eulerian_path
+        ) * 2 * np.pi / 3 + eulerian_path * 2 * np.pi / 9
+    elif sequence == "Octahedral":
+        # fmt:off
+        eulerian_path = np.array(
+            [ 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1 ]
+        )
+        # fmt:on
+
+        rabi_rotations = eulerian_path * 2 * np.sqrt(2 / 3) * np.pi / 3
+        azimuthal_angles = eulerian_path * np.pi / 4
+        detuning_rotations = (
+            1 ^ eulerian_path
+        ) * np.pi / 2 + eulerian_path * 2 * np.pi / 3 / np.sqrt(3)
+    else:
+        # fmt:off
+        eulerian_path = np.array(
+            [ 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0 ]
+        )
+        # fmt:on
+
+        phi = (np.sqrt(5) + 1) / 2  # golden ratio
+        rabi_rotations = (1 ^ eulerian_path) * 2 * np.pi / 5 / np.sqrt(
+            phi + 2
+        ) + eulerian_path * 2 * np.pi * (phi - 1) / 3 / np.sqrt(3)
+        azimuthal_angles = (1 ^ eulerian_path) * 3 * np.pi / 2 + eulerian_path * np.pi
+        detuning_rotations = (1 ^ eulerian_path) * 2 * np.pi * phi / 5 / np.sqrt(
+            phi + 2
+        ) + eulerian_path * 2 * np.pi * phi / 3 / np.sqrt(3)
 
     # Re-use the CPMG offset function to obtain equally spaced pulses along a certain duration.
-    offsets = _carr_purcell_meiboom_gill_offsets(
-        duration, len(eulerian_paths[sequence])
-    )
-    rabi_rotations = np.array(
-        [generators[sequence][idx]["Rabi"] for idx in eulerian_paths[sequence]]
-    )
-    azimuthal_angles = np.array(
-        [generators[sequence][idx]["Azimuthal"] for idx in eulerian_paths[sequence]]
-    )
-    detuning_rotations = np.array(
-        [generators[sequence][idx]["Detuning"] for idx in eulerian_paths[sequence]]
-    )
+    offsets = _carr_purcell_meiboom_gill_offsets(duration, rabi_rotations.shape[0])
 
     if pre_post_rotation:
         # Use a pi/2 followed by a -pi/2 X rotation as all the sequences
