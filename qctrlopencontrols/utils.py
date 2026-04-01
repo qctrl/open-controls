@@ -67,8 +67,7 @@ def create_repr_from_attributes(class_instance=None, attributes=None) -> str:
     for attribute in attributes:
         if not isinstance(attribute, str):
             raise ArgumentsValueError(
-                "Each attribute name must be a string. Found "
-                f"{type(attribute)} type.",
+                f"Each attribute name must be a string. Found {type(attribute)} type.",
                 {"attribute": attribute, "type(attribute)": type(attribute)},
             )
 

@@ -522,7 +522,7 @@ class DrivenControl:
 
         check_arguments(
             file_type in _file_types,
-            "Requested file type is not supported. Please use " f"one of {_file_types}",
+            f"Requested file type is not supported. Please use one of {_file_types}",
             {"file_type": file_type},
         )
 
