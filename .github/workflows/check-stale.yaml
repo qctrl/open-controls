@@ -1,4 +1,5 @@
- ##### This file is managed automatically. To update visit: https://github.com/qctrl/repositories-manager. #####
+##### This file is managed automatically. To update visit: https://github.com/qctrl/repositories-manager. #####
+---
 name: "Close stale issues and PRs"
 on:
   schedule:
@@ -12,7 +13,7 @@ jobs:
       pull-requests: write
       contents: write
     steps:
-      - uses: actions/stale@v9
+      - uses: actions/stale@v10
         with:
           stale-issue-message: "This issue is stale because it has been open for 30 days with no activity. Remove stale label or comment, or this issue will be closed in 5 days."
           stale-pr-message: "This PR is stale because it has been open for 30 days with no activity. Remove stale label or comment, or this PR will be closed and the branch deleted in 5 days."
