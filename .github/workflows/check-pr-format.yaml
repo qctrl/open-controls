@@ -1,4 +1,5 @@
 ##### This file is managed automatically. To update visit: https://github.com/qctrl/repositories-manager. #####
+---
 name: Check PR format
 
 on:
@@ -12,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Check PR format
         shell: bash
         run: /scripts/check-pr-format.sh
