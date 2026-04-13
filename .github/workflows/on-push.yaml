@@ -9,7 +9,7 @@ on:
 
 jobs:
   housekeeping:
-    uses: qctrl/reusable-workflows/.github/workflows/poetry-pre-checks.yaml@workflows/poetry-pre-checks/v1
+    uses: qctrl/reusable-workflows/.github/workflows/poetry-pre-checks.yaml@master
     secrets: inherit
 
   linting:
