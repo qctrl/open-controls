@@ -9,14 +9,38 @@ on:
 
 jobs:
   housekeeping:
-    uses: qctrl/reusable-workflows/.github/workflows/poetry-pre-checks.yaml@master
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          repositories: reusable-workflows
+      - name: Checkout reusable workflows
+        uses: actions/checkout@v6
+        with:
+          repository: qctrl/reusable-workflows
+          token: ${{ steps.app-token.outputs.token }}
+          path: .github/reusable-workflows
+          persist-credentials: false
+          ref: actions/poetry/housekeeping/v2
+      - name: Run housekeeping
+        uses: ./.github/reusable-workflows/.github/actions/poetry/housekeeping
+        with:
+          vault-role-id: ${{ secrets.VAULT_ROLE_ID }}
+          vault-secret-id: ${{ secrets.VAULT_SECRET_ID }}
+      - name: Cleanup reusable workflows checkout
+        if: always()
+        run: rm -rf .github/reusable-workflows
 
   linting:
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Download CI tool
         shell: bash
         run: |
@@ -39,7 +63,7 @@ jobs:
       matrix:
         python: ["3.10", "3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Download CI tool
         shell: bash
         run: |
@@ -59,7 +83,7 @@ jobs:
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Download CI tool
         shell: bash
         run: |

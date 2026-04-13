@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Download CI tool
         shell: bash
         run: |
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Download CI tool
       shell: bash
       run: |
@@ -54,7 +54,7 @@ jobs:
       matrix:
         python: ["3.10", "3.11", "3.12", "3.13"]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Download CI tool
       shell: bash
       run: |
@@ -72,7 +72,7 @@ jobs:
     if: github.event.pull_request.head.repo.fork == true
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Build Sphinx Image
       run: |
         docker build -f ./docs/Dockerfile
