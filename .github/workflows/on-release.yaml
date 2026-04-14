@@ -9,9 +9,32 @@ jobs:
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          repositories: reusable-workflows
+      - name: Checkout reusable workflows
+        uses: actions/checkout@v6
+        with:
+          repository: qctrl/reusable-workflows
+          token: ${{ steps.app-token.outputs.token }}
+          path: .github/reusable-workflows
+          persist-credentials: false
+          ref: actions/poetry/housekeeping/v2
+      - name: Run housekeeping
+        uses: ./.github/reusable-workflows/.github/actions/poetry/housekeeping
+        with:
+          vault-role-id: ${{ secrets.VAULT_ROLE_ID }}
+          vault-secret-id: ${{ secrets.VAULT_SECRET_ID }}
+      - name: Cleanup reusable workflows checkout
+        if: always()
+        run: rm -rf .github/reusable-workflows
       - name: Download CI tool
         shell: bash
         run: |
@@ -22,14 +45,6 @@ jobs:
       - name: Inject environment variables
         run: |
           ./ci env prepareGitHub
-      - name: Update version in code
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global --add safe.directory $GITHUB_WORKSPACE
-          git config --global user.email "robot@q-ctrl.com"
-          git config --global user.name "Q-CTRL Robot"
-          /scripts/housekeeping.sh
       - name: Publish publicly
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,10 +58,28 @@ jobs:
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          repositories: reusable-workflows
+      - name: Checkout reusable workflows
+        uses: actions/checkout@v6
+        with:
+          repository: qctrl/reusable-workflows
+          token: ${{ steps.app-token.outputs.token }}
+          path: .github/reusable-workflows
+          persist-credentials: false
+          ref: actions/docs/update-docs/v1
       - name: Update docs repo
-        uses: qctrl/reusable-workflows/.github/actions/docs/update-docs@master
+        uses: ./.github/reusable-workflows/.github/actions/docs/update-docs
         with:
           source_branch: master
           target_branch: master
           vault-role-id: ${{ secrets.VAULT_ROLE_ID }}
           vault-secret-id: ${{ secrets.VAULT_SECRET_ID }}
+      - name: Cleanup reusable workflows checkout
+        if: always()
+        run: rm -rf .github/reusable-workflows
