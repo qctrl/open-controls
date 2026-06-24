@@ -44,7 +44,7 @@ jobs:
     container: qctrl/ci-images:python-3.11-ci
     steps:
       - name: Update docs repo
-        uses: qctrl/reusable-workflows/.github/actions/docs/update-docs@master
+        uses: qctrl/reusable-workflows/.github/actions/docs/update-docs@actions/docs/update-docs/v1
         with:
           source_branch: master
           target_branch: master
