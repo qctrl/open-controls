@@ -10,8 +10,7 @@ jobs:
     container: qctrl/ci-images:python-3.11-ci
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        with:          persist-credentials: false          fetch-depth: 0
       - name: Download CI tool
         shell: bash
         run: |
