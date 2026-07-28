@@ -9,8 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
     steps:
-      - uses: qctrl/reusable-workflows/.github/actions/github/checkout@actions/github/checkout/v1
+      - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           fetch-depth: 0
       - name: Download CI tool
         shell: bash
