@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
       - name: Check PR format
