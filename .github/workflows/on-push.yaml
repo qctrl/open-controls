@@ -12,9 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
+      - uses: qctrl/reusable-workflows/.github/actions/github/checkout@actions/github/checkout/v1
       - name: Download CI tool
         shell: bash
         run: |
@@ -38,9 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
+      - uses: qctrl/reusable-workflows/.github/actions/github/checkout@actions/github/checkout/v1
       - name: Download CI tool
         shell: bash
         run: |
@@ -63,9 +59,7 @@ jobs:
       matrix:
         python: ["3.10", "3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
+      - uses: qctrl/reusable-workflows/.github/actions/github/checkout@actions/github/checkout/v1
       - name: Download CI tool
         shell: bash
         run: |
@@ -85,9 +79,7 @@ jobs:
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
+      - uses: qctrl/reusable-workflows/.github/actions/github/checkout@actions/github/checkout/v1
       - name: Download CI tool
         shell: bash
         run: |
