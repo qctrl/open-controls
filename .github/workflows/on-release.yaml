@@ -43,9 +43,12 @@ jobs:
   update_documentation:
     runs-on: ubuntu-latest
     container: qctrl/ci-images:python-3.11-ci
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Update docs repo
-        uses: qctrl/reusable-workflows/.github/actions/docs/update-docs@actions/docs/update-docs/v1
+        uses: qctrl/reusable-workflows/.github/actions/docs/update-docs@actions/docs/update-docs/v2
         with:
           source_branch: master
           target_branch: master
