@@ -7,7 +7,7 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    container: qctrl/ci-images:python-3.11-ci
+    container: qctrl/ci-images:python-3.12-ci
     steps:
       - uses: actions/checkout@v7
         with:
@@ -42,7 +42,7 @@ jobs:
 
   update_documentation:
     runs-on: ubuntu-latest
-    container: qctrl/ci-images:python-3.11-ci
+    container: qctrl/ci-images:python-3.12-ci
     permissions:
       contents: read
       id-token: write
