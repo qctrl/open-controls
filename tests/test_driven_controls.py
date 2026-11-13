@@ -417,3 +417,106 @@ def test_resample_inexact():
     assert np.allclose(
         new_driven_control.detunings, [1.3, 1.3, 1.3, 1.3, 2.3, 2.3, 2.3]
     )
+
+
+@pytest.mark.parametrize(
+    (
+        "durations",
+        "rabi_rates",
+        "azimuthal_angles",
+        "detunings",
+        "time_step",
+        "expected_durations",
+        "expected_rabi_rates",
+        "expected_azimuthal_angles",
+        "expected_detunings",
+    ),
+    [
+        (
+            np.array([0.1, 0.2]),
+            np.array([0.4, 1.1]),
+            np.array([0.7, -0.9]),
+            np.array([-0.3, 0.2]),
+            0.1,
+            np.array([0.1, 0.1, 0.1]),
+            np.array([0.4, 1.1, 1.1]),
+            np.array([0.7, -0.9, -0.9]),
+            np.array([-0.3, 0.2, 0.2]),
+        ),
+        (
+            np.array([0.1, 0.1, 0.1]),
+            np.array([0.4, 1.1, 2.0]),
+            np.array([0.7, -0.9, 0.5]),
+            np.array([-0.3, 0.2, 0.1]),
+            0.1,
+            np.array([0.1, 0.1, 0.1]),
+            np.array([0.4, 1.1, 2.0]),
+            np.array([0.7, -0.9, 0.5]),
+            np.array([-0.3, 0.2, 0.1]),
+        ),
+        (
+            np.array([0.2, 0.4]),
+            np.array([0.4, 1.1]),
+            np.array([0.7, -0.9]),
+            np.array([-0.3, 0.2]),
+            0.1,
+            np.array([0.1, 0.1, 0.1, 0.1, 0.1, 0.1]),
+            np.array([0.4, 0.4, 1.1, 1.1, 1.1, 1.1]),
+            np.array([0.7, 0.7, -0.9, -0.9, -0.9, -0.9]),
+            np.array([-0.3, -0.3, 0.2, 0.2, 0.2, 0.2]),
+        ),
+        (
+            np.array([0.1, 0.21]),
+            np.array([0.4, 1.1]),
+            np.array([0.7, -0.9]),
+            np.array([-0.3, 0.2]),
+            0.1,
+            np.array([0.1, 0.1, 0.1, 0.1]),
+            np.array([0.4, 1.1, 1.1, 1.1]),
+            np.array([0.7, -0.9, -0.9, -0.9]),
+            np.array([-0.3, 0.2, 0.2, 0.2]),
+        ),
+    ],
+)
+def test_resample_endpoint_rounding(
+    *,
+    durations,
+    rabi_rates,
+    azimuthal_angles,
+    detunings,
+    time_step,
+    expected_durations,
+    expected_rabi_rates,
+    expected_azimuthal_angles,
+    expected_detunings,
+):
+    driven_control = DrivenControl(
+        durations=durations,
+        rabi_rates=rabi_rates,
+        azimuthal_angles=azimuthal_angles,
+        detunings=detunings,
+    )
+
+    new_driven_control = driven_control.resample(time_step)
+
+    assert np.isclose(new_driven_control.duration, np.sum(expected_durations))
+    assert np.allclose(new_driven_control.durations, expected_durations)
+    assert np.allclose(new_driven_control.rabi_rates, expected_rabi_rates)
+    assert np.allclose(new_driven_control.azimuthal_angles, expected_azimuthal_angles)
+    assert np.allclose(new_driven_control.detunings, expected_detunings)
+
+
+def test_resample_terminal_segment_count_preserved():
+    """A rounded total must not introduce a sample at the final segment boundary."""
+    driven_control = DrivenControl(
+        rabi_rates=np.ones(13),
+        azimuthal_angles=np.zeros(13),
+        detunings=np.zeros(13),
+        durations=np.full(13, 0.1),
+    )
+
+    new_driven_control = driven_control.resample(0.1)
+
+    assert len(new_driven_control.durations) == 13
+    assert np.allclose(new_driven_control.durations, 0.1)
+    assert np.isclose(new_driven_control.duration, 1.3)

@@ -339,7 +339,7 @@ class DrivenControl:
             A new driven control, sampled at the specified rate. The durations of the new control
             are all equal to :math:`\delta t`. The total duration of the new control might be
             slightly larger than the original duration, if the time step doesn't exactly divide the
-            original duration.
+            original duration. The original terminal endpoint is not sampled.
         """
         check_arguments(
             time_step > 0, "Time step must be positive.", {"time_step": time_step}
@@ -352,10 +352,14 @@ class DrivenControl:
         )
 
         count = int(np.ceil(self.duration / time_step))
+        boundaries = np.cumsum(self.durations)
+        # Exclude the terminal endpoint using the same boundary as the segment lookup.
+        if (count - 1) * time_step >= boundaries[-1]:
+            count -= 1
         durations = np.repeat(time_step, count)
         times = np.arange(count) * time_step
 
-        indices = np.digitize(times, bins=np.cumsum(self.durations))
+        indices = np.digitize(times, bins=boundaries)
 
         return DrivenControl(
             durations,
