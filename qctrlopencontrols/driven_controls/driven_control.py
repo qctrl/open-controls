@@ -352,13 +352,14 @@ class DrivenControl:
         )
 
         count = int(np.ceil(self.duration / time_step))
-        # Exclude terminal sample after floating quotient rounding.
-        if (count - 1) * time_step >= self.duration:
+        boundaries = np.cumsum(self.durations)
+        # Exclude the terminal endpoint using the same boundary as the segment lookup.
+        if (count - 1) * time_step >= boundaries[-1]:
             count -= 1
         durations = np.repeat(time_step, count)
         times = np.arange(count) * time_step
 
-        indices = np.digitize(times, bins=np.cumsum(self.durations))
+        indices = np.digitize(times, bins=boundaries)
 
         return DrivenControl(
             durations,
